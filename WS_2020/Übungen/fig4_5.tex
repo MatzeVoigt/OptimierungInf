@@ -1,0 +1,32 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\begin{document}
+       	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=1pt}
+		\begin{pspicture}(-0.5,-0.5)(6.6,2.5)
+		
+		\cnode*(0,1){3pt}{V1} \uput{0.25}[270](0,1){$v_1$}
+		\cnode*(2,2){3pt}{V2} \uput{0.25}[ 90](2,2){$v_2$}
+		\cnode*(2,0){3pt}{V3} \uput{0.25}[270](2,0){$v_3$}
+		\cnode*(4,2){3pt}{V4} \uput{0.25}[ 90](4,2){$v_4$}
+		\cnode*(4,0){3pt}{V5} \uput{0.25}[270](4,0){$v_5$}
+		\cnode*(6,1){3pt}{V6} \uput{0.25}[  0](6,1){$v_6$}
+		
+		\ncline{-}{V1}{V2}
+		\ncline{-}{V1}{V3}
+		\ncline{-}{V2}{V3}
+		\ncline{-}{V2}{V4}
+		\ncline{-}{V3}{V4}
+		\ncline{-}{V3}{V5}
+		%\ncline{-}{V4}{V5}
+		\ncline{-}{V4}{V6}
+		\ncline{-}{V5}{V6}
+		
+		\end{pspicture}
+
+\end{document}

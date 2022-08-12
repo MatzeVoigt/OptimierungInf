@@ -1,0 +1,242 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{pst-all}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 11},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 11}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 15./16. Januar 2018}
+
+\begin{enumerate}[\bfseries 1.]
+
+
+% Aufgabe P-1
+\item Gegeben sei eine Menge $S = \bigl\{ s_1,\ldots,s_n \bigr\}$ und eine Kollektion $T_1,\ldots,T_m$ von $k$-elementigen Teilmengen von $S$. Außerdem besitze jedes Element $s_i$ ein Gewicht $w_i \geq 0$ mit $w_i \in \mathbb{Q}$ ($i=1,\ldots,n$).
+
+Zur Erinnerung: Eine Teilmenge $H \subseteq S$ wird ein \textit{Hitting Set} genannt, falls $H \cap T_i \neq \emptyset$ für alle $i=1,\ldots,m$ gilt. Gesucht ist ein Hitting Set $H$, dessen Gewicht so klein wie möglich ist. Anders gesagt: Die Summe
+\[
+\sum\limits_{s_i \in H}{w_i}
+\]
+soll so klein wie möglich sein. Wir wollen das beschriebene Problem WEIGHTED $k$-HITTING SET nennen.
+
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Formulieren Sie dieses Problem als ein ganzzahliges Programmierungsproblem, dass Sie (ILP) nennen.
+% Aufgabe P-1b
+\item Wie lautet die LP-Relaxation (LP) dieses Problems?
+\end{enumerate}
+
+
+
+% Aufgabe P-2
+\item Der Graph $G = (V,E)$ mit Längenfunktion $\ell$ sei durch die folgende Zeichnung gegeben:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+
+\cnode*(2,4){3pt}{A} \uput{0.25}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.25}[225](2,2){$b$}
+\cnode*(2,0){3pt}{C} \uput{0.25}[270](2,0){$c$}
+\cnode*(6,4){3pt}{D} \uput{0.25}[ 90](6,4){$d$}
+\cnode*(6,2){3pt}{E} \uput{0.25}[  0](6,2){$e$}
+\cnode*(6,0){3pt}{F} \uput{0.25}[270](6,0){$f$}
+\cnode*(0,2){3pt}{S} \uput{0.25}[180](0,2){$s$}
+
+\ncline{->}{S}{A} \uput{0.10}[ 90](1.0, 3.0){$6$}
+\ncline{->}{S}{B} \uput{0.10}[ 90](1.0, 2.0){$5$}
+\ncline{->}{S}{C} \uput{0.10}[270](1.0, 1.0){$2$}
+\ncarc[arcangle=330]{->}{A}{B} \uput{0.35}[180](2.0, 3.0){$1$}
+\ncline{->}{A}{D} \uput{0.10}[ 90](4.0, 4.0){$2$}
+%\ncline{->}{A}{E} \uput{0.10}[ 90](3.0, 3.5){$3$}
+\ncarc[arcangle=345]{->}{A}{E} \uput{0.20}[45](3.0, 3.0){$3$}
+\ncarc[arcangle=330]{->}{B}{A} \uput{0.35}[  0](2.0, 3.0){$3$}
+\ncline{->}{B}{D} \uput{0.10}[ 90](3.0, 2.5){$4$}
+\ncline{->}{B}{E} \uput{0.10}[ 90](4.0, 2.0){$5$}
+\ncline{->}{B}{F} \uput{0.05}[ 90](3.0, 1.5){$3$}
+\ncline{->}{C}{B} \uput{0.10}[  0](2.0, 1.0){$2$}
+%\ncline{->}{C}{E} \uput{0.10}[ 90](3.0, 0.5){$1$}
+\ncarc[arcangle=15]{->}{C}{E} \uput{0.20}[315](3.0, 1.0){$1$}
+\ncline{->}{C}{F} \uput{0.10}[270](4.0, 0.0){$3$}
+\ncline{->}{D}{E} \uput{0.10}[  0](6.0, 3.0){$2$}
+\ncarc[arcangle=345]{->}{E}{A} \uput{0.10}[ 45](3.5, 3.5){$2$}
+\ncarc[arcangle=15]{->}{E}{C} \uput{0.10}[315](3.5, 0.5){$2$}
+\ncarc[arcangle=330]{->}{E}{F} \uput{0.35}[180](6.0, 1.0){$1$}
+\ncarc[arcangle=330]{->}{F}{E} \uput{0.35}[  0](6.0, 1.0){$3$}
+
+\end{pspicture}
+\end{center}
+
+
+
+\begin{enumerate}[a)]
+% Aufgabe P-2a
+\item Verwenden Sie den Algorithmus von Dijkstra in der Version auf Seite 181 des Skripts, um für alle $v \in V$ die Länge $d(v)$ eines kürzesten $s,v$-Pfades zu berechnen. Legen Sie eine Tabelle wie auf Seite 183 des Skripts an, d.h., notieren Sie auch immer einen \enquote{Vorgängerknoten}.
+
+% Aufgabe P-2b
+\item Bestimmen Sie einen kürzeste-Pfade-Baum anhand der Einträge in der letzten Zeile Ihrer Tabelle.
+\end{enumerate}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 22./23. Januar 2018}
+
+\begin{enumerate}[\bfseries 1.]
+
+
+% Aufgabe H-1
+\item Wir knüpfen an Präsenzaufgabe 1 an und betrachten das dort formulierte Problem WEIGHTED $k$-HITTING SET. Die Bezeichnungen (ILP) und (LP) verwenden wir wie in dieser Präsenzaufgabe.
+\begin{enumerate}[a)]
+% Aufgabe H-1a
+\item Geben Sie basierend auf (LP) einen (polynomiellen) Approximationsalgorithmus für WEIGHTED $k$-HITTING SET an, bei dem es sich um einen $k$-Approximationsalgorithmus handelt.
+% Aufgabe H-1b
+\item Weisen Sie nach, dass es sich bei dem von Ihnen angegebenen Algorithmus tatsächlich um einen $k$-Approximationsalgorithmus handelt. 
+\end{enumerate}
+
+\pagebreak
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+% Aufgabe H-2a
+\item Der Graph $G=(V,E)$ mit Längenfunktion $\ell$ sei durch die folgende Zeichnung gegeben:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.75)(6.5,2.75)
+
+\cnode*(0,2){3pt}{S} \uput{0.25}[ 90](0,2){$s$}
+\cnode*(2,2){3pt}{C} \uput{0.25}[ 90](2,2){$c$}
+\cnode*(4,2){3pt}{D} \uput{0.25}[ 90](4,2){$d$}
+\cnode*(6,2){3pt}{G} \uput{0.25}[ 90](6,2){$g$}
+\cnode*(0,0){3pt}{A} \uput{0.25}[270](0,0){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.25}[270](2,0){$b$}
+\cnode*(4,0){3pt}{E} \uput{0.25}[270](4,0){$e$}
+\cnode*(6,0){3pt}{F} \uput{0.25}[270](6,0){$f$}
+
+
+\ncline{->}{S}{A} \uput{0.10}[180](0.0, 1.0){$4$}
+\ncline{->}{S}{B} \uput{0.05}[225](1.0, 1.0){$7$}
+\ncline{->}{S}{C} \uput{0.10}[ 90](1.0, 2.0){$2$}
+\ncline{->}{A}{B} \uput{0.10}[270](1.0, 0.0){$5$}
+\ncline{->}{C}{B} \uput{0.10}[180](2.0, 1.0){$6$}
+\ncline{->}{C}{D} \uput{0.10}[ 90](3.0, 2.0){$2$}
+\ncline{->}{C}{E} \uput{0.05}[225](3.0, 1.0){$6$}
+\ncline{->}{D}{E} \uput{0.10}[  0](4.0, 1.0){$2$}
+\ncline{->}{D}{G} \uput{0.10}[ 90](5.0, 2.0){$1$}
+\ncline{->}{E}{B} \uput{0.10}[270](3.0, 0.0){$1$}
+\ncline{->}{E}{F} \uput{0.10}[270](5.0, 0.0){$1$}
+\ncline{->}{G}{E} \uput{0.05}[315](5.0, 1.0){$1$}
+\ncline{->}{G}{F} \uput{0.10}[  0](6.0, 1.0){$4$}
+
+\end{pspicture}
+\end{center}
+
+Verwenden Sie den Algorithmus von Dijkstra (Skript, Seite 181) um für alle $v \in V$ die Länge $d(v)$ eines kürzesten $s,v$-Pfades zu berechnen. Legen Sie eine Tabelle an, an der man zusätzlich kürzeste $s,v$-Pfade ablesen kann. Bestimmen Sie auch einen kürzeste-Pfade-Baum. 
+
+
+% Aufgabe H-2b
+\item Für den folgenden Graphen bestimme man einen minimalen aufspannenden Baum auf drei Arten:
+\begin{enumerate}[(i)]
+\item mit dem Algorithmus von Prim (mit Startknoten $a$);
+\item mit dem Algorithmus von Kruskal;
+\item mit dem Reverse-Delete-Algorithmus.
+\end{enumerate}
+
+Geben Sie jeweils die Kanten in der Reihenfolge an, in der sie hinzugefügt bzw. weggelassen wurden. (Kommen mehrere Kanten infrage, so wähle man willkürlich eine aus.)
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.75)(10.5,2.75)
+
+\cnode*( 0,0){3pt}{A} \uput{0.25}[270]( 0,0){$a$}
+\cnode*( 2,0){3pt}{B} \uput{0.25}[270]( 2,0){$b$}
+\cnode*( 4,0){3pt}{C} \uput{0.25}[270]( 4,0){$c$}
+\cnode*( 6,0){3pt}{D} \uput{0.25}[270]( 6,0){$d$}
+\cnode*( 8,0){3pt}{E} \uput{0.25}[270]( 8,0){$e$}
+\cnode*(10,0){3pt}{F} \uput{0.25}[270](10,0){$f$}
+\cnode*(10,2){3pt}{G} \uput{0.25}[ 90](10,2){$g$}
+\cnode*( 8,2){3pt}{H} \uput{0.25}[ 90]( 8,2){$h$}
+\cnode*( 6,2){3pt}{I} \uput{0.25}[ 90]( 6,2){$i$}
+\cnode*( 4,2){3pt}{J} \uput{0.25}[ 90]( 4,2){$j$}
+\cnode*( 2,2){3pt}{K} \uput{0.25}[ 90]( 2,2){$k$}
+\cnode*( 0,2){3pt}{L} \uput{0.25}[ 90]( 0,2){$\ell$}
+
+\ncline{-}{A}{B} \uput{0.10}[270]( 1.0, 0.0){$4$}
+\ncline{-}{A}{L} \uput{0.10}[180]( 0.0, 1.0){$6$}
+\ncline{-}{B}{C} \uput{0.10}[270]( 3.0, 0.0){$1$}
+\ncline{-}{B}{K} \uput{0.10}[180]( 2.0, 1.0){$5$}
+\ncline{-}{B}{L} \uput{0.05}[225]( 1.0, 1.0){$8$}
+\ncline{-}{C}{D} \uput{0.10}[270]( 5.0, 0.0){$2$}
+\ncline{-}{C}{I} \uput{0.05}[315]( 5.0, 1.0){$1$}
+\ncline{-}{C}{J} \uput{0.10}[180]( 4.0, 1.0){$2$}
+\ncline{-}{C}{K} \uput{0.05}[225]( 3.0, 1.0){$6$}
+\ncline{-}{D}{E} \uput{0.10}[270]( 7.0, 0.0){$2$}
+\ncline{-}{D}{H} \uput{0.05}[315]( 7.0, 1.0){$5$}
+\ncline{-}{D}{I} \uput{0.05}[  0]( 6.0, 1.0){$4$}
+\ncline{-}{E}{F} \uput{0.10}[270]( 9.0, 0.0){$4$}
+\ncline{-}{E}{G} \uput{0.05}[315]( 9.0, 1.0){$3$}
+\ncline{-}{E}{H} \uput{0.10}[  0]( 8.0, 1.0){$3$}
+\ncline{-}{F}{G} \uput{0.10}[  0](10.0, 1.0){$7$}
+\ncline{-}{G}{H} \uput{0.10}[ 90]( 9.0, 2.0){$1$}
+\ncline{-}{H}{I} \uput{0.10}[ 90]( 7.0, 2.0){$3$}
+\ncline{-}{I}{J} \uput{0.10}[ 90]( 5.0, 2.0){$3$}
+\ncline{-}{J}{K} \uput{0.10}[ 90]( 3.0, 2.0){$2$}
+\ncline{-}{K}{L} \uput{0.10}[ 90]( 1.0, 2.0){$1$}
+
+\end{pspicture}
+\end{center}
+
+\end{enumerate}
+
+
+\end{enumerate}
+\end{enumerate}
+\end{document}

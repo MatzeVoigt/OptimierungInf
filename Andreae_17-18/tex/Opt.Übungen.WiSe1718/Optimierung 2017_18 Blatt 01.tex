@@ -1,0 +1,319 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[greek,ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{eurosym}
+%\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=25mm,top=30mm,bottom=20mm}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 01},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 1}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 16./17. Oktober 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Bei welchen der folgenden LP-Probleme handelt es sich nicht um ein Problem in Standardform?
+\begin{enumerate}[(i)]
+% Aufgabe P-1 (i)
+\item \begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 4x_2 &\ - &\ 5x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 4x_1 &\ + &\ 3x_2 &\ + &\ 5x_3 &\ \geq &\  8 \\
+&& 6x_1 &\ + &\  x_2 &\ - &\ 6x_3 &\ =    &\  5 \\
+&& x_1 &\ + &\ 8x_2 &\ + &\ 8x_3 &\ \leq &\ 21 \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0 
+\end{alignedat}
+\end{align*}
+
+% Aufgabe P-1 (ii)
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & 3x_1 &\ + &\ x_2 &\ + &\ 4x_3 &\ + &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 9x_1 &\ + &\ 2x_2 &\ + &\ 6x_3 &\ + &\ 5x_4 &\ \leq &\  7 \\
+&& 8x_1 &\ + &\ 9x_2 &\ + &\ 7x_3 &\ + &\ 3x_4 &\ \leq &\  2 \\
+&& & & & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+
+% Aufgabe P-1 (iii)
+\item \begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 8x_1 &\ - &\ 3x_2 &\ - &\ 4x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 3x_1 &\ + &\  x_2 &\ + &\  x_3 &\ \leq &\  5 \\
+&& 9x_1 &\ + &\ 5x_2 &    &       &\ \leq &\ -2 \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+
+% Aufgabe P-2
+\item Für diejenigen LP-Probleme aus Aufgabe 1, die nicht in Standardform vorliegen: Überführen Sie diese Probleme in Standardform.
+
+
+% Aufgabe P-3
+\item Handelt es sich bei den folgenden LP-Problemen um unlösbare Probleme? Ist eines der Probleme unbeschränkt?
+\begin{enumerate}[(i)]
+% Aufgabe P-3 (i)
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 3x_1 &\ - &\ x_2 &\ - &\ x_3 &\ - &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&&   x_1 &\ + &\  x_2 &\ + &\  x_3 &\ + &\  x_4 &\ \leq &\   2 \\
+&& -4x_1 &\ - &\ 4x_2 &\ - &\ 4x_3 &\ - &\ 4x_4 &\ \leq &\ -10 \\
+&& & & & & & & \llap{$x_1, x_2, x_3, x_4$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+
+% Aufgabe P-3 (ii)
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & -x_1 &\ - &\ x_2 &\ - &\ x_3 &\ + &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&&   x_1 &\ + &\  x_2 &\ + &\  x_3 &\ - &\ 2x_4 &\ \leq &\ -1 \\
+&& -2x_1 &\ - &\ 2x_2 &\ + &\ 5x_3 &\ - &\  x_4 &\ \leq &\ -3 \\
+&& & & & & & & \llap{$x_1, x_2, x_3, x_4$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+
+% Aufgabe P-4
+\item Lösen Sie das folgende LP-Problem mithilfe der grafischen Methode: 
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & x_1 &\ + &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& 2x_1 &\ - &\ 5x_2 &\ \leq &\  2\ \\
+&& -x_1 &\ + &\ 4x_2 &\ \leq &\  8\ \\
+&&  x_1 &\ + &\ 2x_2 &\ \leq &\ 10\ \\
+&& & & \llap{$x_1,x_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 30. Oktober 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item 
+\begin{enumerate}[a)]
+% Aufgabe H-1a
+\item Überführen Sie die folgenden Probleme in Standardform:
+\begin{enumerate}[(i)]
+% Aufgabe H-1a (i) 
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & -12x_1 &\ + &\ x_2 &\ - &\ 2x_3 &\ - &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& -3x_1 &\ - &\  x_2 &\ + &\  x_3 &    &       &\ \leq &\ 11 \\
+&&       &\ - &\ 5x_2 &\ + &\  x_3 &\ + &\  x_4 &\ \geq &\  5 \\
+&&  -x_1 &\ + &\ 7x_2 &\ - &\ 2x_3 &\ + &\  x_4 &\ =    &\ -6 \\
+&& & & & & & & \llap{$x_1, x_2, x_3,x_4$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+
+% Aufgabe H-1a (ii)
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & -12x_1 &\ - &\ x_2 &\ + &\ 2x_3 &\ - &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&&  3x_1 &\ - &\ x_2 &\ + &\ 4x_3 &    &       &\ \geq &\  2 \\
+&& -5x_1 &\ + &\ x_2 &\ - &\ 2x_3 &\ + &\  x_4 &\ \leq &\  3 \\
+&&       &    &\ x_2 &\ + &\ 2x_3 &\ - &\ 2x_4 &\ =    &\  5 \\
+&& 	     &    &      &    &       &    &\  x_4 &\ \leq &\  7 \\
+&& & & & & & & \llap{$x_2,x_3,x_4$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+% Aufgabe H-1b
+\item Lösen Sie das folgende Problem mit der grafischen Methode:
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & x_1 &\ + &\ 3x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&   x_1 &\ + &\  x_2 &\ \leq &\  7\ \\
+&& -2x_1 &\ + &\ 5x_2 &\ \leq &\  9\ \\
+&&  2x_1 &\ - &\ 2x_2 &\ \leq &\  5\ \\
+&& & & \llap{$x_1,x_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+
+% Aufgabe H-2a
+\item Die folgende Aufgabe stammt aus einem bekannten Lehrbuch mit dem Titel \enquote{Mathematik für Wirtschaftswissenschaftler}.
+
+\medskip
+
+Ein Kantinenleiter hat folgendes Problem: Ein Erwachsener soll täglich mindestens 90g Fett, 80g Protein und 300g Kohlenhydrate aufnehmen. Nehmen Sie an, dass diese Forderungen erfüllt werden sollen und die folgenden Informationen beachtet werden sollen. Welche Waren sollten gekauft werden und wie viel sollte von jedem Gut gekauft werden, wenn die billigste Möglichkeit realisiert werden soll? Die Anzahl Gramm an Proteinen, Fett und Kohlenhydraten in 100g einer Reihe von Nahrungsmitteln ist in folgender Tabelle gegeben:
+
+\begin{center}
+\begin{tabular}{l|c|c|c}
+ & Protein & Fett & Kohlenhydrate \\ \hline
+Hähnchen     & 27 &  6 &  0 \\
+Fisch        & 40 &  9 &  0 \\
+Backpflaumen &  4 &  3 & 37 \\
+Weißbrot     &  6 &  3 & 58 \\
+Käse         & 25 & 43 &  0 \\
+Schwarzbrot  & 10 & 13 & 63 \\
+Nüsse        &  9 & 50 &  4 \\
+Margarine    &  0 & 89 &  0
+\end{tabular}
+\end{center}
+
+Es soll eine Höchstgrenze von 70g Brot pro Tag und pro Person berücksichtigt werden und jede Person soll mindestens doppelt soviel Schwarz- wie Weißbrot verzehren.
+
+\pagebreak
+Die Preise in Öre pro 100g werden für die verschiedenen Lebensmittel wie folgt angenommen:
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|c|c}
+H & F & B & W & K & S & N & M \\ \hline
+100 & 100 & 110 & 59 & 119 & 90 & 98 & 65
+\end{tabular}
+\end{center}
+
+\medskip
+
+Formulieren Sie die Aufgabe, vor der der Kantinenleiter steht, als LP-Problem.
+
+
+% Aufgabe H-2b
+\item $\lbrack$Die Idee zu dieser Aufgabe stammt aus einem bekannten Lehrbuch mit dem Titel \textit{Algorithms}.$\rbrack$ 
+
+\medskip
+Ein \textit{Salat} ist eine beliebige Kombination der folgenden Zutaten: 
+\begin{enumerate}[(1)]
+\item Tomaten,
+\item Möhren,
+\item Kopfsalat,
+\item Spinat,
+\item Öl.
+\end{enumerate}
+
+Jeder Salat muss enthalten:
+\begin{enumerate}[(A)]
+\item mindestens 7 Gramm Kohlenhydrate,
+\item mindestens 4 und höchstens 7 Gramm Fett,
+\item mindestens 25 Gramm Proteine,
+\item höchstens 90 Milligramm Kochsalz.
+\end{enumerate}
+
+Außerdem soll gelten:
+\begin{enumerate}[(A)]
+\addtocounter{enumiv}{4}
+\item Der Gewichtsanteil an Kopfsalat darf nicht höher als $15\%$ sein.
+\item Der Gewichtsanteil an Tomaten darf nicht kleiner sein als der Gewichtsanteil an Möhren.
+\end{enumerate}
+
+Es liege die folgende Nährwerttabelle zugrunde (Angaben pro 100g):
+\[
+\begin{array}{c||c|c|c|c|c}
+ & \text{Energie (kcal)} & \text{Proteine (g)} & \text{Fett (g)} & \text{Kohlenhydrate (g)} & \text{Kochsalz (mg)} \\[1mm]  \hline\hline \rule[0mm]{0mm}{5mm}
+\text{Tomaten} & 29 & 0.58 & 0.39 & 5.46 & 7.00 \\[2mm]
+\text{Möhren} & 346 & 8.33 & 1.58 & 80.70 & 508.20 \\[2mm]
+\text{Kopfsalat} & 14 & 1.62 & 0.20 & 2.36 & 8.00 \\[2mm]
+\text{Spinat} & 400 & 12.78 & 1.39 & 74.69 & 7.00 \\[2mm]
+\text{Öl} & 999 & 0.00 & 100.0 & 0.00 & 0.00
+\end{array}
+\]
+
+Die Aufgabe ist es, einen Salat zusammenzustellen, der die genannten Bedingungen erfüllt und so wenig Kalorien wie möglich enthält. Formulieren Sie dieses Problem als LP-Problem.
+\end{enumerate}
+
+% Aufgabe H-3
+\item \begin{enumerate}[a)]
+	% Aufgabe H-3a
+	\item Überführen Sie Pauls Diätproblem und das im Skript aufgeführte Problem (1.2) in Standardform.
+	
+	% Aufgabe H-3b
+	\item Ein Eiscremehersteller produziert pro Tag 480 Einheiten von Eissorte $A$, 400 Einheiten von Sorte $B$ und 230 Einheiten von Sorte $C$. Jede dieser Eissorten kann in einem arbeitsaufwändigen Prozess verfeinert werden, wodurch Luxusvarianten entstehen. Pro Tag können in der regulären Arbeitszeit bis zu 420 Einheiten veredelt werden; darüber hinaus ist es möglich, mithilfe von Überstunden weitere 250 Einheiten zu veredeln -- allerdings zu erhöhten Kosten. Die Gewinne pro Einheit sind wie folgt:
+	\[
+	\begin{array}{c||c|c|c}
+	& \text{einfach} 
+	& \begin{array}{c} \text{in regulärer} \\ \text{Arbeitszeit veredelt} \end{array} 
+	& \begin{array}{c} \text{im Rahmen von} \\ \text{Überstunden veredelt} \end{array} \\[1mm] \hline\hline
+	\text{Sorte } A & 8$ \euro$ & 14$ \euro$ & 11$ \euro$ \\
+	\text{Sorte } B & 4$ \euro$ & 12$ \euro$ &  7$ \euro$ \\
+	\text{Sorte } C & 4$ \euro$ & 13$ \euro$ &  9$ \euro$ 
+	\end{array}
+	\]
+	
+	Beispielsweise führt der folgende Produktionsplan zu einem Gewinn von 9965 $\euro$:
+	\[
+	\begin{array}{c||c|c|c}
+	& \text{einfach} 
+	& \begin{array}{c} \text{in regulärer} \\ \text{Arbeitszeit veredelt} \end{array} 
+	& \begin{array}{c} \text{im Rahmen von} \\ \text{Überstunden veredelt} \end{array} \\[1mm] \hline\hline
+	\text{Sorte } A & 165 & 280 &  35 \\[1mm]
+	\text{Sorte } B & 295 &  70 &  35 \\[1mm]
+	\text{Sorte } C &  55 &  70 &  105
+	\end{array}
+	\]
+	
+	Das Ziel ist, einen Produktionsplan zu finden, der den Gewinn maximiert. Formulieren Sie dieses Problem als LP-Problem in Standardform, wobei Sie mit 6 Variablen $x_1,\ldots,x_6$ auskommen sollen.
+	
+\end{enumerate}
+
+
+\end{enumerate}
+\end{enumerate}
+\end{document}

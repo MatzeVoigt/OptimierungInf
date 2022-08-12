@@ -1,0 +1,58 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color,amsmath,amssymb}
+\DeclareMathOperator{\opt}{OPT}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{unit=0.5cm,linewidth=0.5pt,nodesep=0.5pt}
+\begin{pspicture}(-5.5,-3.7)(20.5,12.2)
+\footnotesize
+
+\psline(0, 0)(15, 0) \psline(0, 4)(15, 4) \psline(0, 7)(15, 7) \psline(0,10)(15,10)
+\psline(0, 1)(15, 1) \psline(0, 5)(15, 5) \psline(0, 8)(15, 8) \psline(0,11)(15,11)
+\psline(0, 2)(15, 2) \psline(0, 6)(15, 6) \psline(0, 9)(15, 9) \psline(0,12)(15,12)
+\psline(0, 3)(15, 3)
+
+\psline( 0,0)( 0,12) \psline( 4,0)( 4,12) \psline( 7,0)( 7,12) \psline(10,0)(10,12) \psline(13,0)(13,12)
+\psline( 1,0)( 1,12) \psline( 5,0)( 5,12) \psline( 8,0)( 8,12) \psline(11,0)(11,12) \psline(14,0)(14,12)
+\psline( 2,0)( 2,12) \psline( 6,0)( 6,12) \psline( 9,0)( 9,12) \psline(12,0)(12,12) \psline(15,0)(15,12)
+\psline( 3,0)( 3,12)
+
+\psline{->}(5.5,6.5)(8.5,7.5)
+\psline{->}(8.5,6.5)(8.5,7.5)
+
+\uput{0.25}[90]( 0.5,0){$0$} \uput{0.25}[90]( 3.5,0){$0$} \uput{0.25}[90]( 6.5,0){$0$} \uput{0.25}[90]( 9.5,0){$0$} \uput{0.25}[90](12.5,0){$0$}
+\uput{0.25}[90]( 1.5,0){$0$} \uput{0.25}[90]( 4.5,0){$0$} \uput{0.25}[90]( 7.5,0){$0$} \uput{0.25}[90](10.5,0){$0$} \uput{0.25}[90](13.5,0){$0$}
+\uput{0.25}[90]( 2.5,0){$0$} \uput{0.25}[90]( 5.5,0){$0$} \uput{0.25}[90]( 8.5,0){$0$} \uput{0.25}[90](11.5,0){$0$} \uput{0.25}[90](14.5,0){$0$}
+
+\uput{0.25}[90](0.5, 1){$0$} \uput{0.25}[90](0.5, 4){$0$} \uput{0.25}[90](0.5, 7){$0$} \uput{0.25}[90](0.5,10){$0$}
+\uput{0.25}[90](0.5, 2){$0$} \uput{0.25}[90](0.5, 5){$0$} \uput{0.25}[90](0.5, 8){$0$} \uput{0.25}[90](0.5,11){$0$}
+\uput{0.25}[90](0.5, 3){$0$} \uput{0.25}[90](0.5, 6){$0$} \uput{0.25}[90](0.5, 9){$0$}
+
+\uput{0.25}[270](0.5, 0){$0$} \uput{0.25}[180](0,0.5){$0$}
+\uput{0.25}[270](1.5, 0){$1$} \uput{0.25}[180](0,1.5){$1$}
+\uput{0.25}[270](2.5, 0){$2$} \uput{0.25}[180](0,2.5){$2$}
+
+\uput{0.25}[270]( 5.5,0){$w-w_i$}
+\uput{0.25}[270]( 8.5,0){$w$}
+\uput{0.25}[270](14.5,0){$W$}
+
+\uput{0.25}[180](0, 6.5){$i-1$}
+\uput{0.25}[180](0, 7.5){$i$}
+\uput{0.25}[180](0,11.5){$n$}
+
+\uput{1.5}[270](7.5,0){Die zwei-dimensionale Tabelle der $\opt$-Werte. Die linke Spalte und untere Zeile ist immer 0.}
+\uput{2.3}[270](7.5,0){Der Eintrag $\opt{(i,w)}$ wird durch die Einträge $\opt{(i-1,w)}$ und $\opt{(i-1,w-w_i)}$ }
+\uput{3.1}[270](7.5,0){berechnet und durch die Pfeile dargestellt.}
+
+\small
+\end{pspicture}
+\end{document}

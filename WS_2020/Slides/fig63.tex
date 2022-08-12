@@ -1,0 +1,31 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.3,-0.5)(5.3,4.5)
+
+\cnode*(0,2){3pt}{V0} \uput{0.25}[180](0,2){$s=v_0$}
+\cnode*(2,4){3pt}{V1} \uput{0.25}[ 90](2,4){$v_1$}
+\cnode*(2,0){3pt}{V2} \uput{0.25}[270](2,0){$v_2$}
+\cnode*(4,2){3pt}{V3} \uput{0.25}[  0](4,2){$v_3=t$}
+
+\ncline{->}{V0}{V1} \uput{0.10}[135](1.0, 3.0){$(5)$}
+\ncline{->}{V0}{V2} \uput{0.10}[225](1.0, 1.0){$(2)$}
+\ncline{->}{V1}{V2} \uput{0.10}[  0](2.0, 2.0){$(1)$}
+\ncline{->}{V1}{V3} \uput{0.10}[ 45](3.0, 3.0){$(2)$}
+\ncline{->}{V2}{V3} \uput{0.10}[315](3.0, 1.0){$(4)$}
+
+\uput{0}[0](0, 3.75){$N$}
+
+\end{pspicture}
+\end{document}

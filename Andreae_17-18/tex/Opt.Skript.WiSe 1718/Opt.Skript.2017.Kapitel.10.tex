@@ -1,0 +1,305 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 10:                                                                  %
+% "Max-Flow und Min-Cut als LP-Probleme"                                       %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Max-Flow und Min-Cut als LP-Probleme}\label{chapter:10}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Axiome der reellen Zahlen"                                              %
+%------------------------------------------------------------------------------%
+
+\section{Ein einführendes Beispiel}
+\label{section:10:1}
+
+Man kann viele Ähnlichkeiten zwischen dem Labelling-Algorithmus und dem Simplexalgorithmus beobachten, beispielsweise diese: Am Schluss, wenn keine Verbesserung mehr möglich ist, erhält man in beiden Fällen eine \enquote{Zugabe}; genauer gilt: 
+\begin{itemize}
+\item Beim Simplexalgorithmus\index{Simplexalgorithmus}\index{Algorithmus!Simplex-} erhält man zusätzlich eine \textit{optimale Lösung des dualen Problems};
+\item Beim Labelling-Algorithmus erhält man neben einem maximalen Fluss auch einen \textit{minimalen Schnitt}\index{minimaler Schnitt}\index{Schnitt!minimaler}.
+\end{itemize}
+
+Diese Ähnlichkeiten hängen natürlich damit zusammen, \textit{dass man das Problem, einen maximalen Fluss in einem Netzwerk zu finden, als ein LP-Problem formulieren kann}\index{Maximalflussproblem als LP-Problem}\index{LP-Problem!Maximalflussproblem als}. Dies hatten wir in Abschnitt \ref{section:6:2} bereits anhand eines Beispiels besprochen -- in Abschnitt \ref{section:10:2} wird der allgemeine Fall behandelt werden. Darüber hinaus wollen wir uns auch mit dem zum Maximalflussproblem dualen Problem befassen. Zum Einstieg betrachten wir ein weiteres Beispiel:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.1)(4.5,4.)
+
+\cnode*(0,2){3pt}{V0} \uput{0.25}[180](0,2){$s=v_0$}
+\cnode*(2,4){3pt}{V1} \uput{0.25}[ 90](2,4){$v_1$}
+\cnode*(2,0){3pt}{V2} \uput{0.25}[270](2,0){$v_2$}
+\cnode*(4,2){3pt}{V3} \uput{0.25}[  0](4,2){$v_3=t$}
+
+\ncline{->}{V0}{V1} \uput{0.10}[135](1.0, 3.0){$(5)$}
+\ncline{->}{V0}{V2} \uput{0.10}[225](1.0, 1.0){$(2)$}
+\ncline{->}{V1}{V2} \uput{0.10}[  0](2.0, 2.0){$(1)$}
+\ncline{->}{V1}{V3} \uput{0.10}[ 45](3.0, 3.0){$(2)$}
+\ncline{->}{V2}{V3} \uput{0.10}[315](3.0, 1.0){$(4)$}
+
+\uput{0}[0](0, 3.75){$N$}
+
+\end{pspicture}
+\end{center}
+
+Die geklammerten Zahlen an den Kanten bezeichnen die Kapazitäten. \textit{Für jede Kante führen wir eine Variable ein, die die Stärke des Flusses durch diese Kante angibt}: Führt die Kante $e$ von $v_i$ nach $v_j$, so bezeichnen wir die dazugehörige Variable mit $x_{ij}$.
+
+Im obigen Beispiel haben wir es also mit den folgenden Variablen zu tun:
+\[
+x_{01},\quad
+x_{02},\quad
+x_{12},\quad
+x_{13},\quad
+x_{23}.
+\]
+
+Das dazugehörige LP-Problem -- wir wollen es (P) nennen -- lautet:
+\begin{align*}
+\begin{alignedat}{7}
+& \text{maximiere } & x_{01} &\ + &\ x_{02} & & & & & & & &  \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & & & \\
+&& x_{01} &\   &\        &\ - &\ x_{12} &\ - &\ x_{13} &\   &\        &\    = &\ 0\ \\
+&&        &\   &\ x_{02} &\ + &\ x_{12} &\   &\        &\ - &\ x_{23} &\    = &\ 0\ \\
+&& x_{01} &\   &\        &\   &\        &\   &\        &\   &\        &\ \leq &\ 5\ \\
+&&        &\   &\ x_{02} &\   &\        &\   &\        &\   &\        &\ \leq &\ 2\ \\
+&&        &\   &\        &\   &\ x_{12} &\   &\        &\   &\        &\ \leq &\ 1\ \\
+&&        &\   &\        &\   &\        &\   &\ x_{13} &\   &\        &\ \leq &\ 2\ \\
+&&        &\   &\        &\   &\        &\   &\        &\   &\ x_{23} &\ \leq &\ 4\ \\
+&& & & & & & & & & \llap{$x_{01},\ldots,x_{23}$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+
+Wir stellen außerdem das \textit{duale Problem}\index{duales Problem!zum Maximalflussproblem} (D) hierzu auf.
+
+Die ersten beiden Nebenbedingungen von (P) beziehen sich auf die inneren Knoten $v_1$ und $v_2$; die dazugehörigen dualen Variablen wollen wir $y_1$ und $y_2$ nennen. Es handelt sich um freie Variablen, da die ersten beiden Nebenbedingungen von (P) Gleichungen sind.
+
+Die anschließenden fünf Ungleichungen von (P) beziehen sich auf die fünf Kanten von $N$. Die dazugehörigen dualen Variablen wollen wir $y_{01}$, $y_{02}$, $y_{12}$, $y_{13}$ und $y_{23}$ nennen.
+
+Das duale Problem (D) lautet wie folgt:
+\begin{align*}
+\begin{alignedat}{9}
+& \text{minimiere } & & & & &\ 5y_{01} &\ + &\ 2y_{02} &\ + &\ y_{12} &\ + &\ 2y_{13} &\ + &\ 4y_{23} & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & & & & & & & \\
+&&  y_1 &\   &\     &\ + &\ y_{01} &\   &\        &\   &\        &\   &\        &\   &\        &\ \geq &\ 1\ \\
+&&      &\   &\ y_2 &\   &\        &\ + &\ y_{02} &\   &\        &\   &\        &\   &\        &\ \geq &\ 1\ \\
+&& -y_1 &\ + &\ y_2 &\   &\        &\   &\        &\ + &\ y_{12} &\   &\        &\   &\        &\ \geq &\ 0\ \\
+&& -y_1 &\   &\     &\   &\        &\   &\        &\   &\        &\ + &\ y_{13} &\   &\        &\ \geq &\ 0\ \\
+&&      &\ - &\ y_2 &\   &\        &\   &\        &\   &\        &\   &\        &\ + &\ y_{23} &\ \geq &\ 0\ \\
+&&     & & & & & & & & & & & & \llap{$y_{01},\ldots,y_{23}$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+
+
+\section{Das primale Problem (Max-Flow)}
+\label{section:10:2}
+\index{Maximalflussproblem als LP-Problem}\index{LP-Problem!Maximalflussproblem als}
+
+
+Nachdem wir in \ref{section:10:1} anhand eines Beispiels gesehen haben, wie man zu (P) und (D) gelangt, \textit{wollen wir nun für ein beliebiges Flussnetzwerk $N = (G,c,s,t)$ mit $G = (V,E)$ das Entsprechende durchführen}. Zu diesem Zweck benennen wir zunächst die Knoten von $N$ wie folgt:
+\begin{itemize}
+\item $v_0$ sei die Quelle, d.h., $v_0=s$;
+\item $v_1,\ldots,v_n$ seien die inneren Knoten;
+\item $v_{n+1}$ sei die Senke, d.h., $v_{n+1}=t$.
+\end{itemize}
+
+Für jede Kante $(v_i,v_j)$ führen wir eine Variable $x_{ij}$ ein; die Kapazität der Kante $(v_i,v_j)$ sei mit $c_{ij}$ bezeichnet. Es folgt die \textit{Beschreibung von (P)}:
+
+\textit{Zielfunktion}: maximiere $\displaystyle\sum\limits_{(v_0,v_j) \in E}{x_{0j}}$
+
+\textit{Nebenbedingungen}:
+\begin{enumerate}[(I)]
+\item Für jeden inneren Knoten $v_i$ gibt es eine Nebenbedingung, die wie folgt lautet\footnote{Man beachte: In (\ref{eq:10:1}) ist der Index $i$ fest gewählt. Die Formel besagt, dass in $v_i$ ebenso viel hinein wie hinaus fließt.}:
+\begin{equation}
+\label{eq:10:1}
+\sum\limits_{(v_j,v_i) \in E}{x_{ji}} - \sum\limits_{(v_i,v_j) \in E}{x_{ij}} = 0.
+\end{equation}
+
+\item Für jede Kante $(v_i,v_j) \in E$ gibt es die Nebenbedingung $x_{ij} \leq c_{ij}$.
+\item Für jede Variable $x_{ij}$ gilt die Nichtnegativitätsbedingung $x_{ij} \geq 0$.
+\end{enumerate}
+
+Damit ist (P) aufgestellt. Es gibt in (P) also -- abgesehen von den Nichtnegativitätsbedingungen -- zwei Typen von Nebenbedingungen
+\begin{enumerate}[(I)]
+\item die \textit{Knotenbedingungen},
+\item die \textit{Kapazitätsbedingungen}.
+\end{enumerate}
+
+Durch die Aufstellung von (P) haben wir gesehen, \textit{dass man das Problem, einen maximalen Fluss in einem Netzwerk zu finden, als ein LP-Problem formulieren kann}.
+
+\begin{Definition}[Feststellung 1]
+Beim Maximalflussproblem handelt es sich um ein spezielles LP-Problem.
+\end{Definition}
+
+
+
+\section{Das duale Problem (Min-Cut)}
+
+Nun wenden wir das \textit{Dualisierungsrezept}\index{Dualisierungsrezept} auf das in \ref{section:10:2} aufgestellte Problem (P) an (vgl. Seite \pageref{page:7:3}): Zu jedem inneren Knoten $v_i$ gehört dann eine duale Variable $y_i$, und zu jeder Kante $(v_i,v_j) \in E$ haben wir eine duale Variable $y_{ij}$. Unter Benutzung dieser Bezeichnungen stellen wir im Folgenden das duale Problem (D) auf. Dabei wird sich herausstellen, dass es einen sehr engen Zusammenhang zwischen minimalen Schnitten $(S,T)$ von $N$ und optimalen Lösungen von (D) gibt. Unser Ergebnis lässt sich so aussprechen: \textit{Ein minimaler Schnitt $(S,T)$ von $N$ stellt eine optimale Lösung von (D) dar}.
+
+Es folgt die \textit{Beschreibung des zu (P) dualen Problems (D)}:
+
+\textit{Zielfunktion}: minimiere $\displaystyle\sum\limits_{(v_i,v_j) \in E}{c_{ij}y_{ij}}$
+
+\textit{Nebenbedingungen}: Zu jeder Kante $(v_i,v_j) \in E$ gehört genau eine Nebenbedingung. Im Einzelnen gilt Folgendes:
+\begin{enumerate}[(I)]
+\item Gilt $i=0$ und $j \leq n$, d.h., $(v_i,v_j)$ führt von der Quelle zu einem inneren Knoten, so lautet die dazugehörige Nebenbedingung
+\[
+y_j + y_{0j} \geq 1 \qquad \text{bzw.} \qquad y_{0j} \geq 1 - y_j.
+\]
+
+\item Gilt $1 \leq i \leq n$ und $1 \leq j \leq n$, d.h., $(v_i,v_j)$ verbindet zwei innere Knoten, so lautet die dazugehörige Nebenbedingung
+\[
+-y_i+y_j +y_{ij} \geq 0 \qquad \text{bzw.} \qquad y_{ij} \geq y_i - y_j.
+\]
+
+\item Gilt $i \geq 1$ und $j=n+1$, d.h., $(v_i,v_j)$ führt von einem inneren Knoten zur Senke, so lautet die dazugehörige Nebenbedingung
+\[
+-y_i + y_{in+1} \geq 0 \qquad \text{bzw.} \qquad y_{in+1} \geq y_i.
+\]
+
+\item Gilt $i=0$ und $j=n+1$, d.h., es liegt der Fall vor, dass $(v_i,v_j)$ direkt von der Quelle zur Senke führt, so lautet die dazugehörige Nebenbedingung
+\[
+y_{0n+1} \geq 1.
+\]
+
+\item Für die Variablen $y_{ij}$ gilt $y_{ij} \geq 0$, während die $y_i$ freie Variablen sind.
+\end{enumerate}
+
+Es ist möglich, die vier verschiedenen Typen (I)-(IV) von Nebenbedingungen in einheitlicher Form zu schreiben. Zu diesem Zweck definieren wir zusätzlich $y_0$ und $y_{n+1}$, indem wir festlegen:
+\[
+y_0 = 1 \qquad \text{und} \qquad y_{n+1} = 0.
+\]
+
+Dann gilt \textit{in jedem der Fälle (I)-(IV)}\footnote{Prüfen Sie dies nach!}: Die zu $(v_i,v_j) \in E$ gehörige Nebenbedingung lautet
+\[
+y_{ij} \geq y_i - y_j.
+\]
+
+\textit{Wir können das zum Problem des maximalen Flusses duale Problem\index{duales Problem!zum Maximalflussproblem} (D) also auch so schreiben}\label{page:10:1}:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:10:2}
+& \text{minimiere } & \sum\limits_{(v_i,v_j) \in E}{c_{ij}y_{ij}} & & &\\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&&  y_{ij} &\ \geq &\ y_i - y_j & \qquad \text{für alle } (v_i,v_j) \in E \\
+&&     y_0 &\    = &\ 1 & \\
+&& y_{n+1} &\    = &\ 0 & \\
+&&  y_{ij} &\ \geq &\ 0 & \qquad \text{für alle } (v_i,v_j) \in E
+\end{alignedat}
+\end{align}
+
+
+
+Um in einem Netzwerk einen maximalen Fluss zu bestimmen, könnte man auch mit dem \textit{Simplexalgorithmus}\index{Simplexalgorithmus}\index{Algorithmus!Simplex-} arbeiten. Das tut man jedoch in der Regel nicht, sondern man verwendet Algorithmen, die -- wie der Labelling-Algorithmus -- von der speziellen Struktur des Maximalflussproblems Gebrauch machen. (Der Simplexalgorithmus ist ja eher eine Art Allzweckwaffe, mit der man \textit{jedes} LP-Problem behandeln kann.)
+
+Der Simplexalgorithmus\index{Simplexalgorithmus}\index{Algorithmus!Simplex-} liefert immer auch eine optimale Lösung des dualen Problems. \textit{Lässt sich dies auch vom Labelling-Algorithmus sagen?}
+
+\textit{Die Antwort auf diese Frage lautet ja!}
+
+Weshalb ist das so? Nun, der Labelling-Algorithmus liefert -- wie wir wissen -- einen minimalen Schnitt, \textit{und aus einem minimalen Schnitt lässt sich (wie wir sehen werden) auf eine sehr einfache und direkte Weise eine optimale Lösung des dualen Problems gewinnen}.
+
+Wir können also festhalten:
+
+\begin{Definition}[Feststellung 2]
+Der Labelling-Algorithmus liefert neben einem maximalen Fluss einen minimalen Schnitt\index{minimaler Schnitt}\index{Schnitt!minimaler} -- und somit auch eine optimale Lösung des zum Maximalflussproblem dualen Problems.
+\end{Definition}
+
+Wie man aus einem minimalen Schnitt eine optimale Lösung des dualen Problems gewinnt, soll nun beschrieben werden. Zu diesem Zweck betrachten wir zunächst einen \textit{beliebigen} Schnitt $(S,T)$ von $N$, d.h., $(S,T)$ kann (aber muss nicht) minimal sein.
+
+Zu $(S,T)$ definieren wir eine dazugehörige zulässige Lösung von (D) wie folgt\footnote{Mit (D) ist hier und im Folgenden natürlich das zum Maximalflussproblem duale Problem gemeint; (D) sei wie in (\ref{eq:10:2}) dargestellt.}:
+
+Wir setzen
+\[
+y_i = \begin{cases}
+1, & \text{falls } v_i \in S; \\
+0, & \text{falls } v_i \in T
+\end{cases}
+\]
+sowie
+\[
+y_{ij} = \begin{cases}
+1, & \text{falls } (v_i,v_j) \in (S,T); \\
+0, & \text{sonst}.
+\end{cases}
+\]
+
+\pagebreak
+Diese Festlegung der dualen Variablen ist in der folgenden Skizze dargestellt:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.25)(7.0,4)
+
+\cnode*(0.0,2.0){3pt}{S1} \uput{0.15}[270](0.0,2.0){$s/1$}
+\cnode*(1.0,2.5){3pt}{S2} \uput{0.15}[270](1.0,2.5){$1$}
+\cnode*(1.5,0.5){3pt}{S3} \uput{0.15}[270](1.5,0.5){$1$}
+\cnode*(2.0,3.5){3pt}{S4} \uput{0.15}[270](2.0,3.5){$1$}
+\cnode*(2.5,2.5){3pt}{S5} \uput{0.15}[270](2.5,2.5){$1$}
+\cnode*(2.5,1.5){3pt}{S6} \uput{0.15}[270](2.5,1.5){$1$}
+
+\cnode*(4.0,1.5){3pt}{T1} \uput{0.15}[270](4.0,1.5){$0$}
+\cnode*(4.0,2.5){3pt}{T2} \uput{0.15}[270](4.0,2.5){$0$}
+\cnode*(4.5,1.5){3pt}{T3} \uput{0.15}[270](4.5,1.5){$0$}
+\cnode*(5.5,1.0){3pt}{T4} \uput{0.15}[270](5.5,1.0){$0$}
+\cnode*(5.5,2.5){3pt}{T5} \uput{0.15}[270](5.5,2.5){$0$}
+\cnode*(6.5,2.0){3pt}{T6} \uput{0.15}[270](6.5,2.0){$t/0$}
+
+\ncline{->}{S2}{S4} \uput{0.10}[135](1.50, 3.00){$0$}
+\ncline{->}{S5}{T2} \uput{0.10}[ 90](3.25, 2.50){$1$}
+\ncline{->}{T1}{S6} \uput{0.10}[ 90](3.25, 1.50){$0$}
+\ncline{->}{T3}{T4} \uput{0.10}[ 60](5.00, 1.25){$0$}
+
+\psline(3.00,0.0)(3.00,4.0)
+\psline(1.50,0.0)(3.00,0.0)
+\psline(1.50,4.0)(3.00,4.0)
+\psarc(1.50,2){2}{90}{270}
+
+\psline(3.50,0.0)(3.50,4.0)
+\psline(3.50,0.0)(5.00,0.0)
+\psline(3.50,4.0)(5.00,4.0)
+\psarc(5.00,2){2}{270}{90}
+
+\uput{0}[0](-0.5, 3.5){$S$}
+\uput{0}[180]( 7.0, 3.5){$T$}
+
+\end{pspicture}
+\end{center}
+
+
+Man überprüft leicht, dass dies eine zulässige Lösung von (D) ist, für die darüber hinaus gilt:
+\begin{equation}
+\label{eq:10:3}
+\begin{array}{c}
+\textit{Der Zielfunktionswert $\displaystyle\sum\limits_{(v_i,v_j) \in E}{c_{ij}y_{ij}}$ für diese} \\
+\textit{zulässige Lösung von (D) ist gleich $c(S,T)$.}
+\end{array}
+\end{equation}
+
+
+Die Feststellung (\ref{eq:10:3}) gilt für jeden beliebigen Schnitt $(S,T)$ von $N$. Ist $(S,T)$ nun ein \textit{minimaler} Schnitt, so gilt nach dem Max-Flow Min-Cut Theorem $c(S,T) = w(f^*)$, wobei $f^*$ einen Maximalfluss von $N$ bezeichnet. Für einen minimalen Schnitt können wir (\ref{eq:10:3}) also auch so aussprechen:
+\begin{equation}
+\label{eq:10:4}
+\begin{array}{c}
+\textit{Der Zielfunktionswert für eine zulässige Lösung von (D), die (wie beschrieben)} \\
+\textit{von einem minimalen Schnitt $(S,T)$ herrührt, ist gleich $w(f^*)$.}
+\end{array}
+\end{equation}
+
+Es folgt, dass die zulässige Lösung von (D), von der in (\ref{eq:10:4}) die Rede ist, eine optimale Lösung von (D) sein muss. (Denn: $f^*$ ist eine zulässige Lösung des zu (D) gehörigen primalen Problems (P) und außerdem besitzt $f^*$ den Zielfunktionswert $w(f^*)$ -- ebenso wie die in (\ref{eq:10:4}) beschriebene zulässige Lösung von (D).)
+
+\textit{Damit ist gezeigt, dass zu einem minimalen Schnitt\index{minimaler Schnitt}\index{Schnitt!minimaler} $(S,T)$ immer eine optimale Lösung von (D) dazugehört, die man (wie beschrieben \textit{und in der Zeichnung dargestellt}) auf eine ganz einfache Art aus $(S,T)$ erhalten kann}.
+
+

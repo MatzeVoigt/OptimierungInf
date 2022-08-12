@@ -1,0 +1,38 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,4.5)
+\footnotesize
+
+\cnode*(0,0){3pt}{V1} \uput{0.2}[180](0,0){$1$}
+\cnode*(4,0){3pt}{V2} \uput{0.2}[  0](4,0){$2$}
+\cnode*(4,2){3pt}{V3} \uput{0.2}[  0](4,2){$3$}
+\cnode*(2,4){3pt}{V4} \uput{0.2}[ 90](2,4){$4$}
+\cnode*(0,2){3pt}{V5} \uput{0.2}[180](0,2){$5$}
+\cnode*(2,1){3pt}{V6} \uput{0.2}[270](2,1){$6$}
+
+\ncline{-}{V1}{V2}
+\ncline{-}{V1}{V5}
+\ncline{-}{V1}{V6}
+\ncline{-}{V2}{V3}
+\ncline{-}{V2}{V6}
+\ncline{-}{V3}{V4}
+\ncline{-}{V3}{V5}
+\ncline{-}{V3}{V6}
+\ncline{-}{V4}{V5}
+\ncline{-}{V5}{V6}
+
+\small
+\end{pspicture}
+\end{document}

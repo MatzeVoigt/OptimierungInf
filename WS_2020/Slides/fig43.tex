@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(15,2.5)
+\footnotesize
+
+\psframe[framearc=0.2](0,0)(1,2) \uput{0.2}[270](0.5,0){$X$}
+\psframe[framearc=0.2](2,0)(3,2) \uput{0.2}[270](2.5,0){$Y$}
+\cnode*(0.5,1.5){3pt}{A1} \pscircle(0.5, 1.5){0.2}
+
+\psline[linestyle=dashed]{-}(3.5,-0.5)(3.5,2.5)
+
+\psframe[framearc=0.2](4,0)(5,2) \uput{0.2}[270](4.5,0){$X$}
+\psframe[framearc=0.2](6,0)(7,2) \uput{0.2}[270](6.5,0){$Y$}
+\cnode*(4.5,1.5){3pt}{B1} \pscircle(4.5, 1.5){0.2}
+\cnode*(6.5,1.5){3pt}{B2}
+\ncline{-}{B1}{B2}
+
+\psline[linestyle=dashed]{-}(7.5,-0.5)(7.5,2.5)
+
+\psframe[framearc=0.2]( 8,0)( 9,2) \uput{0.2}[270]( 8.5,0){$X$}
+\psframe[framearc=0.2](10,0)(11,2) \uput{0.2}[270](10.5,0){$Y$}
+\cnode*( 8.5,1.5){3pt}{C1} \pscircle(8.5, 1.5){0.2}
+\cnode*(10.5,1.5){3pt}{C2}
+\cnode*( 8.5,0.5){3pt}{C3}
+\ncline{-}{C1}{C2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{C2}{C3}
+
+\psline[linestyle=dashed]{-}(11.5,-0.5)(11.5,2.5)
+
+\psframe[framearc=0.2](12,0)(13,2) \uput{0.2}[270](12.5,0){$X$}
+\psframe[framearc=0.2](14,0)(15,2) \uput{0.2}[270](14.5,0){$Y$}
+\cnode*(12.5,1.5){3pt}{D1} \pscircle(12.5, 1.5){0.2}
+\cnode*(14.5,1.5){3pt}{D2}
+\cnode*(12.5,0.5){3pt}{D3}
+\cnode*(14.5,0.5){3pt}{D4}
+\ncline{-}{D1}{D2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{D2}{D3}
+\ncline{-}{D3}{D4}
+
+\small
+\end{pspicture}
+\end{document}

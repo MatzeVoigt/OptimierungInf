@@ -1,0 +1,39 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$4(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$3(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$3(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$0(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$3(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$1(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$3(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$0(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$3(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$4(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$4(4)$}
+
+\small
+\end{pspicture}
+\end{document}

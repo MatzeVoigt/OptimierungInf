@@ -1,0 +1,97 @@
+\documentclass[a4paper]{article}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb,amsfonts,enumerate,mymacros,url,hyperref}
+\usepackage[utf8]{inputenc}
+\begin{document}
+ \title{\vspace*{-3cm}\"Ubersicht zum Simplexverfahren}
+ \author{}
+ \date{}
+ \maketitle
+ Das Ergebnis einer Iteration ist immer ein neues Tableau. Am Ende jeder Iteration wird dieses Ergebnis -- das neue Tableau also -- übersichtlich hingeschrieben -- wobei wir uns an einige sehr \emph{nützliche Konventionen} halten wollen:
+ \begin{enumerate}[1)]
+  \item Die \emph{$z$-Zeile} wird unten notiert und durch einen Strich abgetrennt.
+  \item Im neuen Tableau wird die \emph{Zeile mit der Eingangsvariablen} oben hingeschrieben.
+  \item Die Variable, die neu auf der rechten Seite auftaucht (\emph{die Ausgangsvariable}) schließt immer rechts an.
+  \item Außerdem ist es für die Übersichtlichkeit wichtig, daß im Tableau \emph{gleiche Variablen immer genau untereinander} geschrieben werden.
+  \item \emph{Wahl der Eingangsvariablen}: Kommen mehrere Variablen als Eingangsvariable infrage, so ist es üblich, eine Variable auszuwählen, deren Koeffizient in der $z$-Zeile möglichst groß ist.
+ \end{enumerate}
+  Wir betrachten das folgende Beispiel, das als \emph{Muster für Übungsaufgaben} dient.\\
+  \underline{\textbf{Beispiel:}}
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  2x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\ 5,\ \\
+&& 4x_1 &\  + &\  x_2  &\ + &\ 2x_3 &\ \leq &\ 11,\ \\
+&& 3x_1 &\ + &\  4x_2 &\ + &\ 2x_3 &\ \leq &\ 8,\ \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+\underline{\textbf{Lösung:}} \\ [0.2cm]
+\textbf{Starttableau:}
+\begin{align*}
+\begin{alignedat}{5}
+\label{eq:2:c1}
+x_4 &\ = &\ 5 &\ - &\  2x_1 &\ - &\ 3x_2 &\ - &\  x_3,\ \\
+x_5 &\ = &\ 11 &\ - &\  4x_1 &\ -  &\ x_2   &\ - &\ 2x_3,\ \\
+x_6 &\ = &\ 8 &\ - &\ 3x_1 &\ - &\  4x_2 &\ - &\ 2x_3,\ \\ \cline{1-9}
+  z &\ = &\   &\   &\ 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3.\
+\end{alignedat}
+\end{align*}
+\textbf{1. Iteration:}\\
+Eingangsvariable: $x_1$, Ausgangsvariable: $x_4$ \\
+Es folgt
+\begin{align*}
+ x_1 &= \tfrac{5}{2} - \tfrac{3}{2}x_2 -\tfrac{1}{2}x_3 - \tfrac{1}{2}x_4, \\
+ x_5 &= 11 - 4 \left( \tfrac{5}{2} - \tfrac{3}{2}x_2 - \tfrac{1}{2}x_3 - \tfrac{1}{2}x_4 \right) - x_2 - 2x_3 \\
+    &= 1 + 5x_2 + 2x_4, \\
+ x_6 &= 8 - 3 \left( \tfrac{5}{2} - \tfrac{3}{2}x_2 - \tfrac{1}{2}x_3 - \tfrac{1}{2}x_4 \right) -4x_2 - 2x_3 \\
+    &= \tfrac{1}{2} + \tfrac{1}{2}x_2 - \tfrac{1}{2}x_3 + \tfrac{3}{2}x_4, \\
+z   &= 5 \left( \tfrac{5}{2} - \tfrac{3}{2}x_2 - \tfrac{1}{2}x_3 - \tfrac{1}{2}x_4 \right) + 4x_2 + 3x_3 \\
+    &= \tfrac{25}{2} - \tfrac{7}{2}x_2 + \tfrac{1}{2}x_3 - \tfrac{5}{2}x_4.
+\end{align*}
+Ergebnis der 1. Iteration:
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\  \tfrac{5}{2} &\ - &\ \tfrac{3}{2}x_2 &\ - &\ \tfrac{1}{2}x_3 &\ - &\ \tfrac{1}{2}x_4,\ \\
+x_5 &\ = &\            1 &\ + &\           5x_2 &    &                 &\ + &\           2x_4,\ \\
+x_6 &\ = &\  \tfrac{1}{2} &\ + &\ \tfrac{1}{2}x_2 &\ - &\ \tfrac{1}{2}x_3 &\ + &\ \tfrac{3}{2}x_4,\ \\ \cline{1-9}
+z   &\ = &\ \tfrac{25}{2} &\ - &\ \tfrac{7}{2}x_2 &\ + &\ \tfrac{1}{2}x_3 &\ - &\ \tfrac{5}{2}x_4.\
+\end{alignedat}
+\end{align*}
+\textbf{2. Iteration:} \\
+Eingangsvariable: $x_3$, Ausgangsvariable: $x_6$\\
+Es folgt
+\begin{align*}
+ x_3 &= 1 + x_2 + 3x_4 - 2x_6, \\
+ x_1 &= \tfrac{5}{2} - \tfrac{3}{2} - \tfrac{1}{2} \left(1 + x_2 + 3x_4 - 2x_6\right) - \tfrac{1}{2}x_4 \\
+    &= 2 - 2x_2 - 2x_4 + x_6, \\
+  z &= \tfrac{25}{2} -\tfrac{7}{2}x_2 + \tfrac{1}{2} \left(1 + x_2 + 3x_4 - 2x_6 \right) - \tfrac{5}{2}x_4 \\
+    &= 13 - 3x_2 - x_4 - x_6.
+\end{align*}
+Ergebnis der 2. Iteration:
+\begin{align*}
+\begin{alignedat}{5}
+x_3 &\ = &\  1 &\ + &\  x_2 &\ + &\ 3x_4 &\ - &\ 2x_6,\ \\
+x_1 &\ = &\  2 &\ - &\ 2x_2 &\ - &\ 2x_4 &\ + &\  x_6,\ \\
+x_5 &\ = &\  1 &\ + &\ 5x_2 &\ + &\ 2x_4 &,    &        \\ \cline{1-9}
+z   &\ = &\ 13 &\ - &\ 3x_2 &\ - &\  x_4 &\ - &\  x_6.\
+\end{alignedat}
+\end{align*}
+Dieses Tableau liefert die optimale Lösung $x_1=2$, $x_2 = 0$, $x_3 = 1$ mit $z=13$.\\
+\textbf{Hinweis:} \emph{Das Ergebnis einer Iteration ist natürlich auch immer eine neue zulässige Basislösung.} Dies braucht am Ende einer Iteration aber nicht unbedingt hingeschrieben zu werden, da sie implizit im neuen Tableau enthalten und sehr leicht ablesbar ist. \\
+Der Vollständigkeit halber geben wir diese zulässigen Basislösungen einmal explizit an:\\
+{\textbf{Startlösung:}}
+\begin{equation*}
+ x_1 = 0, \quad x_2 = 0, \quad x_3 = 0, \quad x_4 = 5, \quad x_5 = 11, \quad x_6 = 8, \quad z = 0 
+\end{equation*}
+{\textbf{zulässige Basislösung nach der 1. Iteration:}}
+\begin{equation*}
+ x_1 = \tfrac{5}{2}, \quad x_2 = 0, \quad x_3 = 0, \quad x_4 = 0, \quad x_5 = 1, \quad x_6 = \tfrac{1}{2}, \quad z = 12.5 
+\end{equation*}
+{\textbf{zulässige Basislösung nach der 2. Iteration:}}
+\begin{equation*}
+ x_1 = 2, \quad x_2 = 0, \quad x_3 = 1, \quad x_4 = 0, \quad x_5 = 1, \quad x_6 = 0, \quad z = 13 
+\end{equation*}
+\end{document}
+

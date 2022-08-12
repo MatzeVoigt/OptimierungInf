@@ -1,0 +1,28 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-2.5,-1.2)(3.0,1.5)
+	\footnotesize
+	
+	\psellipse[linewidth=1pt](0,0)(2,1) 
+	\uput{0.05}[135](-1,1){$X$} 
+	
+	\cnode*(1.5,0){3pt}{A} 
+	\cnode*(2.5,0.5){3pt}{B}
+	\ncline{A}{B}
+	\uput{0}[315](2.25,0.25){$e$} 
+	
+	\small
+	\end{pspicture}
+\end{document}

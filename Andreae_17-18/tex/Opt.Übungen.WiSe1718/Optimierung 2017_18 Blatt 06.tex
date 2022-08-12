@@ -1,0 +1,213 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{mathtools}
+\usepackage{eurosym}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 06},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 6}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 27./28. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Konstruieren Sie das duale Problem:
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Gegeben sei das folgende LP-Problem, das wir $(P)$ nennen wollen:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & x_1 &\ + &\ x_2 &\ + &\ x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  2x_1 &\ - &\ 4x_2 &\ + &\  x_3 &\ =    &\ -1\ \\
+&&   x_1 &\ + &\ 5x_2 &\ + &\  x_3 &\ =    &\ 16\ \\
+&&   x_1 &\   &\      &\ + &\  x_3 &\ \geq &\  5\ \\
+&&  2x_1 &\ + &\ 4x_2 &\ - &\  x_3 &\ \leq &\  8\ \\
+&&   x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ \leq &\  0\ \\
+&& -4x_1 &\ + &\ 3x_2 &\   &\      &\ \leq &\  4\ \\
+&&  4x_1 &\ - &\ 3x_2 &\ + &\ 5x_3 &\ \leq &\ 10\ \\
+&&   x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ \leq &\  9\ \\
+&&&&&& \llap{$x_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Konstruieren Sie das zu $(P)$ duale Problem $(D)$, indem Sie das \textit{Dualisierungsrezept} verwenden.
+
+% Aufgabe P-1b
+\item Nun sei mit (P) das folgende Problem bezeichnet:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & x_1 &\ - &\ x_2 & & & & & & \\ 
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ + &\  x_4 &\ \leq &\ 0\ \\
+&& 3x_1 &\ + &\  x_2 &\ + &\ 4x_3 &\ - &\ 2x_4 &\ \geq &\ 3\ \\
+&& -x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ + &\  x_4 &\ =    &\ 1\ \\
+&&&&&&&& \llap{$x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Bilden Sie das zu (P) duale Problem, indem Sie das \textit{Dualisierungsrezept} verwenden (diesmal allerdings \enquote{von rechts nach links}).
+\end{enumerate}
+
+% Aufgabe P-2
+\item In Matrixnotation lautet ein LP-Problem in Standardform bekanntlich so:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\ \leq &\ b\ \\
+&& x &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Das Duale hierzu lautet in Matrixnotation:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{minimiere } & b^Ty & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& A^Ty &\ \geq &\ c\ \\
+&& y &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\pagebreak
+Geben Sie das Duale der folgenden beiden Probleme in Matrixnotation an:
+\begin{enumerate}[a)]
+% Aufgabe P-2a
+\item \begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\ \leq &\ b
+\end{alignedat}
+\end{align*}
+
+% Aufgabe P-2b
+\item \begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\ = &\ b \\
+&& x &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 4./5. Dezember 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item \begin{enumerate}[a)]
+% Aufgabe H-1a
+\item Gegeben sei das folgende LP-Problem, das wir (P) nennen wollen:
+\begin{align*}
+\begin{alignedat}{8}
+& \text{maximiere } &  x_1 &\ + &\ 2x_2 &\ - &\ 3x_3 & & &\ + &\ x_5 &\ - & x_6 & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & & & \\
+&& 3x_1 &\ - &\  x_2 &\ + &\ 9x_3 &\ + &\  x_4 &\ - &\  x_5 &\ + &\ 2x_6 &\ \leq &\ -11\ \\
+&& -x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ + &\  x_4 &\ - &\ 2x_5 &    &       &\ \geq &\   4\ \\
+&& 7x_1 &\ + &\  x_2 &\ + &\ 4x_3 &\ - &\ 2x_4 &\ + &\  x_5 &    &       &\ =    &\   2\ \\
+&& &&&&&&&&&& \llap{$x_2,x_5,x_6$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Bilden Sie das zu (P) duale Problem (D), indem Sie das \textit{Dualisierungsrezept} verwenden.
+
+% Aufgabe H-1b
+\item Nun sei mit (P) das folgende Problem bezeichnet:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & 5x_1 &\ - &\ 2x_2 &\ + &\ x_3 &\ + &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  7x_1 &\ - &\  x_2 &\ + &\  x_3 &\ + &\ 2x_4 &\ \leq &\   5\ \\
+&&   x_1 &\ + &\  x_2 &\ + &\  x_3 &    &       &\ =    &\   9\ \\
+&&   x_1 &\   &\      &\ + &\  x_3 &    &       &\ \geq &\   6\ \\
+&&   x_1 &\ - &\ 3x_2 &\ + &\  x_3 &    &       &\ \leq &\   4\ \\
+&&  2x_1 &\ + &\  x_2 &\ - &\  x_3 &\ + &\  x_4 &\ =    &\   8\ \\
+&& -4x_1 &\ + &\ 3x_2 &\   &\      &    &       &\ \geq &\   1\ \\
+&&   x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ + &\ 7x_4 &\ \geq &\ -10\ \\
+&& &&&&&& \llap{$x_1,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Bilden Sie wieder das zu (P) duale Problem (D), indem Sie das \textit{Dualisierungsrezept} verwenden (diesmal \enquote{von rechts nach links}).
+
+\end{enumerate}
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+
+% Aufgabe H-2a
+\item Wir greifen das \textit{Kantinenleiterproblem} aus Aufgabe 2a) von Blatt 1 auf. Lösen Sie dieses Problem mithilfe des folgenden Tools:
+
+\begin{center}
+\url{http://www.zweigmedia.com/RealWorld/simplex.html}.
+\end{center}
+
+% Aufgabe H-2b
+\item Lösen Sie mit dem angegebenen Tool auch das \textit{Salatproblem} aus Aufgabe 2b) von Blatt 1.
+
+% Aufgabe H-2c
+\item Lösen Sie mit dem angegebenen Tool auch das Problem des Eiscremeherstellers von Blatt 1.
+
+% Aufgabe H-2d
+\item Lösen Sie mit dem angegebenen Tool ebenfalls Pauls Diätproblem (Skript Seite 6).
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

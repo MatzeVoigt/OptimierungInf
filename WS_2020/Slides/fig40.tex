@@ -1,0 +1,43 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.0,-0.5)(2.5,4.5)
+\label{page:11:8}
+\footnotesize
+
+\uput{1}[180](0,2){$G$}
+\cnode*(0,4){3pt}{A1} \uput{0.2}[180](0,4){$x_1$}
+\cnode*(0,3){3pt}{A2} \uput{0.2}[180](0,3){$x_2$}
+\cnode*(0,2){3pt}{A3} \uput{0.2}[180](0,2){$x_3$}
+\cnode*(0,1){3pt}{A4} \uput{0.2}[180](0,1){$x_4$}
+\cnode*(0,0){3pt}{A5} \uput{0.2}[180](0,0){$x_5$}
+\cnode*(2,4){3pt}{B1} \uput{0.2}[  0](2,4){$y_1$}
+\cnode*(2,3){3pt}{B2} \uput{0.2}[  0](2,3){$y_2$}
+\cnode*(2,2){3pt}{B3} \uput{0.2}[  0](2,2){$y_3$}
+\cnode*(2,1){3pt}{B4} \uput{0.2}[  0](2,1){$y_4$}
+\cnode*(2,0){3pt}{B5} \uput{0.2}[  0](2,0){$y_5$}
+\ncline{-}{A1}{B3}
+\ncline{-}{A2}{B1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A2}{B2}
+\ncline{-}{A3}{B2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A3}{B3}
+\ncline{-}{A4}{B2}
+\ncline{-}{A4}{B3}
+\ncline{-}{A5}{B3}
+\ncline{-}{A5}{B4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A5}{B5}
+
+\small
+\end{pspicture}
+\end{document}

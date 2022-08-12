@@ -1,0 +1,74 @@
+\def\nr{3. Aufgabenblatt}
+\def\kopf{\\\hfill\normalsize\mdseries}
+\documentclass[11pt,a4paper,fleqn]{scrartcl}
+\usepackage{eurosym}
+\input{header_OptInf}
+
+\subsection*{Präsenzaufgaben am 23./24.11.2020}
+
+\Aufgabe[ (zulässige Starttableaus)]{P1}
+Bestimmen Sie für das LP-Problem ein zulässiges Starttableau bzw. stellen Sie fest, dass das Problem unlösbar ist. Erreichen Sie dies, indem Sie die 1. Phase des Zweiphasen-Simplexverfahrens durchführen.
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & 6x_1 &\ + &\ 11x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& 4x_1 &\ - &\ x_2 &\ \leq &\  2, \\
+&& -x_1 &\ + &\ x_2 &\ \leq &\  8, \\
+&& -x_1 &\ - &\ x_2 &\ \leq &\ -3, \\
+&&&& \llap{$x_1,x_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\subsection*{Hausaufgaben bis zum 02.12.2020 (12:00 Uhr)}
+\emph{Bitte reichen Sie Ihre Hausaufgaben in festen Zweier- oder Dreiergruppen bei Moodle ein. Bitte laden Sie ausschließlich \textbf{PDF-Dokumente} hoch, andernfalls können Ihre Hausaufgaben nicht korrigiert werden.}
+
+\Aufgabe[ (Lösbarkeit und zulässige Starttableaus, 6 Punkte)]{H1}
+Bestimmen Sie für folgende LP-Probleme ein zulässiges Starttableau bzw. stellen Sie fest, dass diese unlösbar sind. Erreichen Sie dies, indem Sie die 1. Phase des Zweiphasen-Simplexverfahrens durchführen.
+\begin{enumerate}[a)]
+	% Aufgabe H-1a
+	\item \begin{align*}
+	\begin{alignedat}{4}
+	& \text{maximiere } & -10x_1 &\ + &\ 5x_2 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & \\
+	&& -2x_1 &\ - &\ 4x_2 &\ \leq &\ -10, \\
+	&&  2x_1 &\ - &\ 2x_2 &\ \leq &\   5, \\
+	&&&& \llap{$x_1,x_2$} &\ \geq &\ 0.
+	\end{alignedat}
+	\end{align*}
+	
+	% Aufgabe H-2a
+	\item \begin{align*}
+	\begin{alignedat}{4}
+	& \text{maximiere } & -2x_1 &\ + &\ x_2 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & \\
+	&&  x_1 &\ - &\ x_2 &\ \leq &\ -4, \\
+	&& 2x_1 &\ + &\ x_2 &\ \leq &\  1, \\
+	&& -x_1 &\ - &\ 2x_2 &\ \leq &\ -2, \\
+	&&&& \llap{$x_1,x_2$} &\ \geq &\ 0.
+	\end{alignedat}
+	\end{align*}
+\end{enumerate}
+
+\Aufgabe[ (Beispiele von Klee und Minty, 4 Punkte)]{H2}
+\begin{enumerate}[a)]
+	% Aufgabe H-2a
+	\item Schreiben Sie das Problem von Klee und Minty für $n=2$ auf. 
+	
+	% Aufgabe H-2b
+%	\item Stellen Sie die Menge der zulässigen Lösungen dieses Problems durch eine %Skizze dar, wobei Sie den Maßstab wie folgt wählen:
+%	\begin{align*}
+%	\text{1 Einheit auf der $x_1$-Achse} &\mathrel{\widehat{=}} \text{1cm} \\%
+%	\text{10 Einheiten auf der $x_2$-Achse} &\mathrel{\widehat{=}} \text{1cm}.
+%	\end{align*}
+	
+	% Aufgabe H-2c
+	\item Lösen Sie das Problem mit dem Simplexverfahren auf zwei verschiedene Arten und stellen Sie für beide Arten fest, wie viele Iterationen benötigt werden.
+	\begin{enumerate}[i)]
+		% Aufgabe H-2c (i)
+		\item Benutzen Sie die Regel vom größten Koeffizienten.
+		% Aufgabe H-2c (ii)
+		\item Wählen Sie in der 1. Iteration $x_2$ als Eingangsvariable.
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,201 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{pst-all}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 8},
+  pdfauthor={},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2019/20}
+
+\textbf{Blatt 8}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 11./12. Dezember 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Schauen Sie sich Figur 9.8 (Skript, Seite 127) an und denken Sie sich die Markierungen weg.
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Erläutern Sie Schritt für Schritt den Markierungsprozess: In welcher Reihenfolge wurden die Markierungen (labels) hinzugefügt und was geben die Markierungen an?
+
+\textbf{Hinweis}: Beachten Sie immer ($5^\prime$) (Skript, Seite 122)! Für die Zeilen (6)--(9) bzw. (10)--(13) gilt die übliche Regel: Gibt es mehrere Kandidaten für den nächsten zu markierenden Knoten, so ist die alphabetische Reihenfolge entscheidend.
+
+% Aufgabe P-1b
+\item Wie kommt in Figur 9.8 der flussvergrößernde Pfad $(s,a,b,c,f,t)$ zustande?
+% Aufgabe P-1c
+\item Wie kommt der in Figur 9.9 angegebene verbesserte Fluss zustande?
+\end{enumerate}
+
+% Aufgabe P-2
+\item Wenden Sie den Algorithmus von Edmonds und Karp auf das folgende Netzwerk an. Gehen Sie dabei Schritt für Schritt vor, ähnlich wie im Beispiel auf den Seiten 123-128. (Es gelte wie üblich die Regel aus Aufgabe 1a).)
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+
+\cnode*(2,4){3pt}{A} \uput{0.25}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.25}[270](2,2){$b$}
+\cnode*(2,0){3pt}{C} \uput{0.25}[270](2,0){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.25}[270](4,0){$d$}
+\cnode*(4,2){3pt}{E} \uput{0.25}[270](4,2){$e$}
+\cnode*(0,2){3pt}{S} \uput{0.25}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.25}[  0](6,2){$t$}
+
+\ncline{->}{S}{A} \uput{0.05}[135](1.0, 3.0){$(3)$}
+\ncline{->}{S}{B} \uput{0.10}[270](1.0, 2.0){$(5)$}
+\ncline{->}{S}{C} \uput{0.05}[225](1.0, 1.0){$(6)$}
+\ncline{->}{A}{B} \uput{0.05}[  0](2.0, 3.0){$(4)$}
+\ncline{->}{A}{T} \uput{0.15}[ 90](4.0, 3.0){$(5)$}
+\ncline{->}{B}{D} \uput{0.05}[215](3.0, 1.0){$(6)$}
+\ncline{->}{B}{E} \uput{0.10}[270](3.0, 2.0){$(2)$}
+\ncline{->}{C}{D} \uput{0.10}[270](3.0, 0.0){$(4)$}
+\ncline{->}{D}{T} \uput{0.05}[315](5.0, 1.0){$(5)$}
+\ncline{->}{E}{T} \uput{0.10}[270](5.0, 2.0){$(3)$}
+
+\end{pspicture}
+\end{center}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 18./19. Dezember 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item Wie Präsenzaufgabe 2 für das folgende Netzwerk:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+
+\cnode*(2,4){3pt}{A} \uput{0.25}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.25}[270](2,2){$b$}
+\cnode*(2,0){3pt}{C} \uput{0.25}[270](2,0){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.25}[270](4,0){$d$}
+
+\cnode*(4,3){3pt}{F} \uput{0.25}[ 90](4,3){$e$}
+\cnode*(0,2){3pt}{S} \uput{0.25}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.25}[  0](6,2){$t$}
+
+\ncline{->}{S}{A} \uput{0.05}[135](1.0, 3.0){$(5)$}
+\ncline{->}{S}{B} \uput{0.10}[270](1.0, 2.0){$(5)$}
+\ncline{->}{S}{C} \uput{0.05}[225](1.0, 1.0){$(6)$}
+
+\ncline{->}{A}{F} \uput{0.15}[ 90](3.0, 3.5){$(3)$}
+\ncline{->}{B}{D} \uput{0.05}[215](3.0, 1.0){$(6)$}
+
+\ncline{->}{B}{F} \uput{0.10}[ 90](3.0, 2.5){$(2)$}
+\ncline{->}{C}{D} \uput{0.10}[270](3.0, 0.0){$(4)$}
+\ncline{->}{D}{T} \uput{0.05}[315](5.0, 1.0){$(5)$}
+
+\ncline{->}{F}{T} \uput{0.15}[ 90](5.0, 2.5){$(4)$}
+
+\end{pspicture}
+\end{center}
+
+\textbf{Hinweis}: Beachten Sie immer ($5^\prime$) (Skript, Seite 122)! Für die Zeilen (6)--(9) bzw. (10)--(13) gilt die übliche Regel: Gibt es mehrere Kandidaten für den nächsten zu markierenden Knoten, so ist die alphabetische Reihenfolge entscheidend.
+
+\pagebreak
+
+% Aufgabe H-2
+\item Bearbeiten Sie die folgende Klausuraufgabe aus dem WS 2015/16:
+
+\begin{enumerate}[a)]
+% Aufgabe H-2a
+\item Wir betrachten das folgende Netzwerk $N$, in dem die Kapazitäten in Klammern angegeben sind; die Zahlen ohne Klammern bezeichnen den aktuellen Fluss, den wir $f_1$ nennen. Wie üblich seien $s$ und $t$ die Quelle bzw. die Senke des Netzwerks.
+
+\begin{center}
+\psset{xunit=1.25cm,yunit=1.25cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.75)(8.5,4.75)
+\small
+
+\cnode*(0,2){3pt}{S} \uput{0.25}[180](0,2){$s$}
+\cnode*(8,2){3pt}{T} \uput{0.25}[  0](8,2){$t$}
+\cnode*(2,4){3pt}{A} \uput{0.25}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.25}[270](2,2){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.25}[270](4,2){$d$}
+\cnode*(6,4){3pt}{D} \uput{0.25}[ 90](6,4){$e$}
+\cnode*(6,3){3pt}{E} \uput{0.25}[270](6,3){$f$}
+\cnode*(2,0){3pt}{F} \uput{0.25}[270](2,0){$c$}
+
+\footnotesize
+\ncline{->}{S}{A} \uput{0.05}[135](1,3.0){$26(38)$}
+\ncline{->}{S}{B} \uput{0.05}[270](1,2.0){$4(4)$}
+\ncline{->}{S}{F} \uput{0.05}[225](1,1.0){$2(2)$}
+\ncline{->}{A}{B} \uput{0.05}[  0](2,3.0){$8(8)$}
+\ncline{->}{A}{C} \uput{0.25}[ 90](3,3.0){$9(10)$}
+\ncline{->}{A}{D} \uput{0.05}[ 90](4,4.0){$9(12)$}
+\ncline{->}{B}{C} \uput{0.05}[270](3,2.0){$14(26)$}
+\ncline{->}{C}{E} \uput{0.05}[315](5,2.5){$8(8)$}
+\ncline{->}{C}{F} \uput{0.05}[315](3,1.0){$11(24)$}
+\ncline{->}{C}{T} \uput{0.05}[270](6,2.0){$4(4)$}
+\ncline{->}{D}{B} \uput{0.10}[ 90](4,3.0){$2(3)$}
+\ncline{->}{D}{E} \uput{0.05}[180](6,3.5){$0(4)$}
+\ncline{->}{D}{T} \uput{0.05}[ 45](7,3.0){$7(7)$}
+\ncline{->}{E}{T} \uput{0.05}[225](7,2.5){$8(9)$}
+\ncline{->}{F}{T} \uput{0.05}[315](5,1.0){$13(27)$}
+
+\normalsize
+\end{pspicture}
+\end{center}
+
+Es soll der \textit{Algorithmus von Edmonds und Karp} angewendet werden, wobei nur die nächste Flussvergrößerung betrachtet wird. Um $f_1$ zu verbessern, werden auf die übliche Art Knotenmarkierungen vorgenommen, beispielsweise erhält $s$ die Markierung $(-, \infty)$ und $a$ erhält die Markierung $(s, +, 12)$.
+\begin{enumerate}[(i)]
+\item In welcher Reihenfolge werden die Knoten markiert? (\textbf{Regel}: Ist diese Reihenfolge durch den Algorithmus von Edmonds und Karp nicht festgelegt, so ist die alphabetische Reihenfolge entscheidend.) Geben Sie für jeden Knoten die zugehörige Markierung an! Gibt es Knoten, die unmarkiert bleiben?
+\item Geben Sie den zunehmenden Pfad $P$ an, der zur Flussvergrößerung führt und geben Sie auch den verbesserten Fluss $f_2$ an. (Es genügt, $f_2(e)$ für diejenigen Kanten anzugeben, für die $f_2(e) \neq f_1(e)$ gilt.)
+\end{enumerate}
+
+% Aufgabe H-2b
+\item Führt man den Ford-Fulkerson-Algorithmus zur Bestimmung eines Maximalflusses in einem Netzwerk aus, so erhält man im letzten Schritt einen minimalen Schnitt $(S, T)$. Woran erkennt man, welche Knoten zu $S$ und welche zu $T$ gehören? (Geben Sie eine kurze und präzise Antwort.)
+
+\end{enumerate}
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

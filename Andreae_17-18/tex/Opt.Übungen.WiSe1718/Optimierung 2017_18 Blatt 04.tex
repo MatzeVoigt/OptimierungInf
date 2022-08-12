@@ -1,0 +1,254 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{pst-all}
+\usepackage{eurosym}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 04},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 4}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 13./14. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Im Beispiel \enquote{Energieflussproblem} in Abschnitt 6.2 wird erläutert, wie das Problem eines \textit{Flusses maximaler Stärke} als LP-Problem formuliert werden kann. Beantworten Sie hierzu die folgenden Fragen:
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Wie viele Variablen gibt es in diesem LP-Problem?
+% Aufgabe P-1b
+\item Wie lautet die Nebenbedingung, die zum Knoten $V_6$ gehört?
+% Aufgabe P-1c
+\item Wie viele Nebenbedingungen gibt es insgesamt? (Die Nichtnegativitätsbedingungen sollen nicht mitgezählt werden.)
+% Aufgabe P-1d
+\item Wie lautet die Zielfunktion?
+\end{enumerate}
+
+% Aufgabe P-2
+\item Anstelle des Netzwerks aus 1. betrachten wir nun das folgende Flussnetzwerk ($v_0$ bezeichnet die \textit{Quelle}, $v_3$ die \textit{Senke} und die Zahlen an den Kanten geben die \textit{Kapazitäten} an):
+
+\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=1pt}
+\begin{pspicture}(-0.5,-0.5)(2.5,2.5)
+
+\cnode*(0,1){3pt}{V0} \uput{0.25}[180](0,1){$v_0$}
+\cnode*(1,2){3pt}{V1} \uput{0.25}[90](1,2){$v_1$}
+\cnode*(1,0){3pt}{V2} \uput{0.25}[270](1,0){$v_2$}
+\cnode*(2,1){3pt}{V3} \uput{0.25}[0](2,1){$v_3$}
+
+\ncline{->}{V0}{V1} \uput{0.10}[135](0.5, 1.5){$5$}
+\ncline{->}{V0}{V2} \uput{0.10}[225](0.5, 0.5){$2$}
+\ncline{->}{V1}{V2} \uput{0.10}[  0](1.0, 1.0){$1$}
+\ncline{->}{V1}{V3} \uput{0.10}[ 45](1.5, 1.5){$2$}
+\ncline{->}{V2}{V3} \uput{0.10}[315](1.5, 0.5){$4$}
+
+\end{pspicture}
+\end{center}
+
+
+Formulieren Sie für dieses Netzwerk die Aufgabe, einen Fluss maximaler Stärke zu finden, als ein lineares Programmierungsproblem.
+
+% Aufgabe P-3
+\item Für das Netzwerk aus 2. seien zusätzlich zu den Kapazitäten auch noch Kosten für jede Kante gegeben:
+
+\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=1pt}
+\begin{pspicture}(-0.5,-0.5)(2.5,2.5)
+
+\cnode*(0,1){3pt}{V0} \uput{0.25}[180](0,1){$v_0$}
+\cnode*(1,2){3pt}{V1} \uput{0.25}[90](1,2){$v_1$}
+\cnode*(1,0){3pt}{V2} \uput{0.25}[270](1,0){$v_2$}
+\cnode*(2,1){3pt}{V3} \uput{0.25}[0](2,1){$v_3$}
+
+\ncline{->}{V0}{V1} \uput{0.10}[135](0.5, 1.5){$5 \mid 2$}
+\ncline{->}{V0}{V2} \uput{0.10}[225](0.5, 0.5){$2 \mid 5$}
+\ncline{->}{V1}{V2} \uput{0.10}[  0](1.0, 1.0){$1 \mid 3$}
+\ncline{->}{V1}{V3} \uput{0.10}[ 45](1.5, 1.5){$2 \mid 7$}
+\ncline{->}{V2}{V3} \uput{0.10}[315](1.5, 0.5){$4 \mid 1$}
+
+\end{pspicture}
+\end{center}
+
+Gefragt ist nach einem \textit{kostenminimalen Fluss} der Stärke 4. Formulieren Sie diese Aufgabenstellung als LP-Problem.
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 20./21. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item \begin{enumerate}[a)]
+	% Aufgabe H-1a
+	\item Im nachfolgenden Flussnetzwerk bezeichne $v_0$ die Quelle, $v_7$ die Senke und die Zahlen an den Kanten bezeichnen die Kapazitäten.
+	
+	\begin{center}
+		\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=1pt}
+		\begin{pspicture}(-0.5,-0.5)(6.5,3.5)
+		\footnotesize
+		
+		\cnode*(0,1.5){3pt}{V0} \uput{0.2}[180](0,1.5){$v_0$}
+		\cnode*(2,0.0){3pt}{V1} \uput{0.2}[270](2,0.0){$v_1$}
+		\cnode*(2,1.0){3pt}{V2} \uput{0.2}[ 90](2,1.0){$v_2$}
+		\cnode*(2,2.0){3pt}{V3} \uput{0.2}[270](2,2.0){$v_3$}
+		\cnode*(2,3.0){3pt}{V4} \uput{0.2}[ 90](2,3.0){$v_4$}
+		\cnode*(4,1.5){3pt}{V5} \uput{0.2}[  0](4,1.5){$v_5$}
+		\cnode*(6,0.0){3pt}{V6} \uput{0.2}[270](6,0.0){$v_6$}
+		\cnode*(6,3.0){3pt}{V7} \uput{0.2}[ 90](6,3.0){$v_7$}
+		
+		
+		\ncline{->}{V0}{V1} \uput{0.1}[270](1.0, 0.75){$6$}
+		\ncline{->}{V0}{V2} \uput{0.1}[270](1.0, 1.25){$1$}
+		\ncline{->}{V0}{V3} \uput{0.1}[ 90](1.0, 1.75){$3$}
+		\ncline{->}{V0}{V4} \uput{0.1}[ 90](1.0, 2.25){$5$}
+		\ncline{->}{V1}{V6} \uput{0.1}[270](4.0, 0.00){$4$}
+		\ncline{->}{V2}{V1} \uput{0.1}[  0](2.0, 0.50){$4$}
+		\ncline{->}{V2}{V5} \uput{0.1}[270](3.0, 1.25){$5$}
+		\ncline{->}{V2}{V6} \uput{0.1}[270](4.0, 0.50){$2$}
+		\ncline{->}{V3}{V4} \uput{0.1}[  0](2.0, 2.50){$5$}
+		\ncline{->}{V3}{V5} \uput{0.1}[ 90](3.0, 1.75){$4$}
+		\ncline{->}{V4}{V7} \uput{0.1}[ 90](4.0, 3.00){$8$}
+		\ncline{->}{V5}{V7} \uput{0.1}[270](5.0, 0.75){$8$}
+		\ncline{->}{V6}{V5} \uput{0.1}[ 90](5.0, 2.25){$2$}
+		\ncline{->}{V6}{V7} \uput{0.1}[  0](6.0, 1.50){$3$}
+		
+		\normalsize
+		\end{pspicture}
+	\end{center}
+	
+	Formulieren Sie für dieses Netzwerk die Aufgabe, einen Fluss maximaler Stärke zu finden, als ein lineares Programmierungsproblem.
+	
+	% Aufgabe H-1b
+	\item Für das folgende Netzwerk mit Quelle $v_0$ und Senke $v_6$ seien neben den Kapazitäten auch noch Kosten gegeben; die linke Zahl bezeichne die Kapazität, die rechte die Kosten einer Kante:
+	
+	\begin{center}
+		\psset{xunit=1.50cm,yunit=1.25cm,linewidth=0.8pt,nodesep=1pt}
+		\begin{pspicture}(-0.5,-1)(3.25,3)
+		\footnotesize
+		
+		\cnode*(0,1){3pt}{V0} \uput{0.25}[180](0,1){$v_0$}
+		\cnode*(1,2){3pt}{V1} \uput{0.15}[315](1,2){$v_1$}
+		\cnode*(1,1){3pt}{V2} \uput{0.25}[225](1,1){$v_2$}
+		\cnode*(1,0){3pt}{V3} \uput{0.15}[ 45](1,0){$v_3$}
+		\cnode*(2,1){3pt}{V4} \uput{0.25}[270](2,1){$v_4$}
+		\cnode*(3,0){3pt}{V5} \uput{0.25}[270](3,0){$v_5$}
+		\cnode*(3,2){3pt}{V6} \uput{0.25}[ 90](3,2){$v_6$}
+		
+		\ncline{->}{V0}{V1} \uput{0.05}[135](0.5, 1.5){$3 \mid 3$}
+		\ncline{->}{V0}{V2} \uput{0.05}[ 90](0.5, 1.0){$4 \mid 4$}
+		\ncline{->}{V0}{V3} \uput{0.05}[225](0.5, 0.5){$4 \mid 3$}
+		\nccurve[angleA=225,angleB=225]{->}{V0}{V5} \uput{0.05}[270](2, -0.5){$4 \mid 3$}
+		\nccurve[angleA=135,angleB=135]{->}{V0}{V6} \uput{0.05}[ 90](2,  2.5){$5 \mid 2$}
+		\ncline{->}{V1}{V2} \uput{0.05}[  0](1.0, 1.5){$6 \mid 6$}
+		\ncline{->}{V1}{V6} \uput{0.05}[ 90](2.0, 2.0){$1 \mid 3$}
+		\ncline{->}{V2}{V3} \uput{0.05}[  0](1.0, 0.5){$1 \mid 6$}
+		\ncline{->}{V2}{V4} \uput{0.05}[ 90](1.5, 1.0){$4 \mid 5$}
+		\ncline{->}{V3}{V5} \uput{0.05}[270](2.0, 0.0){$2 \mid 5$}
+		\ncline{->}{V4}{V5} \uput{0.05}[225](2.5, 0.5){$1 \mid 3$}
+		\ncline{->}{V4}{V6} \uput{0.05}[135](2.5, 1.5){$7 \mid 4$}
+		\ncline{->}{V5}{V6} \uput{0.05}[  0](3.0, 1.0){$4 \mid 2$}
+		
+		\normalsize
+		\end{pspicture}
+	\end{center}
+	
+	Gefragt ist nach einem kostenminimalen Fluss der Stärke 6. Formulieren Sie diese Aufgabenstellung als LP-Problem.
+\end{enumerate}
+
+
+% Aufgabe H-2
+\item 
+\begin{enumerate}[a)]
+	
+	% Aufgabe H-2a
+	\item Ein Personalchef habe für 3 offene Stellen 5 Bewerber, wobei aufgrund eines Eignungstests bekannt sei, welche Einarbeitungszeit $t_{ij}$ der Bewerber $i$ für die Stelle $j$ benötigt ($i=1,\ldots,5$ und $j=1,2,3$). Es sollen alle drei Stellen besetzt werden -- zwei Bewerber gehen leer aus. Die Einstellung soll so erfolgen, dass die Summe der Einarbeitungszeiten minimal ist. Formulieren Sie diese Aufgabe als ein binäres LP-Problem und veranschaulichen Sie die Fragestellung mithilfe eines bipartiten Graphen.
+	
+	% Aufgabe H-2b
+	\item Es sei $G=(V,E)$ ein ungerichteter Graph mit Knotenmenge $V = \bigl\{ v_1,\ldots,v_n \bigr\}$ und Kantenmenge $E = \bigl\{ e_1,\ldots, e_m \bigr\}$. Eine Teilmenge $U$ der Knotenmenge heißt \textit{unabhängig}, falls keine zwei Knoten von $U$ durch eine Kante verbunden sind. Ein bekanntes, in der Informatik häufig betrachtetes Optimierungsproblem:
+	\begin{equation}
+	\tag{$\star$}
+	\text{Finde in $G$ eine unabhängige Menge $U$, die möglichst viele Knoten enthält.}
+	\end{equation}
+	
+	Formulieren Sie das Problem ($\star$) für den unten abgebildeten Graphen $G$ als ein binäres LP-Problem.
+	
+	\begin{center}
+		\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=1pt}
+		\begin{pspicture}(-0.5,-0.5)(4,2.5)
+		
+		\cnode*(0,1){3pt}{V1} \uput{0.25}[270](0,1){$v_1$}
+		\cnode*(2,2){3pt}{V2} \uput{0.25}[ 90](2,2){$v_2$}
+		\cnode*(2,0){3pt}{V3} \uput{0.25}[270](2,0){$v_3$}
+		\cnode*(4,2){3pt}{V4} \uput{0.25}[ 90](4,2){$v_4$}
+		\cnode*(4,0){3pt}{V5} \uput{0.25}[270](4,0){$v_5$}
+		\cnode*(6,1){3pt}{V6} \uput{0.25}[  0](6,1){$v_6$}
+		
+		\ncline{-}{V1}{V2}
+		\ncline{-}{V1}{V3}
+		\ncline{-}{V2}{V3}
+		\ncline{-}{V2}{V4}
+		\ncline{-}{V3}{V5}
+		\ncline{-}{V4}{V5}
+		\ncline{-}{V4}{V6}
+		\ncline{-}{V5}{V6}
+		
+		\end{pspicture}
+	\end{center}
+	
+	\textbf{Hinweis}: Für jeden Knoten $v_i$ ist eine Variable $x_i$ zu betrachten und für jede Kante ist eine Nebenbedingung zu formulieren.
+	
+	
+	% Aufgabe H-2c
+	\item Formulieren Sie das binäre Problem aus b) in ein Ganzzahliges Lineares Programmierungsproblem (ILP-Problem) um. Wie lautet die LP-Relaxation dieses Problems?
+\end{enumerate}
+\end{enumerate}
+
+\end{enumerate}
+\end{document}

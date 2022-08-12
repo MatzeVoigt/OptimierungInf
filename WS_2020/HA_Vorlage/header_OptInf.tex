@@ -1,0 +1,48 @@
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmic,algorithm}
+\usepackage{graphics,graphicx}
+\usepackage{pgfplots,tikz}
+\usepackage{enumerate}
+\usepackage[ngerman]{babel}
+\usepackage{eurosym}
+\usepackage{hyperref}
+\usepackage{caption, subcaption}
+
+\floatname{algorithm}{Algorithmus}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\textheight23cm
+\topmargin-15mm
+\oddsidemargin-5mm    %  -10mm
+\textwidth17cm    %   18.8cm
+\footskip0pt
+\thispagestyle{empty}
+\parindent0mm
+\parskip0ex
+\parskip0ex
+
+\makeatletter
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+\makeatother
+
+\newcommand{\Aufgabe}[2][]{\par\bigskip{\sf\bfseries Aufgabe #2#1:}}
+
+\begin{document}
+{\sf Universität Hamburg \hfill Studi 1, Matrikelnummer 1 \\ Wintersemester 2020/21 \hfill Studi 2, Matrikelnummer 2 \\ \phantom{x} \hfill Studi 3, Matrikelnummer 3}
+\begin{center}
+\ifthenelse{\equal{\nr}{no}}{\Large\sf\bfseries \kopf}{\Large\sf\bfseries Optimierung f\"ur Studierende der Informatik -- \nr.~\kopf}
+\end{center}
+
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\ri}{\mathrm{i}}
+\renewcommand{\H}{\mathsf{H}}
+\newcommand{\T}{\mathsf{T}}

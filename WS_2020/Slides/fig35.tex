@@ -1,0 +1,47 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.5)(8.5,2.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{X1}
+\cnode*(2,2){3pt}{X2}
+\cnode*(4,2){3pt}{X3}
+\cnode*(6,2){3pt}{X4}
+\cnode*(8,2){3pt}{X5}
+\cnode*(1,0){3pt}{Y1}
+\cnode*(3,0){3pt}{Y2}
+\cnode*(5,0){3pt}{Y3}
+\cnode*(7,0){3pt}{Y4}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y4}
+\ncline{-}{X2}{Y1}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X3}{Y3}
+\ncline{-}{X4}{Y3}
+\ncline{-}{X4}{Y4}
+\ncline{-}{X5}{Y2}
+\ncline{-}{X5}{Y3}
+\ncline{-}{X5}{Y4}
+
+\uput{0}[180](-0.5, 2){$X$}
+\uput{0}[180](-0.5, 0){$Y$}
+
+\small
+\end{pspicture}
+\end{document}

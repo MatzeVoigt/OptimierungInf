@@ -1,0 +1,178 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+\documentclass[a4paper,11pt]{scrreprt}
+
+% benötigte Pakete
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fancybox}
+\usepackage{fullpage}
+\usepackage[dvips]{graphicx}
+\usepackage{makeidx}
+\usepackage{paralist}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{tabularx}
+\usepackage{ulem}
+%\usepackage[light, outline]{draftcopy}
+
+% Meta Information festlegen
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung Skript (Wintersemester 2020/21)},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={blueish}}
+
+% eigene Kommandos
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\renewcommand{\O}{\mathcal{O}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\grad}{\operatorname{grad}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Lin}{\operatorname{Lin}}
+\newcommand{\Kern}{\operatorname{Kern}}
+\newcommand{\Bild}{\operatorname{Bild}}
+\newcommand{\rg}{\operatorname{rg}}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\arccot}{\operatorname{arccot}}
+\newcommand{\opt}{\operatorname{OPT}}
+\newcommand{\copt}{\operatorname{Compute-OPT}}
+\newcommand{\icopt}{\operatorname{Iterative-Compute-OPT}}
+\newcommand{\ssum}{\operatorname{Subset-Sum}}
+\newcommand{\opfind}{\operatorname{Find}}
+\newcommand{\opunion}{\operatorname{Union}}
+\newcommand{\opmakeunionfind}{\operatorname{MakeUnionFind}}
+\newcommand{\component}{\operatorname{Component}}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\conv}{\operatorname{conv}}
+\newcommand{\cone}{\operatorname{cone}}
+
+%\newcommand{\OptionalSection}[1]{\section[($\star$) #1]{($\star$) #1}}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}
+
+% environment: Satz 15.48cm
+\newenvironment{Satz}[1][]
+{\smallskip\begin{Sbox}\begin{minipage}{15.49cm}\textbf{#1}.\par\smallskip}
+{\end{minipage}\end{Sbox}\doublebox{\TheSbox}\smallskip}
+
+% environment: Definition
+\newenvironment{Definition}[1][]
+{\smallskip\begin{Sbox}\begin{minipage}{15.6cm}\textbf{#1}.\par\smallskip}
+{\end{minipage}\end{Sbox}\framebox{\TheSbox}\smallskip}
+
+% environment: Box
+\newenvironment{SKBox}
+{\smallskip\begin{Sbox}\begin{minipage}{15.60cm}\smallskip}
+{\end{minipage}\end{Sbox}\framebox{\TheSbox}\smallskip}
+
+% Einstellungen
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0.85ex}
+
+
+% Titel
+\title{\LARGE{Optimierung für Studierende der Informatik}}
+\author{THOMAS ANDREAE}
+\date{\small{Wintersemester 2020/21} \\ \vspace{13.5cm} \small{(Stand: 31. Januar 2018)}}
+
+\makeindex
+
+\begin{document}
+
+
+
+%\maketitle
+
+\thispagestyle{empty}
+
+\vspace*{2cm}
+
+\begin{center}
+\LARGE
+
+
+
+\textbf{Optimierung für Studierende der Informatik}
+
+\Large
+
+\vspace{2cm}
+
+Dieses Dokument wurde entworfen und erstellt von \\
+
+THOMAS ANDREAE
+
+\normalsize
+
+\vspace{1.5cm}
+Vorlesung gehalten von Matthias Voigt \\
+Universit\"at Hamburg \\
+Wintersemester 2020/21
+
+\vspace{14cm}
+
+(Stand: 31. Januar 2018)
+
+\end{center}
+
+\newpage
+
+\small
+\setcounter{page}{1}
+
+\input{Opt.Skript.2017.Vorwort}
+\tableofcontents
+\input{Opt.Skript.2017.Kapitel.01}
+\input{Opt.Skript.2017.Kapitel.02}
+\input{Opt.Skript.2017.Kapitel.03}
+\input{Opt.Skript.2017.Kapitel.04}
+\input{Opt.Skript.2017.Kapitel.05}
+\input{Opt.Skript.2017.Kapitel.06}
+\input{Opt.Skript.2017.Kapitel.07}
+\input{Opt.Skript.2017.Kapitel.08}
+\input{Opt.Skript.2017.Kapitel.09}
+\input{Opt.Skript.2017.Kapitel.10}
+\input{Opt.Skript.2017.Kapitel.11}
+\input{Opt.Skript.2017.Kapitel.12}
+\input{Opt.Skript.2017.Kapitel.13}
+\input{Opt.Skript.2017.Kapitel.14}
+\input{Opt.Skript.2017.Literatur}
+
+\printindex
+
+\end{document}

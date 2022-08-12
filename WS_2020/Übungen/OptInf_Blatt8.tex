@@ -1,0 +1,47 @@
+\def\nr{8. Aufgabenblatt}
+\def\kopf{\\\hfill\normalsize\mdseries}
+\documentclass[11pt,a4paper,fleqn]{scrartcl}
+\usepackage{eurosym}
+\input{header_OptInf}
+
+\subsection*{Präsenzaufgaben am 11./12.01.2021}
+
+\Aufgabe[ (Eine Iteration im Algorithmus von Edmonds und Karp)]{P1}
+% Aufgabe P-1
+Schauen Sie sich die folgdende Abbildung an und denken Sie sich die Markierungen weg:
+\begin{center}
+ \includegraphics{fig8_1.pdf}
+\end{center}
+
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Erläutern Sie Schritt für Schritt den Markierungsprozess im Algorithmus von Edmonds und Karp: In welcher Reihenfolge wurden die Markierungen hinzugefügt und was geben die Markierungen an?
+
+\textbf{Hinweis}: Beachten Sie zudem die übliche Regel: Gibt es mehrere Kandidaten für den nächsten zu markierenden Knoten, so ist die alphabetische Reihenfolge entscheidend.
+
+% Aufgabe P-1b
+\item Wie kommt der in der Abbildung dargestellte flussvergrößernde Pfad $(s,a,b,c,f,t)$ zustande?
+% Aufgabe P-1c
+\item Wie kommt der verbesserte Fluss zustande?
+\end{enumerate}
+
+\Aufgabe[ (Algorithmus von Edmonds und Karp)]{P1}
+Wenden Sie den Algorithmus von Edmonds und Karp auf das folgende Netzwerk an. Gehen Sie dabei Schritt für Schritt vor, ähnlich wie im Beispiel in Vorlesung 7. Es gelte wie üblich die Regel aus Aufgabe P1.
+
+\begin{center}
+ \includegraphics{fig8_2.pdf}
+\end{center}
+
+
+
+\subsection*{Hausaufgaben bis zum 20.01.2021 (12:00 Uhr)}
+\emph{Bitte reichen Sie Ihre Hausaufgaben in festen Zweier- oder Dreiergruppen bei Moodle ein. Bitte laden Sie ausschließlich \textbf{PDF-Dokumente} hoch, andernfalls können Ihre Hausaufgaben nicht korrigiert werden.}
+
+\Aufgabe[ (Algorithmus von Edmonds und Karp, 10 Punkte)]{H1}
+Wenden Sie den Algorithmus von Edmonds und Karp auf das folgende Netzwerk an. Gehen Sie dabei Schritt für Schritt vor, ähnlich wie im Beispiel in Vorlesung 7. Es gelte wie üblich die Regel aus Aufgabe P1. Geben Sie auch in jeder Iteration die Knotenmarkierungen und die Warteschlange der zu untersuchenden Knoten an. Geben Sie am Ende auch einen Maximalfluss, sowie einen minimalen Schnitt an.
+
+\begin{center}
+ \includegraphics{fig8_3.pdf}
+\end{center}
+
+\end{document}

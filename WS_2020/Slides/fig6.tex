@@ -1,0 +1,41 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\begin{document}
+\psset{linewidth=0.5pt,unit=0.5cm,RotZ=90}
+\begin{pspicture}(-1,-1)(5,7.5)
+\tiny
+
+\psline{->}(-1,0)(6,0) \uput{0.1}[0](6,0){$x_1$}
+\psline{->}(0,-1)(0,6) \uput{0.1}[90](0,6){$x_3$}
+\psline(-0.75,-0.75)(0,0)    \uput{0.1}[45](4,4){$x_2$}
+\psline[linestyle=dashed](0,0)(3.464,3.464)
+\psline{->}(3.464,3.464)(4,4)
+
+\psline(2,0)(2,5)
+\psline(0,5)(2,5)
+\psline(2,0)(3.464,3.464)
+\psline(3.464,3.464)(3.464,7.464)
+\psline(0,5)(3.464,7.464)
+\psline(2,5)(3.464,7.464)
+
+\uput{0.1}[135](0,0){$(0,0,0)$}
+\uput{0.25}[30](2,0){$(2,0,0)$}
+\uput{0.1}[180](0,5){$(0,0,5)$}
+\uput{0.1}[225](2,5){$(2,0,5)$}
+\uput{0.1}[350](3.464,3.464){$(0,4,0)$}
+\uput{0.1}[0](3.464,7.464){$(0,4,5)$}
+
+\pspolygon[fillstyle=solid, fillcolor=light-gray](2,0)(3.464,3.464)(3.464,7.464)(2,5)
+
+\small
+\end{pspicture}
+\end{document}

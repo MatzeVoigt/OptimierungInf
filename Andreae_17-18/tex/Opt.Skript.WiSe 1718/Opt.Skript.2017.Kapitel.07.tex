@@ -1,0 +1,1406 @@
+
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 07:                                                                  %
+% "Dualität"                                                                   %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Dualität}\label{chapter:7}
+\index{Dualität}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Motivation: obere Schranken für den optimalen Wert"                         %
+%------------------------------------------------------------------------------%
+
+\section{Motivation: obere Schranken für den optimalen Wert}
+\label{section:7:1}
+
+
+Wir betrachten das folgende LP-Problem in Standardform:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:7:1}
+& \text{maximiere } & 4x_1 &\ + &\ x_2 &\ + &\ 5x_3 &\ + &\ 3x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&&  x_1 &\ - &\  x_2 &\ - &\  x_3 &\ + &\ 3x_4 &\ \leq &\  1\ \\
+&& 5x_1 &\ + &\  x_2 &\ + &\ 3x_3 &\ + &\ 8x_4 &\ \leq &\ 55\ \\
+&& -x_1 &\ + &\ 2x_2 &\ + &\ 3x_3 &\ - &\ 5x_4 &\ \leq &\  3\ \\
+&& & & & & & & \llap{$x_1, x_2, x_3, x_4$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+
+
+Anstatt das Problem zu lösen, wollen wir versuchen, möglichst gute \textit{obere Schranken}\index{obere Schranke}\index{Schranke!obere} für den optimalen Zielfunktionswert $z^*$ unmittelbar am gegebenen LP-Problem abzulesen.
+
+Beispielsweise könnte man die zweite Nebenbedingung mit 2 multiplizieren:
+\[
+10x_1 + 2x_2+6x_3+16x_4 \leq 110.
+\]
+
+Es folgt, dass für jede zulässige Lösung gilt:
+\[
+4x_1 + x_2 + 5x_3 + 3x_4 \leq 10x_1 + 2x_2 + 6x_3 + 16x_4 \leq 110.
+\]
+
+Da dies für jede zulässige Lösung gilt, gilt es insbesondere auch für jede optimale Lösung. Wir haben somit $z^* \leq 110$ erhalten.
+
+Stellen wir uns etwas geschickter an, so können wir diese obere Schranke für $z^*$ noch verbessern. Beispielsweise erhält man $z^* \leq \frac{275}{3}$, wenn man die zweite Nebenbedingung nicht mit 2, sondern mit $\frac{5}{3}$ multipliziert; in diesem Fall ergibt sich für jede zulässige Lösung:
+\[
+4x_1 + x_2 + 5x_3 + 3x_4 \leq \frac{25}{3}x_1 + \frac{5}{3}x_2 + 5x_3 + \frac{40}{3}x_4 \leq \frac{275}{3}.
+\]
+
+Also (insbesondere) $z^* \leq \frac{275}{3}$.
+
+Mit etwas Eingebung und Fantasie können wir diese Schranke noch weiter verbessern. Addiert man beispielsweise die zweite und die dritte Nebenbedingung, so erhält man
+\[
+4x_1 + 3x_2 + 6x_3 + 3x_4 \leq 58;
+\]
+
+es folgt $z^* \leq 58$.
+
+Wir wollen nun systematisch vorgehen und eine Strategie zum Auffinden von oberen Schranken für $z^*$ beschreiben: \textit{Wir bilden eine Linearkombination der Nebenbedingungen\index{Linearkombination von Nebenbedingungen}\index{Nebenbedingungen!Linearkombination von}, d.h., wir nehmen die erste Nebenbedingung mit einer Zahl $y_1$ mal, die zweite Nebenbedingung mit $y_2$, die dritte mit $y_3$; danach addieren wir die erhaltenen Ungleichungen}.
+
+\textit{Dabei setzen wir voraus, dass $y_1 \geq 0$, $y_2 \geq 0$ und $y_3 \geq 0$ gilt}. (In unseren obigen Betrachtungen, die zu $z^* \leq \frac{275}{3}$ bzw. zu $z^* \leq 58$ geführt haben, galt $y_1=0$, $y_2=\frac{5}{3}$, $y_3 = 0$ bzw. $y_1=0$, $y_2=y_3=1$.)
+
+Im allgemeinen Fall (d.h. mit beliebigen $y_1,y_2,y_3 \geq 0$) erhält man
+\begin{equation}
+\label{eq:7:2}
+\Bigl( y_1+5y_2-y_3\Bigr)x_1 + \Bigl( -y_1+y_2+2y_3\Bigr)x_2 + \Bigl( -y_1+3y_2+3y_3 \Bigr)x_3 + \Bigl( 3y_1+8y_2-5y_3\Bigr)x_4
+ \leq y_1 + 55y_2 + 3y_3.
+\end{equation}
+
+Nun möchte man erreichen, dass die linke Seite von (\ref{eq:7:2}) eine obere Schranke für die Zielfunktion 
+\[
+z = 4x_1+x_2+5x_3+3x_4
+\]
+ergibt. Dies ist gewiss der Fall, wenn Folgendes gilt:
+\begin{align*}
+\begin{alignedat}{4}
+ y_1 &\ + &\ 5y_2 &\ - &\  y_3 &\ \geq &\ 4\ \\
+-y_1 &\ + &\  y_2 &\ + &\ 2y_3 &\ \geq &\ 1\ \\
+-y_1 &\ + &\ 3y_2 &\ + &\ 3y_3 &\ \geq &\ 5\ \\
+3y_1 &\ + &\ 8y_2 &\ - &\ 5y_3 &\ \geq &\ 3.
+\end{alignedat}
+\end{align*}
+
+Wenn also die Faktoren $y_i$ nichtnegativ sind und diese 4 Ungleichungen erfüllt sind, so können wir sicher sein, dass jede zulässige Lösung $(x_1,x_2,x_3,x_4)$ die Ungleichung
+\[
+4x_1 + x_2 + 5x_3 + 3x_4 \leq y_1 + 55y_2 + 3y_3
+\]
+erfüllt. Da diese Ungleichung für alle zulässigen Lösungen gilt, also insbesondere auch für eine optimale Lösung, erhalten wir
+\[
+z^* \leq y_1 + 55y_2 + 3y_3.
+\]
+
+Wir möchten gerne, dass diese obere Schranke für $z^*$ möglichst nahe bei $z^*$ liegt. \textit{Damit sind wir beim folgenden Minimierungsproblem angelangt}:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{minimiere } & y_1 &\ + &\ 55y_2 &\ + &\ 3y_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  y_1 &\ + &\ 5y_2 &\ - &\  y_3 &\ \geq &\ 4\ \\
+&& -y_1 &\ + &\  y_2 &\ + &\ 2y_3 &\ \geq &\ 1\ \\
+&& -y_1 &\ + &\ 3y_2 &\ + &\ 3y_3 &\ \geq &\ 5\ \\
+&& 3y_1 &\ + &\ 8y_2 &\ - &\ 5y_3 &\ \geq &\ 3\ \\
+&& & & & & \llap{$y_1,y_2,y_3$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+
+
+Das so erhaltene LP-Problem nennt man das \textit{duale Problem}\index{duales Problem}\index{Problem!duales} des ursprünglichen Problems\footnote{Statt \enquote{ursprüngliches Problem} sagt man auch \textit{primales Problem}\index{primales Problem}\index{Problem!primales}.}.
+
+\section{Das duale Problem}
+\label{section:7:2}
+
+Wir betrachten nun den allgemeinen Fall. Gegeben sei ein LP-Problem in Standardform:
+\begin{align}
+\tag{P}
+\begin{alignedat}{4}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&&                              x_j &\ \geq &\   0 & \qquad (j=1,\ldots,n).
+\end{alignedat}
+\end{align}
+
+Dann nennt man das folgende Problem das \textit{duale Problem} zu (P):
+\begin{align}
+\tag{D}
+\begin{alignedat}{4}
+& \text{minimiere } & \sum\limits_{i=1}^{m}{b_iy_i} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{i=1}^{m}{a_{ij}y_i} &\ \geq &\ c_j & \qquad (j=1,\ldots,n) \\
+&&                              y_i &\ \geq &\   0 & \qquad (i=1,\ldots,m).
+\end{alignedat}
+\end{align}
+
+\textit{Man beachte}: Das Duale\index{Duales} eines Maximierungsproblems ist ein Minimierungsproblem; jeder der $m$ \textit{primalen Nebenbedingungen}\index{primale Nebenbedingung}\index{Nebenbedingungen!primale}
+\[
+\sum\limits_{j=1}^{n}{a_{ij}x_j} \leq b_i
+\]
+
+entspricht eine \textit{duale Variable}\index{duale Variable}\index{Variable!duale} $y_i\ (i=1,\ldots,m)$; umgekehrt gilt: Jeder der $n$ \textit{dualen Nebenbedingungen}\index{duale Nebenbedingung}\index{Nebenbedingungen!duale}
+\[
+\sum\limits_{i=1}^{m}{a_{ij}y_i} \geq c_j
+\]
+
+entspricht eine \textit{primale Variable}\index{primale Variable}\index{Variable!primale} $x_j\ (j=1\ldots,n)$; die Koeffizienten $c_j$ der primalen Zielfunktion tauchen im dualen Problem als rechte Seite auf; Entsprechendes gilt umgekehrt auch für die Koeffizienten $b_i$.
+
+Besonders kurz kann man das alles aufschreiben, wenn man \textit{Matrixschreibweise}\index{Matrixschreibweise} verwendet; dann lauten das primale Problem (P) und das duale Problem (D) wie folgt:
+
+\begin{SKBox}
+\textbf{Primales Problem}.
+\begin{align}
+\tag{P}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & \\
+&& Ax &\ \leq &\ b \\
+&&  x &\ \geq &\ 0
+\end{alignedat}
+\end{align}
+\end{SKBox}
+
+\begin{SKBox}
+\textbf{Duales Problem}.
+\begin{align}
+\tag{D}
+\begin{alignedat}{3}
+& \text{minimiere } & b^Ty & & \\
+& \rlap{unter den Nebenbedingungen} & & \\
+&& A^Ty &\ \geq &\ c \\
+&&    y &\ \geq &\ 0
+\end{alignedat}
+\end{align}
+\end{SKBox}
+
+Hierin ist 
+\[
+c^T = (c_1,\ldots,c_n), \quad
+b^T = (b_1,\ldots,b_m), \quad
+x = \begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix}, \quad
+y = \begin{pmatrix} y_1 \\ \vdots \\ y_m \end{pmatrix}, \quad
+A = \begin{pmatrix} a_{11} & \ldots & a_{1n} \\ \vdots & \ddots & \vdots \\ a_{m1} & \ldots & a_{mn} \end{pmatrix};
+\]
+
+$0$ bezeichnet in (P) den Nullvektor der Länge $n$ und in (D) den Nullvektor der Länge $m$; die Ungleichungen sind komponentenweise zu lesen, beispielsweise bedeutet $y \geq 0$ dasselbe wie $y_i \geq 0$ für $i=1,\ldots,m$.
+
+Wie bereits in unserem Beispiel beobachtet, liefert jede zulässige Lösung des dualen Problems eine \textit{obere Schranke} für den optimalen Wert des primalen Problems. 
+
+\begin{Definition}[Feststellung]
+Ist $(x_1,\ldots,x_n)$ eine primale zulässige Lösung\index{primale zulässige Lösung}\index{Lösung!primale zulässige}\index{zulässige Lösung!primale} und $(y_1,\ldots,y_m)$ eine duale zulässige Lösung\index{duale zulässige Lösung}\index{Lösung!duale zulässige}\index{zulässige Lösung!duale}\footnotemark, so gilt
+\begin{equation}
+\label{eq:7:3}
+\sum\limits_{j=1}^{n}{c_jx_j} \leq \sum\limits_{i=1}^{m}{b_iy_i}.
+\end{equation}
+\end{Definition}
+
+\footnotetext{\enquote{Primale zulässige Lösung} bedeutet natürlich \enquote{zulässige Lösung des primalen Problems}; analog: \enquote{duale zulässige Lösung}. Die Bezeichnungen $c_j$ und $b_i$ seien wie in (P) und (D).}
+
+Die wichtige Feststellung (\ref{eq:7:3}) wird \textit{schwache Dualität}\index{schwache Dualität}\index{Dualität!schwache} genannt. Der Beweis von (\ref{eq:7:3}) ist sehr kurz.
+
+\textbf{Beweis}.
+\[
+\sum\limits_{j=1}^{n}{c_jx_j} \leq \sum\limits_{j=1}^{n}{\left( \sum\limits_{i=1}^{m}{a_{ij}y_i} \right) x_j}
+= \sum\limits_{i=1}^{m}{\left( \sum\limits_{j=1}^{n}{a_{ij}x_j} \right) y_i} \leq \sum\limits_{i=1}^{m}{b_iy_i}. \quad \Box
+\]
+
+Dasselbe in Matrixschreibweise:
+\[
+c^Tx \leq {\Bigl( A^Ty \Bigr)}^Tx = \Bigl( y^TA \Bigr) x = y^T \Bigl( Ax \Bigr) \leq y^Tb = b^Ty.
+\]
+
+\textit{Die Beziehung (\ref{eq:7:3}) (\enquote{schwache Dualität}) ist sehr nützlich}: Falls wir irgendwo her eine primale zulässige Lösung $(x_1^*, \ldots, x_n^*)$ und eine duale zulässige Lösung $(y_1^*, \ldots, y_m^*)$ haben und falls
+\begin{equation}
+\label{eq:7:4}
+\sum\limits_{j=1}^{n}{c_jx_j^*} = \sum\limits_{i=1}^{m}{b_iy_i^*}
+\end{equation}
+gilt, so können wir sicher sein, dass $(x_1^*, \ldots, x_n^*)$ eine optimale Lösung des primalen Problems und $(y_1^*, \ldots, y_m^*)$ eine optimale Lösung des dualen Problems ist. (Wieso nämlich?)
+
+\textbf{Beispiel}. Wir betrachten das LP-Problem (\ref{eq:7:1}), das uns bereits am Anfang dieses Abschnitts zur Illustration diente: $x_1=0$, $x_2=14$, $x_3=0$, $x_4=5$ ist eine zulässige Lösung dieses Problems -- davon können wir uns leicht überzeugen. Wir brauchen die Zahlen $x_1=0$, $x_2=14$, $x_3=0$, $x_4=5$ ja nur in (\ref{eq:7:1}) einzusetzen.
+
+Ich behaupte nun: \textit{Die Zahlen $x_1=0$, $x_2=14$, $x_3=0$ und $x_4=5$ bilden sogar eine optimale Lösung von (\ref{eq:7:1})}. Stellen wir uns vor, das Sie dies bezweifeln. \textit{Wie kann ich Sie schnell davon überzeugen, dass ich Recht habe?}
+
+\textit{Hier ist die Antwort}: Ich präsentiere Ihnen zusätzlich die Zahlen 
+\[
+y_1=11,\quad y_2=0 \quad\text{und}\quad y_3=6,
+\]
+die ich \enquote{magische Zahlen} nenne, da ich mit ihrer Hilfe sämtliche Zweifel zum Verschwinden bringe.
+
+Bei diesen Zahlen handelt es sich um eine zulässige Lösung des dualen Problems -- davon können wir uns ebenfalls ohne Mühe überzeugen. (Wie nämlich?)
+
+\textit{Nun brauchen wir nur noch die Zielfunktionswerte zu vergleichen}: Für $x_1=0$, $x_2=14$, $x_3=0$, $x_4=5$ erhält man $z=29$. Und für $y_1=11$, $y_2=0$, $y_3=6$ erhalten wir 
+\[
+y_1 + 55y_2 + 3y_3 = 11 + 0 + 18 = 29.
+\]
+
+Also ist $x_1=0$, $x_2=14$, $x_3=0$, $x_4=5$ wie behauptet eine optimale Lösung des primalen Problems (\ref{eq:7:1}) (und $y_1=11$, $y_2=0$, $y_3=6$ ist eine optimale Lösung des dazugehörigen dualen Problems).
+
+Anknüpfend an die schwache Dualität und an das Beispiel mit den \enquote{magischen Zahlen} lernen wir jetzt einen zentralen Satz kennen.
+
+
+
+\section{Der Dualitätssatz und sein Beweis}
+\label{section:7:3}
+
+
+Der Dualitätssatz hat seinen Ursprung in Diskussionen zwischen G. B. Dantzig und J. von Neumann aus dem Jahr 1947. Die erste explizite Version des Satzes stammt von D. Gale, H. W. Kuhn und A. W. Tucker (1951).
+
+Bevor wir den Dualitätssatz vorstellen, überlegen wir uns zunächst, dass \textit{das duale Problem des dualen Problems wieder das primale Problem ist}. Hierzu schreiben wir das duale Problem (D) in ein Maximierungsproblem in Standardform um:
+\begin{align}
+\tag{$\widetilde{D}$}
+\begin{alignedat}{3}
+& \text{maximiere } & \sum\limits_{i=1}^{m}{(-b_i)y_i} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{i=1}^{m}{(-a_{ij})y_i} &\ \leq &\ -c_j & \qquad (j=1,\ldots,n) \\
+&&                                 y_i &\ \geq &\    0 & \qquad (i=1,\ldots,m).
+\end{alignedat}
+\end{align}
+
+Das Duale dieses Problems ist
+\begin{align*}
+\begin{alignedat}{3}
+& \text{minimiere } & \sum\limits_{j=1}^{n}{(-c_j)x_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{(-a_{ij})x_j} &\ \geq &\ -b_i & \qquad (i=1,\ldots,m) \\
+&&                                 x_j &\ \geq &\    0 & \qquad (j=1,\ldots,n),
+\end{alignedat}
+\end{align*}
+
+was offensichtlich äquivalent zum Ausgangsproblem (P) (dem primalen Problem) ist.
+
+Gibt es immer \enquote{magische Zahlen} wie im obigen Beispiel?
+
+Die Antwort auf diese Frage liefert der \textit{Dualitätssatz}.
+
+\begin{Satz}[Satz 1 (Dualitätssatz)]
+\index{Dualitätssatz}\index{Satz!Dualitäts-}
+Falls das primale Problem (P) eine optimale Lösung $(x_1^*, \ldots, x_n^*)$ besitzt, so besitzt auch das duale Problem (D) eine optimale Lösung\index{optimale Lösung!des dualen Problems}\index{duales Problem!optimale Lösung}\index{Lösung!optimale duale} $(y_1^*, \ldots,y_m^*)$ und es gilt
+\begin{equation}
+\label{eq:7:5}
+\sum\limits_{j=1}^{n}{c_jx_j^*} = \sum\limits_{i=1}^{m}{b_iy_i^*}.
+\end{equation}
+\end{Satz}
+
+\textit{Bevor wir den Satz beweisen, wollen wir den entscheidenden Punkt anhand eines Beispiels studieren}. Dazu nehmen wir an, dass das primale Problem (P) eine optimale Lösung besitzt. Der Punkt, auf den es ankommt, ist der folgende:
+\index{Beweis!des Dualitätssatzes}\index{Dualitätssatz!Beweis des}
+
+\begin{SKBox}
+Löst man das primale Problem mit dem Simplexverfahren, so kann man in der letzten Zeile (\enquote{der $z$-Zeile}) des letzten Tableaus eine optimale Lösung des dualen Problems ablesen.
+\end{SKBox}
+
+\textit{Wir schauen uns an unserem Beispiel an, wie das geht}. Löst man das Problem (\ref{eq:7:1}) mit dem Simplexverfahren, so erhält man als letztes Tableau:
+\begin{align}
+\label{eq:7:*}
+\tag{$\star$}
+\begin{alignedat}{6}
+x_2 &\ = &\ 14 &\ - &\ 2x_1 &\ - &\ 4x_3 &\ - &\  5x_5 &\ - &\  3x_7\ \\
+x_4 &\ = &\  5 &\ - &\  x_1 &\ - &\  x_3 &\ - &\  2x_5 &\ - &\   x_7\ \\
+x_6 &\ = &\  1 &\ + &\ 5x_1 &\ + &\ 9x_3 &\ + &\ 21x_5 &\ + &\ 11x_7\ \\ \cline{1-11}
+  z &\ = &\ 29 &\ - &\  x_1 &\ - &\ 2x_3 &\ - &\ 11x_5 &\ - &\  6x_7.
+\end{alignedat}
+\end{align}
+
+Wir wissen: Zu den ersten drei Ungleichungen des LP-Problems (\ref{eq:7:1}) gehören die drei Schlupfvariablen
+\[
+x_5,\quad
+x_6 \quad \text{und} \quad
+x_7.
+\]
+
+Andererseits gehört zu jeder dieser Ungleichungen auch eine duale Variable:
+\[
+y_1,\quad
+y_2 \quad \text{und} \quad
+y_3.
+\]
+
+Durch die erste Ungleichung von (\ref{eq:7:1}) ist also $x_5$ mit $y_1$ verbunden; ebenso bestehen Verbindungen von $x_6$ zu $y_2$ und $x_7$ zu $y_3$:
+\[
+\begin{array}{c} x_5 \\ \updownarrow \\ y_1 \end{array} \quad
+\begin{array}{c} x_6 \\ \updownarrow \\ y_2 \end{array} \quad
+\begin{array}{c} x_7 \\ \updownarrow \\ y_3 \end{array}
+\]
+
+In der $z$-Zeile von (\ref{eq:7:*}) finden wir bei den Schlupfvariablen $x_5$, $x_6$ und $x_7$ die folgenden Koeffizienten vor: $-11$ bei $x_5$, $0$ bei $x_6$ und $-6$ bei $x_7$.
+
+Ordnet man diese Koeffizienten mit umgekehrtem Vorzeichen den entsprechenden dualen Variablen zu, so erhält man die gewünschte optimale Lösung des dualen Problems:
+\[
+y_1 = 11, \quad
+y_2 = 0, \quad
+y_3 = 6.
+\]
+
+\textit{Aus dem Beweis des Dualitätssatzes wird sich ergeben, dass diese Vorgehensweise immer funktioniert; dies ist der entscheidende Punkt im nachfolgenden Beweis}.
+
+\textbf{Beweis des Dualitätssatzes}\index{Beweis!des Dualitätssatzes}\index{Dualitätssatz!Beweis des}. Es sei $(x_1^*, \ldots, x_n^*)$ eine optimale Lösung von $(P)$. Wir haben eine zulässige Lösung $(y_1^*,\ldots, y_m^*)$ des dualen Problems (D) anzugeben, die die Gleichung (\ref{eq:7:5}) erfüllt. Aufgrund von (\ref{eq:7:3}) ist $(y_1^*, \ldots, y_m^*)$ dann eine optimale Lösung von $(D)$, für die (\ref{eq:7:5}) gilt, womit wir fertig sind.
+
+\textit{Wir gehen vor, wie zuvor in unserem Beispiel}. Nachdem wir Schlupfvariablen
+\begin{equation}
+\label{eq:7:6}
+x_{n+i} = b_i - \sum\limits_{j=1}^{n}{a_{ij}x_j} \qquad (i=1,\ldots,m)
+\end{equation}
+
+eingeführt haben, landen wir schließlich beim letzten Tableau des Simplexverfahrens; die letzte Zeile dieses Tableaus sei:
+\begin{equation}
+\label{eq:7:7}
+z = z^* + \sum\limits_{k=1}^{n+m}{\overline{c}_kx_k}.
+\end{equation}
+
+Ist $x_k$ eine Basisvariable, so gilt $\overline{c}_k=0$; für alle Koeffizienten $\overline{c}_k$, die zu Nichtbasisvariablen gehören, gilt $\overline{c}_k \leq 0$. Außerdem ist $z^*$ der optimale Wert der Zielfunktion. Nach Voraussetzung ist $(x_1^*, \ldots, x_n^*)$ eine optimale Lösung von (P); deshalb gilt
+\begin{equation}
+\label{eq:7:8}
+z^* = \sum\limits_{j=1}^{n}{c_jx_j^*}.
+\end{equation}
+
+Wir definieren
+\begin{equation}
+\label{eq:7:9}
+y_i^* = -\overline{c}_{n+i} \qquad (i=1,\ldots,m)
+\end{equation}
+
+und behaupten, dass $(y_1^*,\ldots,y_m^*)$ eine zulässige Lösung des dualen Problems (D) ist, die (\ref{eq:7:5}) erfüllt.
+
+\textit{Damit haben wir die entscheidende Idee des Beweises geschildert, nachdem wir diese Idee ja anhand unseres Beispiels kennengelernt hatten}.
+
+Der Rest des Beweises besteht darin, \enquote{nachzurechnen}, dass $(y_1^*,\ldots,y_m^*)$ tatsächlich eine zulässige Lösung von (D) ist, die (\ref{eq:7:5}) erfüllt. Im Folgenden finden Sie den Rest des Beweises im englischen Original (vgl. Chvátal: \textit{Linear Programming}); zur Erinnerung ein paar Vokabeln:
+
+\begin{center}
+\begin{tabular}{ccc}
+constraint & -- & Nebenbedingung \\
+objective function & -- & Zielfunktion \\
+feasible solution & -- & zulässige Lösung \\
+slack variable & -- & Schlupfvariable
+\end{tabular}
+\end{center}
+
+\bigskip
+
+Defining
+\begin{equation}
+\tag{\ref*{eq:7:9}}
+y_i^* = -\overline{c}_{n+i} \qquad (i=1,\ldots,m)
+\end{equation}
+
+we claim that $(y_1^*,\ldots, y_m^*)$ is a dual feasible solution satisfying (\ref{eq:7:5}); the rest of the proof consists of a straightforward verification of our claim. Substituting $\sum{c_jx_j}$ for $z$ and substituting from (\ref{eq:7:6}) for the slack variables in (\ref{eq:7:7}) we obtain the identity
+\[
+\sum\limits_{j=1}^{n}{c_jx_j} \ = \ z^* + \sum\limits_{j=1}^{n}{\overline{c}_jx_j} - \sum\limits_{i=1}^{m}{y_i^* \left( b_i - \sum\limits_{j=1}^{n}{a_{ij}x_j }\right)}
+\]
+
+which may be written as
+\[
+\sum\limits_{j=1}^{n}{c_jx_j} \ = \ \left(  z^* - \sum\limits_{i=1}^{m}{b_iy_i^*} \right) + \sum\limits_{j=1}^{n}{\left( \overline{c}_j + \sum\limits_{i=1}^{m}{a_{ij}y_i^*} \right) x_j}.
+\]
+
+This identity, having been obtained by algebraic manipulations from the definitions of the slack variables and the objective function, must hold for every choice of values $x_1,\ldots,x_n$. Hence we have
+\begin{equation}
+\label{eq:7:10}
+z^* \ = \ \sum\limits_{i=1}^{m}{b_iy_i^*}
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:7:11}
+c_j \ = \  \overline{c}_j + \sum\limits_{i=1}^{m}{a_{ij}y_i^*} \qquad (j=1,\ldots,n).
+\end{equation}
+
+Since $\overline{c}_k \leq 0$ for every $k=1,\ldots,n+m$,  (\ref{eq:7:9}) and (\ref{eq:7:11}) imply
+\begin{align*}
+\begin{alignedat}{3}
+\sum\limits_{i=1}^{m}{a_{ij}y_i^*} &\ \geq &\ c_j & \qquad (j=1,\ldots,n) \\
+                             y_i^* &\ \geq &\   0 & \qquad (i=1,\ldots,m).
+\end{alignedat}
+\end{align*}
+
+Finally, (\ref{eq:7:8}) and (\ref{eq:7:10}) imply (\ref{eq:7:5}). $\Box$
+
+\bigskip
+
+Wir formulieren den Dualitätssatz noch einmal \textit{kurz zusammengefasst in Worten}.
+\index{Dualitätssatz}\index{Satz!Dualitäts-}
+
+\begin{Satz}[Dualitätssatz (kurz zusammengefasst)]
+Wenn das primale Problem eine optimale Lösung besitzt, dann besitzt auch das duale Problem eine optimale Lösung \textit{und die dazugehörigen Zielfunktionswerte stimmen überein}.
+\end{Satz}
+
+Anhand des Beispiels mit den \enquote{magischen Zahlen} haben wir bereits gesehen, dass es sehr nützlich sein kann, neben einer optimalen Lösung $x_1^*,\ldots, x_n^*$ des primalen Problems auch eine optimale Lösung $y_1^*,\ldots,y_m^*$ des dazugehörigen dualen Problems zur Verfügung zu haben: Die Zahlen $y_1^*,\ldots,y_m^*$ können als ein \textit{Zertifikat der Optimalität} (engl. \textit{certificate of optimality})\index{Zertifikat!für Optimalität}\index{Optimalität!Zertifikat für}\label{page:7:4} angesehen werden, da man -- wie wir gesehen haben -- mithilfe dieser Zahlen eine andere Person schnell davon überzeugen kann, dass $x_1^*,\ldots,x_n^*$ tatsächlich eine optimale Lösung des primalen Problems ist.
+
+Außerdem gilt\footnote{Dies ergibt sich, wie wir ausführlich besprochen haben, aus dem Beweis des Dualitätssatzes.}: \textit{Falls man $x_1^*,\ldots,x_n^*$ mit dem Simplexverfahren ermittelt, so bekommt man die Zahlen $y_1^*,\ldots,y_m^*$ (also das Zertifikat) am Ende \enquote{kostenlos mitgeliefert}}. Man spricht in diesem Zusammenhang von einem \textit{zertifizierenden Algorithmus} (engl. \textit{certifying algorithm})\index{zertifizierender Algorithmus}\index{Algorithmus!zertifizierender}.\label{page:7:5}
+
+Als Folgerung aus dem Dualitätssatz und aus der bereits vor dem Dualitätssatz festgestellten Tatsache, dass das Duale des dualen Problems wieder das primale Problem ist, erhalten wir den folgenden Satz.
+
+\begin{Satz}[Satz 2 (Folgerung aus dem Dualitätssatz)]
+\index{Folgerung aus dem Dualitätssatz}\index{Dualitätssatz!Folgerung aus dem}
+Gegeben seien das LP-Problem (P) und das zu (P) duale Problem (D). Dann gilt:
+\begin{enumerate}[(i)]
+\item Besitzt eines dieser beiden Probleme eine optimale Lösung, so besitzt auch das andere eine optimale Lösung und die Zielfunktionswerte stimmen überein.
+\item Ist eines der beiden Probleme unbeschränkt, so hat das andere keine zulässige Lösung.
+\end{enumerate}
+\end{Satz}
+
+\textbf{Beweis}. 
+\begin{enumerate}[(i)]
+\item Dies ergibt sich aus dem Dualitätssatz sowie der Tatsache, dass das Duale des dualen Problems wieder das primale Problem ist.
+\item Dies ergibt sich unmittelbar aus (\ref{eq:7:3}) (\enquote{schwache Dualität}). $\Box$
+\end{enumerate}
+
+Außer den beiden unter (i) und (ii) genannten Fällen gibt es auch noch den Fall, dass sowohl (P) als auch (D) keine zulässige Lösung besitzt. Dass dieser Fall tatsächlich vorkommen kann, zeigt das folgende \textbf{Beispiel}.
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & 2x_1 &\ - &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&  x_1 &\ - &\ x_2 &\ \leq &\  1\ \\
+&& -x_1 &\ + &\ x_2 &\ \leq &\ -2\ \\
+&& & & \llap{$x_1,x_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Dass dieses Problem keine zulässige Lösung besitzt, erkennt man sofort: Addition der beiden Ungleichungen $x_1-x_2 \leq 1$ und $-x_1+x_2 \leq -2$ ergibt $0 \leq -1$. 
+
+Auch das duale Problem, das wie folgt lautet, ist nicht lösbar:
+\begin{align*}
+\begin{alignedat}{4}
+& \text{minimiere } & y_1 &\ - &\ 2y_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&  y_1 &\ - &\ y_2 &\ \geq &\  2\ \\
+&& -y_1 &\ + &\ y_2 &\ \geq &\ -1\ \\
+&& & & \llap{$y_1,y_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\begin{Definition}[Feststellung]
+Sind (P) und (D) wie oben gegeben, so sind also genau \textit{drei Fälle} möglich:
+\begin{enumerate}[(i)]
+\item Sowohl (P) als auch (D) besitzt eine optimale Lösung; in diesem Fall stimmen die optimalen Zielfunktionswerte überein.
+\item Eines der beiden Probleme (P) und (D) ist unbeschränkt und das andere besitzt keine zulässige Lösung.
+\item Keines der beiden Probleme (P) und (D) besitzt eine zulässige Lösung.
+\end{enumerate}
+\end{Definition}
+
+In enger Weise mit dem Dualitätssatz verbunden ist der folgende Satz, den man den \textit{Satz vom komplementären Schlupf} (engl. \textit{Complementary Slackness Theorem}\index{Complementary Slackness Theorem}) nennt.
+
+\begin{Satz}[Satz 3 (Satz vom komplementären Schlupf)]
+\index{Satz!vom komplementären Schlupf}\index{Schlupf, Satz vom komplementären}
+Es sei $x_1^*,\ldots,x_n^*$ eine zulässige Lösung von (P) und $y_1^*,\ldots,y_m^*$ sei eine zulässige Lösung von (D). Notwendig und hinreichend dafür, dass es sich bei $x_1^*,\ldots,x_n^*$ und $y_1^*,\ldots,y_m^*$ gleichzeitig um optimale Lösungen von (P) bzw. (D) handelt, ist das Erfülltsein der folgenden $n+m$ Bedingungen:
+\begin{equation}
+\label{eq:7:12}
+x_j^* \ = \ 0 \quad \text{oder} \quad \sum\limits_{i=1}^{m}{a_{ij}y_i^*} \ = \ c_j \qquad (j=1,\ldots,n)
+\end{equation}
+
+\begin{equation}
+\label{eq:7:13}
+y_i^* \ = \ 0 \quad \text{oder} \quad \sum\limits_{j=1}^{n}{a_{ij}x_j^*} \ = \ b_i \qquad (i=1,\ldots,m).
+\end{equation}
+\end{Satz}
+
+\textbf{Beweis}\index{Beweis!des Satzes vom komplementären Schlupf}. Da $x_1^*,\ldots,x_n^*$ und $y_1^*,\ldots,y_m^*$ zulässige Lösungen von (P) bzw. (D) sind, gilt
+\begin{equation}
+\label{eq:7:14}
+c_jx_j^* \leq \left( \sum\limits_{i=1}^{m}{a_{ij}y_i^*} \right) x_j^* \qquad (j=1,\ldots,n)
+\end{equation}
+
+und
+
+\begin{equation}
+\label{eq:7:15}
+\left( \sum\limits_{j=1}^{n}{a_{ij}x_j^*} \right) y_i^*  \leq b_iy_i^* \qquad (i=1,\ldots,m).
+\end{equation}
+
+Es folgt
+\begin{equation}
+\label{eq:7:16}
+\sum\limits_{j=1}^{n}{c_jx_j^*} \leq \sum\limits_{j=1}^{n}{\left( \sum\limits_{i=1}^{m}{a_{ij}y_i^*} \right) x_j^*} = \sum\limits_{i=1}^{m}{\left( \sum\limits_{j=1}^{n}{a_{ij}x_j^*} \right) y_i^*} \leq \sum\limits_{i=1}^{m}{b_iy_i^*}.
+\end{equation}
+
+Bei $x_1^*, \ldots, x_n^*$ und $y_1^*,\ldots, y_m^*$ handelt es sich (nach dem Dualitätssatz) genau dann um optimale Lösungen von (P) bzw. (D), wenn in (\ref{eq:7:16}) Gleichheit gilt. Dies ist genau dann der Fall, wenn in sämtlichen Ungleichungen in (\ref{eq:7:14}) und (\ref{eq:7:15}) Gleichheit gilt, was genau dann der Fall ist, wenn sämtliche Bedingungen (\ref{eq:7:12}) und (\ref{eq:7:13}) gelten. $\Box$
+
+Es sei ausdrücklich darauf hingewiesen, dass das Wort \enquote{oder} in (\ref{eq:7:12}) sowie in (\ref{eq:7:13}) wie üblich als \enquote{einschließendes Oder}\index{einschließendes Oder}\index{Oder, einschließendes} gemeint ist. Die erste der $m+n$ Bedingungen (\ref{eq:7:12}) und (\ref{eq:7:13}) besagt also, wenn man sie etwas anders formuliert: Es gilt $x_1^*=0$ oder $a_{11}y_1^* + \ldots + a_{m1}y_m^*=c_1$ \textit{oder beides}.
+
+Der Inhalt der $n$ Bedingungen (\ref{eq:7:12}) wird besonders deutlich, wenn man daran denkt, dass es in (P) genau $n$ Variablen $x_1,\ldots,x_n$ gibt und dass diese $n$ Variablen in natürlicher Weise den ersten $n$ Ungleichungen in (D) entsprechen:
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ \longleftrightarrow &\ a_{11}y_1 &\ + &\ \ldots &\ + &\ a_{m1}y_m &\ \geq &\ c_1\ \\
+& & & & \vdots \ & & & & \\
+x_n &\ \longleftrightarrow &\ a_{1n}y_1 &\ + &\ \ldots &\ + &\ a_{mn}y_m &\ \geq &\ c_n. \\
+\end{alignedat}
+\end{align*}
+
+Wir können (\ref{eq:7:12}) also auch so aussprechen:
+
+\begin{SKBox}
+In $(x_1^*,\ldots,x_n^*)$ ist die $j$-te Variable gleich Null oder die entsprechende duale Ungleichung ist \textit{tight}\index{tight}, d.h., diese Ungleichung ist mit Gleichheit erfüllt ($j=1,\ldots,n$).
+\end{SKBox}
+
+
+
+\textbf{Beispiel}. Wir greifen unser erstes Beispiel aus Kapitel \ref{chapter:2} auf:
+\begin{align}
+\tag{P}
+\begin{alignedat}{6}
+& \text{maximiere } & 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\  5\ \\
+&& 4x_1 &\ + &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 11\ \\
+&& 3x_1 &\ + &\ 4x_2 &\ + &\ 2x_3 &\ \leq &\  8\ \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\  0.
+\end{alignedat}
+\end{align}
+
+Wir haben (P) bereits mit dem Simplexverfahren gelöst; das letzte Tableau lautete
+\begin{align*}
+\begin{alignedat}{5}
+x_3 &\ = &\  1 &\ + &\  x_2 &\ + &\ 3x_4 &\ - &\ 2x_6\ \\
+x_1 &\ = &\  2 &\ - &\ 2x_2 &\ - &\ 2x_4 &\ + &\  x_6\ \\
+x_5 &\ = &\  1 &\ + &\ 5x_2 &\ + &\ 2x_4 &    &        \\ \cline{1-9}
+z   &\ = &\ 13 &\ - &\ 3x_2 &\ - &\  x_4 &\ - &\  x_6.
+\end{alignedat}
+\end{align*}
+
+\textbf{Aufgabe}.
+\begin{enumerate}[a)]
+\item Stellen Sie das zugehörige duale Problem (D) auf.
+\item Lesen Sie aus dem letzten Tableau für (P) eine optimale Lösung ($x_1^*,x_2^*,x_3^*)$ für (P) sowie eine optimale Lösung $(y_1^*,y_2^*,y_3^*)$ für (D) ab.
+\item Überprüfen Sie, ob $(y_1^*,y_2^*,y_3^*)$ tatsächlich eine zulässige Lösung für (D) ist, und überprüfen Sie mithilfe des Dualitätssatzes, ob $(y_1^*,y_2^*,y_3^*)$ tatsächlich optimal ist.
+\item Bestätigen Sie noch einmal, dass es sich bei $(x_1^*,x_2^*,x_3^*)$ und $(y_1^*,y_2^*,y_3^*)$ um optimale Lösungen von (P) bzw. (D) handelt, indem Sie die Bedingungen (\ref{eq:7:12}) und (\ref{eq:7:13}) überprüfen.
+\end{enumerate}
+
+Im Englischen heißen die Bedingungen (\ref{eq:7:12}) und (\ref{eq:7:13}) übrigens \textit{complementary slackness conditions}\index{complementary slackness conditions}; im Deutschen sagt man \textit{komplementäre Schlupfbedingungen}.
+\index{komplementäre Schlupfbedingung}\index{Schlupf, komplementäre -bedingung}
+
+
+
+
+\section{Wie die komplementären Schlupfbedingungen eingesetzt werden können, um auf Optimalität zu testen}
+\index{komplementäre Schlupfbedingung}\index{Schlupf, komplementäre -bedingung}
+\index{Test auf Optimalität}\index{Optimalität!Test auf}
+\label{section:7:4}
+
+Stellen Sie sich vor, dass $(x_1^*,\ldots,x_n^*)$ eine zulässige Lösung eines LP-Problems (P) in Standardform ist. Sie vermuten, dass $(x_1^*,\ldots,x_n^*)$ optimal ist -- sicher sind Sie aber nicht.
+
+\textit{In dieser Situation können die komplementären Schlupfbedingungen sehr nützlich sein, um zu testen, ob $(x_1^*,\ldots,x_n^*)$ tatsächlich optimal ist}.
+
+Bevor wir uns anhand eines Beispiels anschauen, wie das geht, halten wir eine Folgerung aus dem Satz vom komplementären Schlupf fest, die besonders gut zu unserer Zielsetzung passt. (Man stellt leicht fest, dass Satz 3' aus Satz 3 folgt.)
+
+\begin{Satz}[Satz 3' (Folgerung aus dem Satz vom komplementären Schlupf)]
+\index{Satz!vom komplementären Schlupf (zweite Fassung)}\index{Schlupf, Satz vom komplementären!zweite Fassung}
+Eine zulässige Lösung $(x_1^*,\ldots,x_n^*)$ von (P) ist genau dann optimal, wenn es Zahlen $y_1^*, \ldots, y_m^*$ gibt, für die gilt:
+\begin{itemize}
+\item Für $(x_1^*,\ldots,x_n^*)$ und $(y_1^*,\ldots,y_m^*)$ gelten die komplementären Schlupfbedingungen;
+\item $(y_1^*,\ldots,y_m^*)$ ist eine zulässige Lösung von (D).
+\end{itemize}
+\end{Satz}
+
+\textbf{Beispiel 1}. Wir betrachten das folgende LP-Problem\label{page:7:1}
+\begin{align}
+\tag{P}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ x_2 &\ + &\ 2x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  x_1 &\ + &\  x_2 &\ + &\ 3x_3 &\ \leq &\ 30 \\
+&& 2x_1 &\ + &\ 2x_2 &\ + &\ 5x_3 &\ \leq &\ 24 \\
+&& 4x_1 &\ + &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 36 \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0
+\end{alignedat}
+\end{align}
+
+und möchten prüfen, ob
+\[
+x_1^* = 8, \quad
+x_2^* = 4, \quad
+x_3^* = 0
+\]
+eine optimale Lösung von (P) ist.
+
+Zu diesem Zweck betrachten wir das duale Problem (D): 
+\begin{align}
+\tag{D}
+\begin{alignedat}{5}
+& \text{minimiere } & 30y_1 &\ + &\ 24y_2 &\ + &\ 36y_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  y_1 &\ + &\ 2y_2 &\ + &\ 4y_3 &\ \geq &\ 3\ \\
+&&  y_1 &\ + &\ 2y_2 &\ + &\  y_3 &\ \geq &\ 1\ \\
+&& 3y_1 &\ + &\ 5y_2 &\ + &\ 2y_3 &\ \geq &\ 2\ \\
+&& & & & & \llap{$y_1, y_2, y_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+
+Wir wollen Satz 3' anwenden und müssen demnach herausfinden, ob es Zahlen $y_1^*$, $y_2^*$ und $y_3^*$ gibt, für die gilt:
+\begin{enumerate}[(1)]
+\item Für $(x_1^*,x_2^*,x_3^*)$ und $(y_1^*,y_2^*,y_3^*)$ gelten die komplementären Schlupfbedingungen.
+\item $(y_1^*,y_2^*,y_3^*)$ ist eine zulässige Lösung von (D).
+\end{enumerate}
+
+\textit{Wir betrachten zunächst nur (1)}: Setzt man $x_1^*=8$, $x_2^*=4$ und $x_3^*=0$ in (P) ein, so stellt man fest, dass die 1. Ungleichung von (P) nicht mit Gleichheit erfüllt ist; soll (1) erfüllt sein, so muss also 
+\[
+y_1^*=0
+\]
+gelten. Wegen $x_1^*>0$ und $x_2^*>0$ muss außerdem gelten, dass die ersten beiden Ungleichungen von (D) mit Gleichheit erfüllt sind. Man erhält, wenn man $y_1^*=0$ berücksichtigt, das folgende Gleichungssystem für $y_2^*$ und $y_3^*$:
+\begin{align}
+\label{eq:7:**}
+\tag{$\star\star$}
+\begin{alignedat}{3}
+2y_2^* &\ + &\ 4y_3^* &\ = &\ 3\ \\
+2y_2^* &\ + &\  y_3^* &\ = &\ 1.
+\end{alignedat}
+\end{align}
+
+Dieses Gleichungssystem hat die eindeutige Lösung 
+\[
+y_2^* = \frac{1}{6}, \quad
+y_3^* = \frac{2}{3}.
+\]
+
+Insgesamt gilt also
+\[
+y_1^* = 0, \quad
+y_2^* = \frac{1}{6} \quad \text{und} \quad
+y_3^* = \frac{2}{3}\ .
+\]
+
+Damit haben wir eindeutig bestimmte Zahlen $y_1^*$, $y_2^*$, $y_3^*$ erhalten, die (1) erfüllen. Nun bleibt nur noch zu prüfen, ob auch (2) gilt. Einsetzen in (D) ergibt, dass die Antwort ja lautet.
+
+Unser Test hat also ergeben, dass $x_1^*=8$, $x_2^*=4$, $x_3^*=0$ eine optimale Lösung von (P) ist.
+
+\medskip
+
+\textbf{Beispiel 2}. Wir betrachten dasselbe LP-Problem wie zuvor in Beispiel 1 und stellen uns vor, es wäre nicht die zulässige Lösung $x_1^*=8$, $x_2^*=4$, $x_3^*=0$ auf Optimalität zu testen gewesen, sondern stattdessen
+\[
+x_1^* = \frac{33}{4}, \quad
+x_2^* = 0, \quad
+x_3^* = \frac{3}{2}.
+\]
+
+\textbf{Aufgabe}. Spielen Sie diesen Testfall durch!\footnote{Anders gesagt: Man soll so tun, als hätte man die Lösung $x_1^*=8$, $x_2^*=4$, $x_3^*=0$ noch gar nicht getestet, und soll stattdessen $x_1^*=\frac{33}{4}$, $x_2^*=0$, $x_3^*=\frac{3}{2}$ testen.}
+
+%\textbf{Hinweis}. In den beiden obigen Beispielen, ebenso wie in vielen anderen Fällen, liefert der Test ein Ergebnis. Es könnte aber auch vorkommen, dass anstelle von (\ref{eq:7:**}) ein Gleichungssystem auftritt, das unendlich viele Lösungen besitzt. Dann hat man unendlich viele Lösungen von (1) gefunden und hat anschließend möglicherweise Schwierigkeiten festzustellen, ob eine darunter ist, die (2) erfüllt. Stellt sich heraus, dass dies nur unter größerem Aufwand zu entscheiden ist, so macht der Test wenig Sinn und sollte lieber abgebrochen werden.
+
+
+
+\section{Zur ökonomischen Bedeutung der dualen Variablen}
+\index{ökonomische Bedeutung dualer Variablen}\index{duale Variable!ökonomische Bedeutung}
+\label{section:7:5}
+
+Wir betrachten ein LP-Problem in Standardform:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:17}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&&                              x_j &\ \geq &\   0 & \qquad (j=1,\ldots,n).
+\end{alignedat}
+\end{align}
+
+Tritt ein LP-Problem in einem Anwendungszusammenhang auf, zum Beispiel in den \textit{Wirtschaftswissenschaften}, so lassen sich die dualen Variablen $y_1,\ldots,y_m$ häufig inhaltlich interpretieren.
+
+Einen Hinweis auf die inhaltliche Bedeutung der dualen Variablen liefert das folgende Beispiel.
+
+\textbf{Beispiel (Gewinn eines Kosmetikherstellers)}. Stellen wir uns vor, dass es bei (\ref{eq:7:17}) darum geht, den Gewinn eines Kosmetikherstellers\index{Beispiel!\enquote{Gewinn eines Kosmetikherstellers}} zu maximieren. Dabei gibt jedes $x_j$ das \textit{Outputniveau für das $j$-te Produkt} an:
+ \[
+\begin{array}{rl}
+x_1: & \text{Menge der pro Woche hergestellten Handcreme} \\
+x_2: & \text{Menge der pro Woche hergestellten Gesichtscreme} \\
+& \qquad\qquad\qquad\qquad\ \ \vdots \\
+x_n: & \text{Menge der pro Woche hergestellten Körperlotion}
+\end{array}
+\]
+
+Die im selben Zeitraum maximal zur Verfügung stehende Menge des $i$-ten Inhaltsstoffs (der \textit{$i$-ten Ressource}\index{$i$-te Ressource}\index{Ressource}) wird durch $b_i$ angegeben:
+\[
+\begin{array}{l}
+\text{Es stehen $b_1$ Einheiten gereinigtes Wasser zur Verfügung.} \\
+\text{Es stehen $b_2$ Einheiten Glycerin zur Verfügung.} \\
+\qquad\qquad\qquad\qquad\qquad \vdots \\
+\text{Es stehen $b_m$ Einheiten Olivenöl zur Verfügung.}
+\end{array}
+\]
+
+Außerdem -- das sollte klar sein -- gibt $c_j$ den Gewinn an, sagen wir in Dollar, den man mit einer Einheit des jeweiligen Produkts erzielt. Ferner: $a_{ij}$ gibt an, wie viele Einheiten der $i$-ten Ressource pro Einheit des $j$-ten Produkts benötigt werden.
+
+Wir schauen uns die Ungleichungen des dualen Problems an:
+\begin{equation}
+\label{eq:7:18}
+\sum\limits_{i=1}^{m}{a_{ij}y_i} \geq c_j \qquad (j=1,\ldots,n).
+\end{equation}
+
+\begin{itemize}
+\item \textit{Rechts} haben wir es mit Dollar pro Einheit von Produkt $j$ zu tun;
+\item \textit{Links} haben wir es bei $a_{ij}$ mit Einheiten von Ressource $i$ pro Einheit von Produkt $j$ zu tun.
+\end{itemize}
+
+\textit{Soll das zusammenpassen, so muss die Größe $y_i$ also etwas in Dollar pro Einheit von Ressource $i$ angeben ($i=1,\ldots,m$).}
+
+\begin{SKBox}
+Die Größe $y_i$  wird in Dollar pro Einheit von Ressource $i$ gemessen und gibt deshalb einen \textit{Preis oder Wert einer Einheit der $i$-ten Ressource an} ($i=1,\ldots,m$).
+\end{SKBox}
+
+Dies soll nun präzisiert und ausgebaut werden. Entscheidendes Hilfsmittel ist der folgende Satz, den wir ohne Beweis angeben. (Bemerkungen zum Beweis findet man im Chvátal.)
+
+\begin{Satz}[Satz 4]
+Falls das LP-Problem (\ref{eq:7:17}) mindestens eine nichtdegenerierte optimale Basislösung besitzt, so gibt es ein $K > 0$ mit folgender Eigenschaft: Falls $|t_i| \leq K$ für alle $i=1,\ldots,m$ gilt, so besitzt das Problem
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:19}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i + t_i & \qquad (i=1,\ldots,m)\ \\
+&&                              x_j &\ \geq &\         0 & \qquad (j=1,\ldots,n)
+\end{alignedat}
+\end{align}
+
+eine optimale Lösung und der optimale Wert dieses Problems ist gleich
+\begin{equation}
+\label{eq:7:20}
+\begin{aligned}
+z^* + \sum\limits_{i=1}^{m}{y_i^*t_i}.
+\end{aligned}
+\end{equation}
+
+Hierbei bezeichnet $z^*$ den optimalen Wert von (\ref{eq:7:17}) und $y_1^*,\ldots,y_m^*$ bezeichnet die optimale Lösung\footnotemark{} des dualen Problems von (\ref{eq:7:17}).
+\end{Satz}
+
+\footnotetext{Aufgrund der Voraussetzung von Satz 4, dass (\ref{eq:7:17}) mindestens eine nichtdegenerierte optimale Basislösung besitzt, kann gezeigt werden, dass das duale Problem eine \textit{eindeutig bestimmte} optimale Lösung hat; insofern ist es gerechtfertigt, an dieser Stelle von \textit{der} optimalen Lösung zu sprechen.}
+
+\textit{Dieser Satz beschreibt den Effekt, den kleine Veränderungen der zur Verfügung stehenden Ressourcen auf den Gewinn haben}.
+
+Für den Fall, dass $t_i > 0$  für ein $i$ gilt, bedeutet die Formel (\ref{eq:7:20}):
+
+\textit{Mit jeder zusätzlich zur Verfügung stehenden Einheit der $i$-ten Ressource nimmt der maximale Gewinn um $y_i^*$ Dollar zu}.
+
+Man kann dies auch so formulieren:
+
+\textit{$y_i^*$ gibt den Höchstbetrag an, den die Firma für eine zusätzliche Einheit der $i$-ten Ressource zu zahlen bereit sein sollte.\footnote{Etwas genauer gilt: Mehr als $y_i^*$ Dollar zu zahlen sollte die Firma nicht bereit sein; beträgt der Preis genau $y_i^*$ Dollar, so liegt ein Grenzfall vor (\enquote{weder Nutzen noch Schaden}).}}
+
+Ist $t_i < 0$, so ergibt sich eine ähnliche Interpretation von $y_i^*$. Damit haben wir die gewünschte Interpretation der dualen Variablen erhalten.
+
+Im beschriebenen Zusammenhang ist es üblich, $y_i^*$ den \textit{Schattenpreis} der $i$-ten Ressource\index{Schattenpreis!der $i$-ten Ressource}\index{$i$-te Ressource!Schattenpreis der}\index{Ressource!Schattenpreise der $i$-ten} zu nennen. Zur Illustration geben wir ein Beispiel.
+
+\index{Beispiel!\enquote{Forstunternehmerin}}\index{Forstunternehmerin}
+\textbf{Beispiel (Forstunternehmerin)}. Eine Forstunternehmerin besitzt 100ha Wald, der vollständig aus Laub\-bäumen besteht\footnote{Im englischsprachigen Original (vgl. Chvátal: \textit{Linear Programming}) ist von \foreignquote{english}{100 acre of hardwood timber} die Rede (1 acre = 4047$m^2)$.}. Es gibt die folgenden Möglichkeiten:
+\begin{enumerate}[(i)]
+\item Den Wald zu fällen und den Boden brach liegen zu lassen, würde zunächst \$10 Kosten pro ha verursachen und später durch den Verkauf des Holzes einen Erlös von \$50 pro ha einbringen.
+\item Den Wald zu fällen und anschließend Pinien zu pflanzen, würde zunächst Kosten von \$50 pro ha verursachen; später würden jedoch (nach Abzug späterer Kosten) \$120 pro ha in die Kasse kommen.
+\end{enumerate}
+
+Also: Die 2. Möglichkeit ist die bessere, da sie \$70 Gewinn pro ha verspricht, während der Gewinn bei der 1. Möglichkeit nur \$40 pro ha beträgt. Nun kann die 2. Möglichkeit aber nicht im vollen Umfang umgesetzt werden, da nur \$4000 zur Verfügung stehen, um die unmittelbar anfallenden Kosten zu bestreiten. Die Forstunternehmerin erkennt, dass sich ihr Problem so formulieren lässt:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:21}
+& \text{maximiere } & 40x_1 &\ + &\ 70x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&   x_1 &\ + &\   x_2 &\ \leq &\  100\ \\
+&& 10x_1 &\ + &\ 50x_2 &\ \leq &\ 4000\ \\
+&& & & \llap{$x_1,x_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+
+Die optimale Lösung ist $x_1^* = 25$ und $x_2^*=75$.
+
+Die Forstunternehmerin sollte also nach Fällung des gesamten Baumbestands 25\% der Fläche brach liegen lassen und die restlichen 75\% mit Pinien bepflanzen. Dies würde zunächst Investitionskosten von \$4000 verursachen; der Gewinn würde letztendlich \$6250 betragen.
+
+\textit{Offensichtlich stellt das Anfangskapital von \$4000 eine wertvolle Ressource dar}\footnote{Man beachte, dass es in diesem Beispiel zwei Ressourcen gibt: Laubwald und Kapital. Jeder der beiden Ressourcen entspricht eine Ungleichung von (\ref{eq:7:21}); auf der rechten Seite steht dabei die zur Verfügung stehende Menge der jeweiligen Ressource (100ha bzw. \$ 4000). Es ist also alles ganz ähnlich wie weiter oben im Beispiel des Kosmetikherstellers.}. In der Tat wäre die Forstunternehmerin gut beraten, diese Ressource zu erhöhen und einen Kredit aufzunehmen: Die zu erwartenden zusätzlichen Einnahmen könnten möglicherweise sogar drastische Zinsen ausgleichen.
+
+Beispielsweise könnte sie die Gelegenheit haben, sich \$100 zu borgen, für die sie später \$180 zurückzahlen müsste. \textbf{Sollte sie das machen?}
+
+\textit{Die Antwort auf diese und ähnliche Fragen erhält man, wenn man die optimale Lösung des zu (\ref{eq:7:21}) dualen Problems berechnet}; diese lautet:
+\[
+y_1^* = 32.5, \quad
+y_2^* = 0.75.
+\]
+
+Aufgrund der Erläuterungen zu Satz 4 und wegen $y_2^* = 0.75$ erkennt man: \textit{Die Forstunternehmerin sollte (in begrenztem Umfang) Kapital aufnehmen, aber nur genau dann, wenn die zu zahlenden Zinsen kleiner als 75 Cent pro Dollar sind.}
+
+Dieses Ergebnis hat sich aufgrund von Satz 4 ergeben. Es lässt sich aber auch direkt nachprüfen, wenn man sich anschaut, wie das in Satz 4 auftretende LP-Problem (\ref{eq:7:19}) in unserem Fall lautet:
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:7:22}
+& \text{maximiere } & 40x_1 &\ + &\ 70x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&   x_1 &\ + &\   x_2 &\ \leq &\  100\ &\   &\ \\
+&& 10x_1 &\ + &\ 50x_2 &\ \leq &\ 4000\ &\ + &\ t \\
+&& & & \llap{$x_1,x_2$} &\ \geq &\   0. & &
+\end{alignedat}
+\end{align}
+
+Hierbei ist $4000+t$ das zur Verfügung stehende Kapital. Die Größe $t$ gibt das zusätzlich aufgenommene Kapital an.
+
+Jede zulässige Lösung $x_1$, $x_2$ dieses Problems erfüllt die Ungleichung
+\begin{equation}
+\label{eq:7:23}
+40x_1 + 70x_2 = 32.5 \bigl( x_1+x_2 \bigr) + 0.75 \bigl( 10x_1 + 50x_2 \bigr) \leq 3250 + 0.75(4000+t) = 6250 + 0.75t.
+\end{equation}
+
+Deshalb wird der zusätzliche Gewinn niemals größer als $0.75t$ sein.
+
+Falls $t \leq 1000$, so kann in der Tat ein zusätzlicher Gewinn von $0.75t$ erzielt werden, wenn man
+\begin{equation}
+\label{eq:7:24}
+x_1 = 25 - 0.025t,\quad
+x_2 = 75 + 0.025t
+\end{equation}
+
+wählt. (Das Ergebnis (\ref{eq:7:24}) erhält man, wenn man (\ref{eq:7:22}) für festes $t$ mit $0 \leq t \leq 1000$ mittels Simplexverfahren löst.)
+
+Kreditaufnahme von mehr als \$1000 ist offensichtlich sinnlos, da insgesamt nicht mehr als \$5000 benötigt werden. Damit ist auch präzisiert, was mit der Formulierung gemeint ist, dass die Forstunternehmerin \enquote{in begrenztem Umfang} Kapital aufnehmen sollte, falls die Zinsen kleiner als 75\% sind: In unserem Fall bedeutet das $t \leq 1000$.
+
+\textit{Der Fall $t < 0$ lässt sich auf ganz ähnliche Art illustrieren}: Anstelle der Gelegenheit, sich \$100 zu borgen, für die sie später \$180 zurückzahlen müsste, könnte sich für unsere Forstunternehmerin die Gelegenheit bieten, einen Teil ihrer \$4000 abzuzweigen und in ein anderes lukratives Unternehmen zu investieren. Beispielsweise könnte sie die Gelegenheit haben, \$100 zu investieren, um dann später \$180 zurückzubekommen.
+
+Eine solche Investition in ein anderes Unternehmen führt zu einem negativen $t$ in (\ref{eq:7:22}). Die Ungleichung (\ref{eq:7:23}) bleibt aber auch für $t < 0$ gültig; diese Ungleichung bedeutet für $t < 0$:
+
+Falls $-t$ Dollar für eine alternative Investition abgezweigt werden ($-t$ ist positiv!), so beträgt der Gewinn aus der ursprünglichen Unternehmung nur noch höchstens $6250 + 0.75t$, d.h., der Gewinn aus der ursprünglichen Unternehmung fällt um mindestens $0.75(-t)$.
+
+Falls man $x_1$ und $x_2$ wie in (\ref{eq:7:24}) wählt und falls $-t \leq 3000$ gilt, so kann in der Tat erreicht werden, dass die Verringerung des Gewinns aus der ursprünglichen Unternehmung genau $0.75(-t)$ beträgt.
+
+Die Berechnungen laufen in beiden Fällen ($t \geq 0$ und $t<0$) also völlig gleich, nur der Gültigkeitsbereich von (\ref{eq:7:24}) ist im ersten Fall $0 \leq t \leq 1000$ und im zweiten Fall $-3000 \leq t < 0$.
+
+\textit{Zusammenfassung}:
+\begin{enumerate}[1.]
+\item Hat die Forstunternehmerin die Gelegenheit, weiteres Kapital aufzunehmen, so sollte sie es tun, aber nur bis zu \$1000 und nur, falls die zu zahlenden Zinsen kleiner als 75 Cent pro Dollar sind.
+\item Hat sie die Gelegenheit, einen Teil ihres Geldes in ein anderes Unternehmen zu investieren, so kann zugeraten werden, falls sie für einen Dollar mehr als 175 Cent zurückbekommt. Dies gilt aber nur dann, wenn die Investitionssumme nicht höher als \$3000 ist.
+\end{enumerate}
+
+Dies ist nun aber noch nicht ganz das Ende der Geschichte.
+
+\textit{Man stelle sich einmal vor, dass es eine überraschende Gelegenheit für unsere Forstunternehmerin gibt, ein möglicherweise noch besseres Geschäft zu machen}. Beispielsweise könnte sich die Gelegenheit ergeben, den Wald zu fällen und -- sagen wir -- Koniferen zu pflanzen.
+
+Um eine schnelle Beurteilung der Geschäftsaussichten zu erhalten, kann die Forstunternehmerin die \textit{Schattenpreise}\index{Schattenpreis} ihrer Ressourcen heranziehen:
+\begin{center}
+\$32.5 pro ha Laubwald; \\
+\$0.75 pro Dollar Kapital.
+\end{center}
+
+Falls die neue Aktivität $d$ Dollar Investitionskosten pro ha erfordert, dann haben die Ressourcen, die durch die neue Unternehmung pro ha verbraucht werden, einen Wert von $\$(32.5 + 0.75d)$. Die neue Aktivität kommt demnach genau dann in Betracht, wenn der Gewinn pro ha diesen Wert übersteigt.
+
+
+
+
+\section{Dualität im Fall eines allgemeinen LP-Problems}
+\index{allgemeiner Fall eines LP-Problems}\index{LP-Problem!allgemeiner Fall}\index{Dualität!eines allgemeinen LP-Problems}
+\label{section:7:6}
+
+Für jedes LP-Problem (P) in Standardform haben wir definiert, was wir unter dem dazugehörigen dualen Problem (D) verstehen. Es besitzen jedoch nicht nur Probleme in Standardform ein duales Problem, \textit{sondern zu jedem LP-Problem gehört ein duales Problem}.
+
+Wie sieht nun im allgemeinen Fall das duale Problem aus? Die Antwort auf diese Frage werden wir weiter unten in Form eines \textit{Rezepts} präsentieren. Bevor wir dies tun, soll jedoch erläutert werden, was wir unter dem \enquote{allgemeinen Fall} genau verstehen.
+
+Klarerweise bedeutet es keine Einschränkung der Allgemeinheit, wenn wir annehmen, dass wir als Ausgangsproblem (primales Problem) ein Maximierungsproblem vorliegen haben: Jedes Minimierungsproblem lässt sich ja -- wie wir wissen -- auf eine ganz einfache Art in ein Maximierungsproblem verwandeln. (Wie nämlich?)
+
+Ebenfalls bedeutet es keine Einschränkung, wenn wir annehmen, dass im primalen Problem (abgesehen von Nichtnegativitätsbedingungen) keine Ungleichungen des Typs $\sum\limits_{j=1}^{n}{a_{ij}x_j} \geq b_i$ auftreten: Kommt eine solche Ungleichung (beispielsweise $3x_1+2x_2-5x_3 \geq 6$) vor, so braucht man diese ja nur mit $-1$ zu multiplizieren.
+
+\textit{Als Nebenbedingungen, die keine Nichtnegativitätsbedingungen sind, können im primalen Problem (P) im allgemeinen Fall also auftreten}:
+\begin{itemize}
+\item Ungleichungen vom Typ $\sum\limits_{j=1}^{n}{a_{ij}x_j} \leq b_i$, wie beispielsweise $27x_1-x_2+2x_3 \leq 5$;
+\item Gleichungen.
+\end{itemize} 
+
+\textit{In ähnlicher Weise können im allgemeinen Fall zwei Typen von Variablen auftreten}:
+\begin{itemize}
+\item Variablen, die einer Nichtnegativitätsbedingung unterliegen ($x_j \geq 0$);
+\item freie Variablen\index{freie Variable}\index{Variable!freie}, d.h. Variablen, für die nicht $x_j \geq 0$ gefordert wird.
+\end{itemize}
+
+Ein allgemeines LP-Problem (P) ist beispielsweise:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 7x_1 &\ + &\ 3x_2 &\ + &\ x_3 &\ + &\ 5x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& -2x_1 &\ + &\  x_2 &\ + &\ x_3 &\ - &\ 3x_4 &\ \leq &\  1\ \\
+&&  5x_1 &\ + &\  x_2 &\   &\     &\ + &\ 9x_4 &\ \leq &\ -2\ \\
+&&   x_1 &\ + &\ 3x_2 &\ + &\ x_3 &\ + &\ 7x_4 &\    = &\  5\ \\
+&&   x_1 &\   &\      &\ + &\ x_3 &\ - &\ 6x_4 &\    = &\  1\ \\
+&& & & & & & & \llap{$x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Hierbei sind $x_1$ und $x_4$ freie Variablen.
+
+Im Unterschied zu den bislang betrachteten primalen Problemen in Standardform können jetzt also \textit{zusätzlich Gleichungen\index{Gleichung} und freie Variablen\index{freie Variable}\index{Variable!freie}} auftreten.
+
+Wir gehen also von einem LP-Problem (P) des folgenden Typs aus:
+\footnotesize
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:25}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i \in I_1) \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\    = &\ b_i & \qquad (i \in I_2) \\
+&&                              x_j &\ \geq &\   0 & \qquad (j \in J_1).
+\end{alignedat}
+\end{align}
+\small
+
+Was in (\ref{eq:7:25}) und im Folgenden die Bezeichnungen in $I_1$, $I_2$ und $J_1$ bedeuten, liegt auf der Hand:
+\begin{itemize}
+\item $I_1$ ist die Menge der Indizes $i \in \bigl\{ 1,\ldots,m \bigr\}$, für die die $i$-te Nebenbedingung eine \textit{Ungleichung}\index{Ungleichung} ist;
+\item $I_2$ ist die Menge der Indizes $i \in \bigl\{ 1,\ldots,m \bigr\}$, für die die $i$-te Nebenbedingung eine \textit{Gleichung}\index{Gleichung} ist;
+\item $J_1$ ist die Menge der Indizes $j \in \bigl\{ 1,\ldots,n \bigr\}$, die zu \textit{restringierten Variablen}\index{restringierte Variable}\index{Variable!restringierte} $x_j$ gehören, also zu denjenigen Variablen, die einer Nichtnegativitätsbedingung unterliegen.
+\end{itemize}
+
+Ergänzend definieren wir noch $J_2 = \bigl\{ 1,\ldots,n \bigr\} \setminus J_1$.
+\begin{itemize}
+\item Die Menge $J_2$ enthält diejenigen Indizes, die zu \textit{freien Variablen}\index{freie Variable}\index{Variable!freie} gehören.
+\end{itemize}
+
+Es ist durchaus möglich, dass einige dieser Indexmengen leer sind: Gilt beispielsweise $I_1 = \emptyset$, so treten in (P) nur Gleichungen auf; oder (eine andere Möglichkeit): Es gilt $J_1 = \emptyset$, d.h., wir haben es nur mit freien Variablen zu tun.
+
+Gilt $I_2 = J_2 = \emptyset$, so liegt der Fall eines LP-Problems in Standardform vor.
+
+Unter einer \textit{Linearkombination der Nebenbedingungen}\index{Linearkombination von Nebenbedingungen}\index{Nebenbedingungen!Linearkombination von}
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:7:26}
+\sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i \in I_1) \\
+\sum\limits_{j=1}^{n}{a_{ij}x_j} &\    = &\ b_i & \qquad (i \in I_2)
+\end{alignedat}
+\end{align}
+verstehen wir eine lineare Ungleichung, die dadurch entsteht, dass man jede dieser Nebenbedingungen mit einem Faktor $y_i$ multipliziert, wobei $y_i \geq 0$ für alle $i \in I_1$ gelten soll, und anschließend die entstandenen Ungleichungen und Gleichungen aufsummiert.
+
+Die hierdurch entstandene neue Ungleichung (Linearkombination) lautet also
+\begin{equation}
+\label{eq:7:27}
+\sum\limits_{i=1}^{m}{y_i \left( \sum\limits_{j=1}^{n}{a_{ij}x_j} \right)} \leq \sum\limits_{i=1}^{m}{b_iy_i}.
+\end{equation}
+
+\textit{Wichtig, damit die Ungleichung (\ref{eq:7:27}) tatsächlich zustande kommt}: Für die Ungleichungen aus (\ref{eq:7:26}) müssen nichtnegative Faktoren gewählt werden. (Die Faktoren $y_i$, die zu den Gleichungen gehören, sind hingegen frei wählbar.)
+
+Wir wollen die Faktoren $y_i$ als \textit{duale Variablen}\index{duale Variable}\index{Variable!duale} bezeichnen; es gilt also:
+\begin{itemize}
+\item Zu jeder \textit{Ungleichung} von (\ref{eq:7:26}) gehört eine \textit{restringierte duale Variable}\index{restringierte duale Variable}\index{duale Variable!restringierte}\index{Variable!restringierte duale} $y_i$, d.h., es wird $y_i \geq 0$ gefordert.
+\item Zu jeder \textit{Gleichung} von (\ref{eq:7:26}) gehört eine \textit{freie duale Variable}\index{freie duale Variable}\index{Variable!freie duale}\index{duale Variable!freie} $y_i$.
+\end{itemize}
+
+Änderung der Summationsreihenfolge auf der linken Seite von (\ref{eq:7:27}) ergibt
+\begin{equation}
+\label{eq:7:28}
+\sum\limits_{i=1}^{m}{y_i \left( \sum\limits_{j=1}^{n}{a_{ij}x_j} \right)} = \sum\limits_{j=1}^{n}{\left( \sum\limits_{i=1}^{m}{a_{ij}y_i} \right) x_j}.
+\end{equation}
+
+Ersetzt man die linke Seite von (\ref{eq:7:27}) entsprechend, so geht unsere Linearkombination in die folgende Darstellung über:
+\begin{equation}
+\label{eq:7:29}
+\sum\limits_{j=1}^{n}{\left( \sum\limits_{i=1}^{m}{a_{ij}y_i} \right) x_j} \leq \sum\limits_{i=1}^{m}{b_iy_i}.
+\end{equation}
+
+Gelten für eine Wahl der Variablen $x_1,\ldots,x_n$ sämtliche Nebenbedingungen (\ref{eq:7:26}), so gilt für diese Wahl von $x_1,\ldots,x_n$ ebenfalls (\ref{eq:7:29}).
+
+Bislang haben wir nur die Nebenbedingungen von (\ref{eq:7:25}) betrachtet -- \textit{nun kommen zusätzlich die Koeffizienten $c_1,\ldots,c_n$ der Zielfunktion ins Spiel}.
+
+Falls die Zahlen $y_1,\ldots,y_m$ so gewählt werden, dass
+\begin{equation}
+\label{eq:7:30}
+\sum\limits_{i=1}^{m}{a_{ij}y_i} \geq c_j \quad \text{für alle } j \in J_1
+\end{equation}
+
+und
+
+\begin{equation}
+\label{eq:7:31}
+\sum\limits_{i=1}^{m}{a_{ij}y_i}  = c_j \quad \text{für alle } j \in J_2
+\end{equation}
+
+gilt, so folgt für jede zulässige Lösung $x_1,\ldots,x_n$ von (\ref{eq:7:25}):
+\[
+c_jx_j \leq \left( \sum\limits_{i=1}^{m}{a_{ij}y_i} \right) x_j  \quad \text{für alle } j \in J_1
+\]
+und
+\[
+c_jx_j = \left( \sum\limits_{i=1}^{m}{a_{ij}y_i} \right) x_j  \quad \text{für alle } j \in J_2,
+\]
+
+woraus man durch Aufsummieren
+\[
+\sum\limits_{j=1}^{n}{c_jx_j} \leq \sum\limits_{j=1}^{n}{\left( \sum\limits_{i=1}^{m}{a_{ij}y_i} \right) x_j}
+\]
+
+erhält und somit (aufgrund von (\ref{eq:7:29}))
+\begin{equation}
+\label{eq:7:32}
+\sum\limits_{j=1}^{n}{c_jx_j}  \leq \sum\limits_{i=1}^{m}{b_iy_i}.
+\end{equation}
+
+Zusammenfassend können wir feststellen:
+
+\begin{Definition}[Feststellung]
+Falls die Zahlen $y_1,\ldots,y_m$ die Bedingungen (\ref{eq:7:30}) und (\ref{eq:7:31}) erfüllen und falls außerdem $y_i \geq 0$ für alle $i \in I_1$ gilt, so ist die Zahl
+\[
+\sum\limits_{i=1}^{m}{b_iy_i}
+\]
+eine \textit{obere Schranke} für den optimalen Wert von (\ref{eq:7:25}).
+\end{Definition}
+
+Natürlich wünscht man sich eine \textit{möglichst gute obere Schranke}, was zu folgendem LP-Problem führt:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:33}
+& \text{minimiere } & \sum\limits_{i=1}^{m}{b_iy_i} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{i=1}^{m}{a_{ij}y_i} &\ \geq &\ c_j & \qquad (j \in J_1) \\
+&& \sum\limits_{i=1}^{m}{a_{ij}y_i} &\    = &\ c_j & \qquad (j \in J_2) \\
+&&                              y_i &\ \geq &\   0 & \qquad (i \in I_1).
+\end{alignedat}
+\end{align}
+
+Man nennt (\ref{eq:7:33}) das \textit{duale Problem}\index{duales Problem}\index{Problem!duales} (oder kurz: das \textit{Duale}\index{Duales}) zu (\ref{eq:7:25}); in diesem Zusammenhang wird (\ref{eq:7:25}) das \textit{primale Problem}\index{primales Problem}\index{Problem!primales} genannt.
+
+Das duale Problem (D) für das Beispiel (P) vor (\ref{eq:7:25}) lautet also:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & y_1 &\ - &\ 2y_2 &\ + &\ 5y_3 &\ + &\ y_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& -2y_1 &\ + &\ 5y_2 &\ + &\  y_3 &\ + &\  y_4 &\    = &\ 7\ \\
+&&   y_1 &\ + &\  y_2 &\ + &\ 3y_3 &\   &\      &\ \geq &\ 3\ \\
+&&   y_1 &\   &\      &\ + &\  y_3 &\ + &\  y_4 &\ \geq &\ 1\ \\
+&& -3y_1 &\ + &\ 9y_2 &\ + &\ 7y_3 &\ - &\ 6y_4 &\    = &\ 5\ \\
+&& & & & & & & \llap{$y_1,y_2$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Wir können uns das folgende \textit{Dualisierungsrezept}\index{Dualisierungsrezept}\label{page:7:3} merken.
+
+\begin{Satz}[Dualisierungsrezept]
+\begin{itemize}
+\item Ist die $i$-te Nebenbedingung im primalen Problem (P) eine Ungleichung, so ist $y_i$ in (D) eine restringierte Variable.
+\item Ist die $i$-te Nebenbedingung in (P) eine Gleichung, so ist $y_i$ eine freie Variable.
+\item Ist $x_j$ eine freie Variable, so ist in (D) die $j$-te Nebenbedingung eine Gleichung.
+\item Ist $x_j$ eine restringierte Variable, so ist in (D) die $j$-te Nebenbedingung eine Ungleichung.
+\end{itemize}
+\end{Satz}
+
+Dasselbe in Tabellenform:
+
+\begin{center}\label{page:7:2}
+\begin{tabular}{c||c}
+\textit{Maximierungsproblem (P)} & \textit{Minimierungsproblem (D)} \\ [1ex] \hline\hline \\ [-1.5ex]
+$i$-te Nebenbedingung enthält $\leq$ & $y_i \geq 0$ \\ [1ex] \hline \\ [-1.5ex]
+$i$-te Nebenbedingung enthält $=$ & $y_i$ ist frei \\ [1ex] \hline \\ [-1.5ex]
+$x_j \geq 0$ & $j$-te Nebenbedingung enthält $\geq$ \\ [1ex] \hline \\ [-1.5ex]
+$x_j$ ist frei & $j$-te Nebenbedingung enthält $=$
+\end{tabular}
+\end{center}
+
+In Worten lässt sich das \textit{Dualisierungsrezept}\index{Dualisierungsrezept} ebenfalls sehr eingängig ausdrücken:
+
+\begin{center}
+\textit{Ungleichungen entsprechen restringierten Variablen im jeweils anderen Problem;\\
+Gleichungen entsprechen freien Variablen.}
+\end{center}
+
+\textbf{Beispiel}. Konstruieren Sie das Duale (D) des folgenden LP-Problems, das wir (P) nennen:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ 5x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 5x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\    = &\ -8\ \\
+&& 4x_1 &\ + &\ 2x_2 &\ + &\ 8x_3 &\ \leq &\ 23\ \\
+&& 6x_1 &\ + &\ 7x_2 &\ + &\ 3x_3 &\ \geq &\  1\ \\
+&&  x_1 &\   &\      &\   &\      &\ \leq &\  4\ \\
+&& & & & & \llap{$x_3$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+\textbf{Lösung}. Bevor wir das Dualisierungsrezept anwenden können, muss zunächst die 3. Nebenbedingung mit $-1$ multipliziert werden. Man erhält:
+
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ 5x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  5x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\    = &\ -8\ \\
+&&  4x_1 &\ + &\ 2x_2 &\ + &\ 8x_3 &\ \leq &\ 23\ \\
+&& -6x_1 &\ - &\ 7x_2 &\ - &\ 3x_3 &\ \leq &\ -1\ \\
+&&   x_1 &\   &\      &\   &\      &\ \leq &\  4\ \\
+&& & & & & \llap{$x_3$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+Nun können wir das Dualisierungsrezept anwenden und erhalten (D):
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & -8y_1 &\ + &\ 23y_2 &\ - &\ y_3 &\ + &\ 4y_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 5y_1 &\ + &\ 4y_2 &\ - &\ 6y_3 &\ + &\ y_4 &\    = &\ 3\ \\
+&& 3y_1 &\ + &\ 2y_2 &\ - &\ 7y_3 &\   &\     &\    = &\ 2\ \\
+&&  y_1 &\ + &\ 8y_2 &\ - &\ 3y_3 &\   &\     &\ \geq &\ 5\ \\
+&& & & & & & & \llap{$y_2,y_3,y_4$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+Die folgende Feststellung ist unschwer einzusehen.
+
+\begin{Definition}[Feststellung]
+Bildet man von einem Problem $(P)$ das Duale $(D)$ und anschließend das Duale von $(D)$, so gelangt man zurück zum primalen Problem $(P)$, wobei es vorkommen kann, dass man $(P)$ in leicht umgeschriebener Form erhält.
+\end{Definition}
+
+Wir halten fest: \textit{Das Duale des dualen Problems ist das primale Problem}.
+
+Ist $(P)$ ein Minimierungsproblem und soll von $(P)$ das Duale gebildet werden, so kann man zunächst einmal eine Überführung von $(P)$ in ein Maximierungsproblem vornehmen. Danach lässt sich das Duale bilden, indem man wie in unserem letzten Beispiel vorgeht.
+
+Da das Duale des dualen Problems das primale Problem ist, gibt es hierzu eine \textit{alternative Vorgehensweise}: Man wendet die Tabelle, in der das Dualisierungsrezept beschrieben wird, \textit{von rechts nach links} an. Dabei liest man die Tabelle von rechts nach links:
+
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+Liegt ein Minimierungsproblem $(D)$ vor, von dem das Duale zu bilden ist, so sorgt man zunächst dafür, dass alle Ungleichungsnebenbedingungen von der Form \enquote{$\geq$} sind; dann kann man das Duale von $(D)$ bilden, indem man zum Problem $(P)$ der linken Spalte übergeht.
+\end{minipage}
+\end{center}
+
+Für allgemeine LP-Probleme gelten ähnliche Sätze wie für LP-Probleme in Standardform. Dies trifft beispielsweise auf den Dualitätssatz zu. Auch für allgemeine LP-Probleme lässt sich der Dualitätssatz wie folgt formulieren
+(Beweis: siehe Chvatal).
+
+\begin{Satz}[Satz (Dualitätssatz für allgemeine LP-Probleme)]
+\index{Dualitätssatz!für allgemeine LP-Probleme}\index{Satz!Dualitäts- für allgemeine LP-Probleme}
+Falls ein LP-Problem eine optimale Lösung besitzt, so gilt dies auch für das duale Problem und die optimalen Werte beider Probleme stimmen überein.
+\end{Satz} 
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Das Lemma von Farkas"                                                       %
+%------------------------------------------------------------------------------%
+
+\section{Das Lemma von Farkas}
+\label{section:7:7}
+
+Wir haben in Abschnitt \ref{section:7:3} den Dualitätssatz mithilfe des Simplexalgorithmus bewiesen. Eine andere Möglichkeit, den Dualitätssatz zu beweisen, macht vom Lemma von Farkas Gebrauch. Da es sich bei dem \enquote{Lemma von Farkas} genannten Satz um eine sehr bekannte und häufig benutzte Aussage handelt, die keineswegs nur beim Beweis des Dualitätssatzes eine Rolle spielt, soll das Lemma von Farkas hier vorgestellt werden.
+
+\begin{Satz}[Satz (Lemma von Farkas)]
+\label{page:7:6}
+Es sei $A$ eine reelle $m \times n$ - Matrix und $b \in \R^m$ sei ein Vektor. Dann ist genau eine der beiden Aussagen richtig:
+\begin{enumerate}[(i)]
+\item Es existiert ein $x \in \R^n$, für das $Ax=b$ und $x \geq 0$ gilt.
+\item Es existiert ein $y \in \R^m$, für das $y^TA \geq 0$ und $y^Tb < 0$ gilt\footnotemark.
+\end{enumerate}
+\end{Satz}
+
+\footnotetext{Die Bedeutung des Symbols \enquote{0} erklärt sich aus dem jeweiligen Zusammenhang: In der Ungleichung $x \geq 0$ ist $0$ ein Spaltenvektor, in $y^TA \geq 0$ ist $0$ ein Zeilenvektor und in $y^Tb < 0$ ist $0$ eine reelle Zahl.}
+
+\textit{Dass (I) und (II) nicht gleichzeitig gelten können, ist einfach einzusehen}: Angenommen, es würden (I) und (II) gleichzeitig gelten. Dann erhielte man aus $y^TA \geq 0$ und $x \geq 0$, dass $(y^TA)x \geq 0$ gilt, woraus sich (unter Benutzung von $Ax=b$) Folgendes ergibt:
+\[
+y^Tb = y^T(Ax) = (y^TA)x \geq 0.
+\]
+
+Dies steht im Widerspruch zu $y^Tb < 0$, womit gezeigt ist, dass (I) und (II) nicht gleichzeitig gelten können.
+
+\textit{Die eigentliche Aussage des Lemmas von Farkas ist die Feststellung, dass immer eine der beiden Aussagen (I) und (II) gelten muss.}
+
+Es gibt \textit{verschiedene Versionen} des Lemmas von Farkas. Da es uns hier besonders auf die geometrische Interpretation des Lemmas von Farkas ankommt, haben wir eine Version ausgewählt, die für die geometrische Deutung besonders gut geeignet ist. Später werden wir noch eine andere Version kennenlernen.
+
+Wir kommen zur \textit{geometrischen Interpretation des Lemmas von Farkas}. Hierbei spielen die Spalten von $A$ eine wichtige Rolle. Wir bezeichnen die Spalten von $A$ mit
+\[
+a_1,\ldots,a_n.
+\]
+
+Bei den Spalten $a_1,\ldots,a_n$ handelt es sich um Vektoren des $\R^m$ -- und ebenso ist $b$ ein Vektor des $\R^m$. Bezeichnen wir die Einträge von $x$ mit $x_1,\ldots,x_n$ (mit anderen Worten: $x^T = (x_1,\ldots,x_n)$), so können wir (I) auch wie folgt ausdrücken: Es existiert eine Linearkombination $x_1a_1 + \ldots + x_na_n$ der Spalten von $A$ \textit{mit nichtnegativen Koeffizienten} $x_i \in \R$ ($i=1,\ldots,n$), so dass gilt:
+\[
+x_1a_1 + \ldots + x_na_n = b.
+\]
+
+In geometrischer Terminologie lässt sich (I) demnach wie folgt aussprechen (vgl. Abschnitt \ref{section:4:4}):
+\begin{center}
+(I) Der Vektor $b$ liegt im konvexen Kegel, der von der Menge $\bigl\{ a_1,\ldots,a_n \bigr\}$ erzeugt wird.
+\end{center}
+
+Dasselbe noch etwas knapper geschrieben:
+\[
+b \in \cone(\bigl\{ a_1,\ldots,a_n \bigr\}).
+\]
+
+In der folgenden Zeichnung wird (I) für den Fall illustriert, dass $m=2$ und $n=3$ gilt (\enquote{drei Vektoren $a_1,a_2,a_3$ im $\R^2$}):
+
+\begin{figure}[H]
+\centering
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-5,-0,25)(5,3.5)
+\footnotesize
+
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(-6,2)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(6,2)
+
+\psline[linewidth=1pt]{->}(0,0)(-3,1) \uput{0.25}[270](-3,1){$a_1$}
+\psline[linewidth=1pt]{->}(0,0)(1,2) \uput{0.25}[0](1,2){$a_2$}
+\psline[linewidth=1pt]{->}(0,0)(3,1) \uput{0.25}[270](3,1){$a_3$}
+\psline[linewidth=1pt]{->}(0,0)(-2,3) \uput{0.25}[0](-2,3){$b$}
+
+\pscircle*(0,0){0.075}
+
+\small
+\end{pspicture*}
+
+\caption*{Der Fall $b \in \cone\left(\bigl\{ a_1,a_2,a_3 \bigr\}\right)$}
+\end{figure}
+
+Der Fall, dass (I) nicht gilt, d.h., dass $b$ \textit{nicht} im konvexen Kegel $\cone(\bigl\{ a_1,\ldots,a_n \bigr\})$ enthalten ist, wird in der nächsten Zeichnung dargestellt:
+
+\begin{figure}[H]
+\centering
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-5,-2.5)(5,3.5)
+\footnotesize
+
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(-6,2)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(6,2)
+
+\psline[linewidth=1pt]{->}(0,0)(-3,1) \uput{0.25}[270](-3,1){$a_1$}
+\psline[linewidth=1pt]{->}(0,0)(1,2) \uput{0.25}[0](1,2){$a_2$}
+\psline[linewidth=1pt]{->}(0,0)(3,1) \uput{0.25}[270](3,1){$a_3$}
+\psline[linewidth=1pt]{->}(0,0)(3,-2) \uput{0.25}[0](3,-2){$b$}
+
+\pscircle*(0,0){0.075}
+
+\small
+\end{pspicture*}
+
+\caption*{Der Fall $b \notin \cone\left(\bigl\{ a_1,a_2,a_3 \bigr\}\right)$}
+\end{figure}
+
+Soviel zur geometrischen Interpretation von (I) bzw. zum Fall, dass (I) nicht gilt. Wir kommen nun zur geometrischen Interpretation von (II).
+
+Zunächst beobachten wir, dass der Vektor $y \in \R^m$, der in (II) vorkommt, nicht der Nullvektor sein kann, da andernfalls nicht $y^Tb < 0$ gelten würde. Zu $y$ gehört also eine Hyperebene $h$ des $\R^m$:
+\[
+h = \Bigl\{ x \in \R^m : y^Tx = 0 \Bigr\}.
+\]
+
+Mit anderen Worten: \textit{$h$ ist die Menge aller Vektoren des $\R^m$, die senkrecht auf $y$ stehen}.
+
+Man beachte, dass $h$ den Nullvektor enthält; im Fall $m=2$ ist $h$ also eine \textit{Ursprungsgerade} und im Fall $m=3$ ist $h$ eine \textit{Ursprungsebene}.
+
+\textbf{Sprechweise}: Es seien $y$ und $h$ wie zuvor, d.h., es gelte $y \in \R^m$, $y \neq 0$ und $h = \bigl\{ x \in \R^m : y^Tx = 0 \bigr\}$. Außerdem seien $b \in \R^m$ und eine Menge $C \subseteq \R^m$ gegeben. Gilt $y^Tc \geq 0$ für alle $c \in C$ sowie $y^Tb<0$, so sagt man, \textit{dass $h$ den Vektor $b$ von den Vektoren aus $C$ trennt}. Oder etwas kürzer:
+\begin{center}
+	\textit{$h$ trennt $b$ von $C$.}
+\end{center}
+
+Man kann dies auch so ausdrücken: \textit{Alle Vektoren von $C$ liegen auf einer Seite von $h$ und $b$ liegt nicht auf dieser Seite}.
+
+Damit ist klar, wie (II) geometrisch zu interpretieren ist: Die Ungleichungen $y^TA \geq 0$ und $y^Tb<0$ besagen, dass die Hyperebene $h = \bigl\{ x \in \R^m : y^Tx=0 \bigr\}$ den Vektor $b$ von den Spaltenvektoren $a_1,\ldots,a_n$ der Matrix $A$ trennt.
+
+Es sei $C = \cone(\bigl\{ a_1,\ldots,a_n \bigr\})$ und es gelte $c \in C$. Man beachte (Beweis als Übungsaufgabe!): Aus $y^TA \geq 0$ folgt, dass ebenfalls $y^Tc \geq 0$ gilt.
+
+Die Ungleichungen $y^TA \geq 0$ und $y^Tb < 0$ besagen also noch etwas mehr, nämlich dass die Hyperebene $h = \bigl\{ x \in \R^m : y^Tx = 0 \bigr\}$ den Vektor $b$ nicht nur von $a_1,\ldots,a_n$ trennt, sondern sogar vom gesamten konvexen Kegel $C = \cone(\bigl\{ a_1,\ldots,a_n \bigr\})$.
+
+Natürlich haben wir unsere Sprechweisen wie z.B. \enquote{$h$ trennt $b$ von $C$} nicht willkürlich gewählt, sondern so, dass sie für die Fälle $\R^2$ und $\R^3$ mit unserer geometrischen Anschauung übereinstimmen. In der folgenden Zeichnung wird der Fall $m=2$ illustriert:
+
+\begin{figure}[H]
+\centering
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-5,-2.5)(5,3.5)
+\footnotesize
+
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(-6,2)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(6,2)
+
+\psline[linewidth=1pt]{->}(0,0)(-3,1) \uput{0.25}[270](-3,1){$a_1$}
+\psline[linewidth=1pt]{->}(0,0)(1,2) \uput{0.25}[0](1,2){$a_2$}
+\psline[linewidth=1pt]{->}(0,0)(3,1) \uput{0.25}[270](3,1){$a_3$}
+\psline[linewidth=1pt]{->}(0,0)(3,-2) \uput{0.25}[90](3,-2){$b$}
+
+\psline[linewidth=1.25pt](-5,-0.5)(5,0.5) \uput{0.15}[270](-2.5,-0.25){$h$}
+
+\pscircle*(0,0){0.075}
+
+\small
+\end{pspicture*}
+\end{figure}
+
+Unter Benutzung der eingeführten geometrischen Sprechweisen können wir das Lemma von Farkas wie folgt formulieren:
+
+\begin{Satz}[Lemma von Farkas (\enquote{geometrische Formulierung})]
+Gegeben seien Vektoren $a_1,\ldots,a_n$ des $\R^m$ sowie $b \in \R^m$. Dann ist genau eine der beiden Aussagen richtig:
+\begin{enumerate}[(I)]
+\item Der Vektor $b$ ist im konvexen Kegel $\cone(\bigl\{ a_1,\ldots,a_n \bigr\})$ enthalten.
+\item Es gibt eine durch den Ursprung gehende Hyperebene des $\R^m$, die $b$ von $\cone(\bigl\{ a_1,\ldots,a_n \bigr\})$ trennt.
+\end{enumerate}
+\end{Satz}
+
+Aus der geometrischen Formulierung wird übrigens klar, dass es sich beim Lemma von Farkas im Fall $m=2$ um eine Feststellung handelt, die aufgrund der geometrischen Anschauung selbstverständlich richtig ist: Wenn $b$ außerhalb des konvexen Kegels $C = \cone(\bigl\{ a_1,\ldots,a_n \bigr\})$ liegt, so gibt es eine Ursprungsgerade $h$, die $b$ von $C$ trennt. (Man mache sich klar, dass Entsprechendes auch im Fall $m=3$ gilt: Auch in diesem Fall ist die Aussage des Lemmas von Farkas anschaulich einleuchtend; die Rolle der trennenden Ursprungsgerade wird hier von einer trennenden Ursprungsebene übernommen.)
+
+Nachdem wir die geometrischen Aspekte des Lemmas von Farkas behandelt haben, kommen wir auf \textit{Varianten des Lemmas von Farkas} zu sprechen. Wir wollen uns hier nur eine Variante anschauen; einen umfassenden Überblick über weitere Varianten und über eng verwandte Sätze erhält man im Buch von Schrijver:
+\begin{itemize}
+\item A. Schrijver: \textit{Theory of Linear and Integer Programming}. Wiley (1998).
+\end{itemize}
+
+Bei der Variante des Lemmas von Farkas, die wir auf Seite \pageref{page:7:6} formuliert haben, geht es in (I) um ein Gleichungssystem $Ax=b$. Betrachtet man anstelle von $Ax=b$ das Ungleichungssystem $Ax \leq b$, so lautet die entsprechende Variante des Lemmas von Farkas wie folgt.
+
+\begin{Satz}[Lemma von Farkas (Version für $Ax \leq b$ und $x \geq 0$)]
+\index{Variante des Lemma von Farkas}
+Es sei $A$ eine reelle $m \times n$ - Matrix und $b \in \R^m$ sei ein Vektor. Dann ist genau eine der beiden Aussagen richtig:
+\begin{enumerate}[(I')]
+\item Es existiert ein $x \in \R^n$, für das $Ax \leq b$ und $x \geq 0$ gilt.
+\item Es existiert ein $y \in \R^m$, für das $y^TA \geq 0$, $y^Tb < 0$ und $y \geq 0$ gilt.
+\end{enumerate}
+\end{Satz}
+
+Die beiden Versionen des Lemmas von Farkas sind äquivalent im folgenden Sinne: Aus der Version von Seite \pageref{page:7:6} (Version für $Ax=b$ und $x \geq 0$) lässt sich unschwer die neue Version (Version für $Ax \leq b$ und $x \geq 0$) folgern, und umgekehrt lässt sich ebenso leicht die ursprüngliche Version aus der neuen Version gewinnen. \textit{Wir zeigen, wie sich die neue Version aus der ursprünglichen ergibt}: Zu diesem Zweck betrachten wir die Matrix
+\[
+A^+ = \bigl(A \mid I_m\bigr).
+\]
+
+Erläuterung dieser Schreibweise: $I_m$ ist eine $m \times m$ - Einheitsmatrix; die neue Matrix $A^+$ entsteht also aus $A$, indem man zu $A$ weitere $m$ Spalten rechts hinzunimmt, wobei die neuen Spalten die Einheitsmatrix $I_m$ bilden.
+
+Man beachte, dass (I') äquivalent zur folgenden Aussage ist, die wir ($\text{I}^+$) nennen wollen.
+\begin{center}
+($\text{I}^+$) Es existiert ein $\overline{x} \in \R^{n+m}$, für das $A^+\overline{x} = b$ und $\overline{x} \geq 0$ gilt\footnote{Der Übergang von (I') zu ($\text{I}^+$) entspricht der Einführung von Schlupfvariablen.}.
+\end{center}
+
+Außerdem ist (II') äquivalent zur folgenden Aussage:
+\begin{center}
+($\text{II}^+$) Es existiert ein $y \in \R^m$, für das $y^TA^+ \geq 0$ und $y^Tb < 0$ gilt\footnote{Beim Übergang von (II') zu ($\text{II}^+$) wurden $y^TA \geq 0$ und $y \geq 0$ zu $y^TA^+ \geq 0$ zusammengefasst.}.
+\end{center}
+
+Wendet man die ursprüngliche Version des Lemmas von Farkas auf die Matrix $A^+$ und den Vektor $b$ an, so erhält man, dass genau eine der beiden Aussagen ($\text{I}^+$) und ($\text{II}^+$) richtig ist. Es folgt (wegen (I') $\Leftrightarrow$ ($\text{I}^+$) und (II') $\Leftrightarrow$ ($\text{II}^+$)), dass genau eine der Aussagen (I') und (II') richtig ist. $\Box$
+
+Nach einem ähnlichen Schema zeigt man, das auch umgekehrt die ursprüngliche Version des Lemmas von Farkas aus der neuen Version folgt. (Der Beweis sei dem Leser als Übungsaufgabe überlassen. \textit{Hinweis}: Man denke unter anderem daran, dass sich eine lineare Gleichung äquivalent durch zwei Ungleichungen ausdrücken lässt.)
+
+In vielen Lehrbüchern der Linearen Optimierung wird wie folgt vorgegangen: Zunächst wird das Lemma von Farkas in einer der üblichen Varianten bewiesen; danach wird das Lemma von Farkas benutzt, um den Dualitätssatz zu beweisen. \textit{Da wir in der glücklichen Lage sind, den Dualitätssatz bereits bewiesen zu haben, können wir auch umgekehrt vorgehen}: Im Folgenden werden wir das Lemma von Farkas aus dem Dualitätssatz herleiten.
+
+Genauer: \textit{Wir weisen nach, dass sich das Lemma von Farkas (in der Version für $Ax \leq b$ und $x \geq 0$) auf eine sehr einfache Art aus dem Dualitätssatz ergibt.}
+
+Hier ist der angekündigte \textbf{Beweis des Lemmas von Farkas}: Die Bezeichnungen $A$ und $b$ seien wie im Lemma von Farkas gewählt. Zu gegebenem $A$ und $b$ stellen wir das folgende LP-Problem auf, das wir (P) nennen:
+\begin{align}
+\tag{P}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & \\
+&& Ax &\ \leq &\ b \\
+&&  x &\ \geq &\ 0
+\end{alignedat}
+\end{align}
+
+Die Bedeutung von $A$ und $b$ haben wir bereits besprochen. \textit{Was ist nun aber $c$?} Antwort: $c$ ist nichts weiter als der \textit{Nullvektor} der Länge $n$.
+
+Dies ist ein \textit{Trick}, den man sich merken sollte, da er auch in anderen Situationen nützlich ist: \textit{Die Wahl von $c=0$ bewirkt, dass jede zulässige Lösung von (P) eine optimale Lösung ist.}
+
+Um das Lemma von Farkas zu beweisen, nehmen wir an, dass (I') nicht gilt. Wir weisen nach, dass dann (II') gelten muss. Dass (I') nicht gilt bedeutet, dass (P) keine zulässige Lösung besitzt. Aufgrund des Dualitätssatzes ist dann das zu (P) duale Problem (D) \textit{unbeschränkt}. Das Duale (D) lautet wie folgt (Man beachte $c=0$!):
+\begin{align}
+\tag{D}
+\begin{alignedat}{3}
+& \text{minimiere } & b^Ty & & \\
+& \rlap{unter den Nebenbedingungen} & & \\
+&& A^Ty &\ \geq &\ 0 \\
+&&  y &\ \geq &\ 0
+\end{alignedat}
+\end{align}
+
+Da (D) unbeschränkt ist, existiert ein $y \in \R^m$, für das $A^Ty \geq 0$, $b^Ty < 0$ und $y \geq 0$ gilt. Das bedeutet aber, dass (II') gilt. (Man beachte, dass $y^Tb = b^Ty$ gilt; außerdem ist $A^Ty \geq 0$ äquivalent zu $y^TA \geq 0$.)
+
+Damit ist der Beweis des Lemmas von Farkas im Wesentlichen fertig. Es fehlt nur noch der Nachweis, dass (I') und (II') nicht gleichzeitig erfüllt sein können. Dies sei dem Leser als Übungsaufgabe überlassen. (\textit{Hinweis}: Man gehe ähnlich vor wie auf Seite \pageref{page:7:6}.) $\Box$
+
+Wir schließen den Abschnitt über das Lemma von Farkas mit einigen \textit{Literaturhinweisen}.
+
+Neben dem Buch von Schrijver bietet auch das Buch von Matou\v{s}ek/Gärtner einen guten Überblick über die unterschiedlichen Varianten des Lemmas von Farkas.
+
+Interessante Anwendungen des Lemmas von Farkas findet man beispielsweise in
+\begin{itemize}
+\item D. Bertsimas, J. N. Tsitsiklis: \textit{Introduction to Linear Optimization}. Athena Scientific (1997).
+\item N. Lauritzen: \textit{Undergraduate Convexity}. World Scientific (2013).
+\end{itemize}

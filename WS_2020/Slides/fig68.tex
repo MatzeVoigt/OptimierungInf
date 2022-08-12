@@ -1,0 +1,37 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,-1.2)(8.5,4.5)
+	\footnotesize
+	
+	\cnode*(0,2){3pt}{S} \uput{0.15}[180](0,2){$s$}
+	\cnode*(2,4){3pt}{A} \uput{0.15}[ 90](2,4){$a$}
+	\cnode*(2,0){3pt}{B} \uput{0.15}[270](2,0){$b$}
+	\cnode*(6,4){3pt}{C} \uput{0.15}[ 90](6,4){$c$}
+	\cnode*(6,0){3pt}{D} \uput{0.15}[270](6,0){$d$}
+	\cnode*(8,2){3pt}{T} \uput{0.15}[  0](8,2){$t$}
+	
+	\ncline{->}{S}{A} \uput{0.05}[135](1,3){$0(3)$}
+	\ncline{->}{S}{B} \uput{0.05}[225](1,1){$3(3)$}
+	\ncline{->}{A}{C} \uput{0.05}[ 90](4,4){$2(5)$}
+	\ncline{->}{A}{D} \uput{0.05}[ 45](4,2){$0(2)$}
+	\ncline{->}{B}{A} \uput{0.05}[  0](2,2){$2(2)$}
+	\ncline{->}{B}{D} \uput{0.05}[270](4,0){$1(3)$}
+	\ncline{->}{C}{T} \uput{0.05}[ 45](7,3){$2(2)$}
+	\ncline{->}{D}{T} \uput{0.05}[315](7,1){$1(4)$}
+	
+	\small		
+	\uput{0.75}[270](4,0){Ein Netzwerk $N=(G,c,s,t)$ mit Fluss $f$.}
+	\end{pspicture}
+\end{document}

@@ -1,0 +1,26 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-2,-0.8)(4,2.25)
+
+\cnode*(0,2){3pt}{V1} \uput{0.25}[325](0,2){$1$} \uput{0.25}[180](0, 2){$x_1 = \frac{1}{2}$}
+\cnode*(2,2){3pt}{V2} \uput{0.25}[215](2,2){$2$} \uput{0.25}[  0](2, 2){$x_2 = \frac{1}{2}$}
+\cnode*(1,0){3pt}{V3} \uput{0.25}[ 90](1,0){$3$} \uput{0.20}[270](1, 0){$x_3 = \frac{1}{2}$}
+
+\ncline{-}{V1}{V2} 
+\ncline{-}{V1}{V3}
+\ncline{-}{V2}{V3}
+
+\end{pspicture}
+\end{document}

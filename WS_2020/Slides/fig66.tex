@@ -1,0 +1,26 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,0.5)(2.5,1.7)
+	\footnotesize
+	
+	\cnode*(0,1){3pt}{X} \uput{0.15}[180](0,1){$x$}
+	\cnode*(2,1){3pt}{Y} \uput{0.15}[  0](2,1){$y$}
+	\ncarc[arcangle=30]{->}{X}{Y}
+	\uput{0.1}[ 90](1,1.25){$3(8)$}
+	\uput{0.1}[270](1,1.25){$e$}
+
+    \small	
+	\end{pspicture}
+\end{document}

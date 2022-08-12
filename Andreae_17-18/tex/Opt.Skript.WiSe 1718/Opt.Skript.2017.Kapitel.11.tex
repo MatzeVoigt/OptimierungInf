@@ -1,0 +1,2402 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 11:                                                                  %
+% "Matchings und Knotenüberdeckungen in bipartiten Graphen"                    %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Matchings und Knotenüberdeckungen in bipartiten Graphen}\label{chapter:11}
+\index{bipartit}\index{bipartite Graphen!Matching in}\index{Matching!in bipartiten Graphen}
+
+In diesem Abschnitt geht es größtenteils um eine Anwendung der Ergebnisse über Maximalflüsse auf \textit{ungerichtete} Graphen. 
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Einführung"                                                                 %
+%------------------------------------------------------------------------------%
+
+\section{Grundbegriffe}
+\label{section:11:1}
+
+Wir wiederholen zunächst einmal die Definition eines ungerichteten Graphen, die bereits aus den Grundvorlesungen bekannt ist. 
+
+\begin{Definition}[Definition]
+Ein \textit{ungerichteter Graph}\index{ungerichteter Graph}\index{Graph!ungerichteter} $G$ ist ein Paar $(V,E)$, wobei $V$ eine beliebige endliche Menge und $E$ eine Teilmenge der Menge aller zweielementigen Teilmengen von $V$ ist. Man nennt $V$ die \textit{Knotenmenge} und $E$ die \textit{Kantenmenge} von $G$.
+\end{Definition}
+
+\textbf{Beispiel}.
+\begin{align*}
+V &= \Bigl\{ 1, 2,3,4,5, 6 \Bigr\} \\
+E &= \Bigl\{ \bigl\{ 1,2 \bigr\},\ 
+\bigl\{ 2,3 \bigr\},\ 
+\bigl\{ 3,4 \bigr\},\ 
+\bigl\{ 4,5 \bigr\},\ 
+\bigl\{ 1,5 \bigr\},\ 
+\bigl\{ 3,5 \bigr\},\ 
+\bigl\{ 1,6 \bigr\},\ 
+\bigl\{ 2,6 \bigr\},\ 
+\bigl\{ 3,6 \bigr\},\ 
+\bigl\{ 5,6 \bigr\} \Bigr\}
+\end{align*}
+
+Den Graphen dieses Beispiels kann man wie folgt darstellen:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,4.5)
+\footnotesize
+
+\cnode*(0,0){3pt}{V1} \uput{0.2}[180](0,0){$1$}
+\cnode*(4,0){3pt}{V2} \uput{0.2}[  0](4,0){$2$}
+\cnode*(4,2){3pt}{V3} \uput{0.2}[  0](4,2){$3$}
+\cnode*(2,4){3pt}{V4} \uput{0.2}[ 90](2,4){$4$}
+\cnode*(0,2){3pt}{V5} \uput{0.2}[180](0,2){$5$}
+\cnode*(2,1){3pt}{V6} \uput{0.2}[270](2,1){$6$}
+
+\ncline{-}{V1}{V2}
+\ncline{-}{V1}{V5}
+\ncline{-}{V1}{V6}
+\ncline{-}{V2}{V3}
+\ncline{-}{V2}{V6}
+\ncline{-}{V3}{V4}
+\ncline{-}{V3}{V5}
+\ncline{-}{V3}{V6}
+\ncline{-}{V4}{V5}
+\ncline{-}{V5}{V6}
+
+\small
+\end{pspicture}
+\end{center}
+
+Wir setzen die in \enquote{Mathematik I (DM)} behandelten Grundbegriffe über Graphen und die dort verwendeten Schreibweisen als bekannt voraus.
+
+In der Überschrift dieses Abschnitts kommen die beiden Begriffe \enquote{Matching} und \enquote{bipartiter Graph} vor. Im Folgenden werden diese beiden Begriffe definiert und erläutert.
+
+\begin{Definition}[Definition]
+Es sei $G=(V,E)$ ein (ungerichteter) Graph\footnotemark. Eine Teilmenge $M$ von $E$ wird ein \textit{Matching}\index{Matching} von $G$ genannt, falls je zwei verschiedene Kanten von $M$ niemals einen Knoten gemeinsam haben.
+\end{Definition}
+\footnotetext{Wir wollen in Kapitel \ref{chapter:11} die folgende \textit{Konvention} verwenden: Liegt ein ungerichteter Graph vor, so kann das Adjektiv \enquote{ungerichtet} auch wegfallen; liegt hingegen ein gerichteter Graph vor, so soll das Adjektiv \enquote{gerichtet} nicht weggelassen werden.}
+
+In der folgenden Skizze wird ein Graph $G$ und ein Matching $M$ von $G$ dargestellt: 
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(8.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{A} \uput{0.2}[180](0,2){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.2}[270](2,0){$b$}
+\cnode*(2,4){3pt}{C} \uput{0.2}[ 90](2,4){$c$}
+\cnode*(6,0){3pt}{D} \uput{0.2}[270](6,0){$d$}
+\cnode*(8,2){3pt}{E} \uput{0.2}[  0](8,2){$e$}
+\cnode*(6,4){3pt}{F} \uput{0.2}[ 90](6,4){$f$}
+\cnode*(3.5,2.5){3pt}{G} \uput{0.2}[ 90](3.5,2.5){$g$}
+\cnode*(4.5,2){3pt}{H} \uput{0.2}[  0](4.5,2){$h$}
+\cnode*(3.5,1.5){3pt}{I} \uput{0.2}[270](3.5,1.5){$i$}
+
+\ncline{-}{A}{B}
+\ncline[linewidth=3pt]{-}{A}{C}
+\ncline{-}{A}{D}
+\ncline{-}{A}{F}
+\ncline{-}{A}{G}
+\ncline{-}{A}{I}
+\ncline{-}{B}{D}
+\ncline{-}{C}{F}
+\ncline{-}{D}{E}
+\ncline[linewidth=3pt]{-}{D}{F}
+\ncline{-}{D}{H}
+\ncline{-}{D}{I}
+\ncline{-}{E}{F}
+\ncline{-}{F}{G}
+\ncline{-}{F}{H}
+\ncline{-}{G}{H}
+\ncline[linewidth=3pt]{-}{G}{I}
+\ncline{-}{H}{I}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+Die Kanten von $M$ wurden fett gezeichnet. $M$ besteht aus drei Kanten:
+\[
+M = \Bigl\{ \{ a,c \},\ \{ g,i \},\ \{ d,f \} \Bigr\}.
+\]
+Können Sie ein Matching mit mehr als drei Kanten angeben?
+
+\textbf{Zur Übung}: Geben Sie einen zusammenhängenden Graphen $G$ mit 10 Kanten an, für den gilt: Es gibt in $G$ ein Matching $M$ mit $|M| = 2$, aber ein Matching mit mehr als 2 Kanten gibt es nicht.
+
+\begin{Definition}[Definition]
+Die \textit{Matchingzahl}\index{Matchingzahl}\index{Zahl!Matching-} $m(G)$ eines Graphen $G$ wird definiert durch:
+\[
+m(G) = \max{\Bigl\{ |M| : M \text{ ist ein Matching von $G$} \Bigr\}}.
+\]
+\end{Definition}
+
+Für den oben abgebildeten Graphen $G$ mit $V(G) = \bigl\{ a,\ldots,i \bigr\}$ gilt $m(G) = 4$.
+
+Unter dem \textit{Matching-Problem}\index{Matching-Problem}\index{Problem!Matching-} versteht man das Problem, für einen gegebenen Graphen $G$ ein Matching $M$ mit größtmöglicher Kantenzahl zu finden; mit anderen Worten: Gesucht ist ein Matching $M$, für das
+\[
+|M| = m(G)
+\] 
+gilt.
+
+Wir werden das \textit{Matching-Problem für bipartite Graphen} behandeln. Zunächst einmal ist die noch ausstehende Definition eines bipartiten Graphen zu geben.
+
+\begin{Definition}[Definition]
+Ein Graph $G=(V,E)$ heißt \textit{bipartit}\index{bipartit}\index{bipartite Graphen}\index{Graph!bipartiter}, falls seine Knotenmenge $V$ in zwei disjunkte Teilmengen $X$ und $Y$ zerlegt werden kann, so dass jede Kante von $G$ einen Knoten aus $X$ mit einem Knoten aus $Y$ verbindet.
+\end{Definition}
+
+Kanten sollen also immer nur zwischen den Mengen $X$ und $Y$ verlaufen, aber \textit{niemals innerhalb von $X$ oder innerhalb von $Y$}.
+
+\pagebreak
+Hier ein \textbf{Beispiel} eines bipartiten Graphen:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.5)(8.5,2.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{X1}
+\cnode*(2,2){3pt}{X2}
+\cnode*(4,2){3pt}{X3}
+\cnode*(6,2){3pt}{X4}
+\cnode*(8,2){3pt}{X5}
+\cnode*(1,0){3pt}{Y1}
+\cnode*(3,0){3pt}{Y2}
+\cnode*(5,0){3pt}{Y3}
+\cnode*(7,0){3pt}{Y4}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y4}
+\ncline{-}{X2}{Y1}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X3}{Y3}
+\ncline{-}{X4}{Y3}
+\ncline{-}{X4}{Y4}
+\ncline{-}{X5}{Y2}
+\ncline{-}{X5}{Y3}
+\ncline{-}{X5}{Y4}
+
+\uput{0}[180](-0.5, 2){$X$}
+\uput{0}[180](-0.5, 0){$Y$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Bipartite Graphen sowie Matchings in bipartiten Graphen treten besonders häufig in Situationen auf, in denen es um die Zuordnung von Personen oder Objekten zu anderen Personen oder Objekten geht -- wie etwa im nachfolgenden Problem.
+
+Gegeben seien $m$ Personen und $n$ Jobs\index{Job}. Die Personen seien mit $x_1,\ldots,x_m$ und die Jobs mit $y_1,\ldots,y_n$ bezeichnet. Ist eine Person $x_i$ für einen Job $y_j$ geeignet, so ziehen wir eine Kante von $x_i$ nach $y_j$, wie beispielsweise im folgenden Graphen:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(10.5,2.5)
+\footnotesize
+
+\cnode*( 1,2){3pt}{X1} \uput{0.2}[ 90]( 1,2){$x_1$}
+\cnode*( 3,2){3pt}{X2} \uput{0.2}[ 90]( 3,2){$x_2$}
+\cnode*( 5,2){3pt}{X3} \uput{0.2}[ 90]( 5,2){$x_3$}
+\cnode*( 7,2){3pt}{X4} \uput{0.2}[ 90]( 7,2){$x_4$}
+\cnode*( 9,2){3pt}{X5} \uput{0.2}[ 90]( 9,2){$x_5$}
+\cnode*( 0,0){3pt}{Y1} \uput{0.2}[270]( 0,0){$y_1$}
+\cnode*( 2,0){3pt}{Y2} \uput{0.2}[270]( 2,0){$y_2$}
+\cnode*( 4,0){3pt}{Y3} \uput{0.2}[270]( 4,0){$y_3$}
+\cnode*( 6,0){3pt}{Y4} \uput{0.2}[270]( 6,0){$y_4$}
+\cnode*( 8,0){3pt}{Y5} \uput{0.2}[270]( 8,0){$y_5$}
+\cnode*(10,0){3pt}{Y6} \uput{0.2}[270](10,0){$y_6$}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y3}
+\ncline{-}{X1}{Y6}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X2}{Y5}
+\ncline{-}{X3}{Y4}
+\ncline{-}{X3}{Y5}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+\ncline{-}{X4}{Y3}
+\ncline{-}{X4}{Y5}
+\ncline{-}{X4}{Y6}
+\ncline{-}{X5}{Y4}
+\ncline{-}{X5}{Y5}
+
+\small
+\end{pspicture}
+\end{center}
+
+Die Aufgabe ist nun, möglichst vielen Personen einen Job zu geben, wobei Jobs jedoch nur mit geeigneten Personen zu besetzen sind; außerdem soll kein Job mehrfach vergeben werden und keine Person soll mehr als einen Job erhalten.
+
+Perfekt wäre es natürlich, wenn jede Person einen Job bekäme und auch kein Job unbesetzt bliebe. In diesem Fall spricht man von einem \textit{perfekten Matching}\index{perfektes Matching}\index{Matching!perfektes}. Auch wenn es um nicht-bipartite Graphen geht, spricht man von perfekten Matchings.
+
+Der Deutlichkeit halber sei noch einmal die genaue Definition gegeben.
+
+\begin{Definition}[Definition]
+Es sei $G=(V,E)$ ein Graph. Ein Matching $M$ von $G$ heißt \textit{perfekt}\index{perfekt}, falls es zu jedem Knoten $v$ von $G$ eine Kante $e \in M$ gibt, die $v$ trifft.
+\end{Definition}
+
+Zur Illustration ein Graph $G$, der ein perfektes Matching  besitzt:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,4.5)
+\footnotesize
+
+\cnode*(0,0){3pt}{V1}
+\cnode*(4,0){3pt}{V2}
+\cnode*(4,4){3pt}{V3}
+\cnode*(0,4){3pt}{V4}
+\cnode*(1,1){3pt}{V5}
+\cnode*(3,1){3pt}{V6}
+\cnode*(3,3){3pt}{V7}
+\cnode*(1,3){3pt}{V8}
+
+
+\ncline{-}{V1}{V2}
+\ncline{-}{V1}{V4}
+\ncline{-}{V1}{V5}
+\ncline{-}{V2}{V3}
+\ncline{-}{V2}{V6}
+\ncline{-}{V3}{V4}
+\ncline{-}{V3}{V7}
+\ncline{-}{V4}{V8}
+\ncline{-}{V5}{V6}
+\ncline{-}{V5}{V8}
+\ncline{-}{V6}{V7}
+\ncline{-}{V7}{V8}
+
+\small
+\end{pspicture}
+\end{center}
+
+\textit{Klar ist}: Besitzt ein Graph $G=(V,E)$ ein perfektes Matching, so ist $|V|$ eine gerade Zahl und es gilt
+\[
+m(G) = \frac{|V|}{2}.
+\]
+
+\textbf{Zur Übung}: Besitzt der folgende Graph ein perfektes Matching?
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,7.5)
+\footnotesize
+
+\cnode*(3,3){3pt}{C}
+
+\cnode*(0,0){3pt}{L1}
+\cnode*(2,0.5){3pt}{L2}
+\cnode*(2,2){3pt}{L3}
+\cnode*(0.5,2){3pt}{L4}
+\cnode*(1,1){3pt}{L5}
+\cnode*(6,0){3pt}{R1}
+\cnode*(4,0.5){3pt}{R2}
+\cnode*(4,2){3pt}{R3}
+\cnode*(5.5,2){3pt}{R4}
+\cnode*(5,1){3pt}{R5}
+\cnode*(3,6.82){3pt}{T1}
+\cnode*(2,5){3pt}{T2}
+\cnode*(3,4){3pt}{T3}
+\cnode*(4,5){3pt}{T4}
+\cnode*(3,5.41){3pt}{T5}
+
+\ncline{-}{C}{L3}
+\ncline{-}{C}{R3}
+\ncline{-}{C}{T3}
+\ncline{-}{L1}{L2}
+\ncline{-}{L1}{L4}
+\ncline{-}{L1}{L5}
+\ncline{-}{L2}{L3}
+\ncline{-}{L2}{L5}
+\ncline{-}{L3}{L4}
+\ncline{-}{L4}{L5}
+\ncline{-}{R1}{R2}
+\ncline{-}{R1}{R4}
+\ncline{-}{R1}{R5}
+\ncline{-}{R2}{R3}
+\ncline{-}{R2}{R5}
+\ncline{-}{R3}{R4}
+\ncline{-}{R4}{R5}
+\ncline{-}{T1}{T2}
+\ncline{-}{T1}{T4}
+\ncline{-}{T1}{T5}
+\ncline{-}{T2}{T3}
+\ncline{-}{T2}{T5}
+\ncline{-}{T3}{T4}
+\ncline{-}{T4}{T5}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ein Algorithmus zur Lösung des Matching-Problems für bipartite Graphen"     %
+%------------------------------------------------------------------------------%
+
+\section{Ein Algorithmus zur Lösung des Matching-Problems für bipartite Graphen}
+\label{section:11:2}
+
+Nach diesem einführenden Teil kommen wir nun wie angekündigt zum \textit{Matching-Problem für bipartite Graphen}\index{Matching-Problem!für bipartite Graphen}\index{bipartite Graphen!Matching-Problem für}\index{Problem!des Matchings für bipartite Graphen}. Wir folgen dabei zum Teil der Darstellung im folgenden Lehrbuch:
+\begin{itemize}
+\item Jon Kleinberg, Éva Tardos: \textit{Algorithm Design}. Pearson (2006).
+\end{itemize}
+
+\subsection{Das Problem}
+
+\textit{Eingabe}: ein bipartiter Graph $G=(V,E)$ mit zugehöriger Knotenpartition $V = X \cup Y$.
+
+\textit{Gesucht}: ein Matching von $G$ mit maximaler Anzahl von Kanten.
+
+Wir setzen im Folgenden stets voraus, dass der betrachtete bipartite Graph $G$, für den ein Matching mit maximaler Kantenzahl gefunden werden soll, keine Knoten vom Grad 0 (\enquote{\textit{isolierte Knoten}}\index{isolierter Knoten}\index{Knoten!isolierter}) besitzt; dies ist möglich, da isolierte Knoten für das Matching-Problem offenbar keine Rolle spielen.
+
+
+\subsection{Der Algorithmus}
+\label{page:11:2}
+
+Es soll der \textit{Netzwerk-Fluss-Algorithmus} von Edmonds und Karp\index{Netzwerk-Fluss-Algorithmus}\index{Algorithmus!Netzwerk-Fluss-} angewendet werden, um das Matching-Problem für bipartite Graphen zu lösen. Netzwerk-Fluss-Algorithmen lassen sich auf \textit{gerichtete} Graphen anwenden, beim Matching-Problem geht es jedoch um \textit{ungerichtete} Graphen; außerdem brauchen wir eine \textit{Quelle} $s$, eine \textit{Senke} $t$ und \textit{Kapazitäten}.
+
+Dies alles stellt keine Schwierigkeit dar, da wir einen gegebenen bipartiten Graphen in ein passendes Netzwerk überführen können.
+
+Es sei $G=(V,E)$ ein bipartiter Graph mit Knotenpartition $V=X \cup Y$. Wir bilden auf folgende Art ein Flussnetzwerk:
+\begin{itemize}
+\item Alle Kanten von $G$ werden von $X$ nach $Y$ gerichtet.
+\item Wir fügen zwei neue Knoten $s$ und $t$ hinzu und verbinden $s$ mit jedem Knoten $x \in X$ durch die (gerichtete) Kante $(s,x)$; analog: Zu jedem $y \in Y$ wird die Kante $(y,t)$ hinzugefügt.
+\item Jede Kante erhält die Kapazität 1.
+\end{itemize}
+
+Den so aus $G$ entstandenen gerichteten Graphen wollen wir $G'$ nennen; das entstandene Netzwerk ist also
+\[
+N = \bigl( G', c, s, t \bigr)
+\]\label{page:11:6}
+
+mit $c(e)=1$ für alle Kanten $e$ von $G'$.
+
+Illustration dieser Konstruktion:
+
+\begin{center}
+\psset{xunit=1.25cm,yunit=1.25cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(11.5,2.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{X1l} \uput{0.2}[180](0,2){$x_1$}
+\cnode*(0,1){3pt}{X2l} \uput{0.2}[180](0,1){$x_2$}
+\cnode*(0,0){3pt}{X3l} \uput{0.2}[180](0,0){$x_3$}
+\cnode*(2,1.5){3pt}{Y1l} \uput{0.2}[  0](2,1.5){$y_1$}
+\cnode*(2,0.5){3pt}{Y2l} \uput{0.2}[  0](2,0.5){$y_2$}
+\ncline{-}{X1l}{Y1l}
+\ncline{-}{X1l}{Y2l}
+\ncline{-}{X2l}{Y1l}
+\ncline{-}{X3l}{Y1l}
+\ncline{-}{X3l}{Y2l}
+
+
+\cnode*(5,1){3pt}{S} \uput{0.2}[180](5,1){$s$}
+\cnode*(11,1){3pt}{T} \uput{0.2}[  0](11,1){$t$}
+\cnode*(7,2){3pt}{X1r} \uput{0.2}[ 90](7,2){$x_1$}
+\cnode*(7,1){3pt}{X2r} \uput{0.2}[270](7,1){$x_2$}
+\cnode*(7,0){3pt}{X3r} \uput{0.2}[270](7,0){$x_3$}
+\cnode*(9,1.5){3pt}{Y1r} \uput{0.2}[ 90](9,1.5){$y_1$}
+\cnode*(9,0.5){3pt}{Y2r} \uput{0.2}[270](9,0.5){$y_2$}
+
+\scriptsize
+\ncline{->}{X1r}{Y1r} \uput{0.1}[ 90](8,1.75){$(1)$}
+\ncline{->}{X1r}{Y2r} \uput{0.25}[270](7.5,1.75){$(1)$}
+\ncline{->}{X2r}{Y1r} \uput{0.25}[270](7.5,1.25){$(1)$}
+\ncline{->}{X3r}{Y1r} \uput{0.1}[270](8,0.75){$(1)$}
+\ncline{->}{X3r}{Y2r} \uput{0.1}[270](8,0.25){$(1)$}
+\ncline{->}{S}{X1r} \uput{0.10}[ 90](6,1.5){$(1)$}
+\ncline{->}{S}{X2r} \uput{0.05}[270](6,1.0){$(1)$}
+\ncline{->}{S}{X3r} \uput{0.10}[270](6,0.5){$(1)$}
+\ncline{->}{Y1r}{T} \uput{0.1}[ 90](10,1.25){$(1)$}
+\ncline{->}{Y2r}{T} \uput{0.1}[270](10,0.75){$(1)$}
+
+\psline[linewidth=2pt]{->}(3,1)(4,1)
+
+\small
+\end{pspicture}
+\end{center}
+
+\textit{Der angekündigte Algorithmus zur Berechnung eines Matchings von $G$ mit maximaler Kantenzahl ist \textit{sehr einfach}: Er besteht lediglich darin, dass man mit dem Algorithmus von Edmonds und Karp einen maximalen Fluss $f^*$ von $N$ berechnet}. Wir werden sehen (siehe Analyse des Algorithmus), dass es ebenfalls ganz einfach ist, aus dem erhaltenen Maximalfluss $f^*$ das gewünschte Matching zu gewinnen.
+
+\subsection{Analyse des Algorithmus}
+\label{section:11:2:3}
+
+Wir erinnern uns zunächst an eine \textit{Besonderheit des Netzwerk-Fluss-Problems}, die sich in unserem Zusammenhang als entscheidend erweist:
+\begin{equation}
+\label{eq:11:*}
+\tag{$\star$}
+\begin{array}{c}
+\text{Setzt man -- wie wir es immer gemacht haben -- voraus, dass alle Kapazitäten ganzzahlig sind,} \\
+\textit{so gibt es auch immer einen ganzzahligen Maximalfluss\index{ganzzahliger Maximalfluss}\index{Maximalfluss!ganzzahliger}: Der Ford-Fulkerson-Algorithmus} \\
+\textit{liefert bei ganzzahligen Kapazitäten auch immer einen ganzzahligen Maximalfluss.}
+\end{array}
+\end{equation}
+
+
+Wenn Sie sich noch einmal von der Richtigkeit der Feststellung (\ref{eq:11:*}) überzeugen wollen: Ein kurzer Blick auf Seite \pageref{eq:9:10} sollte genügen. Da die in (\ref{eq:11:*}) getroffenen Feststellungen für den Ford-Fulkerson-Algorithmus gelten, gelten sie natürlich ebenfalls für den Algorithmus von Edmonds und Karp.
+
+Nun zur \textbf{Analyse unseres Matching-Algorithmus}: \textit{Diese basiert auf dem Nachweis, dass sich Matchings in $G$ und ganzzahlige Flüsse in $N = (G',c,s,t)$ auf eine leicht durchschaubare Art entsprechen}.
+
+\begin{enumerate}[(I)]
+\item Nehmen wir zunächst an, dass ein Matching $M$ von $G$ gegeben ist, das -- sagen wir -- aus $k$ Kanten $\bigl\{ x_{i_1}, y_{i_1}\bigr\}, \ldots, \bigl\{ x_{i_k}, y_{i_k} \bigr\}$ besteht. Dann gehört zu $M$ ein ganzzahliger Fluss $f$ auf $N$, der wie folgt definiert wird:
+\[
+\begin{array}{c}
+f(s, x_{i_j}) = f(x_{i_j}, y_{i_j}) = f(y_{i_j}, t) = 1 \quad (j = 1,\ldots,k), \\[2mm]
+f(e) = 0 \quad \text{sonst.}
+\end{array}
+\]
+
+Man erkennt sofort, dass es sich hierbei um einen Fluss handelt, dass also (F1) und (F2) aus der Definition eines Flusses erfüllt sind; außerdem gilt $w(f) = k$.
+
+\item Nun wollen wir umgekehrt annehmen, dass ein ganzzahliger Fluss $f$ auf $N$ gegeben ist, für den $w(f)=k$ gilt. Aufgrund von (F1) gilt dann
+\[
+0 \leq f(e) \leq c(e) = 1
+\]
+
+für alle Kanten $e$ von $G'$. Hieraus folgt wegen der Ganzzahligkeit von $f$, dass für jede Kante $e$ von $G'$
+\[
+f(e) = 0 \quad \text{oder} \quad f(e) = 1
+\]
+
+gilt. Wir definieren nun $M'$ als die Menge derjenigen (gerichteten) Kanten $e$ von $G'$, für die gilt: $e$ führt von $X$ nach $Y$ und es gilt $f(e)=1$. 
+\end{enumerate}
+
+Im Buch von Kleinberg und Tardos werden drei einfache Fakten über die Menge $M'$ bewiesen. Wir schauen uns diese besonders wichtigen Feststellungen im 
+englischsprachigen Original an:
+
+\bigskip
+
+\begin{enumerate}[(i)]
+\item \textit{$M'$ contains $k$ edges}.
+
+\textbf{Proof}. To prove this, consider the cut $(A, B)$ in $G'$ with $A = \bigl\{s\bigr\} \cup X$. The value of the flow is the total flow leaving $A$, minus the total flow entering $A$\footnote{Vgl. Formel (\ref{eq:9:2}) in Kapitel \ref{chapter:9} (Stichwort: \textit{Nettofluss}).}. The first of these terms is simply the cardinality of $M'$, since these are the edges leaving $A$ that carry flow, and each carries exactly one unit of flow. The second of these terms is $0$, since there are no edges entering $A$. Thus, $M'$ contains $k$ edges. $\Box$
+
+\item \textit{Each node in $X$ is the tail of at most one edge in $M'$}.
+
+\textbf{Proof}. To prove this, suppose $x \in X$ were the tail of at least two edges in $M'$. Since our flow is integer-valued, this means that at least two units of flow leave from $x$. By conservation of flow, at least two units of flow would have to come into $x$ -- but this is not possible, since only a single edge of capacity $1$ enters $x$. Thus $x$ is the tail of at most one edge in $M'$. $\Box$
+\end{enumerate}
+
+By the same reasoning, we can show
+\begin{enumerate}[(i)]
+\addtocounter{enumi}{2}
+\item \textit{Each node in $Y$ is the head of at most one edge in $M'$}.
+\end{enumerate}
+
+\bigskip
+
+Bei den Kanten von $M'$ handelt es sich um gerichtete Kanten, die von $X$ nach $Y$ führen. Mit $M$ wollen wir die dazugehörige Menge von ungerichteten Kanten bezeichnen. Aufgrund von (i), (ii) und (iii) gilt dann: \textit{$M$ ist ein Matching von $G$ mit $|M|=k$}.
+
+\textbf{Zusammenfassung von (I) und (II)}: In (I) haben wir gesehen, dass es zu jedem Matching $M$ von $G$ mit $|M|=k$ einen ganzzahligen Fluss $f$ in $N$ mit $w(f)=k$ gibt. In (II) haben wir erkannt, dass es umgekehrt zu jedem ganzzahligen Fluss $f$ in $N$ mit $w(f)=k$ ein Matching $M$ von $G$ mit $|M|=k$ gibt. Ist $f^*$ ein ganzzahliger Maximalfluss auf $N$, so gilt also
+\[
+w(f^*) = m(G).
+\]
+
+Außerdem haben wir in (II) gesehen, wie man ein Matching $M$ von $G$ mit $|M|=m(G)$ erhält, wenn ein ganzzahliger Maximalfluss $f^*$ von $N$ vorliegt: Man hat nichts weiter zu tun, als die Menge $M'$ derjenigen Kanten $e$ von $G'$ zu betrachten, die von $X$ nach $Y$ führen und für die $f^*(e)=1$ gilt; um $M$ mit $|M| = m(G)$ zu erhalten, braucht man nur noch die Orientierung dieser Kanten wegzulassen.
+
+
+
+\subsection{Bemerkung zur Komplexität}
+
+$G=(V,E)$ sei bipartit mit $|V|=n$ und $|E|=m$; isolierte Knoten soll es in $G$ nicht geben.
+
+\textit{Beobachtung}: Jede Kante in $G'$ hat die Kapazität 1. Die Summe der Kapazitäten der an $s$ stoßenden Kanten ist demnach gewiss nicht größer als $n$. Für jeden ganzzahligen Maximalfluss $f^*$ von $N$ gilt deshalb $w(f^*) \leq n$. Folglich benötigt der Algorithmus von Edmonds und Karp nicht mehr als $n$ Iterationen, um einen Maximalfluss in $N=(G',c,s,t)$ zu finden.
+
+Anknüpfend an diese Beobachtung lässt sich zeigen, dass Folgendes gilt (Details siehe Kleinberg/Tardos): Der Algorithmus von Edmonds und Karp kann benutzt werden, um in einem bipartiten Graphen ein Matching maximaler Größe in $O(nm)$ Zeit zu finden. 
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Alternierende und augmentierende Pfade"                                     %
+%------------------------------------------------------------------------------%
+
+\section{Alternierende und augmentierende Pfade}
+\label{section:11:3}
+
+\textit{Es ist lohnend, sich genauer anzuschauen, wie flussvergrößernde Pfade im Falle des bipartiten Matching-Problems konkret aussehen}. Hierzu schauen wir uns den folgenden bipartiten Graphen $G$ an; die Kanten $\bigl\{ x_2,y_2 \bigr\}$, $\bigl\{ x_3,y_3 \bigr\}$ und $\bigl\{ x_5,y_5 \bigr\}$ bilden ein Matching $M$ in $G$. (Hier und im Folgenden sind Matchingkanten, d.h. Kanten aus $M$, immer durch Wellenlinien dargestellt.)
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.0,-0.5)(2.5,4.5)
+\label{page:11:8}
+\footnotesize
+
+\uput{1}[180](0,2){$G$}
+\cnode*(0,4){3pt}{A1} \uput{0.2}[180](0,4){$x_1$}
+\cnode*(0,3){3pt}{A2} \uput{0.2}[180](0,3){$x_2$}
+\cnode*(0,2){3pt}{A3} \uput{0.2}[180](0,2){$x_3$}
+\cnode*(0,1){3pt}{A4} \uput{0.2}[180](0,1){$x_4$}
+\cnode*(0,0){3pt}{A5} \uput{0.2}[180](0,0){$x_5$}
+\cnode*(2,4){3pt}{B1} \uput{0.2}[  0](2,4){$y_1$}
+\cnode*(2,3){3pt}{B2} \uput{0.2}[  0](2,3){$y_2$}
+\cnode*(2,2){3pt}{B3} \uput{0.2}[  0](2,2){$y_3$}
+\cnode*(2,1){3pt}{B4} \uput{0.2}[  0](2,1){$y_4$}
+\cnode*(2,0){3pt}{B5} \uput{0.2}[  0](2,0){$y_5$}
+\ncline{-}{A1}{B3}
+\ncline{-}{A2}{B1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A2}{B2}
+\ncline{-}{A3}{B2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A3}{B3}
+\ncline{-}{A4}{B2}
+\ncline{-}{A4}{B3}
+\ncline{-}{A5}{B3}
+\ncline{-}{A5}{B4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A5}{B5}
+
+\small
+\end{pspicture}
+\end{center}
+
+Es sei $f$ der ganzzahlige Fluss in $N=(G',c,s,t)$, der $M$ entspricht (vgl. (I) in Abschnitt \ref{section:11:2:3}). Da $|M|$ nicht größtmöglich ist, ist $f$ kein Maximalfluss und folglich muss es einen flussvergrößernden $s,t$-Pfad geben. Beispielsweise ist der folgende Pfad $P'$ ein flussvergrößernder Pfad in $N=(G',c,s,t)$:
+\[
+P':\quad s,\ x_4,\ y_3,\ x_3,\ y_2,\ x_2,\ y_1,\ t.
+\]
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-1)(4.5,4.5)
+\footnotesize
+
+\uput{0.75}[270](2,0){Das $G$ entsprechende Netzwerk $N=(G',c,s,t)$.}
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(4,2){3pt}{T} \uput{0.2}[  0](4,2){$t$}
+\cnode*(1,4){3pt}{X1} \uput{0.2}[ 90](1,4){$x_1$}
+\cnode*(1,3){3pt}{X2} \uput{0.2}[270](1,3){$x_2$}
+\cnode*(1,2){3pt}{X3} \uput{0.2}[270](1,2){$x_3$}
+\cnode*(1,1){3pt}{X4} \uput{0.2}[270](1,1){$x_4$}
+\cnode*(1,0){3pt}{X5} \uput{0.2}[270](1,0){$x_5$}
+\cnode*(3,4){3pt}{Y1} \uput{0.2}[ 90](3,4){$y_1$}
+\cnode*(3,3){3pt}{Y2} \uput{0.2}[270](3,3){$y_2$}
+\cnode*(3,2){3pt}{Y3} \uput{0.2}[270](3,2){$y_3$}
+\cnode*(3,1){3pt}{Y4} \uput{0.2}[270](3,1){$y_4$}
+\cnode*(3,0){3pt}{Y5} \uput{0.2}[270](3,0){$y_5$}
+\ncline{->}{X1}{Y3}
+\ncline{->}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{->}{X2}{Y2}
+\ncline{->}{X3}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{->}{X3}{Y3}
+\ncline{->}{X4}{Y2}
+\ncline{->}{X4}{Y3}
+\ncline{->}{X5}{Y3}
+\ncline{->}{X5}{Y4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{->}{X5}{Y5}
+\ncline{->}{S}{X1}
+\ncline{->}{S}{X2}
+\ncline{->}{S}{X3}
+\ncline{->}{S}{X4}
+\ncline{->}{S}{X5}
+\ncline{->}{Y1}{T}
+\ncline{->}{Y2}{T}
+\ncline{->}{Y3}{T}
+\ncline{->}{Y4}{T}
+\ncline{->}{Y5}{T}
+
+\small
+\end{pspicture}
+\end{center}
+
+\textit{Wir wissen}: Alle Kapazitäten von $N$ sind gleich 1. Deshalb konnte in der Abbildung, in der $N$ dargestellt wird, auf die Angabe der Kapazitäten verzichtet werden. Außerdem: Für neun gerichtete Kanten $e$ gilt $f(e)=1$ (Für welche nämlich?); für die übrigen Kanten gilt $f(e)=0$.
+
+Dem Pfad $P'$ entspricht in $G$ ein ungerichteter Pfad, den wir $P$ nennen wollen.
+\[
+P:\quad x_4,\ y_3,\ x_3,\ y_2,\ x_2,\ y_1.
+\]
+
+\pagebreak
+Man beachte, dass sich auf $P$ Kanten, die nicht in $M$ sind, mit Kanten aus $M$ abwechseln:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(2.5,3.5)
+\footnotesize
+
+\uput{0}[270](1,0){$P$}
+
+\cnode*(0,2){3pt}{X2} \uput{0.2}[180](0,2){$x_2$}
+\cnode*(0,1){3pt}{X3} \uput{0.2}[180](0,1){$x_3$}
+\cnode*(0,0){3pt}{X4} \uput{0.2}[180](0,0){$x_4$}
+\cnode*(2,3){3pt}{Y1} \uput{0.2}[  0](2,3){$y_1$}
+\cnode*(2,2){3pt}{Y2} \uput{0.2}[  0](2,2){$y_2$}
+\cnode*(2,1){3pt}{Y3} \uput{0.2}[  0](2,1){$y_3$}
+\ncline{-}{X2}{Y1}
+\ncline{-}{X3}{Y2}
+\ncline{-}{X4}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y3}
+
+\small
+\end{pspicture}
+\end{center}
+
+Dasselbe, nur ein wenig anders formuliert: \textit{Auf $P$ wechseln sich Nicht-Matchingkanten mit Matchingkanten ab}. Außerdem beginnt $P$ in einem Knoten von $X$, der in $G$ \textit{ungepaart}\index{ungepaart} ist, d.h., es gibt im gesamten Graphen $G$ keine Matchingkante, die an diesen Knoten stößt. Und schließlich gilt: $P$ endet in einem Knoten von $Y$, der in $G$ ebenfalls ungepaart ist\footnote{Um festzustellen, dass $x_4$ und $y_1$ tatsächlich ungepaarte Knoten sind, hat man einen Blick auf die obere Figur von Seite \pageref{page:11:8} zu werfen -- sich nur die Darstellung von $P$ anzuschauen, reicht natürlich nicht aus.}.
+
+Vergrößert man nun wie üblich den Fluss $f$ mithilfe von $P'$, so erkennt man, dass dies nichts anderes bedeutet, als das Matching $M$ folgendermaßen mithilfe von $P$ zu vergrößern:
+
+\begin{SKBox}
+\textit{Man entfernt aus $M$ alle Matchingkanten von $P$ und nimmt stattdessen die Nicht-Matchingkanten von $P$ hinzu}.
+\end{SKBox}\label{page:11:5}
+
+Kurz gesagt: \textit{Man nimmt längs $P$ einen Austausch von Matching- und Nicht-Matchingkanten vor}.
+
+Dass dies so schön funktioniert, liegt natürlich an den drei bereits oben genannten Eigenschaften von $P$:
+%\begin{enumerate}[\circled 1]
+%\item Auf $P$ wechseln sich Matchingkanten und Nicht-Matchingkanten ab;
+%\item $P$ beginnt in einem ungepaarten Knoten von $X$;
+%\item $P$ endet in einem ungepaarten Knoten von $Y$.
+%\end{enumerate}
+
+\begin{longtable}{p{0.5cm}p{14cm}} 
+\circled{1} & Auf $P$ wechseln sich Nicht-Matchingkanten mit Matchingkanten ab; \\[1mm]
+\circled{2} & $P$ beginnt in einem ungepaarten Knoten von $X$; \\[1mm]
+\circled{3} & $P$ endet in einem ungepaarten Knoten von $Y$.
+\end{longtable}
+
+Besitzt ein Pfad $P$ die Eigenschaften \circled{1} - \circled{3}, so nennt man $P$ einen \textit{augmentierenden Pfad}\index{augmentierender Pfad}\index{Pfad!augmentierender}\label{page:11:3} (engl. \textit{augmenting path}). Wir haben gesehen, wozu augmentierende Pfade gut sind: \textit{Mit ihrer Hilfe lässt sich aus einem gegebenen Matching $M$ ein Matching mit $|M|+1$ Kanten gewinnen}. 
+
+Es lässt sich unschwer beweisen, dass einem flussvergrößernden Pfad in $N=(G',c,s,t)$ immer ein augmentierender Pfad in $G$ entspricht (und umgekehrt). Da dies eine wichtige Feststellung ist, halten wir das Gesagte noch einmal fest:
+
+\begin{Definition}[Feststellung 1]
+Es sei $G=(V,E)$ ein bipartiter Graph mit Knotenpartition $V = X \cup Y$; es gelte $X=\bigl\{ x_1,\ldots,x_m\bigr\}$ und $Y = \bigl\{ y_1,\ldots,y_n \bigr\}$. Ferner sei $N=(G',c,s,t)$ das zu $G$ gehörige Flussnetzwerk. Es sei ein Matching $M$ von $G$ gegeben und $f$ sei der zu $M$ gehörige ganzzahlige Fluss in $N$. Dann gilt:
+\begin{enumerate}[(i)]
+\item Ist $P' = (s,x_{i_1},y_{i_1},\ldots,x_{i_k},y_{i_k},t)$ ein flussvergrößernder Pfad in $N$, so ist $P = (x_{i_1},y_{i_1},\ldots,x_{i_k},y_{i_k})$ ein augmentierender Pfad in $G$.
+\item Ist umgekehrt $P = (x_{i_1},y_{i_1},\ldots,x_{i_k},y_{i_k})$ ein augmentierender Pfad in $G$, so ist $P' = (s,x_{i_1},y_{i_1},\ldots,x_{i_k},y_{i_k},t)$ ein flussvergrößernder Pfad in $N$.
+\end{enumerate}
+\end{Definition}
+
+\textbf{Beweis.} Wir zeigen (i); der Nachweis von (ii) sei dem Leser überlassen.
+
+Es sei also $P' = (s,x_{i_1},y_{i_1},\ldots,x_{i_k},y_{i_k},t)$ ein flussvergrößernder Pfad in $N$. Da $(s,x_{i_1})$ eine Vorwärtskante von $P'$ ist, gilt $f(s, x_{i_1}) < c(s,x_{i_1}) = 1$, woraus wegen der Ganzzahligkeit von $P'$ folgt, dass $f(s, x_{i_1})=0$ gilt. Dies impliziert,
+dass $x_{i_1}$ in $G$ ein ungepaarter Knoten ist.
+
+Man beachte, dass Folgendes gilt: Die Kanten $(x_{i_j},y_{i_j})$ sind Vorwärtskanten von $P'$; die Kanten $(y_{i_j}, x_{i_{j+1}})$ sind hingegen Rückwärtskanten. Hieraus ergibt sich $f(x_{i_j}, y_{i_j}) < c(x_{i_j}, y_{i_j}) = 1$ ($j=1,\ldots,k$) sowie $f(y_{i_j}, x_{i_{j+1}}) > 0$. Aufgrund der Ganzzahligkeit von $f$ folgt also
+\[
+f(x_{i_j}, y_{i_j}) = 0\ \ (j=1,\ldots,k)
+\quad\text{und}\quad
+f(y_{i_j}, x_{i_{j+1}}) = 1\ \ (j=1,\ldots,k-1).
+\]
+
+Für $G$ bedeutet dies, dass die Kanten $(x_{i_j}, y_{i_j})$ Nicht-Matchingkanten sind, während es sich bei den Kanten $(y_{i_j}, x_{i_{j+1}})$ um Matchingkanten handelt.
+
+Schließlich erhält man (analog zu $f(s,x_{i_1})=0$), dass $f(y_{i_k},t)=0$ gilt. Dies bedeutet, dass $y_{i_k}$ in $G$ ein ungepaarter Knoten ist.
+
+Insgesamt haben wir wie behauptet erhalten, dass $P$ ein augmentierender Pfad in $G$ ist. $\Box$
+
+Neben dem Begriff des augmentierenden Pfads spielt der Begriff eines
+\begin{center}
+	\textit{alternierenden Pfads}
+\end{center}
+eine zentrale Rolle.
+
+\begin{Definition}[Definition]
+Gegeben sei ein bipartiter Graph $G=(V,E)$ mit dazugehöriger Knotenpartition $V=X \cup Y$. Außerdem sei ein Matching $M$ von $G$ gegeben. Ein Pfad $P$ in $G$ wird \textit{alternierender Pfad}\index{alternierender Pfad}\index{Pfad!alternierender} (engl. \textit{alternating path}) genannt, wenn er in einem ungepaarten Knoten $x$ von $X$ beginnt und wenn Folgendes gilt: $P$ besteht entweder nur aus $x$ oder auf $P$ wechseln sich Nicht-Matchingkanten mit Matchingkanten ab.
+\end{Definition}
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(15,2.5)
+\footnotesize
+
+\psframe[framearc=0.2](0,0)(1,2) \uput{0.2}[270](0.5,0){$X$}
+\psframe[framearc=0.2](2,0)(3,2) \uput{0.2}[270](2.5,0){$Y$}
+\cnode*(0.5,1.5){3pt}{A1} \pscircle(0.5, 1.5){0.2}
+
+\psline[linestyle=dashed]{-}(3.5,-0.5)(3.5,2.5)
+
+\psframe[framearc=0.2](4,0)(5,2) \uput{0.2}[270](4.5,0){$X$}
+\psframe[framearc=0.2](6,0)(7,2) \uput{0.2}[270](6.5,0){$Y$}
+\cnode*(4.5,1.5){3pt}{B1} \pscircle(4.5, 1.5){0.2}
+\cnode*(6.5,1.5){3pt}{B2}
+\ncline{-}{B1}{B2}
+
+\psline[linestyle=dashed]{-}(7.5,-0.5)(7.5,2.5)
+
+\psframe[framearc=0.2]( 8,0)( 9,2) \uput{0.2}[270]( 8.5,0){$X$}
+\psframe[framearc=0.2](10,0)(11,2) \uput{0.2}[270](10.5,0){$Y$}
+\cnode*( 8.5,1.5){3pt}{C1} \pscircle(8.5, 1.5){0.2}
+\cnode*(10.5,1.5){3pt}{C2}
+\cnode*( 8.5,0.5){3pt}{C3}
+\ncline{-}{C1}{C2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{C2}{C3}
+
+\psline[linestyle=dashed]{-}(11.5,-0.5)(11.5,2.5)
+
+\psframe[framearc=0.2](12,0)(13,2) \uput{0.2}[270](12.5,0){$X$}
+\psframe[framearc=0.2](14,0)(15,2) \uput{0.2}[270](14.5,0){$Y$}
+\cnode*(12.5,1.5){3pt}{D1} \pscircle(12.5, 1.5){0.2}
+\cnode*(14.5,1.5){3pt}{D2}
+\cnode*(12.5,0.5){3pt}{D3}
+\cnode*(14.5,0.5){3pt}{D4}
+\ncline{-}{D1}{D2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{D2}{D3}
+\ncline{-}{D3}{D4}
+
+\small
+\end{pspicture}
+\end{center}
+
+Die Zeichnung stellt alternierende Pfade der Längen 0, 1, 2 und 3 dar; ungepaarte Knoten sind durch 
+\begin{pspicture}(-0.2,-0.1)(0.2,0.1) 
+\cnode*(0,0){3pt}{X} \pscircle(0, 0){0.2}
+\end{pspicture} 
+gekennzeichnet und Matchingkanten durch Wellenlinien.
+
+Man beachte, dass jeder augmentierende Pfad auch ein alternierender Pfad ist: \textit{Augmentierende Pfade sind also spezielle alternierende Pfade}. Die nachfolgende Zeichnung stellt einen augmentierenden Pfad der Länge 5 dar:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(3,2)
+\footnotesize
+
+\psframe[framearc=0.2](0,0)(1,2) \uput{0.2}[270](0.5,0){$X$}
+\psframe[framearc=0.2](2,0)(3,2) \uput{0.2}[270](2.5,0){$Y$}
+\cnode*(0.5,1.5){3pt}{X1} \pscircle(0.5, 1.5){0.2}
+\cnode*(0.5,1.0){3pt}{X2}
+\cnode*(0.5,0.5){3pt}{X3}
+\cnode*(2.5,1.5){3pt}{Y1}
+\cnode*(2.5,1.0){3pt}{Y2}
+\cnode*(2.5,0.5){3pt}{Y3} \pscircle(2.5, 0.5){0.2}
+\ncline{-}{X1}{Y1}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X3}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y2}
+
+\small
+\end{pspicture}
+\end{center}
+
+In Feststellung 1 haben wir festgehalten, dass sich augmentierende Pfade in $G$ und flussvergrößernde Pfade in $N$ auf eine ganz einfache Art entsprechen. \textit{Eine analoge Feststellung lässt sich auch für alternierende Pfade treffen}. Dies wird im Folgenden ausgeführt.
+
+Der Unterschied zwischen den Begriffen \enquote{augmentierender Pfad} und \enquote{alternierender Pfad} besteht darin, dass augmentierende Pfade immer in einem ungepaarten Knoten von $Y$ enden, während alternierende Pfade in einem beliebigen Knoten $w$ von $G$ enden können.
+
+Etwas ganz Ähnliches gilt in $N$ für die Begriffe \enquote{flussvergrößernder Pfad} und \enquote{zunehmender Pfad zum Knoten $w$}. (Zum Begriff \enquote{zunehmender Pfad zum Knoten $w$}: vgl. Seite \pageref{page:9:7}.) Der Unterschied zwischen diesen beiden Begriffen besteht darin, dass flussvergrößernde Pfade immer in $t$ enden, während ein zunehmender Pfad nach $w$ in einem beliebigen Knoten $w$ von $N$ enden kann.
+
+Es gilt nun die folgende Feststellung 2, die man analog zu Feststellung 1 beweist.
+
+\begin{Definition}[Feststellung 2]
+Es sei $G=(V,E)$ ein bipartiter Graph mit Knotenpartition $V = X \cup Y$; es gelte $X=\bigl\{ x_1,\ldots,x_m\bigr\}$ und $Y = \bigl\{ y_1,\ldots,y_n \bigr\}$. Ferner sei $N=(G',c,s,t)$ das zu $G$ gehörige Flussnetzwerk. Es sei ein Matching $M$ von $G$ gegeben und $f$ sei der zu $M$ gehörige ganzzahlige Fluss in $N$. Außerdem sei $w$ ein Knoten aus $G$. Dann gilt:
+\begin{enumerate}[(i)]
+\item Ist $P' = (s,x_{i_1},\ldots,w)$ ein zunehmender Pfad nach $w$ im Netzwerk $N$, so ist $P = (x_{i_1},\ldots,w)$ ein alternierender Pfad in $G$.
+\item Ist umgekehrt $P = (x_{i_1},\ldots,w)$ ein alternierender Pfad in $G$, so ist $P' = (s,x_{i_1},\ldots,w)$ ein zunehmender Pfad nach $w$ in $N$.
+\end{enumerate}
+\end{Definition}
+
+Es sei angemerkt, dass in Feststellung 2 auch $x_{i_1}=w$ gelten kann, d.h., der Fall, dass $P$ nur aus einem einzigen Knoten besteht, ist nicht ausgeschlossen.
+
+Wir können die Feststellungen 1 und 2 kurz und knapp wie folgt zusammenfassen:
+\begin{itemize}
+\item Jedem flussvergrößernden Pfad im Netzwerk $N$ entspricht auf natürliche Weise ein augmentierender Pfad in $G$; und umgekehrt.
+\item Jedem zunehmenden Pfad in $N$ zu einem Knoten $w$ aus $G$ entspricht in $G$ auf natürliche Weise ein alternierender Pfad nach $w$; und umgekehrt.
+\end{itemize}
+
+Insbesondere können wir festhalten (Dies folgt unmittelbar aus Feststellung 2!):
+
+\begin{SKBox}
+Ein Knoten $w$ ist in $G$ genau dann mit einem alternierenden Pfad erreichbar, wenn er in $N$ mit einem zunehmenden Pfad erreichbar ist.
+\end{SKBox}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Knotenüberdeckungen in bipartiten Graphen"                                  %
+%------------------------------------------------------------------------------%
+
+\section{Knotenüberdeckungen in bipartiten Graphen: der Satz von König}
+\label{section:11:4}
+
+Wir behandeln in diesem Abschnitt den Begriff der \textit{Knotenüberdeckung}\index{Knotenüberdeckung} in einem Graphen. Knotenüberdeckungen stehen in engem Zusammenhang mit Matchings; liegt ein bipartiter Graph vor, so handelt es sich um den zum Begriff des Matchings \enquote{dualen Begriff}: Matching und Knotenüberdeckung bilden für bipartite Graphen ein ähnliches Begriffspaar wie beispielsweise Fluss und Schnitt oder primales und duales Problem.
+
+Es geht darum, alle Kanten eines Graphen durch Knoten zu überdecken; genauer: Die Kanten sollen durch möglichst wenige Knoten überdeckt werden. Es folgt die genaue Definition; man beachte, dass die Definition nicht nur für bipartite Graphen getroffen wird, sondern (allgemeiner) für beliebige Graphen.
+
+\begin{Definition}[Definition]
+Es sei $G=(V,E)$ ein Graph. Eine Menge $U \subseteq V$ heißt \textit{Knotenüberdeckung}\footnotemark{} von $G$, falls jede Kante von $G$ mit einem Knoten aus $U$ inzidiert.
+\end{Definition}
+\footnotetext{Engl. \textit{node cover}\index{node cover} oder \textit{vertex cover}\index{vertex cover}.}
+
+Anders gesagt: Jede Kante von $G$ soll von mindestens einem Knoten aus $U$ getroffen werden.
+
+Wählt man $U=V$, so ist $U$ offenbar eine Knotenüberdeckung von $G=(V,E)$. Worum es geht: Es soll eine möglichst kleine Knotenüberdeckung $U$ gefunden werden, d.h., \textit{$|U|$ soll minimal\index{minimale Knotenüberdeckung}\index{Knotenüberdeckung!minimale} sein}.
+
+\begin{Definition}[Definition]
+Mit $c(G)$ bezeichnen wir die kleinstmögliche Anzahl von Knoten in einer Knotenüberdeckung von $G$, d.h., wir definieren
+\[
+c(G) = \min{\Bigl\{ |U| : U \text{ ist eine Knotenüberdeckung von $G$} \Bigr\}}.
+\]
+
+Man nennt $c(G)$ die \textit{Knotenüberdeckungszahl}\index{Knotenüberdeckungszahl}\index{Zahl!Knotenüberdeckungs-} von $G$\footnotemark.
+\end{Definition}
+\footnotetext{Engl. \textit{node covering number}\index{node covering number} oder auch einfach nur \textit{covering number}\index{covering number}.}
+
+In jedem Graphen gilt
+\begin{equation}
+\label{eq:11:1}
+m(G) \leq c(G),
+\end{equation}
+
+da für jedes Matching $M$ und jede Knotenüberdeckung $U$ von $G$ gilt: $|M| \leq |U|$ (\enquote{Je zwei Kanten aus $M$ haben keinen Knoten gemeinsam; also benötigt man mindestens $|M|$ Knoten, um alle Kanten von $G$ zu treffen.})
+
+\textbf{Beispiel}. $G$ sei der vollständige Graph mit drei Knoten:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(2.5,2.5)
+\footnotesize
+
+\uput{0}[0](0,2){$G$}
+\cnode*(0,0){3pt}{V1}
+\cnode*(2,0){3pt}{V2}
+\cnode*(1,2){3pt}{V3}
+\ncline{-}{V1}{V2}
+\ncline{-}{V1}{V3}
+\ncline{-}{V2}{V3}
+
+\small
+\end{pspicture}
+\end{center}
+
+Dann gilt $m(G)=1$ und $c(G)=2$.
+
+Das Beispiel zeigt, dass $m(G) < c(G)$ für nichtbipartite Graphen möglich ist. Für bipartite Graphen gilt dagegen der folgende \textit{Satz von König}\footnote{Dénes König (1884-1944), ungarischer Mathematiker.}.
+
+\begin{Satz}[Satz (D. König, 1931)]
+\index{Satz!von König}\index{König, Satz von}
+Für jeden bipartiten Graphen gilt
+\begin{equation}
+\label{eq:11:2}
+m(G) = c(G).
+\end{equation}
+\end{Satz}
+
+Wir werden einen \textit{konstruktiven Beweis des Satzes von König}\index{Beweis!des Satzes von König}\index{König, Satz von! Beweis} geben: \textit{Der Beweis wird eine Methode liefern, wie man in einem bipartiten Graphen eine minimale Knotenüberdeckung\index{minimale Knotenüberdeckung}\index{Knotenüberdeckung!minimale} findet}.
+
+Wenn man in einem bipartiten Graphen ein Matching $M$ mit maximaler Kantenzahl gefunden hat, \textit{so ist es sehr nützlich, gleichzeitig auch eine minimale Knotenüberdeckung $U$, also eine Knotenüberdeckung mit $|U|=|M|$ zu besitzen}. 
+
+Stellen Sie sich vor, Sie haben in mühevoller Rechnung für einen sehr großen bipartiten Graphen ein Matching $M$ mit maximaler Kantenzahl gefunden. Dem Matching selbst kann man dann in der Regel nicht ansehen, dass es kein Matching mit größerer Kantenzahl gibt. Wenn Sie aber gleichzeitig eine Knotenüberdeckung $U$ präsentieren, für die $|U|=|M|$ gilt, so wird jeder sofort einsehen, dass es sich bei $M$ in der Tat um ein Matching mit maximaler Kantenzahl handelt. Die Knotenüberdeckung $U$ ist in diesem Fall ein hervorragendes Mittel, um die Optimalität von $M$ zu \textit{verifizieren}\index{verifizieren}. Anders gesagt: $U$ ist ein \textit{Zertifikat}\index{Zertifikat} für die Optimalität von $M$.
+
+Der im Folgenden präsentierte konstruktive Beweis des Satzes von König knüpft an unseren Algorithmus zum Auffinden eines Matchings mit maximaler Kantenzahl an (vgl. Seite \pageref{page:11:2}ff). Eine zentrale Rolle spielt dabei der Begriff des \textit{alternierenden Pfades}, den wir im vorangegangenen Abschnitt kennengelernt haben.
+
+\textbf{Beweis des Satzes von König}\index{Beweis!des Satzes von König}\index{König, Satz von! Beweis}. $G$ sei bipartit. Zu zeigen ist $m(G) = c(G)$. Es sei $M$ ein Matching von $G$ mit $|M|=m(G)$. Zu finden ist eine Knotenüberdeckung $U$ von $G$ mit $|U|=|M|$. Wie üblich bezeichnen wir mit $X$ und $Y$ eine zu $G$ gehörige Knotenpartition.
+
+Mit $S$\label{page:11:7} bezeichnen wir die Menge derjenigen Knoten von $G$, die von $X$ aus mit einem alternierenden Pfad\index{alternierender Pfad}\index{Pfad!alternierender} erreichbar sind. (Zur Erinnerung: Ein alternierender Pfad startet immer in einem ungepaarten Knoten von $X$.) Es sei
+\[
+U := \bigl( X \setminus S \bigr) \cup \bigl( Y \cap S \bigr).
+\]
+
+\begin{center}
+\psset{xunit=1.50cm,yunit=1.50cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0)(3,2)
+\footnotesize
+
+\psframe[framearc=0.5](0,0)(1,2) \uput{0.2}[180](0,1.5){$X \cap S$} \uput{0.2}[180](0,0.5){$X \setminus S$}
+\psframe[framearc=0.5](2,0)(3,2) \uput{0.2}[  0](3,1.5){$Y \cap S$} \uput{0.2}[  0](3,0.5){$Y \setminus S$}
+\psline{-}(0,1)(1,1)
+\psline{-}(2,1)(3,1)
+
+\small
+\end{pspicture}
+\end{center}
+
+Es gelten die folgenden Feststellungen:
+\begin{enumerate}[(i)]
+\item In $X \setminus S$ gibt es keine ungepaarten Knoten (nach Definition von $S$ und aufgrund der Tatsache, dass ein ungepaarter Knoten $x \in X$ für sich allein genommen bereits einen alternierenden Pfad darstellt).
+\item In $Y \cap S$ gibt es ebenfalls keine ungepaarten Knoten (, da es sonst einen augmentierenden Pfad gäbe, im Widerspruch zu $|M|=m(G)$).
+\item Es gibt keine Kante aus $M$, die $Y \cap S$ mit $X \setminus S$ verbindet (, da es sonst einen alternierenden Pfad gäbe, der einen Knoten aus $X \setminus S$ erreicht).
+\end{enumerate}
+
+
+Aus (i)-(iii) folgt, dass sämtliche Knoten aus $U$ auf Kanten aus $M$ liegen, und zwar je zwei verschiedene Knoten von $U$ auf unterschiedlichen Kanten aus $M$. Es folgt
+\[
+|U| \leq |M|.
+\]
+
+Darüber hinaus gilt: 
+\begin{enumerate}[(i)]
+\addtocounter{enumi}{3}
+\item Es gibt keine Kanten zwischen $X \cap S$ und $Y \setminus S$.
+\end{enumerate}
+
+\textbf{Begründung zu (iv)}. Angenommen, $e=\bigl\{ x',y' \bigr\}$ wäre eine Kante von $G$ mit $x' \in X \cap S$ und $y' \in Y \setminus S$. Wegen $x' \in X \cap S$ existiert ein alternierender Pfad $P$, der in $x'$ endet. Dann ist $P$ entweder nur einpunktig (d.h., $x'$ ist ein ungepaarter Knoten) oder $P$ durchläuft abwechselnd Knoten aus $X \cap S$ und $Y \cap S$, wobei sich Nicht-Matchingkanten und Matchingkanten abwechseln und die letzte Kante eine Matchingkante ist. In beiden Fällen würde $e \notin M$ gelten und $y'$ wäre durch einen alternierenden Pfad erreichbar, im Widerspruch zu $y' \notin S$.
+
+Feststellung (iv) bedeutet, dass $U$ eine Knotenüberdeckung von $G$ ist, weshalb insbesondere $|U| \geq |M|$ gilt. Oben hatten wir bereits $|U| \leq |M|$ festgestellt. Insgesamt haben wir also (wie gewünscht) eine Knotenüberdeckung $U$ mit $|U| = |M|$ erhalten. $\Box$
+
+Wir kommen nun zurück auf unseren Matching-Algorithmus für bipartite Graphen $G=(V,E)$ mit Knotenpartition $V=X \cup Y$ (vgl. Seite \pageref{page:11:2}ff). In diesem wurde auf das zu $G$ gehörige Netzwerk $N=(G',c,s,t)$ der Algorithmus von Edmonds und Karp angewandt. (Zur Definition von $N$ siehe Seite \pageref{page:11:6}.) Es sei $(S',T')$ der vom Algorithmus von Edmonds und Karp gelieferte minimale Schnitt von $N=(G',c,s,t)$. Vergleicht man den Beweis des Max-Flow Min-Cut Theorems mit dem Beweis des Satzes von König, so erkennt man, dass für die im Beweis des Satzes von König definierte Menge $S$ gilt: $S = S' \setminus \bigl\{ s \bigr\}$. (Um zu erkennen, dass dies tatsächlich so ist, beachte man vor allem die am Ende von Abschnitt \ref{section:11:3} formulierte Feststellung, dass ein Knoten $w$ in $G$ genau dann mit einem alternierenden Pfad erreichbar ist, wenn er in $N$ mit einem zunehmenden Pfad erreichbar ist.) 
+
+\textit{Damit ist klar, dass unser Matching-Algorithmus für bipartite Graphen nicht nur ein Matching \index{maximales Matching}\index{Matching!maximales} $M$ mit maximaler Kantenzahl, sondern auch eine minimale Knotenüberdeckung $U$ liefert, die man wie folgt bekommt}: Ist $(S',T')$ der gefundene minimale Schnitt von $N=(G',c,s,t)$, so sei $S = S' \setminus \bigl\{ s \bigr\}$. Dann gilt:
+\begin{equation}
+\label{eq:11:3}
+U = \bigl( X \setminus S \bigr) \cup \bigl( Y \cap S \bigr).
+\end{equation}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ein Beispiel"                                                               %
+%------------------------------------------------------------------------------%
+
+\section{Zwei Beispiele}
+\label{section:11:5}
+
+In diesem Abschnitt wird der zuvor besprochene Matching-Algorithmus anhand von zwei Beispielen illustriert. Im ersten Beispiel wird die Vorgehensweise sehr detailliert beschrieben, wobei zwischendurch auch immer das zum Graphen $G$ gehörende Netzwerk $N=(G',c,s,t)$ betrachtet wird. Im zweiten Beispiel wird dann (wie allgemein üblich) das Netzwerk $N$ überhaupt nicht mehr herangezogen: Das Vorgehen wird nur noch in der Sprache der ungerichteten Graphen, Matchings und alternierenden Pfade beschrieben.
+
+\textbf{Beispiel 1}. Wir betrachten den folgenden bipartiten Graphen $G=(V,E)$ mit $V = X \cup Y$ für $X = \bigl\{ x_1,x_2,x_3,x_4 \bigr\}$ und $Y = \bigl\{ y_1,y_2,y_3 \bigr\}$:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.25)(3.5,2.25)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y3}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\end{figure}
+
+Die \textbf{Aufgabe} ist, ein Matching mit maximaler Kantenzahl und gleichzeitig eine minimale Knotenüberdeckung zu finden. Hierzu soll -- wie in den Abschnitten \ref{section:11:2} - \ref{section:11:4} beschrieben -- der Algorithmus von Edmonds und Karp (vgl. Abschnitt \ref{section:9:4}) verwendet werden, wobei die folgende Regel zu beachten ist:
+
+\begin{center}
+\begin{tabular}{rl}
+($\star$)& Ist im Algorithmus von Edmonds und Karp die Reihenfolge der zu markierenden \\
+    & Knoten nicht festgelegt, \textit{so sind Knoten mit kleinerem Index vorzuziehen}.
+\end{tabular}
+\end{center}
+
+Der Deutlichkeit halber sei angemerkt, dass es in dieser Aufgabe nicht darum geht, ein Matching mit maximaler Kantenzahl und eine minimale Knotenüberdeckung \enquote{durch scharfes Hinsehen} zu ermitteln. Es geht darum, den Algorithmus von Edmonds und Karp anzuwenden. Wir gehen vor wie in Abschnitt \ref{section:11:2} beschrieben, d.h., als erstes verwandeln wir den bipartiten Graphen $G$ in ein Netzwerk $N=(G',c,s,t)$:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.50cm,yunit=1.2cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-2.25)(3.5,4.25)
+
+\cnode*(1.5,4){3pt}{S} \uput{0.25}[ 90](1.5,4){$s$}
+\cnode*(1.5,-2){3pt}{T} \uput{0.25}[270](1.5,-2){$t$}
+\cnode*(0,2){3pt}{X1} \uput{0.25}[180](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[180](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[  0](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[  0](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[180](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[180](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[  0](2.5,0){$y_3$}
+
+\scriptsize
+\ncline{->}{S}{X1} \uput{0.10}[180](0.75,3){$(1)$}
+\ncline{->}{S}{X2} \uput{0.10}[180](1.25,3){$(1)$}
+\ncline{->}{S}{X3} \uput{0.10}[  0](1.75,3){$(1)$}
+\ncline{->}{S}{X4} \uput{0.10}[  0](2.25,3){$(1)$}
+\ncline{->}{Y1}{T} \uput{0.10}[180](1,-1){$(1)$}
+\ncline{->}{Y2}{T} \uput{0.10}[180](1.5,-1){$(1)$}
+\ncline{->}{Y3}{T} \uput{0.10}[  0](2,-1){$(1)$}
+\ncline{->}{X1}{Y1} \uput{0.05}[225](0.25,1){$(1)$}
+\ncline{->}{X1}{Y2} \uput{0.05}[225](0.75,1){$(1)$}
+\ncline{->}{X1}{Y3} \uput{0.05}[  0](0.75,1.5){$(1)$}
+\ncline{->}{X2}{Y2} \uput{0.05}[  0](1.13,1.5){$(1)$}
+\ncline{->}{X3}{Y1} \uput{0.05}[  0](1.70,1.5){$(1)$}
+\ncline{->}{X4}{Y1} \uput{0.05}[315](1.75,1){$(1)$}
+\ncline{->}{X4}{Y2} \uput{0.05}[315](2.25,1){$(1)$}
+\small
+
+\uput{0.1}[180](0,1){$N$}
+
+\end{pspicture}
+\end{figure}
+
+Los geht es wie immer mit dem Nullfluss, den wir $f_0$ nennen wollen (vgl. Abbildung \ref{abb:11:1}). In Abbildung \ref{abb:11:1} sind außerdem die Markierungen eingetragen, die vom Algorithmus vergeben werden, bevor es zur ersten Flussvergrößerung kommt: Die Knoten wurden in der Reihenfolge $s,x_1,x_2,x_3,x_4,y_1,y_2,y_3,t$ markiert. Diese Reihenfolge ergibt sich aus Zeile (5') des Algorithmus von Edmonds und Karp (\enquote{first labelled -- first scanned}) sowie aus der obigen Regel ($\star$).
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.750cm,yunit=1.25cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-2.75)(3.5,4.75)
+
+\cnode*(1.5,4){3pt}{S}  \uput{0.20}[ 90](1.5,4){$s$}
+\cnode*(1.5,-2){3pt}{T} \uput{0.20}[270](1.5,-2){$t$} 
+\cnode*(0,2){3pt}{X1}   \uput{0.20}[180](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2}   \uput{0.20}[180](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3}   \uput{0.20}[  0](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4}   \uput{0.20}[  0](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.20}[180](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.20}[180](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.20}[  0](2.5,0){$y_3$}
+
+%\scriptsize
+\tiny
+\uput{0.50}[90](1.5,4){$(-,\infty)$} %s
+\uput{0.50}[270](1.5,-2){$(y_1,+,1)$} %t
+\uput{0.20}[ 0](0,2){$(s,+,1)$} %x1
+\uput{0.20}[ 0](1,2){$(s,+,1)$} %x2
+\uput{0.20}[180](2,2){$(s,+,1)$} %x3
+\uput{0.20}[180](3,2){$(s,+,1)$} %x4
+\uput{0.20}[  0](0.5,0){$(x_1,+,1)$} %y1
+\uput{0.20}[  0](1.5,0){$(x_1,+,1)$} %y2
+\uput{0.20}[180](2.5,0){$(x_1,+,1)$} %y3
+\ncline[linewidth=1.5pt]{->}{S}{X1} \uput{0.10}[180](0.75,3){$0(1)$} 
+\ncline{->}{S}{X2} \uput{0.10}[180](1.25,3){$0(1)$}
+\ncline{->}{S}{X3} \uput{0.10}[  0](1.75,3){$0(1)$}
+\ncline{->}{S}{X4} \uput{0.10}[  0](2.25,3){$0(1)$}
+\ncline[linewidth=1.5pt]{->}{Y1}{T} \uput{0.10}[180](1,-1){$0(1)$}
+\ncline{->}{Y2}{T} \uput{0.10}[180](1.5,-1){$0(1)$}
+\ncline{->}{Y3}{T} \uput{0.10}[  0](2,-1){$0(1)$}
+\ncline[linewidth=1.5pt]{->}{X1}{Y1} \uput{0.05}[225](0.25,1){$0(1)$}
+\ncline{->}{X1}{Y2} \uput{0.05}[225](0.75,1){$0(1)$}
+\ncline{->}{X1}{Y3} \uput{0.05}[  0](0.75,1.5){$0(1)$}
+\ncline{->}{X2}{Y2} \uput{0.05}[  0](1.13,1.5){$0(1)$}
+\ncline{->}{X3}{Y1} \uput{0.05}[  0](1.70,1.5){$0(1)$}
+\ncline{->}{X4}{Y1} \uput{0.05}[315](1.75,1){$0(1)$}
+\ncline{->}{X4}{Y2} \uput{0.05}[315](2.25,1){$0(1)$}
+\small
+
+\uput{0.1}[180](0,1){$N$}
+
+\end{pspicture}
+
+\caption{}
+\label{abb:11:1}
+\end{figure}
+
+Der gefundene flussvergrößernde Pfad $P'=(s,x_1,y_1,t)$ wurde in Abbildung \ref{abb:11:1} fett eingezeichnet; der verbesserte Fluss, den wir $f_1$ nennen wollen, wurde weiter unten in Abbildung \ref{abb:11:3} eingetragen. Es gilt
+\begin{align*}
+f_1(s,x_1) &= 1 \\
+f_1(x_1,y_1) &= 1 \\
+f_1(y_1,t) &= 1
+\end{align*}
+und $f_1(e)=0$ für alle übrigen Kanten des Netzwerks $N$. Das Ergebnis der ersten Flussvergrößerung ist, dass wir den Fluss $f_0$ zu $f_1$ verbessert haben. Übertragen wir dieses Ergebnis auf den bipartiten Graphen $G$, so können wir feststellen: \textit{Am Anfang waren noch keine Matchingkanten vorhanden und nach der ersten Flussvergrößerung besteht das aktuelle Matching aus genau einer Kante, nämlich der Kante $\bigl\{ x_1,y_1 \bigr\}$}:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$}
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y3}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\caption{}
+\label{abb:11:2}
+\end{figure}
+
+In Abbildung \ref{abb:11:3} sind neben dem Fluss $f_1$ die Markierungen eingetragen, die vom Algorithmus vergeben werden, bevor es zur Verbesserung von $f_1$ kommt; dabei wurden die Knoten in der Reihenfolge $s,x_2,x_3,x_4,y_2,y_1,t$ markiert. Als flussvergrößernden Pfad erhält man $P'=(s,x_2,y_2,t)$.
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.750cm,yunit=1.25cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-2.75)(3.5,4.75)
+
+\cnode*(1.5,4){3pt}{S}  \uput{0.20}[ 90](1.5,4){$s$}
+\cnode*(1.5,-2){3pt}{T} \uput{0.20}[270](1.5,-2){$t$} 
+\cnode*(0,2){3pt}{X1}   \uput{0.20}[180](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2}   \uput{0.20}[180](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3}   \uput{0.20}[  0](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4}   \uput{0.20}[  0](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.20}[180](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.20}[180](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.20}[  0](2.5,0){$y_3$}
+
+%\scriptsize
+\tiny
+\uput{0.50}[90](1.5,4){$(-,\infty)$} %s
+\uput{0.50}[270](1.5,-2){$(y_2,+,1)$} %t
+%\uput{0.20}[ 0](0,2){$(s,+,1)$} %x1
+\uput{0.20}[ 0](1,2){$(s,+,1)$} %x2
+\uput{0.20}[180](2,2){$(s,+,1)$} %x3
+\uput{0.20}[180](3,2){$(s,+,1)$} %x4
+\uput{0.20}[  0](0.5,0){$(x_3,+,1)$} %y1
+\uput{0.20}[  0](1.5,0){$(x_2,+,1)$} %y2
+%\uput{0.20}[180](2.5,0){$(x_1,+,1)$} %y3
+\ncline{->}{S}{X1} \uput{0.10}[180](0.75,3){$1(1)$} 
+\ncline[linewidth=1.5pt]{->}{S}{X2} \uput{0.10}[180](1.25,3){$0(1)$}
+\ncline{->}{S}{X3} \uput{0.10}[  0](1.75,3){$0(1)$}
+\ncline{->}{S}{X4} \uput{0.10}[  0](2.25,3){$0(1)$}
+\ncline{->}{Y1}{T} \uput{0.10}[180](1,-1){$1(1)$}
+\ncline[linewidth=1.5pt]{->}{Y2}{T} \uput{0.10}[180](1.5,-1){$0(1)$}
+\ncline{->}{Y3}{T} \uput{0.10}[  0](2,-1){$0(1)$}
+\ncline{->}{X1}{Y1} \uput{0.05}[225](0.25,1){$1(1)$}
+\ncline{->}{X1}{Y2} \uput{0.05}[225](0.75,1){$0(1)$}
+\ncline{->}{X1}{Y3} \uput{0.05}[  0](0.75,1.5){$0(1)$}
+\ncline[linewidth=1.5pt]{->}{X2}{Y2} \uput{0.05}[  0](1.13,1.5){$0(1)$}
+\ncline{->}{X3}{Y1} \uput{0.05}[  0](1.70,1.5){$0(1)$}
+\ncline{->}{X4}{Y1} \uput{0.05}[315](1.75,1){$0(1)$}
+\ncline{->}{X4}{Y2} \uput{0.05}[315](2.25,1){$0(1)$}
+\small
+
+\uput{0.1}[180](0,1){$N$}
+
+\end{pspicture}
+\caption{}
+\label{abb:11:3}
+\end{figure}
+
+Verbesserung von $f_1$ mittels $P'$ führt zum Fluss $f_2$ (wie in Abbildung \ref{abb:11:5} angegeben) sowie zum Matching $M_2 = \bigl\{ \{x_1,y_1\}, \{x_2,y_2\} \bigr\}$:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$}
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\caption{}
+\label{abb:11:4}
+\end{figure}
+
+Bezeichnen wir mit $M_0$ die leere Menge sowie mit $M_1$ das Matching, das nach der ersten Flussvergrößerung aktuell war, so können wir den bisherigen Verlauf wie folgt darstellen:
+\[
+\begin{array}{ccl}
+f_0 & & M_0 = \emptyset \\
+\downarrow & & \ \downarrow \\
+f_1 & & M_1 = \Bigl\{ \{x_1,y_1 \} \Bigr\} \\
+\downarrow & & \ \downarrow \\
+f_2 & & M_2 = \Bigl\{ \{x_1,y_1 \}, \{x_2,y_2\} \Bigr\} \\
+\end{array}
+\]
+
+\pagebreak
+Alles was bislang passiert ist, lässt sich wie folgt in einem einzigen Satz zusammenfassen:
+
+\begin{center}
+In den ersten beiden Iterationen wählt der Algorithmus die \\
+Kanten $\bigl\{ x_1,y_1 \bigr\}$ und $\bigl\{ x_2,y_2 \bigr\}$ als Matchingkanten aus.
+\end{center}
+
+Nun geht es in die nächste Runde (3. Iteration): Es werden Markierungen wie in Abbildung \ref{abb:11:5} vergeben, wobei die Knoten in folgender Reihenfolge markiert werden: $s,x_3,x_4,y_1,y_2,x_1,x_2,y_3,t$. Dies führt in $N$ zum flussvergrößernden Pfad $P'=(s,x_3,y_1,x_1,y_3,t)$ bzw. in $G$ zum augmentierenden Pfad $P=(x_3,y_1,x_1,y_3)$; siehe Abbildung \ref{abb:11:5} bzw. \ref{abb:11:6}.
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.750cm,yunit=1.25cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-2.75)(3.5,4.75)
+
+\cnode*(1.5,4){3pt}{S}  \uput{0.20}[ 90](1.5,4){$s$}
+\cnode*(1.5,-2){3pt}{T} \uput{0.20}[270](1.5,-2){$t$} 
+\cnode*(0,2){3pt}{X1}   \uput{0.20}[180](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2}   \uput{0.20}[180](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3}   \uput{0.20}[  0](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4}   \uput{0.20}[  0](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.20}[180](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.20}[180](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.20}[  0](2.5,0){$y_3$}
+
+%\scriptsize
+\tiny
+\uput{0.50}[90](1.5,4){$(-,\infty)$} %s
+\uput{0.50}[270](1.5,-2){$(y_3,+,1)$} %t
+\uput{0.20}[ 0](0,2){$(y_1,-,1)$} %x1
+\uput{0.20}[ 0](1,2){$(y_2,-,1)$} %x2
+\uput{0.20}[180](2,2){$(s,+,1)$} %x3
+\uput{0.20}[180](3,2){$(s,+,1)$} %x4
+\uput{0.20}[  0](0.5,0){$(x_3,+,1)$} %y1
+\uput{0.20}[  0](1.5,0){$(x_4,+,1)$} %y2
+\uput{0.20}[180](2.5,0){$(x_1,+,1)$} %y3
+\ncline{->}{S}{X1} \uput{0.10}[180](0.75,3){$1(1)$} 
+\ncline{->}{S}{X2} \uput{0.10}[180](1.25,3){$1(1)$}
+\ncline[linewidth=1.5pt]{->}{S}{X3} \uput{0.10}[  0](1.75,3){$0(1)$}
+\ncline{->}{S}{X4} \uput{0.10}[  0](2.25,3){$0(1)$}
+\ncline{->}{Y1}{T} \uput{0.10}[180](1,-1){$1(1)$}
+\ncline{->}{Y2}{T} \uput{0.10}[180](1.5,-1){$1(1)$}
+\ncline[linewidth=1.5pt]{->}{Y3}{T} \uput{0.10}[  0](2,-1){$0(1)$}
+\ncline[linewidth=1.5pt]{->}{X1}{Y1} \uput{0.05}[225](0.25,1){$1(1)$}
+\ncline{->}{X1}{Y2} \uput{0.05}[225](0.75,1){$0(1)$}
+\ncline[linewidth=1.5pt]{->}{X1}{Y3} \uput{0.05}[  0](0.75,1.5){$0(1)$}
+\ncline{->}{X2}{Y2} \uput{0.05}[  0](1.13,1.5){$1(1)$}
+\ncline[linewidth=1.5pt]{->}{X3}{Y1} \uput{0.05}[  0](1.70,1.5){$0(1)$}
+\ncline{->}{X4}{Y1} \uput{0.05}[315](1.75,1){$0(1)$}
+\ncline{->}{X4}{Y2} \uput{0.05}[315](2.25,1){$0(1)$}
+\small
+
+\uput{0.1}[180](0,1){$N$}
+
+\end{pspicture}
+\caption{Der flussvergrößernde Pfad $P'=(s,x_3,y_1,x_1,y_3,t)$.}
+\label{abb:11:5}
+\end{figure}
+
+
+
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$} \pscircle(2, 2){0.2}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$} \pscircle(2.5, 0){0.2}
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline[linewidth=1.5pt]{-}{X1}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\ncline[linewidth=1.5pt]{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\caption{Der augmentierende Pfad $P=(x_3,y_1,x_1,y_3)$.}
+\label{abb:11:6}
+\end{figure}
+
+Der Austausch von Nicht-Matchingkanten und Matchingkanten von $P$ führt zum Matching
+\[
+M_3 = \Bigl\{ \{x_1,y_3\}, \{x_2,y_2\}, \{x_3,y_1\} \Bigr\},
+\]
+
+das in der folgenden Darstellung wiedergegeben wird:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\caption{}
+\label{abb:11:7}
+\end{figure}
+
+Nun geht es -- wie man sich bereits denken kann -- in die letzte Runde (4. Iteration), in der der Algorithmus kein verbessertes Matching findet, stattdessen aber ein \textit{Zertifikat für die Optimalität von $M_3$} liefert. Der Abbildung \ref{abb:11:8} entnimmt man, welche Knoten markiert werden; die Markierung erfolgt dabei in der Reihenfolge $s,x_4,y_1,y_2,x_3,x_2$. Die übrigen Knoten werden nicht markiert, da sie nicht durch einen zunehmenden Pfad erreicht werden. Man erhält den Schnitt $(S',T')$ mit $S'=\bigl\{ s,x_2,x_3,x_4,y_1,y_2 \bigr\}$ und $T'=\bigl\{ x_1,y_3,t \bigr\}$.
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.750cm,yunit=1.25cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-2.75)(3.5,4.75)
+
+\cnode*(1.5,4){3pt}{S}  \uput{0.20}[ 90](1.5,4){$s$}
+\cnode*(1.5,-2){3pt}{T} \uput{0.20}[270](1.5,-2){$t$} 
+\cnode*(0,2){3pt}{X1}   \uput{0.20}[180](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2}   \uput{0.20}[180](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3}   \uput{0.20}[  0](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4}   \uput{0.20}[  0](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.20}[180](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.20}[180](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.20}[  0](2.5,0){$y_3$}
+
+%\scriptsize
+\tiny
+\uput{0.50}[90](1.5,4){$(-,\infty)$} %s
+%\uput{0.50}[270](1.5,-2){$(y_3,+,1)$} %t
+%\uput{0.20}[ 0](0,2){$(y_1,-,1)$} %x1
+\uput{0.20}[ 0](1,2){$(y_2,-,1)$} %x2
+\uput{0.20}[180](2,2){$(y_1,-,1)$} %x3
+\uput{0.20}[180](3,2){$(s,+,1)$} %x4
+\uput{0.20}[  0](0.5,0){$(x_4,+,1)$} %y1
+\uput{0.20}[  0](1.5,0){$(x_4,+,1)$} %y2
+%\uput{0.20}[180](2.5,0){$(x_1,+,1)$} %y3
+\ncline{->}{S}{X1} \uput{0.10}[180](0.75,3){$1(1)$} 
+\ncline{->}{S}{X2} \uput{0.10}[180](1.25,3){$1(1)$}
+\ncline{->}{S}{X3} \uput{0.10}[  0](1.75,3){$1(1)$}
+\ncline{->}{S}{X4} \uput{0.10}[  0](2.25,3){$0(1)$}
+\ncline{->}{Y1}{T} \uput{0.10}[180](1,-1){$1(1)$}
+\ncline{->}{Y2}{T} \uput{0.10}[  0](1.5,-1){$1(1)$}
+\ncline{->}{Y3}{T} \uput{0.10}[  0](2,-1){$1(1)$}
+\ncline{->}{X1}{Y1} \uput{0.05}[225](0.25,1){$0(1)$}
+\ncline{->}{X1}{Y2} \uput{0.05}[225](0.75,1){$0(1)$}
+\ncline{->}{X1}{Y3} \uput{0.05}[  0](0.75,1.5){$1(1)$}
+\ncline{->}{X2}{Y2} \uput{0.05}[  0](1.13,1.5){$1(1)$}
+\ncline{->}{X3}{Y1} \uput{0.05}[  0](1.70,1.5){$1(1)$}
+\ncline{->}{X4}{Y1} \uput{0.05}[315](1.75,1){$0(1)$}
+\ncline{->}{X4}{Y2} \uput{0.05}[315](2.25,1){$0(1)$}
+
+\psbcurve[linewidth=2pt](-0.5,3)(0.25,2)(0.5,-1.5)(2.25,0.15)(3.5,0.5)
+
+\small
+
+\uput{0.1}[180](0,1){$N$}
+\uput{0}[0](2.5,3.5){$S'$}
+\uput{0}[0](2.5,-1.5){$T'$}
+
+\end{pspicture}
+\caption{}
+\label{abb:11:8}
+\end{figure}
+
+Für $G$ bedeutet dies, wenn wir $S = S' \setminus \bigl\{s\bigr\}$ setzen: Als Zertifikat für die Optimalität des Matchings $M_3 = \bigl\{ \{x_1,y_3\}, \{x_2,y_2\}, \{x_3,y_1\} \bigr\}$ hat der Algorithmus die minimale Knotenüberdeckung $U = (X \setminus S) \cup (Y \cap S) = \bigl\{ x_1,y_1,y_2 \bigr\}$ gefunden (vgl. Abbildung \ref{abb:11:9}).
+
+\begin{figure}[H]
+\centering
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-1)(3.5,3)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$} \psframe(-0.1,2.2)(0.1,1.8)
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$} \psframe(0.4,0.2)(0.6,-0.2)
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$} \psframe(1.4,0.2)(1.6,-0.2)
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\footnotesize
+\uput{0.5}[90](0,2){$\overbrace{\hspace{1cm}}$}
+\uput{0.75}[90](0,2){$X \setminus S$}
+\uput{0.5}[90](2,2){$\overbrace{\hspace{5cm}}$}
+\uput{0.75}[90](2,2){$X \cap S$}
+\uput{0.5}[270](1,0){$\underbrace{\hspace{3cm}}$}
+\uput{0.75}[270](1,0){$Y \cap S$}
+\uput{0.5}[270](2.5,0){$\underbrace{\hspace{1cm}}$}
+\uput{0.75}[270](2.5,0){$Y \setminus S$}
+
+\small
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\caption{Die Knoten der minimalen Knotenüberdeckung $U$ sind durch ein Quadrat gekennzeichnet.}
+\label{abb:11:9}
+\end{figure}
+
+\textbf{Beispiel 2}. Wir betrachten den folgenden bipartiten Graphen $G=(V,E)$:
+
+\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(4,2){3pt}{X5} \uput{0.25}[ 90](4,2){$x_5$}
+\cnode*(5,2){3pt}{X6} \uput{0.25}[ 90](5,2){$x_6$}
+\cnode*(6,2){3pt}{X7} \uput{0.25}[ 90](6,2){$x_7$}
+\cnode*(0,0){3pt}{Y1} \uput{0.25}[270](0,0){$y_1$}
+\cnode*(1,0){3pt}{Y2} \uput{0.25}[270](1,0){$y_2$}
+\cnode*(2,0){3pt}{Y3} \uput{0.25}[270](2,0){$y_3$}
+\cnode*(3,0){3pt}{Y4} \uput{0.25}[270](3,0){$y_4$}
+\cnode*(4,0){3pt}{Y5} \uput{0.25}[270](4,0){$y_5$}
+\cnode*(5,0){3pt}{Y6} \uput{0.25}[270](5,0){$y_6$}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y4}
+\ncline{-}{X2}{Y1}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X2}{Y3}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X2}{Y6}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X3}{Y5}
+\ncline{-}{X4}{Y2}
+\ncline{-}{X4}{Y3}
+\ncline{-}{X4}{Y4}
+\ncline{-}{X4}{Y5}
+\ncline{-}{X4}{Y6}
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+\ncline{-}{X6}{Y2}
+\ncline{-}{X6}{Y3}
+\ncline{-}{X6}{Y4}
+\ncline{-}{X6}{Y5}
+\ncline{-}{X6}{Y6}
+\ncline{-}{X7}{Y1}
+\ncline{-}{X7}{Y5}
+
+\end{pspicture}
+\end{center}
+
+Es sei $X = \bigl\{ x_1,\ldots,x_7 \bigr\}$ und $Y = \bigl\{ y_1,\ldots,y_6 \bigr\}$. Wie in Beispiel 1 besteht die Aufgabe darin, ein Matching mit maximaler Kantenzahl und gleichzeitig eine minimale Knotenüberdeckung zu finden. Hierzu soll der Algorithmus von Edmonds und Karp verwendet werden, und auch diesmal soll die Regel ($\star$) angewandt werden.
+
+Im Prinzip wird in Beispiel 2 alles wie in Beispiel 1 ablaufen. \textit{Ein wesentlicher Unterschied besteht jedoch in der Art der Beschreibung}: Das Netzwerk $N=(G',c,s,t)$ wird nicht mehr erwähnt werden; wir haben es höchstens noch im Hinterkopf. In der folgenden Beschreibung verwenden wir nur noch Ausdrucksweisen, die mit Matchings in bipartiten Graphen zusammenhängen; Ausdrucksweisen, die mit Netzwerken und Flüssen zusammenhängen, werden vermieden. \textit{Das hat den Vorteil, dass alles einfacher, übersichtlicher und kürzer wird}.
+
+\textit{Lösung}: Mit dem \enquote{leeren Matching} $M_0 = \emptyset$ geht es los; in der ersten Iteration wählt der Algorithmus die Kante $\bigl\{ x_1,y_1 \bigr\}$ als Matchingkante aus. (Dies läuft im Detail wie in Beispiel 1 ab.) Am Ende der 1. Iteration gilt also $M_1 = \bigl\{ \{x_1,y_1\} \bigr\}$. Im Verlauf der 2.-5. Iteration kommen dann -- in der angegebenen Reihenfolge -- die Kanten $\bigl\{ x_2,y_2 \bigr\}$, $\bigl\{ x_3,y_5 \bigr\}$, $\bigl\{ x_4,y_3 \bigr\}$ und $\bigl\{ x_6,y_4 \bigr\}$ hinzu\footnote{Prüfen Sie nach, dass dies tatsächlich so ist; machen Sie sich auch klar, dass es an (5') (\enquote{first labelled -- first scanned}) sowie an der Regel ($\star$) liegt, dass es zur Auswahl der genannten fünf Kanten kommt.}. Wir können also festhalten: Nach fünf Iterationen lautet das aktuelle Matching wie folgt (vgl. Zeichnung):
+\[
+M_5 = \Bigl\{ 
+\bigl\{ x_1,y_1 \bigr\}, 
+\bigl\{ x_2,y_2 \bigr\}, 
+\bigl\{ x_3,y_5 \bigr\}, 
+\bigl\{ x_4,y_3 \bigr\},
+\bigl\{ x_6,y_4 \bigr\}
+\Bigr\}.
+\]
+
+\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(4,2){3pt}{X5} \uput{0.25}[ 90](4,2){$x_5$}
+\cnode*(5,2){3pt}{X6} \uput{0.25}[ 90](5,2){$x_6$}
+\cnode*(6,2){3pt}{X7} \uput{0.25}[ 90](6,2){$x_7$}
+\cnode*(0,0){3pt}{Y1} \uput{0.25}[270](0,0){$y_1$}
+\cnode*(1,0){3pt}{Y2} \uput{0.25}[270](1,0){$y_2$}
+\cnode*(2,0){3pt}{Y3} \uput{0.25}[270](2,0){$y_3$}
+\cnode*(3,0){3pt}{Y4} \uput{0.25}[270](3,0){$y_4$}
+\cnode*(4,0){3pt}{Y5} \uput{0.25}[270](4,0){$y_5$}
+\cnode*(5,0){3pt}{Y6} \uput{0.25}[270](5,0){$y_6$}
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\ncline{-}{X1}{Y4}
+\ncline{-}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{Y2}{X2}
+\ncline{-}{X2}{Y3}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X2}{Y6}
+\ncline{-}{X3}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X4}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X4}{Y3}
+\ncline{-}{X4}{Y4}
+\ncline{-}{X4}{Y5}
+\ncline{-}{X4}{Y6}
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+\ncline{-}{X6}{Y2}
+\ncline{-}{X6}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X6}{Y4}
+\ncline{-}{X6}{Y5}
+\ncline{-}{X6}{Y6}
+\ncline{-}{X7}{Y1}
+\ncline{-}{X7}{Y5}
+
+\end{pspicture}
+\end{center}
+
+
+In der 6. Iteration findet der Algorithmus den augmentierenden Pfad
+\[
+\Bigl( x_5, y_1, x_1, y_4, x_6, y_6 \Bigr)
+\]
+und ändert das aktuelle Matching entsprechend ab (Austausch der Matchingkanten gegen die Nicht-Matchingkanten dieses Pfads): $\bigl\{ x_5,y_1 \bigr\}$, $\bigl\{ x_1,y_4 \bigr\}$ und $\bigl\{ x_6,y_6 \bigr\}$ werden in die aktuelle Menge der Matchingkanten aufgenommen, $\bigl\{ x_1,y_1 \bigr\}$ und $\bigl\{ x_6,y_4 \bigr\}$ verlassen diese Menge. Nach der 6. Iteration lautet das aktuelle Matching demnach (vgl. Zeichnung):
+\[
+M_6 = \Bigl\{ 
+\bigl\{ x_1,y_4 \bigr\}, 
+\bigl\{ x_2,y_2 \bigr\}, 
+\bigl\{ x_3,y_5 \bigr\}, 
+\bigl\{ x_4,y_3 \bigr\},
+\bigl\{ x_5,y_1 \bigr\},
+\bigl\{ x_6,y_6 \bigr\}
+\Bigr\}.
+\]
+
+\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(4,2){3pt}{X5} \uput{0.25}[ 90](4,2){$x_5$}
+\cnode*(5,2){3pt}{X6} \uput{0.25}[ 90](5,2){$x_6$}
+\cnode*(6,2){3pt}{X7} \uput{0.25}[ 90](6,2){$x_7$}
+\cnode*(0,0){3pt}{Y1} \uput{0.25}[270](0,0){$y_1$}
+\cnode*(1,0){3pt}{Y2} \uput{0.25}[270](1,0){$y_2$}
+\cnode*(2,0){3pt}{Y3} \uput{0.25}[270](2,0){$y_3$}
+\cnode*(3,0){3pt}{Y4} \uput{0.25}[270](3,0){$y_4$}
+\cnode*(4,0){3pt}{Y5} \uput{0.25}[270](4,0){$y_5$}
+\cnode*(5,0){3pt}{Y6} \uput{0.25}[270](5,0){$y_6$}
+
+\ncline{-}{X1}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y4}
+\ncline{-}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\ncline{-}{X2}{Y3}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X2}{Y6}
+\ncline{-}{X3}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X4}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X4}{Y3}
+\ncline{-}{X4}{Y4}
+\ncline{-}{X4}{Y5}
+\ncline{-}{X4}{Y6}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+\ncline{-}{X6}{Y2}
+\ncline{-}{X6}{Y3}
+\ncline{-}{X6}{Y4}
+\ncline{-}{X6}{Y5}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X6}{Y6}
+\ncline{-}{X7}{Y1}
+\ncline{-}{X7}{Y5}
+
+\end{pspicture}
+\end{center}
+
+In der 7. Iteration versucht der Algorithmus, einen augmentierenden Pfad zu finden, der in $x_7$ startet -- was nicht gelingt. Dabei werden die folgenden Knoten --~in der angegebenen Reihenfolge~-- mit alternierenden Pfaden erreicht und markiert: $x_7$, $y_1$, $y_5$, $x_5$, $x_3$.
+
+\textit{Ergebnis}: Der Algorithmus liefert das obige Matching $M_6$ mit 6 Kanten zusammen mit der minimalen Knotenüberdeckung
+\[
+U = \Bigl\{ x_1, x_2, x_4, x_6, y_1, y_5 \Bigr\}.
+\]
+
+In der nachfolgenden Zeichnung wird dieses Ergebnis veranschaulicht; die Knoten aus $U$ sind durch ein Quadrat gekennzeichnet.
+
+\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$} \psframe(-0.1,2.2)(0.1,1.8)
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$} \psframe(0.9,2.2)(1.1,1.8)
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$} \psframe(2.9,2.2)(3.1,1.8)
+\cnode*(4,2){3pt}{X5} \uput{0.25}[ 90](4,2){$x_5$}
+\cnode*(5,2){3pt}{X6} \uput{0.25}[ 90](5,2){$x_6$} \psframe(4.9,2.2)(5.1,1.8)
+\cnode*(6,2){3pt}{X7} \uput{0.25}[ 90](6,2){$x_7$}
+\cnode*(0,0){3pt}{Y1} \uput{0.25}[270](0,0){$y_1$} \psframe(-0.1,0.2)(0.1,-0.2)
+\cnode*(1,0){3pt}{Y2} \uput{0.25}[270](1,0){$y_2$}
+\cnode*(2,0){3pt}{Y3} \uput{0.25}[270](2,0){$y_3$}
+\cnode*(3,0){3pt}{Y4} \uput{0.25}[270](3,0){$y_4$}
+\cnode*(4,0){3pt}{Y5} \uput{0.25}[270](4,0){$y_5$} \psframe(3.9,0.2)(4.1,-0.2)
+\cnode*(5,0){3pt}{Y6} \uput{0.25}[270](5,0){$y_6$}
+
+\ncline{-}{X1}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y4}
+\ncline{-}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\ncline{-}{X2}{Y3}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X2}{Y6}
+\ncline{-}{X3}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X4}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X4}{Y3}
+\ncline{-}{X4}{Y4}
+\ncline{-}{X4}{Y5}
+\ncline{-}{X4}{Y6}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+\ncline{-}{X6}{Y2}
+\ncline{-}{X6}{Y3}
+\ncline{-}{X6}{Y4}
+\ncline{-}{X6}{Y5}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X6}{Y6}
+\ncline{-}{X7}{Y1}
+\ncline{-}{X7}{Y5}
+
+\end{pspicture}
+\end{center}
+
+\textit{Wie kommt man auf die minimale Knotenüberdeckung $U = \bigl\{ x_1, x_2, x_4, x_6, y_1, y_5 \bigr\}$}?
+
+Die Antwort findet sich im Skript auf Seite \pageref{page:11:7}: Bezeichnen wir (wie dort) mit $S$ die Menge der in der 7. Iteration mittels alternierender Pfade erreichbaren Knoten, so ist
+\[
+U = \Bigl( X \setminus S \Bigr) \cup \Bigl( Y \cap S \Bigr)
+\]
+die gewünschte Knotenüberdeckung.
+
+Wir betonen noch einmal: In der Darstellung von Beispiel 2 wurden keine Begriffe aus der \enquote{Welt der Flussnetzwerke} verwendet, sondern nur noch Begriffe aus der \enquote{Welt der Matchings}. Beispielsweise war nicht mehr von zunehmenden Pfaden zu einem Knoten die Rede, sondern es ging um \textit{Erreichbarkeit durch alternierende Pfade}. Dieses Umsteigen auf andere Sprechweisen ist üblich und vor allem auch angemessen: Es geht ja in der Fragestellung ausschließlich um Matchings in ungerichteten Graphen und nicht um Flüsse in Netzwerken. Ermöglicht wurde das Umsteigen auf andere Sprechweisen durch die Ergebnisse des Abschnitts \ref{section:11:3}. Empfehlung: \textit{Schauen Sie sich die zusammenfassende Bemerkungen am Ende von Abschnitt \ref{section:11:3} noch einmal an}.
+
+Die Vorgehensweise in Beispiel 2 wird \textit{besonders anschaulich}, wenn man sich die 6. und 7. Iteration mithilfe von \enquote{alternierenden Bäumen} vorstellt. Wir führen dies für die 6. Iteration vor.
+
+Ausgangspunkt in der 6. Iteration ist das Matching $M_5 = \bigl\{ \{x_1,y_1\}, \{x_2,y_2\}, \{x_3,y_5\}, \{x_4,y_3\}, \{x_6,y_4\} \bigr\}$ (siehe entsprechende Abbildung weiter oben). Im Anschluss an diese Abbildung wurde gesagt, dass der Algorithmus in der 6. Iteration den augmentierenden Pfad $(x_5,y_1,x_1,y_4,x_6,y_6)$ findet. \textit{Der Prozess, wie der Algorithmus diesen Pfad findet, lässt sich besonders anschaulich mit alternierenden Bäumen darstellen}.
+
+Da wir in $X$ zwei ungepaarte Knoten ($x_5$ und $x_7$) haben, geht es um zwei Bäume $T_1$ und $T_2$. Zunächst sind diese Bäume noch sehr klein -- sie bestehen nur aus ihren Wurzeln $x_5$ und $x_7$:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,0.5)
+
+\uput{0}[0](0,0){$T_1$}
+\uput{0}[180](6,0){$T_2$}
+\cnode*(1,0){3pt}{X5} \uput{0.25}[270](1,0){$x_5$} \pscircle(1,0){0.2}
+\cnode*(5,0){3pt}{X7} \uput{0.25}[270](5,0){$x_7$} \pscircle(5,0){0.2}
+
+\end{pspicture}
+\end{figure}
+
+Das Bemühen, einen augmentierenden Pfad zu finden, führt dazu, dass diese Bäume wachsen. Im vorliegenden Fall wird sich herausstellen, dass nur $T_1$ wächst; bei $T_2$ liegt \enquote{Nullwachstum} vor. Im Folgenden sind die Phasen dieses Wachstums in kleinen Schritten dargestellt:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,1)
+
+\uput{0}[0](0,0){$T_1$}
+\uput{0}[180](6,0){$T_2$}
+\cnode*(1,0){3pt}{X5} \uput{0.25}[270](1,0){$x_5$} \pscircle(1,0){0.2}
+\cnode*(5,0){3pt}{X7} \uput{0.25}[270](5,0){$x_7$} \pscircle(5,0){0.2}
+\cnode*(0,1){3pt}{Y1} \uput{0.25}[180](0,1){$y_1$}
+\cnode*(2,1){3pt}{Y5} \uput{0.25}[  0](2,1){$y_5$}
+
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+
+\end{pspicture}
+\end{figure}
+
+%-------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,2)
+
+\uput{0}[0](0,0){$T_1$}
+\uput{0}[180](6,0){$T_2$}
+\cnode*(0,2){3pt}{X1} \uput{0.25}[180](0,2){$x_1$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[  0](2,2){$x_3$}
+\cnode*(1,0){3pt}{X5} \uput{0.25}[270](1,0){$x_5$} \pscircle(1,0){0.2}
+\cnode*(5,0){3pt}{X7} \uput{0.25}[270](5,0){$x_7$} \pscircle(5,0){0.2}
+\cnode*(0,1){3pt}{Y1} \uput{0.25}[180](0,1){$y_1$}
+\cnode*(2,1){3pt}{Y5} \uput{0.25}[  0](2,1){$y_5$}
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+
+\end{pspicture}
+\end{figure}
+
+%-------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,3)
+
+\uput{0}[0](0,0){$T_1$}
+\uput{0}[180](6,0){$T_2$}
+\cnode*(0,2){3pt}{X1} \uput{0.25}[180](0,2){$x_1$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[  0](2,2){$x_3$}
+\cnode*(1,0){3pt}{X5} \uput{0.25}[270](1,0){$x_5$} \pscircle(1,0){0.2}
+\cnode*(5,0){3pt}{X7} \uput{0.25}[270](5,0){$x_7$} \pscircle(5,0){0.2}
+\cnode*(0,1){3pt}{Y1} \uput{0.25}[180](0,1){$y_1$}
+\cnode*(0,3){3pt}{Y4} \uput{0.25}[180](0,3){$y_4$}
+\cnode*(2,1){3pt}{Y5} \uput{0.25}[  0](2,1){$y_5$}
+
+\ncline{-}{X1}{Y4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+
+\end{pspicture}
+\end{figure}
+
+%-------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4)
+
+\uput{0}[0](0,0){$T_1$}
+\uput{0}[180](6,0){$T_2$}
+\cnode*(0,2){3pt}{X1} \uput{0.25}[180](0,2){$x_1$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[  0](2,2){$x_3$}
+\cnode*(1,0){3pt}{X5} \uput{0.25}[270](1,0){$x_5$} \pscircle(1,0){0.2}
+\cnode*(0,4){3pt}{X6} \uput{0.25}[180](0,4){$x_6$}
+\cnode*(5,0){3pt}{X7} \uput{0.25}[270](5,0){$x_7$} \pscircle(5,0){0.2}
+\cnode*(0,1){3pt}{Y1} \uput{0.25}[180](0,1){$y_1$}
+\cnode*(0,3){3pt}{Y4} \uput{0.25}[180](0,3){$y_4$}
+\cnode*(2,1){3pt}{Y5} \uput{0.25}[  0](2,1){$y_5$}
+
+\ncline{-}{X1}{Y4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X6}{Y4}
+
+\end{pspicture}
+\end{figure}
+
+%-------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,5)
+
+\uput{0}[0](0,0){$T_1$}
+\uput{0}[180](6,0){$T_2$}
+\cnode*(0,2){3pt}{X1} \uput{0.25}[180](0,2){$x_1$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[  0](2,2){$x_3$}
+\cnode*(1,0){3pt}{X5} \uput{0.25}[270](1,0){$x_5$} \pscircle(1,0){0.2}
+\cnode*(0,4){3pt}{X6} \uput{0.25}[180](0,4){$x_6$}
+\cnode*(5,0){3pt}{X7} \uput{0.25}[270](5,0){$x_7$} \pscircle(5,0){0.2}
+\cnode*(0,1){3pt}{Y1} \uput{0.25}[180](0,1){$y_1$}
+\cnode*(0,3){3pt}{Y4} \uput{0.25}[180](0,3){$y_4$}
+\cnode*(2,1){3pt}{Y5} \uput{0.25}[  0](2,1){$y_5$}
+\cnode*(0,5){3pt}{Y6} \uput{0.25}[180](0,5){$y_6$} \pscircle(0,5){0.2}
+
+\ncline{-}{X1}{Y4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y5}
+\ncline{-}{X5}{Y1}
+\ncline{-}{X5}{Y5}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X6}{Y4}
+\ncline{-}{X6}{Y6}
+
+\end{pspicture}
+\end{figure}
+
+Der Knoten $y_6$ wurde mit einem Kreis versehen, da es sich -- was besonders wichtig ist -- um einen ungepaarten Knoten aus $Y$ handelt.
+
+\textit{Aufgabe}: Stellen Sie auch für die 7. Iteration den dazugehörigen alternierenden Baum dar.
+
+In unserem Beispiel hatten die auftretenden Bäume eine etwas spezielle Gestalt. Deshalb sei abschließend noch ein alternierender Baum angegeben, wie er typischerweise in einem größeren Beispiel vorkommen könnte:
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(8.5,7)
+
+\cnode*(1,6){3pt}{X1} \uput{0.25}[180](1,6){$x_1$}
+\cnode*(3,6){3pt}{X2} \uput{0.25}[  0](3,6){$x_2$}
+\cnode*(7,4){3pt}{X3} \uput{0.25}[  0](7,4){$x_3$}
+\cnode*(0,2){3pt}{X4} \uput{0.25}[180](0,2){$x_4$}
+\cnode*(6,6){3pt}{X5} \uput{0.25}[180](6,6){$x_5$}
+\cnode*(3,0){3pt}{X6} \uput{0.25}[270](3,0){$x_6$} \pscircle(3,0){0.2}
+\cnode*(6,2){3pt}{X7} \uput{0.25}[  0](6,2){$x_7$}
+\cnode*(2,4){3pt}{X8} \uput{0.25}[180](2,4){$x_8$}
+\cnode*(3,2){3pt}{X9} \uput{0.25}[180](3,2){$x_9$}
+\cnode*(4,4){3pt}{X10} \uput{0.25}[180](4,4){$x_{10}$}
+\cnode*(5,4){3pt}{X11} \uput{0.25}[  0](5,4){$x_{11}$}
+\cnode*(8,6){3pt}{X12} \uput{0.25}[  0](8,6){$x_{12}$}
+\cnode*(0,1){3pt}{Y1} \uput{0.25}[180](0,1){$y_1$}
+\cnode*(5,3){3pt}{Y2} \uput{0.25}[  0](5,3){$y_2$}
+\cnode*(2,3){3pt}{Y3} \uput{0.25}[180](2,3){$y_3$}
+\cnode*(1,5){3pt}{Y4} \uput{0.25}[180](1,5){$y_4$}
+\cnode*(3,1){3pt}{Y5} \uput{0.25}[180](3,1){$y_5$}
+\cnode*(3,5){3pt}{Y6} \uput{0.25}[  0](3,5){$y_6$} 
+\cnode*(6,5){3pt}{Y7} \uput{0.25}[180](6,5){$y_7$}
+\cnode*(4,3){3pt}{Y8} \uput{0.25}[180](4,3){$y_8$}
+\cnode*(7,3){3pt}{Y9} \uput{0.25}[  0](7,3){$y_9$}
+\cnode*(6,1){3pt}{Y10} \uput{0.25}[  0](6,1){$y_{10}$}
+\cnode*(1,7){3pt}{Y11} \uput{0.25}[180](1,7){$y_{11}$} \pscircle(1,7){0.2}
+\cnode*(8,5){3pt}{Y12} \uput{0.25}[  0](8,5){$y_{12}$}
+
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y4}
+\ncline{-}{X1}{Y11}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y6}
+\ncline{-}{X3}{Y7}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y9}
+\ncline{-}{X3}{Y12}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X4}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X5}{Y7}
+\ncline{-}{X6}{Y1}
+\ncline{-}{X6}{Y5}
+\ncline{-}{X6}{Y10}
+\ncline{-}{X7}{Y2}
+\ncline{-}{X7}{Y9}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X7}{Y10}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X8}{Y3}
+\ncline{-}{X8}{Y4}
+\ncline{-}{X8}{Y6}
+\ncline{-}{X9}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X9}{Y5}
+\ncline{-}{X9}{Y8}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X10}{Y8}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X11}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X12}{Y12}
+
+\end{pspicture}
+\caption*{Ein typischer alternierender Baum}
+\end{figure}
+
+Wir haben im Zusammenhang mit Beispiel 2 von \enquote{alternierenden Bäumen} gesprochen, ohne diesen Begriff exakt definiert zu haben. Dies soll nun nachgeholt werden. Im Folgenden wird die übliche Definition des Begriffs \textit{alternierender Baum} wiedergegeben. Man erkennt sofort, dass alle Bäume, die wir bislang als \enquote{alternierende Bäume} bezeichnet haben, auch im Sinne dieser Definition alternierende Bäume sind.
+
+\begin{Definition}[Definition]
+Es sei $G=(V,E)$ ein bipartiter Graph mit Knotenpartition $V = X \cup Y$; ein Matching $M$ von $G$ sei fest gegeben. Ein Teilgraph $T$ von $G$ heißt \textit{alternierender Baum}\index{alternierender Baum}\index{Baum!alternierender}, falls $T$ ein Baum ist und falls es einen Knoten $r$ von $T$ gibt, für den gilt
+\begin{enumerate}[(i)]
+\item $r$ ist ein ungepaarter Knoten aus $X$.
+\item Für alle Knoten $v$ von $T$ gilt: Der eindeutig bestimmte $r,v$-Pfad in $T$ ist ein alternierender Pfad.
+\end{enumerate}
+\end{Definition}
+
+
+
+
+%
+%
+%Die \textbf{Aufgabe} ist es, ein Matching mit maximaler Kantenzahl und gleichzeitig eine minimale Knotenüberdeckung zu finden. Hierzu soll -- wie in den Abschnitten \ref{section:11:2} - \ref{section:11:4} beschrieben -- der Algorithmus von Edmonds und Karp (vgl. Abschnitt \ref{section:9:4}) verwendet werden, wobei die folgende Regel zu beachten ist: Gibt es mehrere Kandidaten für den nächsten zu markierenden Knoten, so sind Knoten mit kleinerem Index vorzuziehen.
+%
+%Der Deutlichkeit halber sei angemerkt, dass es in dieser Aufgabe nicht darum geht, ein Matching mit maximaler Kantenzahl und eine minimale Knotenüberdeckung \enquote{durch scharfes Hinsehen} zu ermitteln. Es geht darum, den Algorithmus von Edmonds und Karp anzuwenden.
+%
+%Es sei $X = \bigl\{ x_1, \ldots, x_7\bigr\}$ und $Y = \bigl\{ y_1, \ldots, y_6\bigr\}$. Wir gehen vor wie in Abschnitt \ref{section:11:2} beschrieben, d.h., wir verwandeln den bipartiten Graphen in ein Netzwerk und wenden den Algorithmus von Edmonds und Karp an. Dabei haben wir das Netzwerk jedoch nur im Hinterkopf: In der folgenden Beschreibung verwenden wir in erster Linie Ausdrucksweisen, die mit Matchings in bipartiten Graphen zusammenhängen; Ausdrucksweisen, die mit Netzwerken und Flüssen zusammenhängen, werden vermieden. \textit{Wir übersetzen sozusagen alles gleich in die Sprache der ungerichteten Graphen und Matchings}.
+%
+%\textbf{Lösung}: Im 1. Durchlauf der repeat-Schleife des Algorithmus von Edmonds und Karp (vgl. Seite \pageref{page:9:5}f sowie (5') auf Seite \pageref{page:9:6}) wählt der Algorithmus die Kante $\bigl\{ x_1,y_1 \bigr\}$ als Matchingkante aus; im 2.-5. Durchlauf kommen dann -- in der angegebenen Reihenfolge -- die Kanten $\bigl\{ x_2,y_2 \bigr\}$, $\bigl\{ x_3,y_5 \bigr\}$, $\bigl\{ x_4,y_3 \bigr\}$ und $\bigl\{ x_6,y_4 \bigr\}$ hinzu. Nach dem 5. Durchlauf der repeat-Schleife gilt für das aktuelle Matching $M$ demnach (vgl. Zeichnung):
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Der Heiratssatz"                                                            %
+%------------------------------------------------------------------------------%
+
+\section{Der Heiratssatz}
+\label{section:11:6}
+
+Ist $G=(V,E)$ ein bipartiter Graph mit Knotenpartition $V=X \cup Y$ und ist $A \subseteq X$ gegeben, so bezeichnet man mit $\Gamma(A)$ die Menge aller Knoten von $Y$, die einen Nachbarn in $A$ besitzen. Wir erwähnen einen der bekanntesten Sätze über Matchings in bipartiten Graphen, den sogenannten \textit{Heiratssatz}.
+
+\begin{Satz}[Heiratssatz]
+\index{Heiratssatz}\index{Satz!Heirats-}
+In einem bipartiten Graphen $G=(V,E)$ mit Knotenpartition $V=X \cup Y$ gibt es genau dann ein Matching $M$, für das $|M|=|X|$ gilt, wenn für alle $A \subseteq X$ die Bedingung $|A| \leq |\Gamma(A)|$ erfüllt ist.
+\end{Satz}
+
+Der Heiratssatz wurde in der ersten Hälfte des 20. Jahrhunderts von verschiedenen Mathematikern unabhängig voneinander in leicht unterschiedlichen Versionen formuliert und bewiesen; zu nennen sind neben anderen der ungarische Mathematiker D. König, der deutsche Mathematiker G. Frobenius sowie der Amerikaner Ph. Hall.
+
+Der Heiratssatz ist nicht schwer zu beweisen; es gibt viele unterschiedliche Beweise. Einen algorithmischen Beweis, der mit alternierenden Bäumen und augmentierenden Pfaden arbeitet und der deshalb für uns besonders interessant ist, findet man beispielsweise im folgenden Lehrbuch
+\begin{itemize}
+\item A. Steger: \textit{Diskrete Strukturen}. Band 1. Springer-Verlag (2007)\footnote{Dieses Buch steht Ihnen als eBook via SpringerLink vollständig zur Verfügung.}.
+\end{itemize}
+
+Auf den nachfolgenden Seiten (bis zum Ende von Abschnitt \ref{section:11:6}) finden Sie (in leicht gekürzter Form) das entsprechende Kapitel aus dem Buch von Steger; dieses Kapitel ist von Ihnen selbstständig durchzuarbeiten.
+
+
+\bigskip \bigskip
+
+% begin steger
+
+Betrachten wir das folgende Zuordnungsproblem. Gegeben ist eine Menge von Rechnern mit verschiedenen Leistungsmerkmalen (Speicher, Geschwindigkeit, Plattenplatz, etc.) und eine Menge von Jobs\index{Job} mit unterschiedlichen Leistungsanforderungen an die Rechner. Gibt es eine Möglichkeit, die Jobs so auf die Rechner zu verteilen, dass alle Jobs gleichzeitig bearbeitet werden können? Graphentheoretisch können wir das Problem wie folgt formulieren: Wir symbolisieren jeden Job und jeden Rechner durch einen Knoten und verbinden einen Job mit einem Rechner genau dann, wenn der Rechner die Leistungsanforderungen des Jobs erfüllt. Gesucht ist dann eine Auswahl der Kanten, die jedem Job genau einen Rechner zuordnet und umgekehrt jedem Rechner höchstens einen Job. Eine solche Teilmenge der Kanten nennt man ein Matching des Graphen. Obiges Beispiel beschreibt ein Matching in einem bipartiten Graphen. In der folgenden Definition verallgemeinern wir diesen Begriff auf beliebige Graphen.
+
+\begin{Definition}[Definition 2.56] 
+Eine Kantenmenge $M \subseteq E$ heißt \textit{Matching} in einem Graphen\index{Matching!in Graphen}\index{Graphen, Matching in} $G = (V,E)$, falls kein Knoten des Graphen zu mehr als einer Kante aus $M$ inzident ist, oder formal ausgedrückt, wenn
+\[
+e \cap f = \emptyset \quad \text{für alle } e,f \in M \text{ mit } e \neq f.
+\]
+
+Man sagt ein Knoten $v$ wird von $M$ \textit{überdeckt}, falls es eine Kante $e \in M$ gibt,
+die $v$ enthält. Ein Matching $M$ heißt \textit{perfektes Matching}, wenn jeder Knoten
+durch genau eine Kante aus $M$ überdeckt wird, oder, anders ausgedrückt, wenn
+$|M| = |V|/2$.
+\end{Definition}
+
+\textbf{BEISPIEL 2.57}. Ein Graph enthält im Allgemeinen sehr viele Matchings. Beispielsweise ist $M = \bigl\{e\bigr\}$ für jede Kante $e \in E$ ein Matching. Die folgende Abbildung zeigt ein Matching (links) und ein perfektes Matching (Mitte).
+
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(11.5,2.5)
+\footnotesize
+
+\psrotate(1,1){  0}{\cnode*(1,2){3pt}{A1}}
+\psrotate(1,1){ 72}{\cnode*(1,2){3pt}{A2}}
+\psrotate(1,1){144}{\cnode*(1,2){3pt}{A3}}
+\psrotate(1,1){216}{\cnode*(1,2){3pt}{A4}}
+\psrotate(1,1){288}{\cnode*(1,2){3pt}{A5}}
+\cnode*(3,1.75){3pt}{A6}
+\ncline{-}{A1}{A2}
+\ncline{-}{A3}{A4}
+\ncline{-}{A5}{A1}
+\ncline{-}{A5}{A6}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A2}{A3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{A4}{A5}
+
+\psrotate(6,1){  0}{\cnode*(6,0){3pt}{B1}}
+\psrotate(6,1){ 72}{\cnode*(6,0){3pt}{B2}}
+\psrotate(6,1){144}{\cnode*(6,0){3pt}{B3}}
+\psrotate(6,1){216}{\cnode*(6,0){3pt}{B4}}
+\psrotate(6,1){288}{\cnode*(6,0){3pt}{B5}}
+\cnode*(4,0.25){3pt}{B6}
+\ncline{-}{B2}{B3}
+\ncline{-}{B4}{B5}
+\ncline{-}{B5}{B1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B1}{B2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B3}{B4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B5}{B6}
+
+\cnode*(10,1){3pt}{C0}
+\psrotate(10,1){  0}{\cnode*(10,0){3pt}{C1}}
+\psrotate(10,1){ 30}{\cnode*(10,0){3pt}{C2}}
+\psrotate(10,1){ 60}{\cnode*(10,0){3pt}{C3}}
+\psrotate(10,1){ 90}{\cnode*(10,0){3pt}{C4}}
+\psrotate(10,1){120}{\cnode*(10,0){3pt}{C5}}
+\psrotate(10,1){150}{\cnode*(10,0){3pt}{C6}}
+\psrotate(10,1){180}{\cnode*(10,0){3pt}{C7}}
+\psrotate(10,1){210}{\cnode*(10,0){3pt}{C8}}
+\psrotate(10,1){240}{\cnode*(10,0){3pt}{C9}}
+\psrotate(10,1){270}{\cnode*(10,0){3pt}{C10}}
+\psrotate(10,1){300}{\cnode*(10,0){3pt}{C11}}
+\psrotate(10,1){330}{\cnode*(10,0){3pt}{C12}}
+\ncline{-}{C0}{C1}
+\ncline{-}{C0}{C2}
+\ncline{-}{C0}{C3}
+\ncline{-}{C0}{C4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{C0}{C5}
+\ncline{-}{C0}{C6}
+\ncline{-}{C0}{C7}
+\ncline{-}{C0}{C8}
+\ncline{-}{C0}{C9}
+\ncline{-}{C0}{C10}
+\ncline{-}{C0}{C11}
+\ncline{-}{C0}{C12}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+Nicht jeder Graph enthält jedoch ein perfektes Matching. Für Graphen mit einer ungeraden Anzahl an Knoten ist dies klar. Es gibt aber sogar Graphen mit beliebig vielen Knoten, deren größtes Matching aus einer einzigen Kante besteht. Dies sind die so genannten \textit{Sterngraphen} (im Bild rechts), deren Kantenmenge genau aus den zu einem Knoten inzidenten Kanten besteht.
+
+Wir werden uns in diesem Kapitel auf Matchings in bipartiten Graphen beschränken. Der folgende Satz von PHILIP HALL (1904-1982) gibt eine notwendige und hinreichende Bedingung an, unter der ein Matching in einem bipartiten Graphen existiert, das alle Knoten einer Partition überdeckt. Zur Formulierung des Satzes führen wir noch eine abkürzende Schreibweise für die \textit{Nachbarschaft einer Knotenmenge} $X \subseteq V$ ein:
+\[
+\Gamma(X) := \bigcup\limits_{v \in X}{\Gamma(v)}.
+\]
+
+\begin{Satz}[Satz 2.58 (Hall)] 
+\index{Satz!von Hall}\index{Heiratssatz}\index{Satz!Heirats-}
+In einem bipartiten Graphen $G = (A \uplus B,E)$ gibt es genau dann ein Matching $M$ der Kardinalität $|M| = |A|$, wenn gilt
+\begin{equation}
+\tag{2.2}
+\bigl| \Gamma(X) \bigr| \geq \bigl|X\bigr| \quad \text{für alle } X \subseteq A.
+\end{equation}
+\end{Satz}
+
+\textbf{Beweis}\index{Beweis!des Heiratssatzes}\index{Heiratssatz!Beweis des}. Wir beweisen zuerst die \enquote{$\Rightarrow$}-Richtung des Satzes. Sei $M$ ein Matching der Kardinalität $|M| = |A|$. In dem durch $M$ gegebenen Teilgraphen $H = (A \uplus B,M)$ hat jede Teilmenge $X \subseteq A$ nach Definition eines Matchings genau $|X|$ Nachbarn. Wegen $M \subseteq E$ gilt daher auch $|\Gamma(X)| \geq |X|$ für alle $X \subseteq A$.
+
+Die \enquote{$\Leftarrow$}-Richtung des Satzes beweisen wir durch Widerspruch. Wir nehmen also an, es gibt einen Graphen $G = (A \uplus B,E)$, der die Bedingung (2.2) erfüllt, der aber kein Matching der Kardinalität $|A|$ enthält. Wir wählen uns nun ein beliebiges kardinalitätsmaximales Matching $M$ in $G$. Da nach unserer Annahme $|M| < |A|$ gilt, gibt es mindestens einen Knoten in $A$, wir wollen ihn $a_0$ nennen, der von $M$ nicht überdeckt wird. Wenden wir (2.2) für $X = \bigl\{ a_0 \bigr\}$ an, so sehen wir, dass $a_0$ mindestens einen Nachbarn in $B$ hat. Wir wählen uns einen solchen beliebig und nennen ihn $b_0$. Ausgehend von $a_0$, $b_0$ konstruieren wir jetzt eine Folge von Knoten $a_i \in A$ und $b_i \in B$ wie folgt:
+
+\begin{center}
+\begin{tabular}{rl}
+ (1)& $k \leftarrow 0$; \\
+ (2)& \textbf{while} $b_k$ wird von $M$ überdeckt \textbf{do begin} \\
+ (3)& \qquad $a_{k+1} \leftarrow$ Nachbar von $b_k$ in $M$; \\
+ (4)& \qquad wähle einen beliebigen Knoten aus $\Gamma\left(\bigl\{a_0, \ldots, a_ {k+1}\bigr\}\right) \setminus \bigl\{b_0, \ldots, b_k \bigr\}$ \\
+    & \qquad\qquad und nenne ihn $b_{k+1}$; \\
+ (5)& \qquad $k \leftarrow k + 1$; \\
+ (6)& \textbf{end} \\
+\end{tabular}
+\end{center}
+
+Beachte, dass es wegen der Bedingung (2.2) in jeder Iteration der while-Schleife den Knoten $b_{k+1}$ auch wirklich gibt. Jeder Knoten $b_{k+1}$ ist nach Konstruktion zu mindestens einem Knoten in der Menge $\bigl\{a_0, \ldots , a_{k+1} \bigr\}$ benachbart. Die folgende Abbildung zeigt einen möglichen Ablauf des Algorithmus, der für $k = 8$ stoppt:
+
+\begin{center}
+\psset{xunit=1.50cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,3.5)
+\footnotesize
+
+\cnode*(0,1.5){3pt}{A0} \uput{0.2}[270](0,1.5){$a_0$}
+\cnode*(2,2.5){3pt}{A1} \uput{0.2}[270](2,2.5){$a_1$}
+\cnode*(4,3.0){3pt}{A2} \uput{0.2}[270](4,3.0){$a_2$}
+\cnode*(4,2.0){3pt}{A3} \uput{0.2}[270](4,2.0){$a_3$}
+\cnode*(2,0.5){3pt}{A4} \uput{0.2}[270](2,0.5){$a_4$}
+\cnode*(6,2.5){3pt}{A5} \uput{0.2}[270](6,2.5){$a_5$}
+\cnode*(6,1.5){3pt}{A6} \uput{0.2}[270](6,1.5){$a_6$}
+\cnode*(4,1.0){3pt}{A7} \uput{0.2}[270](4,1.0){$a_7$}
+\cnode*(4,0.0){3pt}{A8} \uput{0.2}[270](4,0.0){$a_8$}
+
+\cnode*(1,2.5){3pt}{B0} \uput{0.2}[270](1,2.5){$b_0$}
+\cnode*(3,3.0){3pt}{B1} \uput{0.2}[270](3,3.0){$b_1$}
+\cnode*(3,2.0){3pt}{B2} \uput{0.2}[270](3,2.0){$b_2$}
+\cnode*(1,0.5){3pt}{B3} \uput{0.2}[270](1,0.5){$b_3$}
+\cnode*(5,2.5){3pt}{B4} \uput{0.2}[270](5,2.5){$b_4$}
+\cnode*(5,1.5){3pt}{B5} \uput{0.2}[270](5,1.5){$b_5$}
+\cnode*(3,1.0){3pt}{B6} \uput{0.2}[270](3,1.0){$b_6$}
+\cnode*(3,0.0){3pt}{B7} \uput{0.2}[270](3,0.0){$b_7$}
+\cnode*(5,0.0){3pt}{B8} \uput{0.2}[270](5,0.0){$b_8$}
+
+\ncline{-}{A0}{B0}
+\ncline{-}{A0}{B3}
+\ncline{-}{A1}{B1}
+\ncline{-}{A1}{B2}
+\ncline{-}{A3}{B4}
+\ncline{-}{A3}{B5}
+\ncline{-}{A4}{B6}
+\ncline{-}{A4}{B7}
+\ncline{-}{A8}{B8}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B0}{A1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B1}{A2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B2}{A3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B3}{A4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B4}{A5}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B5}{A6}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B6}{A7}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{B7}{A8}
+
+\small
+\end{pspicture}
+\end{center}
+
+Die Abbildung verdeutlicht, dass es immer von $a_0$ zu dem letzten gefundenen Knoten, in unserem Beispiel also zu $b_8$, einen Pfad gibt, der abwechselnd aus Kanten besteht, die nicht zum Matching $M$ gehören, und aus Kanten, die in $M$ enthalten sind. Nach Konstruktion wissen wir zudem, dass sowohl $a_0$ also auch $b_k$ nicht von $M$ überdeckt werden. Daraus folgt aber, dass wir ein neues Matching $M'$ wie folgt konstruieren können: Wir entfernen aus $M$ alle Kanten des Pfades, die zu $M$ gehören, und fügen stattdessen zu $M$ alle Kanten des Pfades hinzu, die bislang nicht zu $M$ gehört haben. (In obigem Beispiel würde man also die Kanten $\bigl\{b_3, a_4\bigr\}$ und $\bigl\{b_7, a_8 \bigr\}$ aus $M$ entfernen und dafür die Kanten $\bigl\{a_0, b_3\bigr\}$, $\bigl\{a_4, b_7\bigr\}$ und $\bigl\{a_8, b_8 \bigr\}$ zu $M$ hinzufügen.) Das so entstandene Matching $M'$ enthält dann genau eine Kante mehr als das Matching $M$. Da wir $M$ als kardinalitätsmaximales Matching gewählt haben, kann dies allerdings nicht sein. Wir haben also die Annahme, dass es in $G$ kein Matching der Kardinalität $|A|$ gibt, zum gewünschten Widerspruch geführt.
+
+\textbf{BEISPIEL 2.59}. Den Satz von Hall findet man oft auch unter der Bezeichnung \enquote{Heiratssatz}\index{Heiratssatz}\index{Satz!Heirats-}. Warum dies so ist, verdeutlicht die folgende Geschichte. Wenn die Menge $A$ aus Prinzessinnen und die Menge $B$ aus Rittern besteht und eine Kante jeweils bedeutet, dass die Prinzessin und der Ritter sich gerne sehen, so gibt der Satz von Hall die Bedingung an, die erfüllt sein muss, damit sich alle Prinzessinnen glücklich verheiraten können. Man beachte: Über die Vermählungschancen der Ritter wird dadurch noch nichts ausgesagt!
+
+%\begin{Definition}[Korollar 2.60]
+%Sei $G$ ein $k$-regulärer bipartiter Graph. Dann enthält $G$ ein perfektes Matching und hat chromatischen Index $\chi'(G) = k$.
+%\end{Definition}
+%
+%\textbf{Beweisskizze}. Die erste Aussage zeigt man durch einfaches Nachprüfen der Bedingung (2.2). Die zweite Aussage folgt daraus durch Induktion über $k$. $\Box$
+
+Betrachten wir den Beweis von Satz 2.58 noch einmal genauer. Bei der Konstruktion des Matchings $M'$ haben wir die Annahme, dass $M$ ein kardinalitätsmaximales Matching war, nur insofern ausgenutzt, als dass uns dies die Existenz des Knotens $a_0$ garantiert hat. Mit anderen Worten, den Algorithmus aus dem Beweis von Satz 2.58 kann man auch verwenden, um aus jedem beliebigen Matching $M$ mit $|M| < |A|$ ein neues Matching $M'$ mit $|M'| = |M| + 1$ zu konstruieren. Insbesondere kann man also ausgehend von $M = \emptyset$ das Matching sukzessive solange vergrößern, bis es aus genau $|A|$ vielen Kanten besteht. Die Ausarbeitung der Details dieses Verfahrens sei dem Leser als Übungsaufgabe überlassen. 
+
+%\begin{Definition}[Korollar 2.61]
+%Ist $G = (A \uplus B,E)$ ein bipartiter Graph, der die Bedingung (2.2) aus Satz 2.58 erfüllt, so kann man ein Matching $M$ der Kardinalität $|M| = |A|$ in Zeit $O(|V| \cdot |E|)$ bestimmen.
+%\end{Definition}
+
+Den im Beweis von Satz 2.58 konstruierten Pfad von $a_0$ zu $b_k$ nennt man aus naheliegenden Gründen einen \textit{augmentierenden Pfad}\index{augmentierender Pfad}\index{Pfad!augmentierender}\label{page:11:4}. Die Idee, maximale Matchings mithilfe von solchen augmentierenden Pfaden zu konstruieren, lässt sich auch auf bipartite Graphen, die die Bedingung (2.2) nicht erfüllen, und sogar auch auf nicht bipartite Graphen übertragen. Allerdings sind die Algorithmen hierfür (zum Teil erheblich) komplizierter\footnote{Der Deutlichkeit halber: Für bipartite Graphen, die die Bedingung (2.2) nicht erfüllen, ist die Sache keineswegs komplizierter; Matching-Algorithmen für nicht bipartite Graphen sind dagegen erheblich komplizierter. Wer sich über Matching-Algorithmen für nicht bipartite Graphen informieren möchte, findet Genaueres u.a. in den Büchern von Jungnickel und Lovász/Plummer. Der Name des bekanntesten Matching-Algorithmus für nicht bipartite Graphen sei hier noch erwähnt: Dies ist der berühmte \textit{Blütenalgorithmus von Edmonds}.\index{Blütenalgorithmus von Edmonds}}.
+
+% end steger
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Knotenüberdeckungen in beliebigen Graphen"                                  %
+%------------------------------------------------------------------------------%
+
+\section{Knotenüberdeckungen in beliebigen Graphen}
+\label{section:11:7}
+
+Ist $G=(V,E)$ ein \textit{bipartiter} Graph, so wissen wir, wie man in $G$ eine Knotenüberdeckung mit möglichst wenigen Knoten findet: Dies haben wir ausführlich in den Abschnitten \ref{section:11:2} - \ref{section:11:5} besprochen, wo wir einen Algorithmus mit polynomieller Laufzeit kennengelernt haben, der sowohl ein Matching mit maximaler Kantenzahl als auch eine Knotenüberdeckung mit minimaler Knotenzahl liefert.
+
+Ist $G=(V,E)$ ein \textit{beliebiger}, nicht notwendig bipartiter Graph, so ist die Situation gänzlich anders: Bei dem Problem, in $G$ eine Knotenüberdeckung mit minimaler Knotenzahl zu finden, handelt es sich um ein \textit{NP-schweres Optimierungsproblem}\footnote{Zum Begriff \textit{NP-schwer} und verwandten Begriffen siehe Kleinberg/Tardos (Kapitel 8).}. Ein Algorithmus mit polynomieller Laufzeit existiert für dieses Problem demnach nur, wenn P $=$ NP gilt, was allgemein als sehr unwahrscheinlich angesehen wird.
+
+Was tun? Eine Möglichkeit ist, nach einem \textit{Approximationsalgorithmus} Ausschau zu halten, d.h. nach einem Algorithmus mit polynomieller Laufzeit, der eine \textit{Näherungslösung mit Gütegarantie} liefert. Einen solchen Algorithmus werden wir im Folgenden kennenlernen.
+
+
+
+\subsection{Ein 2-Approximationsalgorithmus für das Knotenüberdeckungsproblem}
+\label{section:11:7:1}
+\index{2-Approximationsalgorithmus}\index{Algorithmus!2-Approximations-}
+
+Es sei $\gamma \geq 1$ eine reelle Zahl. Bevor wir auf das Knotenüberdeckungsproblem zu sprechen kommen, soll definiert werden, was unter einer \textit{Näherungslösung mit Gütegarantie}\index{Näherungslösung}\index{Lösung!Näherungs-} $\gamma$ und unter einem \textit{$\gamma$-Approximations\-algorithmus}\index{$\gamma$-Approximationsalgorithmus}\index{Algorithmus!$\gamma$-Approximations-} zu verstehen ist.
+
+Zu diesem Zweck nehmen wir an, dass ein \textit{Minimierungsproblem} vorliegt\footnote{Für Maximierungsprobleme trifft man ähnliche Definitionen und verwendet ähnliche Sprechweisen.}. Dabei muss es sich nicht unbedingt um ein Problem handeln, das als ganzzahliges lineares Programmierungsproblem formulierbar ist, sondern es kann ein beliebiges Optimierungsproblem vorliegen, bei dem eine \textit{reelle nichtnegative Zielfunktion} zu minimieren ist. Wir setzen voraus, dass das Problem eine optimale Lösung besitzt. \textit{Mit $L^*$ sei der (unbekannte) optimale Zielfunktionswert bezeichnet}. 
+
+Außerdem: $\mathcal{A}$ sei ein Algorithmus für das vorliegende Problem, der eine Lösung liefert, die nicht notwendigerweise optimal ist. \textit{Der Wert der von $\mathcal{A}$ gelieferten Lösung sei mit $L_{\mathcal{A}}$ bezeichnet}.
+
+\begin{Definition}[Definition]
+Man sagt, dass $\mathcal{A}$ eine \textit{Näherungslösung mit Gütegarantie} $\gamma$ liefert, falls stets (d.h. für alle Instanzen des betrachteten Problems) gilt:
+\begin{equation}
+\label{eq:11:4}
+L_{\mathcal{A}} \leq \gamma L^*.
+\end{equation}
+\end{Definition}
+
+Die Ungleichung (\ref{eq:11:4}) bedeutet, dass der Wert der von $\mathcal{A}$ gelieferten Lösung niemals schlechter als das $\gamma$-fache des Optimalwerts $L^*$ ist. Gilt zusätzlich zu (\ref{eq:11:4}), dass es sich bei $\mathcal{A}$ um einen polynomiellen Algorithmus handelt, so spricht man von einem \textit{$\gamma$-Approximationsalgorithmus}.
+
+Liegt ein polynomieller Algorithmus $\mathcal{A}$ vor, von dem man nachweisen möchte, dass es sich für ein bestimmtes $\gamma \geq 1$ um einen $\gamma$-Approximationsalgorithmus handelt, \textit{so steht man vor der Schwierigkeit, dass $L^*$ unbekannt ist}.
+
+Es stellt sich die Frage, wie man (\ref{eq:11:4}) nachweisen kann, wenn man $L^*$ gar nicht kennt. Die entscheidende Rolle hierbei spielen \textit{untere Schranken} für $L^*$: Der Wert $L^*$ ist zwar unbekannt, aber häufig kennt man eine untere Schranke $B$ für $L^*$, d.h., man kennt eine Größe $B$, für die gilt:
+\begin{equation}
+\label{eq:11:5}
+B \leq L^*.
+\end{equation}
+
+Gelingt es einem nun nachzuweisen, dass
+\begin{equation}
+\label{eq:11:6}
+L_{\mathcal{A}} \leq \gamma B,
+\end{equation}
+
+gilt, so erhält man wegen $B \leq L^*$, dass (\ref{eq:11:4}) erfüllt ist:
+\[
+L_{\mathcal{A}} \leq \gamma B \leq \gamma L^*.
+\]
+
+Man hat also Zweierlei zu tun, um zu (\ref{eq:11:4}) zu gelangen:
+\begin{itemize}
+\item Erstens ist eine geeignete untere Schranke $B$ zu finden;
+\item zweitens ist für diese Schranke (\ref{eq:11:6}) nachzuweisen.
+\end{itemize}
+
+\pagebreak
+Im Folgenden demonstrieren wir die geschilderte Vorgehensweise anhand des \textit{Knotenüberdeckungsproblems}. Dies lässt sich wie folgt formulieren. 
+
+\medskip
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+\textbf{Knotenüberdeckungsproblem}
+
+\medskip
+\textbf{Eingabe}: ein Graph $G=(V,E)$.
+
+\medskip
+\textbf{Gesucht}: eine Knotenüberdeckung von $G$ mit minimaler Knotenzahl.
+\end{minipage}
+\index{Knotenüberdeckungsproblem}
+\index{Problem!Knotenüberdeckungs-}
+\end{center}
+\medskip
+
+
+Anders gesagt: Es ist nach einer Knotenüberdeckung $U$ von $G$ mit $|U| = c(G)$ gefragt. Zur Definition der \textit{Knotenüberdeckungszahl}\index{Knotenüberdeckungszahl}\index{Zahl!Knotenüberdeckungs-} $c(G)$: vgl. Abschnitt \ref{section:11:4}. Es sei noch einmal betont:
+\begin{itemize}
+\item Wir können nicht erwarten, einen polynomiellen Algorithmus zur exakten Lösung des Knotenüberdeckungsproblems zu finden, da es sich um ein NP-schweres Optimierungsproblem handelt.
+\item Aus diesem Grund halten wir nach einem $\gamma$-Approximationsalgorithmus Ausschau, wobei wir uns wünschen, dass $\gamma$ \enquote{nicht allzu groß} ist.
+\end{itemize}
+
+Es wird ein 2-Approximationsalgorithmus für das Knotenüberdeckungsproblem vorgestellt werden. Hierzu benötigen wir den Begriff eines \textit{nicht erweiterbaren} Matchings,\index{nicht erweiterbares Matching}\index{Matching!nicht erweiterbares} der wie folgt definiert wird:
+
+\begin{Definition}[Definition]
+Es sei $G=(V,E)$ ein Graph. Ein Matching $M$ von $G$ wird \textit{nicht erweiterbar} genannt, wenn es maximal in Bezug auf die Inklusion $\subseteq$ ist, d.h., wenn es unmöglich ist, $M$ durch Hinzunahme einer weiteren Kante $e \in E$ zu einem größeren Matching von $G$ zu erweitern.
+\end{Definition}
+
+Es ist sorgfältig zwischen den Begriffen \textit{nicht erweiterbares Matching} und \textit{Matching mit maximaler Kantenzahl} zu unterscheiden.
+
+Als \textbf{Beispiel} betrachten wir den folgenden Graph:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0)(4,4)
+
+\cnode*(0,0){3pt}{V0} 
+\cnode*(1,1){3pt}{V1} 
+\cnode*(3,1){3pt}{V2} 
+\cnode*(4,0){3pt}{V3}
+\cnode*(2,2.75){3pt}{V4}
+\cnode*(2,4){3pt}{V5} 
+
+\ncline{-}{V0}{V1} \uput{0.10}[135](0.5, 0.5){$e_5$}
+\ncline{-}{V1}{V2} \uput{0.10}[270](2.0, 1.0){$e_4$}
+\ncline{-}{V1}{V4} \uput{0.10}[135](1.5, 1.8){$e_2$}
+\ncline{-}{V2}{V3} \uput{0.10}[ 45](3.5, 0.5){$e_6$}
+\ncline{-}{V2}{V4} \uput{0.10}[ 45](2.5, 1.8){$e_3$}
+\ncline{-}{V4}{V5} \uput{0.10}[  0](2.0, 3.375){$e_1$}
+
+\end{pspicture}
+\end{center}
+
+In diesem Graph ist die Menge $M = \bigl\{ e_1,e_4 \bigr\}$ ein nicht erweiterbares Matching, das aber keineswegs maximale Kantenzahl besitzt; $M' = \bigl\{ e_1,e_5,e_6 \bigr\}$ besitzt dagegen maximale Kantenzahl.
+
+\medskip
+\textbf{Einschub zur Terminologie in der englischsprachigen Literatur}: Im Englischen wird ein nicht erweiterbares Matching \textit{maximal matching}\index{maximal matching} genannt, während \textit{maximum matching}\index{maximum matching} die Bezeichnung für ein Matching mit maximaler Kantenzahl ist.
+\medskip
+
+Für einen gegebenen Graphen $G=(V,E)$ ein nicht erweiterbares Matching zu finden, ist sehr leicht: 
+
+Man beginnt mit dem leeren Matching $M = \emptyset$ und geht die Kanten von $G$ in einer beliebigen Reihenfolge durch. Stößt man dabei auf eine Kante $e$, durch deren Hinzunahme das aktuelle Matching $M$ zu einem größeren Matching wird, so nehme man $e$ in $M$ auf; andernfalls wird $e$ nicht aufgenommen.
+
+Hieran anknüpfend erhält man den gewünschten Approximationsalgorithmus für das Knotenüberdeckungsproblem:
+
+\begin{Definition}[2-Approximationsalgorithmus für das Knotenüberdeckungsproblem]	\index{2-Approximationsalgorithmus für das Knotenüberdeckungsproblem}
+Bestimme ein nicht erweiterbares Matching $M$ von $G$ und wähle als Output $U$ die Menge aller Knoten, die mit einer Kante von $M$ inzidieren.
+\end{Definition}
+
+\begin{Satz}[Satz]
+Der beschriebene Algorithmus ist ein 2-Approximationsalgorithmus für das Knotenüberdeckungsproblem.
+\end{Satz}
+
+\textbf{Beweis}. Es handelt sich um einen polynomiellen Algorithmus, da ein nicht erweiterbares Matching $M$ (wie zuvor beschrieben) in polynomieller Zeit gefunden werden kann.
+
+Das vom Algorithmus gelieferte $U$ ist eine Knotenüberdeckung: Würde $U$ eine Kante $e$ von $G$ nicht treffen, so könnte man $e$ zu $M$ hinzunehmen, d.h., $M$ wäre erweiterbar. Es bleibt zu zeigen:
+\begin{equation}
+\label{eq:11:7}
+|U| \leq 2c(G).
+\end{equation}
+
+Die Rolle der unteren Schranke $B$ aus (\ref{eq:11:5}) wird von $|M|$ übernommen: Es gilt $|M| \leq c(G)$, da eine Knotenüberdeckung alle Kanten aus $M$ treffen muss. Es folgt $2|M| \leq 2c(G)$, woraus man wegen $|U|=2|M|$ die gewünschte Ungleichung (\ref{eq:11:7}) erhält. $\Box$
+
+\textbf{Frage}: Ist es möglich, den gefundenen Faktor 2 zu verbessern, indem man den Algorithmus unverändert lässt, aber eine raffiniertere Analyse des Algorithmus vornimmt?
+
+\textbf{Antwort}: Dass dies nicht möglich ist, erkennt man anhand des vollständig bipartiten Graphen $K_{n,n}$. (Details in den Übungen.)
+
+\textbf{Nächste Frage}: Gibt es einen $\gamma$-Approximationsalgorithmus für das Knotenüberdeckungsproblem für ein $\gamma < 2$?
+
+\textbf{Antwort}: Das ist nicht bekannt. Es handelt sich um ein berühmtes offenes Problem.
+
+Bekannt ist jedoch Folgendes:
+
+\begin{Satz}[Satz (Dinur und Safra 2001)]
+\index{Satz!von Dinur und Safra}
+Falls P $\neq$ NP, so existiert kein $\gamma$-Approximationsalgorithmus für das Knotenüberdeckungsproblem für $\gamma < 1.3606$.
+\end{Satz}
+
+
+
+\subsection{Gewichtete Knotenüberdeckungen}
+\label{section:11:7:2}
+\index{Gewichtete Knotenüberdeckung} \index{Knotenüberdeckung!gewichtete}
+
+Es sei ein Graph $G=(V,E)$ gegeben, wobei wir $V = \bigl\{ 1,\ldots,n \bigr\}$ annehmen. Jeder Knoten $i$ besitzt ein \textit{Gewicht} $w_i \geq 0$ mit $w_i \in \Q$ ($i=1,\ldots,n$). Zu finden ist eine Knotenüberdeckung $U \subseteq V$ mit möglichst kleinem Gewicht, wobei das Gewicht von $U$ definiert wird durch
+\[
+w(U) = \sum\limits_{i \in U}{w_i}.
+\]
+
+Sind alle Gewichte gleich 1, so liegt der ursprünglich betrachtete Fall vor, in dem die Anzahl der Knoten in einer Knotenüberdeckung zu minimieren ist. Das ursprünglich betrachtete Problem ist also ein Spezialfall des allgemeinen gewichteten Problems.
+
+Das gewichtete Knotenüberdeckungsproblem lässt sich wie folgt als ein ganzzahliges lineares Optimierungsproblem schreiben, das wir mit (ILP) bezeichnen:
+\begin{align}
+\tag{ILP}
+\begin{alignedat}{5}
+& \text{minimiere } & \rlap{$w_1x_1 + \ldots + w_nx_n$} & & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & \\
+&&\ x_i &\ + &\ x_j &\ \geq &\ 1 & \qquad \bigl\{ i,j \bigr\} \in E \\
+&& & & & & \llap{$x_i \in \bigl\{ 0,1 \bigr\}$}  & \qquad i \in V
+\end{alignedat}
+\end{align}
+
+Jedem Knoten $i$ entspricht hierbei eine Variable $x_i$. Außerdem entspricht jeder zulässigen Lösung $x = (x_1,\ldots,x_n)$ von (ILP) eine Knotenüberdeckung $U$, wenn man die folgende (naheliegende) \textit{Interpretation} vornimmt: $x_i=1$ bedeutet, dass der Knoten $i$ in $U$ liegt, während $x_i=0$ gleichbedeutend mit $i \notin U$ ist. Man beachte: Für jede Kante $\bigl\{ i,j \bigr\}$ wird durch die Bedingung $x_i+x_j \geq 1$ gesichert, dass $i \in U$ oder $j \in U$ gilt.
+
+Umgekehrt erhält man auf entsprechende Art zu jeder Knotenüberdeckung $U$ eine zulässige Lösung von (ILP). Zusammenfassend können wir feststellen:
+
+\begin{Definition}[Feststellung]
+Ist $x = (x_1,\ldots,x_n)$ eine zulässige Lösung dieses ganzzahligen linearen Programmierungsproblems, so ist $U = \bigl\{ i \in V : x_i = 1 \bigr\}$ eine Knotenüberdeckung (und umgekehrt entspricht auch jeder Knotenüberdeckung eine zulässige Lösung von (ILP)). 
+\end{Definition}
+
+Außerdem gilt:
+
+\begin{Definition}[Feststellung]
+Ist $x^* = (x_1^*,\ldots,x_n^*)$ eine optimale Lösung des ganzzahligen linearen Programmierungsproblems (ILP), so ist $U^* = \bigl\{ i \in V : x_i^* = 1 \bigr\}$ eine minimale Knotenüberdeckung (und umgekehrt), wobei \enquote{minimale Knotenüberdeckung} bedeuten soll: Knotenüberdeckung minimalen Gewichts.
+\end{Definition}
+
+
+
+\subsection{Relaxieren und Runden: Ein 2-Approximationsalgorithmus für das gewichtete Knotenüberdeckungsproblem}
+\label{section:11:7:3}
+\index{Relaxieren und Runden}
+
+Im vorangegangenen Abschnitt \ref{section:11:7:2} haben wir das gewichtete Knotenüberdeckungsproblem in ein ganzzahliges lineares Optimierungsproblem (ILP) umgeschrieben. Dies ermöglicht uns, die \textit{LP-Relaxation}\index{LP-Relaxation}\index{Relaxation!LP-} des Problems zu betrachten:
+\begin{align}
+\tag{LP}
+\begin{alignedat}{5}
+& \text{minimiere } & \rlap{$w_1x_1 + \ldots + w_nx_n$} & & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & \\
+&&\ x_i &\ + &\ x_j &\ \geq &\ 1 & \qquad \bigl\{ i,j \bigr\} \in E \\
+&&\     &\   &\  &\  &\ \llap{$0 \leq x_i \leq 1$} & \qquad i \in V \\
+\end{alignedat}
+\end{align}
+
+\textbf{Beobachtung}. Es gilt
+\begin{equation}
+\label{eq:11:8}
+\text{Optimalwert von (LP)} \leq \text{Optimalwert von (ILP)}.
+\end{equation}
+
+\textit{Denn}: Jede zulässige Lösung von (ILP) ist auch eine zulässige Lösung von (LP).
+
+Das folgende \textbf{Beispiel} zeigt, dass Optimalwert von (LP) $<$ Optimalwert von (ILP) möglich ist: Es sei $G=(V,E)$ mit $V = \bigl\{ 1,2,3 \bigr\}$ und $E = \bigl\{ \{ 1,2\}, \{2,3\}, \{3,1\} \bigr\}$. Alle Gewichte seien gleich 1, d.h. $w_1=w_2=w_3=1$. Der Optimalwert von (ILP) ist offenbar gleich 2. Für (LP) gibt es dagegen eine zulässige Lösung mit Zielfunktionswert $\frac{3}{2}$: Man braucht nur $x_1 = x_2 = x_3 = \frac{1}{2}$ zu wählen (siehe Zeichnung).
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-2,-0.5)(4,2.25)
+
+\cnode*(0,2){3pt}{V1} \uput{0.25}[325](0,2){$1$} \uput{0.25}[180](0, 2){$x_1 = \frac{1}{2}$}
+\cnode*(2,2){3pt}{V2} \uput{0.25}[215](2,2){$2$} \uput{0.25}[  0](2, 2){$x_2 = \frac{1}{2}$}
+\cnode*(1,0){3pt}{V3} \uput{0.25}[ 90](1,0){$3$} \uput{0.20}[270](1, 0){$x_3 = \frac{1}{2}$}
+
+\ncline{-}{V1}{V2} 
+\ncline{-}{V1}{V3}
+\ncline{-}{V2}{V3}
+
+\end{pspicture}
+\end{center}
+
+Die Methode, die zum Einsatz kommen wird, lässt sich wie folgt beschreiben:
+
+\begin{center}
+Man löst die LP-Relaxation und rundet.
+\end{center}
+
+Genauer: Es sei $x^* = (x_1^*,\ldots,x_n^*)$ eine optimale Lösung der LP-Relaxation (LP). Dann betrachten wir die Menge $U \subseteq V$, die wie folgt definiert ist:
+\[
+U = \left\{ i \in V : x_i^* \geq \frac{1}{2} \right\}.
+\]
+
+\begin{Satz}[Satz]
+Es sei $x^* = (x_1^*,\ldots,x_n^*)$ eine optimale Lösung der LP-Relaxation\index{LP-Relaxation}\index{Relaxation!LP-} (LP) des gewichteten Knotenüberdeckungsproblems (ILP). Dann ist $U = \bigl\{ i \in V : x_i^* \geq \frac{1}{2} \bigr\}$ eine Knotenüberdeckung mit einem Gewicht $w(U)$, das höchstens doppelt so groß ist wie das Gewicht einer minimalen Knotenüberdeckung.
+\end{Satz}
+
+\textbf{Beweis}. Wir weisen zunächst nach, dass die Menge $U = \bigl\{ i \in V : x_i^* \geq \frac{1}{2} \bigr\}$ tatsächlich eine Knotenüberdeckung ist. Zu diesem Zweck betrachten wir eine beliebige Kante $e=\bigl\{ i,j \bigr\} \in E$. Da $(x_1^*, \ldots, x_n^*)$ eine Lösung von (LP) ist, gilt $x_i^* + x_j^* \geq 1$. Deshalb muss $x_i^* \geq \frac{1}{2}$ oder $x_j^* \geq \frac{1}{2}$ (oder beides) gelten. Es folgt, dass $i \in U$ oder $j \in U$ erfüllt ist, d.h., $U$ ist eine Knotenüberdeckung.
+
+Es bleibt zu zeigen: $w(U) = \sum\limits_{i \in U}{w_i}$ ist höchstens doppelt so groß wie das minimale Gewicht einer Knotenüberdeckung. Dies ergibt sich wie folgt.
+
+Es sei $U_{\text{min}}$ eine Knotenüberdeckung minimalen Gewichts. Die Rolle der unteren Schranke $B$ aus (\ref{eq:11:5}) wird in diesem Fall vom Zielfunktionswert $\sum\limits_{i=1}^{n}{w_ix_i^*}$ der optimalen Lösung $x^* = (x_1^*,\ldots,x_n^*)$ von (LP) übernommen. Es gilt nämlich 
+\begin{equation}
+\label{eq:11:9}
+\sum\limits_{i=1}^{n}{w_ix_i^*} \leq w \left( U_{\text{min}} \right).
+\end{equation}
+
+Zum Nachweis von (\ref{eq:11:9}) ist nur zu beachten, dass $w\left(U_{\text{min}} \right) = \sum\limits_{i \in U_{\text{min}}}{w_i}$ Zielfunktionswert einer optimalen Lösung von (ILP) ist, nämlich der Lösung $x=(x_1,\ldots,x_n)$ mit
+\[
+x_i = \begin{cases}
+1 & \text{falls } i \in U_{\text{min}} \\
+0 & \text{sonst}.
+\end{cases}
+\]
+
+Also: (\ref{eq:11:9}) gilt aufgrund der Beobachtung (\ref{eq:11:8}).
+
+Außerdem gilt
+\begin{equation}
+\label{eq:11:10}
+\sum\limits_{i=1}^{n}{w_ix_i^*} \geq \sum\limits_{i \in U}{w_ix_i^*} \stackrel{(\star)}{\geq} \frac{1}{2} \sum\limits_{i \in U}{w_i} = \frac{1}{2}w(U),
+\end{equation}
+
+wobei sich die mit $(\star)$ gekennzeichnete Ungleichung von (\ref{eq:11:10}) aus der Tatsache ergibt, dass $x_i^* \geq \frac{1}{2}$ für alle $i \in U$ gilt. Aus (\ref{eq:11:9}) und (\ref{eq:11:10}) ergibt sich, dass wie behauptet
+\[
+w(U) \leq 2w\left(U_{\text{min}}\right)
+\]
+gilt. $\Box$
+
+Den Inhalt des vorangegangenen Satzes können wir auch so aussprechen: \textit{Der Algorithmus \enquote{Lösen der LP-Relaxation und Runden} ist ein 2-Approximationsalgorithmus für das gewichtete Knotenüberdeckungsproblem}. (Man beachte: (LP) lässt sich in polynomieller Zeit lösen; vgl. Abschnitt \ref{chapter:14} dieses Skripts.)

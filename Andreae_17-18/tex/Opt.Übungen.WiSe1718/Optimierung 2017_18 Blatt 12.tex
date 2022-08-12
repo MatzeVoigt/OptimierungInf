@@ -1,0 +1,195 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{pst-all}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 12},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 12}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 22./23. Januar 2018}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Erläutern Sie, wie die Einträge in der Tabelle im Beispiel auf Seite 206 zustande kommen.
+
+% Aufgabe P-2
+\item In Kapitel 6 des Skripts findet sich auf Seite 64 der folgende Text:
+
+\smallskip
+\textbf{Knapsack}
+
+During a robbery, a burglar finds much more loot than he had expected and has to decide what to take. His bag (or \enquote{knapsack}) will hold a total weight of at most $W$ pounds. There are $n$ items to pick from, of weight $w_1,$ $\ldots$, $w_n$ and dollar value $v_1$, $\dots$, $v_n$. What's the most valuable combination of items he can fit into his bag?
+
+For instance, take $W=10$ and
+\[
+\begin{array}{c||c|c|c|c}
+\text{Item}   & 1 & 2 & 3 & 4 \\ \hline\hline
+\text{Weight} & 6 & 3 & 4 & 2 \\ \hline
+\text{Value}  & \$30 & \$14 & \$16 & \$9
+\end{array}
+\]
+
+\medskip
+
+\begin{enumerate}[a)]
+% Aufgabe P-2a
+\item Wir betrachten die Variante, in der jeder Gegenstand nur einmal vorhanden ist. Lösen Sie das Problem für die angegebenen Daten, indem Sie den auf Seite 207 beschriebenen Dynamischen-Programmierungs-Algorithmus verwenden.
+
+\textbf{Hinweis}: Es ist eine Tabelle anzulegen, die der Tabelle aus Aufgabe 1 sehr ähnlich ist.
+
+% Aufgabe P-2b
+\item Wie kann man aus der Tabelle nicht nur den optimalen Wert einer Rucksackfüllung ablesen, sondern auch, \textit{welche Gegenstände} in den Rucksack zu packen sind?
+\end{enumerate}
+
+
+% Aufgabe P-3
+\item \textit{Eine Klausuraufgabe aus dem WS 2013/14}: Wir betrachten die Variante des Rucksackproblems, bei der jeder Gegenstand nur einmal vorhanden ist. Die Gegenstände bezeichnen wir mit $1, \ldots, n$. Mit $v_i$ sei der Wert (\enquote{value}) des Gegenstandes $i$ bezeichnet und $w_i$ bezeichne sein Gewicht (\enquote{weight}). Für jeden Gegenstand betrachten wir den Quotienten $q_i = \frac{v_i}{w_i}$ (\enquote{Wert einer Gewichtseinheit}) und nehmen an, dass die Quotienten alle verschieden sind. 
+
+\textbf{Vorschlag für eine Greedy-Strategie}: Man ordnet die Gegenstände in absteigender Reihenfolge nach den Quotienten (\enquote{Gegenstand mit größtem Quotienten zuerst}). In dieser Reihenfolge geht man die Gegenstände durch und packt immer den nächsten noch möglichen Gegenstand ein.
+
+Beweisen oder widerlegen Sie die Behauptung, dass diese Strategie immer eine optimale Lösung liefert.
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 29./30. Januar 2018}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item Wie Präsenzaufgabe 2, aber diesmal für folgende Daten sowie $W=18$:
+\[
+\begin{array}{c||c|c|c|c|c|c|c}
+\text{Item}   & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline\hline
+\text{Weight} & 4 & 6 & 11 & 8 & 7 & 5 & 3 \\ \hline
+\text{Value}  & 2 & 3 & 6 & 6 & 5 & 4 & 2
+\end{array}
+\]
+
+Es ist auch eine optimale Rucksackfüllung an der von Ihnen angelegten Tabelle abzulesen. Unterstreichen Sie diejenigen Einträge der Tabelle, auf die es beim Ablesen der optimalen Rucksackfüllung ankam, und geben Sie die gefundene Rucksackfüllung an.
+
+\pagebreak
+
+% Aufgabe H-2
+\item Wenden Sie auf die folgenden Graphen $G$ die Version des Algorithmus von Bellman und Ford an, bei der man am Schluss feststellt, ob der gegebene Graph einen negativen Kreis enthält. Es ist eine \textit{Tabelle} anzulegen, an der man erstens ablesen kann, ob ein negativer Kreis vorhanden ist; falls dies nicht der Fall ist, so soll man zweitens an der Tabelle für alle Knoten $v$ sowohl die Länge eines kürzesten $s,v$-Pfades als auch einen solchen Pfad selber ablesen können.
+
+\begin{enumerate}[a)]
+
+% Aufgabe H-2a
+\item $G$ sei der folgende Graph:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-1.0)(6.5,3.0)
+
+\cnode*(2,2){3pt}{A} \uput{0.15}[ 90](2,2){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.15}[270](2,0){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.15}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.15}[270](4,0){$d$}
+\cnode*(6,1){3pt}{E} \uput{0.15}[  0](6,1){$e$}
+\cnode*(0,1){3pt}{S} \uput{0.15}[180](0,1){$s$}
+
+\ncline{->}{A}{C} \uput{0.10}[ 90](3.0, 2.0){$-1$}
+\ncline{->}{A}{D} \uput{0.05}[225](3.5, 0.5){$-4$}
+\ncline{->}{B}{A} \uput{0.10}[180](2.0, 1.0){$1$}
+\ncline{->}{B}{C} \uput{0.05}[135](3.5, 1.5){$-2$}
+\ncline{->}{B}{D} \uput{0.10}[270](3.0, 0.0){$3$}
+\ncarc[arcangle=310]{->}{C}{A} \uput{0.10}[ 90](3.0, 2.5){$3$}
+\ncline{->}{C}{D} \uput{0.10}[  0](4.0, 1.0){$1$}
+\ncarc[arcangle=50]{->}{D}{B} \uput{0.10}[270](3.0, -0.5){$2$}
+\ncline{->}{D}{E} \uput{0.10}[315](5.0, 0.5){$1$}
+\ncline{->}{E}{C} \uput{0.10}[ 45](5.0, 1.5){$3$}
+\ncline{->}{S}{A} \uput{0.10}[135](1.0, 1.5){$2$}
+\ncline{->}{S}{B} \uput{0.10}[225](1.0, 0.5){$7$}
+
+\end{pspicture}
+\end{center}
+
+% Aufgabe H-2b
+\item Der Graph $G$ sei wie folgt gegeben:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-1.0)(6.5,3.0)
+
+\cnode*(2,2){3pt}{A} \uput{0.15}[ 90](2,2){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.15}[270](2,0){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.15}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.15}[270](4,0){$d$}
+\cnode*(6,1){3pt}{E} \uput{0.15}[  0](6,1){$e$}
+\cnode*(0,1){3pt}{S} \uput{0.15}[180](0,1){$s$}
+
+\ncline{->}{A}{C} \uput{0.10}[ 90](3.0, 2.0){$-1$}
+\ncline{->}{A}{D} \uput{0.05}[225](3.5, 0.5){$-4$}
+\ncline{->}{B}{A} \uput{0.10}[180](2.0, 1.0){$4$}
+\ncline{->}{B}{C} \uput{0.05}[135](3.5, 1.5){$-2$}
+\ncline{->}{B}{D} \uput{0.10}[270](3.0, 0.0){$3$}
+\ncarc[arcangle=310]{->}{C}{A} \uput{0.10}[ 90](3.0, 2.5){$7$}
+\ncline{->}{C}{D} \uput{0.10}[  0](4.0, 1.0){$1$}
+\ncarc[arcangle=50]{->}{D}{B} \uput{0.10}[270](3.0, -0.5){$1$}
+\ncline{->}{D}{E} \uput{0.10}[315](5.0, 0.5){$1$}
+\ncline{->}{E}{C} \uput{0.10}[ 45](5.0, 1.5){$3$}
+\ncline{->}{S}{A} \uput{0.10}[135](1.0, 1.5){$6$}
+\ncline{->}{S}{B} \uput{0.10}[225](1.0, 0.5){$3$}
+
+\end{pspicture}
+\end{center}
+
+\end{enumerate}
+
+
+
+
+%\end{enumerate}
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

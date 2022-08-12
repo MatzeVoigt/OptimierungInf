@@ -1,0 +1,42 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.2,-0.5)(12.5,4.2)
+	\footnotesize
+	
+	\cnode*(0,2){3pt}{X1}
+	\cnode*(2,4){3pt}{X2}
+	\cnode*(4,2){3pt}{X3}
+	\cnode*(2,0){3pt}{X4}	
+	\ncline{->}{X1}{X2}
+	\ncarc[arcangle=30]{->}{X1}{X4}
+	\ncline{->}{X2}{X3}
+	\ncarc[arcangle=30]{->}{X4}{X1}
+	\uput{0.5}[270](2,0){$G$}
+	
+	\cnode*(8,2){3pt}{Y1}
+	\cnode*(10,4){3pt}{Y2}
+	\cnode*(12,2){3pt}{Y3}
+	\cnode*(10,0){3pt}{Y4}	
+	\ncarc[arcangle=20]{->}{Y1}{Y2}
+    \ncarc[arcangle=20]{->}{Y1}{Y4}
+    \ncarc[arcangle=320, linestyle=dashed]{->}{Y1}{Y4}
+	\ncarc[arcangle=20, linestyle=dashed]{->}{Y2}{Y1}
+    \ncarc[arcangle=20]{->}{Y2}{Y3}
+	\ncarc[arcangle=20, linestyle=dashed]{->}{Y3}{Y2}
+    \ncarc[arcangle=20]{->}{Y4}{Y1}
+	\ncarc[arcangle=320, linestyle=dashed]{->}{Y4}{Y1}
+	\uput{0.5}[270](10,0){$G^+$}
+    \end{pspicture}
+\end{document}

@@ -1,0 +1,110 @@
+\babel@toc {ngerman}{}
+\contentsline {chapter}{\numberline {1}Einf\"uhrung}{5}{chapter.1}
+\contentsline {section}{\numberline {1.1}Ein Di\"atproblem}{5}{section.1.1}
+\contentsline {section}{\numberline {1.2}Bemerkungen zur Grafischen Methode}{11}{section.1.2}
+\contentsline {chapter}{\numberline {2}Wie das Simplexverfahren funktioniert}{17}{chapter.2}
+\contentsline {chapter}{\numberline {3}Schwierigkeiten und Hindernisse -- und wie man sie \"uberwindet}{28}{chapter.3}
+\contentsline {section}{\numberline {3.1}Initialisierung (Vorbemerkungen)}{28}{section.3.1}
+\contentsline {section}{\numberline {3.2}Iteration}{29}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Wahl der Eingangsvariablen}{29}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Wahl der Ausgangsvariablen}{29}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Entartung}{30}{subsection.3.2.3}
+\contentsline {section}{\numberline {3.3}Terminierung}{31}{section.3.3}
+\contentsline {section}{\numberline {3.4}Das Zweiphasen-Simplexverfahren}{35}{section.3.4}
+\contentsline {chapter}{\numberline {4}Verbindungen zur Geometrie}{41}{chapter.4}
+\contentsline {section}{\numberline {4.1}Polyeder}{41}{section.4.1}
+\contentsline {section}{\numberline {4.2}Geometrische Interpretation des Simplexverfahrens}{43}{section.4.2}
+\contentsline {section}{\numberline {4.3}Konvexe Mengen}{44}{section.4.3}
+\contentsline {section}{\numberline {4.4}Eine Bemerkung zu konvexen Funktionen}{46}{section.4.4}
+\contentsline {section}{\numberline {4.5}Der Begriff der konvexen H\"ulle}{48}{section.4.5}
+\contentsline {section}{\numberline {4.6}Konvexe Kegel}{52}{section.4.6}
+\contentsline {chapter}{\numberline {5}Wie schnell ist das Simplexverfahren?}{55}{chapter.5}
+\contentsline {section}{\numberline {5.1}Beispiele von Klee und Minty}{55}{section.5.1}
+\contentsline {section}{\numberline {5.2}Alternative Pivotierungsregeln}{57}{section.5.2}
+\contentsline {chapter}{\numberline {6}Einige Anwendungsbeispiele}{59}{chapter.6}
+\contentsline {section}{\numberline {6.1}Das allgemeine Di\"atproblem}{59}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Ein Beispiel aus der Politik}{60}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Weitere Beispiele}{62}{subsection.6.1.2}
+\contentsline {section}{\numberline {6.2}Energieflussproblem}{62}{section.6.2}
+\contentsline {section}{\numberline {6.3}Das Rucksackproblem (Knapsack Problem)}{64}{section.6.3}
+\contentsline {section}{\numberline {6.4}Cutting Paper Rolls}{65}{section.6.4}
+\contentsline {chapter}{\numberline {7}Dualit\"at}{68}{chapter.7}
+\contentsline {section}{\numberline {7.1}Motivation: obere Schranken f\"ur den optimalen Wert}{68}{section.7.1}
+\contentsline {section}{\numberline {7.2}Das duale Problem}{69}{section.7.2}
+\contentsline {section}{\numberline {7.3}Der Dualit\"atssatz und sein Beweis}{72}{section.7.3}
+\contentsline {section}{\numberline {7.4}Wie die komplement\"aren Schlupfbedingungen eingesetzt werden k\"onnen, um auf Optimalit\"at zu testen}{77}{section.7.4}
+\contentsline {section}{\numberline {7.5}Zur \"okonomischen Bedeutung der dualen Variablen}{79}{section.7.5}
+\contentsline {section}{\numberline {7.6}Dualit\"at im Fall eines allgemeinen LP-Problems}{83}{section.7.6}
+\contentsline {section}{\numberline {7.7}Das Lemma von Farkas}{88}{section.7.7}
+\contentsline {chapter}{\numberline {8}Die revidierte Simplexmethode}{93}{chapter.8}
+\contentsline {section}{\numberline {8.1}Matrixdarstellung}{93}{section.8.1}
+\contentsline {section}{\numberline {8.2}Beschreibung des revidierten Simplexverfahrens anhand eines Beispiels}{97}{section.8.2}
+\contentsline {section}{\numberline {8.3}Eine Iteration im revidierten Simplexverfahren}{100}{section.8.3}
+\contentsline {section}{\numberline {8.4}Vergleich der Standardsimplexmethode mit dem revidierten Verfahren}{104}{section.8.4}
+\contentsline {section}{\numberline {8.5}Anhang zu Abschnitt \ref *{chapter:8}}{105}{section.8.5}
+\contentsline {chapter}{\numberline {9}Maximale Fl\"usse und minimale Schnitte in Netzwerken}{107}{chapter.9}
+\contentsline {section}{\numberline {9.1}Fl\"usse in Netzwerken}{107}{section.9.1}
+\contentsline {section}{\numberline {9.2}Schnitte}{111}{section.9.2}
+\contentsline {section}{\numberline {9.3}Das Max-Flow Min-Cut Theorem und der Labelling-Algorithmus von Ford und Fulkerson}{114}{section.9.3}
+\contentsline {section}{\numberline {9.4}Der Algorithmus von Edmonds und Karp}{121}{section.9.4}
+\contentsline {subsubsection}{\nonumberline Die Komplexit\"at des Algorithmus von Edmonds und Karp}{129}{section*.63}
+\contentsline {subsubsection}{\nonumberline Beweis des Satzes von Edmonds und Karp}{129}{section*.64}
+\contentsline {section}{\numberline {9.5}Der Begriff des Residualgraphen}{131}{section.9.5}
+\contentsline {chapter}{\numberline {10}Max-Flow und Min-Cut als LP-Probleme}{135}{chapter.10}
+\contentsline {section}{\numberline {10.1}Ein einf\"uhrendes Beispiel}{135}{section.10.1}
+\contentsline {section}{\numberline {10.2}Das primale Problem (Max-Flow)}{136}{section.10.2}
+\contentsline {section}{\numberline {10.3}Das duale Problem (Min-Cut)}{137}{section.10.3}
+\contentsline {chapter}{\numberline {11}Matchings und Knoten\"uberdeckungen in bipartiten Graphen}{140}{chapter.11}
+\contentsline {section}{\numberline {11.1}Grundbegriffe}{140}{section.11.1}
+\contentsline {section}{\numberline {11.2}Ein Algorithmus zur L\"osung des Matching-Problems f\"ur bipartite Graphen}{143}{section.11.2}
+\contentsline {subsection}{\numberline {11.2.1}Das Problem}{143}{subsection.11.2.1}
+\contentsline {subsection}{\numberline {11.2.2}Der Algorithmus}{143}{subsection.11.2.2}
+\contentsline {subsection}{\numberline {11.2.3}Analyse des Algorithmus}{144}{subsection.11.2.3}
+\contentsline {subsection}{\numberline {11.2.4}Bemerkung zur Komplexit\"at}{145}{subsection.11.2.4}
+\contentsline {section}{\numberline {11.3}Alternierende und augmentierende Pfade}{146}{section.11.3}
+\contentsline {section}{\numberline {11.4}Knoten\"uberdeckungen in bipartiten Graphen: der Satz von K\"onig}{149}{section.11.4}
+\contentsline {section}{\numberline {11.5}Zwei Beispiele}{152}{section.11.5}
+\contentsline {section}{\numberline {11.6}Der Heiratssatz}{161}{section.11.6}
+\contentsline {section}{\numberline {11.7}Knoten\"uberdeckungen in beliebigen Graphen}{163}{section.11.7}
+\contentsline {subsection}{\numberline {11.7.1}Ein 2-Approximationsalgorithmus f\"ur das Knoten\"uberdeckungsproblem}{164}{subsection.11.7.1}
+\contentsline {subsection}{\numberline {11.7.2}Gewichtete Knoten\"uberdeckungen}{166}{subsection.11.7.2}
+\contentsline {subsection}{\numberline {11.7.3}Relaxieren und Runden: Ein 2-Approximationsalgorithmus f\"ur das gewichtete Knoten\"uberdeckungsproblem}{167}{subsection.11.7.3}
+\contentsline {chapter}{\numberline {12}Greedy-Algorithmen oder: Is Greed Good? Does Greed work?}{169}{chapter.12}
+\contentsline {section}{\numberline {12.1}Intervall-Scheduling: The Greedy Algorithm Stays Ahead}{170}{section.12.1}
+\contentsline {subsection}{\numberline {12.1.1}Das Intervall-Scheduling-Problem}{170}{subsection.12.1.1}
+\contentsline {subsection}{\numberline {12.1.2}Entwurf eines Greedy-Algorithmus}{170}{subsection.12.1.2}
+\contentsline {section}{\numberline {12.2}Ein Algorithmus, der auf einem Austauschargument basiert}{173}{section.12.2}
+\contentsline {section}{\numberline {12.3}K\"urzeste Pfade in Graphen}{176}{section.12.3}
+\contentsline {section}{\numberline {12.4}Minimale aufspannende B\"aume}{183}{section.12.4}
+\contentsline {subsection}{\numberline {12.4.1}Algorithmen f\"ur das Minimum Spanning Tree Problem}{184}{subsection.12.4.1}
+\contentsline {subsection}{\numberline {12.4.2}Analyse der Algorithmen}{185}{subsection.12.4.2}
+\contentsline {section}{\numberline {12.5}Die Union-Find-Datenstruktur}{191}{section.12.5}
+\contentsline {subsection}{\numberline {12.5.1}Das Problem}{191}{subsection.12.5.1}
+\contentsline {subsection}{\numberline {12.5.2}Eine einfache Datenstruktur f\"ur das Union-Find-Problem}{192}{subsection.12.5.2}
+\contentsline {subsection}{\numberline {12.5.3}Eine bessere Datenstruktur f\"ur Union-Find}{194}{subsection.12.5.3}
+\contentsline {subsection}{\numberline {12.5.4}Weitere Verbesserungen durch Pfadverk\"urzung (path compression)}{196}{subsection.12.5.4}
+\contentsline {section}{\numberline {12.6}Die Laufzeit der Algorithmen von Kruskal und Prim}{196}{section.12.6}
+\contentsline {subsection}{\numberline {12.6.1}Zur Laufzeit von Kruskals Algorithmus}{196}{subsection.12.6.1}
+\contentsline {subsection}{\numberline {12.6.2}Zur Laufzeit von Prims Algorithmus}{197}{subsection.12.6.2}
+\contentsline {chapter}{\numberline {13}Dynamisches Programmieren}{199}{chapter.13}
+\contentsline {section}{\numberline {13.1}Das gewichtete Intervall-Scheduling-Problem}{199}{section.13.1}
+\contentsline {section}{\numberline {13.2}Ein Algorithmus zur L\"osung des Rucksackproblems}{204}{section.13.2}
+\contentsline {subsection}{\numberline {13.2.1}Das Subset-Sum-Problem}{204}{subsection.13.2.1}
+\contentsline {subsubsection}{\nonumberline Entwurf des Algorithmus}{204}{section*.95}
+\contentsline {subsubsection}{\nonumberline Zur Laufzeit von Subset-Sum(n,W)}{206}{section*.96}
+\contentsline {subsection}{\numberline {13.2.2}Das Rucksackproblem}{207}{subsection.13.2.2}
+\contentsline {section}{\numberline {13.3}Der Algorithmus von Bellman und Ford}{207}{section.13.3}
+\contentsline {section}{\numberline {13.4}K\"urzeste Pfade \enquote {all-to-all}: Der Algorithmus von Floyd und Warshall}{213}{section.13.4}
+\contentsline {chapter}{\numberline {14}Polynomielle Algorithmen f\"ur Lineare Programmierung}{218}{chapter.14}
+\contentsline {section}{\numberline {14.1}Einf\"uhrende Bemerkungen}{218}{section.14.1}
+\contentsline {section}{\numberline {14.2}Die Eingabel\"ange eines LP-Problems und der Begriff des polynomiellen Algorithmus}{218}{section.14.2}
+\contentsline {section}{\numberline {14.3}Ellipsen im $\mathbb {R}^2$}{221}{section.14.3}
+\contentsline {section}{\numberline {14.4}Lineare und affine Abbildungen}{223}{section.14.4}
+\contentsline {section}{\numberline {14.5}Ellipsoide im $\mathbb {R}^n$}{229}{section.14.5}
+\contentsline {section}{\numberline {14.6}Eine Reduktion}{231}{section.14.6}
+\contentsline {section}{\numberline {14.7}Die Ellipsoid-Methode}{232}{section.14.7}
+\contentsline {section}{\numberline {14.8}Theorie und Praxis}{236}{section.14.8}
+\contentsline {section}{\numberline {14.9}Innere-Punkte-Methoden}{236}{section.14.9}
+\contentsline {subsection}{\numberline {14.9.1}Logarithmische Barriere-Funktionen}{237}{subsection.14.9.1}
+\contentsline {subsection}{\numberline {14.9.2}Der Begriff des zentralen Pfades}{240}{subsection.14.9.2}
+\contentsline {chapter}{\numberline {15}Literatur}{241}{chapter.15}

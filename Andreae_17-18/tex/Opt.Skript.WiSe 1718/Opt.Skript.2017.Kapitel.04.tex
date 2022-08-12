@@ -1,0 +1,882 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 04:                                                                  %
+% "Verbindungen zur Geometrie"                                                 %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Verbindungen zur Geometrie}\label{chapter:4}
+\index{Geometrie}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Polyeder"                                                                   %
+%------------------------------------------------------------------------------%
+
+\section{Polyeder}
+\label{section:4:1}
+
+Im Zusammenhang mit der grafischen Methode hatten wir bereits Geraden, Halbebenen und Durchschnitte von endlich vielen Halbebenen im $\R^2$ betrachtet (vgl. Kapitel \ref{chapter:1}). Wir wollen einige der dort auftretenden Begriffe verallgemeinern.
+
+In Kapitel \ref{chapter:1} hatten wir beispielsweise festgestellt: Sind $a_1,a_2,b \in \R$ gegeben und sind $a_1,a_2$ nicht beide gleich Null, so wird durch die Gleichung
+\[
+a_1x_1 + a_2x_2 = b
+\]
+eine \textit{Gerade im $\R^2$}\index{Gerade im $\mathbb{R}^2$} dargestellt; die Menge aller Paare $(x_1,x_2) \in \R^2$, für die
+\[
+a_1x_1 + a_2x_2 \leq b
+\]
+gilt, bilden eine \textit{Halbebene}\index{Halbebene}\index{Ebene!Halb-}, die durch diese Gerade begrenzt wird.
+
+
+\textit{Ähnliches gilt im $\R^3$}: Sind $a_1,a_2,a_3,b \in \R$ gegeben und sind $a_1,a_2,a_3$ nicht alle gleich Null, so wird durch die Gleichung 
+\[
+a_1x_1 + a_2x_2 + a_3x_3 = b
+\]
+eine \textit{Ebene im $\R^3$}\index{Ebene!im $\mathbb{R}^3$} dargestellt, und die Menge aller Tripel $(x_1,x_2,x_3) \in \R^3$, für die
+\[
+a_1x_1 + a_2x_2+a_3x_3 \leq b
+\]
+gilt, bilden einen \textit{Halbraum}\index{Halbraum}\index{Halbraum des $\mathbb{R}^n$}, der durch diese Ebene begrenzt wird.
+
+
+\textit{Analoge Sprechweisen verwendet man auch im $\R^n$}: Sind $a_1,\ldots,a_n,b \in \R^n$ gegeben und sind nicht alle $a_1,\ldots,a_n$ gleich Null, so nennt man die Menge aller $n$-Tupel $(x_1,\ldots,x_n) \in \R^n$, für die die Gleichung
+\[
+a_1x_1 + \ldots + a_nx_n = b
+\]
+gilt, eine \textit{Hyperebene im $\R^n$}\index{Hyperebene im $\mathbb{R}^n$}\index{Ebene!Hyper- des $\mathbb{R}^n$}; und die Menge aller $n$-Tupel $(x_1,\ldots,x_n) \in \R^n$, für die
+\[
+a_1x_1 + \ldots + a_nx_n \leq b
+\]
+gilt, nennt man einen \textit{Halbraum des $\R^n$}.
+
+Dem Buch von Chvátal folgend, wählen wir für unsere weiteren Betrachtungen das folgende Beispiel eines LP-Problems:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ 5x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 2x_1 &\ + &\ x_2 &\  &\     &\ \leq &\ 4\ \\
+&&      &\   &\     &\  &\ x_3 &\ \leq &\ 5\ \\
+&& & & & & \llap{$x_1,x_2,x_3$} & \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Jede der fünf Nebenbedingungen beschreibt einen gewissen Halbraum des $\R^3$. Also ist die Menge der zulässigen Lösungen\footnote{Statt \enquote{Menge der zulässigen Lösungen} sagt man auch \textit{Bereich der zulässigen Lösungen} oder (kurz) \textit{zulässiger Bereich} (vgl. Kapitel \ref{chapter:1}).} dieses LP-Problems \textit{gleich dem Durchschnitt von fünf Halbräumen}. Eine derartige Menge bezeichnet man als \textit{Polyeder}\index{Polyeder}. 
+
+\pagebreak
+Genauer gilt:
+
+\begin{Definition}[Definition]
+Eine Teilmenge $P$ des $\R^n$ wird \textit{Polyeder} genannt, falls $P$ gleich dem Durchschnitt von endlich vielen Halbräumen des $\R^n$ ist oder falls $P = \R^n$ gilt.
+\end{Definition}
+
+Für $n=2$ kamen Polyeder bereits in Kapitel \ref{chapter:1} vor.
+
+Das in unserem 3-dimensionalen Beispiel auftretende Polyeder ist in der folgenden Zeichnung dargestellt:
+
+\begin{center}
+\psset{linewidth=0.5pt,unit=0.5cm,RotZ=90}
+\begin{pspicture}(-1,-1)(5,7.5)
+\tiny
+
+\psline{->}(-1,0)(6,0) \uput{0.1}[0](6,0){$x_1$}
+\psline{->}(0,-1)(0,6) \uput{0.1}[90](0,6){$x_3$}
+\psline(-0.75,-0.75)(0,0)    \uput{0.1}[45](4,4){$x_2$}
+\psline[linestyle=dashed](0,0)(3.464,3.464)
+\psline{->}(3.464,3.464)(4,4)
+
+\psline(2,0)(2,5)
+\psline(0,5)(2,5)
+\psline(2,0)(3.464,3.464)
+\psline(3.464,3.464)(3.464,7.464)
+\psline(0,5)(3.464,7.464)
+\psline(2,5)(3.464,7.464)
+
+\uput{0.1}[135](0,0){$(0,0,0)$}
+\uput{0.25}[30](2,0){$(2,0,0)$}
+\uput{0.1}[180](0,5){$(0,0,5)$}
+\uput{0.1}[225](2,5){$(2,0,5)$}
+\uput{0.1}[350](3.464,3.464){$(0,4,0)$}
+\uput{0.1}[0](3.464,7.464){$(0,4,5)$}
+
+\pspolygon[fillstyle=solid, fillcolor=light-gray](2,0)(3.464,3.464)(3.464,7.464)(2,5)
+
+\small
+\end{pspicture}
+\end{center}
+
+In diesem Beispiel hat das Polyeder, das den Bereich der zulässigen Lösungen beschreibt, also die Gestalt eines Prismas\index{Prisma}. Zu jeder der fünf Begrenzungsflächen\index{Flächen eines Polyeders}\index{Polyeder!Flächen eines} des Prismas gehört eine der fünf Nebenbedingungen. Genauer gilt: \textit{Die Punkte auf jeder der fünf Flächen\footnote{Statt \enquote{Begrenzungsflächen} sagt man häufig auch \enquote{Seitenflächen}\index{Seitenflächen eines Polyeders}\index{Polyeder!Seitenfläches eines}. Wir werden hier der Einfachheit halber immer \enquote{Flächen} sagen.} erfüllen die zugehörige Nebenbedingung \textbf{mit Gleichheit}}.
+
+Beispielsweise entspricht die Grundfläche (der dreieckige Boden) der Nebenbedingung $x_3 \geq 0$: Für die Punkte auf dem Boden des Prismas gilt $x_3=0$. Der grauen Fläche auf der rechten Seite des Prismas entspricht die Nebenbedingung $2x_1+x_2 \leq 4$, und für die Punkte auf dieser Fläche gilt $2x_1+x_2 = 4$. (Man überlege sich, welche Entsprechungen zwischen den verbleibenden Flächen und Nebenbedingungen außerdem gelten.)
+
+Die Entsprechungen zwischen Flächen einerseits und Nebenbedingungen andererseits werden besonders deutlich, wenn man \textit{Schlupfvariablen} $x_4$, $x_5$ wie üblich hinzunimmt. Es gelte also (Definition der Schlupfvariablen):
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\ 4 &\ - &\ 2x_1 &\ - &\ x_2 &\   &      \\
+x_5 &\ = &\ 5 &\   &\      &\   &\     &\ - &\ x_3.
+\end{alignedat}
+\end{align*}
+
+\textit{Jeder Fläche des Polyeders entspricht dann genau eine der Variablen $x_1,\ldots,x_5$} in dem Sinne, dass $x_j=0$ für die Punkte auf der entsprechenden Fläche gilt. Im Einzelnen hat man Folgendes:
+\begin{itemize}
+\item für die Punkte auf der linken Fläche gilt $x_1=0$;
+\item für die Punkte auf der Frontfläche gilt $x_2=0$;
+\item für die Punkte auf der Grundfläche (\enquote{Boden}) gilt $x_3=0$;
+\item für die Punkte auf der grauen Fläche gilt $x_4=0$;
+\item für die Punkte auf der oberen Fläche (\enquote{Deckel}) gilt $x_5=0$.
+\end{itemize}
+
+Die Menge der zulässigen Lösungen haben wir bereits genau beschrieben: Es handelt sich um die Punkte des Prismas -- natürlich einschließlich derjenigen, die im Inneren des Prismas liegen. Insbesondere können wir festhalten, dass es unendlich viele zulässige Lösungen gibt. \textit{Die meisten dieser Lösungen werden -- wie wir wissen -- vom Simplexverfahren jedoch ignoriert}: Im Simplexverfahren kommen als Ergebnis einer Iteration nur \textbf{zulässige Basislösungen} vor.
+
+%\textbf{Einschub}. Kurze Erläuterung, weshalb es immer nur endlich viele zulässige Basislösungen geben kann: Es liege ein LP-Problem in Standardform mit $n$ Variablen und $m+n$ Nebenbedingungen (einschließlich der Nichtnegativitätsbedingungen) vor. Ist $(\overline{x}_1,\ldots,\overline{x}_{m+n})$ eine zulässige Basislösung, so sind alle Nichtbasisvariablen mit Null belegt und die übrigen Werte $\overline{x}_i$ sind dadurch eindeutig bestimmt. Es gibt also höchstens so viele zulässige Basislösungen, wie es Möglichkeiten gibt, aus den $m+n$ Variablen die $n$ Nichtbasisvariablen auszuwählen. Folglich gibt es höchstens
+%\[
+%\binom{m+n}{n}
+%\]
+%zulässige Basislösungen. $\Box$
+%
+%Wir fahren mit unserem Beispiel fort:
+
+In jeder zulässigen Basislösung sind drei der fünf Variablen $x_1,\ldots,x_5$ Nichtbasisvariablen. Diese drei Variablen sind gleich Null, und die Werte der beiden übrigen Variablen sind dadurch eindeutig bestimmt, dass die Nichtbasisvariablen gleich Null gesetzt wurden. \textit{Geometrisch bedeutet dies, dass jeder Punkt, der eine zulässige Basislösung darstellt, ein eindeutig bestimmter Schnittpunkt von drei Flächen des Prismas ist}, dass es sich also um einen Eckpunkt des Prismas handelt (vgl. Zeichnung).
+
+Statt \enquote{Eckpunkt} sagt man gewöhnlich auch \textit{Ecke} (engl. \textit{vertex}\index{vertex}) eines Polyeders.\index{Ecke!eines Polyeders}\index{Polyeder!Ecke eines}
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Geometrische Interpretation des Simplexverfahrens"                          %
+%------------------------------------------------------------------------------%
+
+\section{Geometrische Interpretation des Simplexverfahrens}
+\index{Geometrische Interpretation des Simplexverfahrens}\index{Simplexverfahren!geometrische Interpretation}
+\label{section:4:2}
+
+Wir wollen uns anschauen, was in unserem Beispiel geometrisch passiert, wenn wir es mit dem Simplexverfahren lösen. Wir interessieren uns dabei nicht für jede Einzelheit, sondern vor allem für die \textit{zulässigen Basislösungen am Ende jeder Iteration}; außerdem geben wir an, welches am Ende jeder Iteration die Basisvariablen sind. Hier das Ergebnis:
+
+\underline{Startlösung}:
+\[
+x_1=0,\quad
+x_2=0,\quad
+x_3=0,\quad
+x_4=4,\quad
+x_5=5;\quad
+\text{Basis: } x_4,\ x_5.
+\]
+
+\underline{Am Ende der 1. Iteration}:
+\[
+x_1=0,\quad
+x_2=0,\quad
+x_3=5,\quad
+x_4=4,\quad
+x_5=0;\quad
+\text{Basis: } x_3,\ x_4.
+\]
+
+\underline{Am Ende der 2. Iteration}:
+\[
+x_1=2,\quad
+x_2=0,\quad
+x_3=5,\quad
+x_4=0,\quad
+x_5=0;\quad
+\text{Basis: } x_1,\ x_3.
+\]
+
+\underline{Am Ende der 3. Iteration}:
+\[
+x_1=0,\quad
+x_2=4,\quad
+x_3=5,\quad
+x_4=0,\quad
+x_5=0;\quad
+\text{Basis: } x_2,\ x_3.
+\]
+
+Am Ende der dritten Iteration wurde eine optimale Lösung erreicht: Im Punkt $(x_1,x_2,x_3) = (0,4,5)$ ist die Zielfunktion optimal (mit $z=33$). Auf dem Weg zu diesem Ergebnis erhielten wir die obigen zulässigen Basislösungen; die dazugehörigen Punkte waren:
+\begin{align*}
+(x_1,x_2,x_3) &= (0,0,0) \\
+(x_1,x_2,x_3) &= (0,0,5) \\
+(x_1,x_2,x_3) &= (2,0,5) \\
+\intertext{sowie schließlich}
+(x_1,x_2,x_3) &= (0,4,5). \\
+\end{align*}
+
+Es handelt sich dabei -- wie aufgrund unserer Vorüberlegungen nicht anders zu erwarten war -- um \textit{Ecken unseres Prismas}\index{Ecke!eines Prismas}\index{Prisma!Ecke eines} (siehe obige Zeichnung). \textit{Die Übergänge von einer Ecke zur nächsten lassen sich als kontinuierliche Bewegung längs der Kanten\index{Kante!eines Polyeders}\index{Polyeder!Kanten eines} interpretieren}.
+
+Betrachten wir beispielsweise die 2. Iteration: Eingangsvariable war hier $x_1$. Die aktuelle Ecke vor der 2. Iteration war $(0,0,5)$. Nach Wahl von $x_1$ als Eingangsvariable wurde der Wert von $x_1$ kontinuierlich angehoben -- unter Beibehaltung von $x_2=0$ und $x_5=0$. Die Bedingung $x_2=x_5=0$ besagt, dass wir nur Punkte betrachten, die sowohl zur vorderen als auch zur oberen Fläche des Polyeders gehören. (Man beachte: $x_2=0$ ist die Bedingung für die vordere, $x_5=0$ die Bedingung für die obere Fläche.)
+
+Beim Anheben von $x_1$ unter Beibehaltung von $x_2=0$ und $x_5=0$ bewegen wir uns also längs der Kante, die sowohl zur vorderen als auch zur oberen Fläche gehört -- und zwar solange, bis wir die nächste Ecke erreicht haben. \textit{In unserem Fall haben wir uns also von $(0,0,5)$ zu $(2,0,5)$ bewegt}.
+
+Wir haben in unserem Beispiel \textit{den typischen Ablauf des Simplexverfahrens} geometrisch beschrieben.
+
+\begin{Definition}[Feststellung]
+Kommen keine degenerierten Iterationen vor, \textit{so bewegt man sich längs bestimmter Kanten des zugehörigen Polyeders von einer Ecke zur nächsten, wobei der Zielfunktionswert steigt. Man stoppt, wenn man an einer optimalen Ecke\index{optimale Ecke}\index{Ecke!optimale} angekommen ist} bzw. wenn man feststellt, dass das Problem unbeschränkt ist.
+\end{Definition}
+
+Bei dieser Beschreibung haben wir vorausgesetzt, dass das Problem lösbar ist und dass wir ein Starttableau kennen (und somit auch eine \textit{Startecke}). Falls degenerierte Iterationen auftreten, so ändert sich an der Beschreibung nicht viel: Es kann dann zusätzlich vorkommen, dass man auf einer Ecke verweilt. (Zur Erinnerung: Bei einer degenerierten Iteration ändert sich nur die Basis, die zulässige Basislösung ändert sich nicht.)
+
+Eine weitere Bemerkung ist angebracht: Wir haben zwar definiert, was man unter einem Polyeder versteht, bei anderen Begriffen (wie beispielsweise Ecke, Kante oder Seitenfläche eines Polyeders) haben wir uns aber lediglich an der Anschauung orientiert, ohne eine mathematische Definition zu geben. Wir wollen dies hier nicht nachholen, sondern verweisen auf die Literatur; man findet Näheres beispielsweise in
+\begin{itemize}
+\item D. Bertsimas, J. N. Tsitsiklis, \textit{Introduction to Linear Optimization}. Athena Scientific.
+\item A. Schrijver: \textit{Theory of Linear and Integer Programming}. Wiley.
+\end{itemize}
+
+Einen Begriff wollen wir aber noch ansprechen: Es handelt sich um den Begriff der \textit{Konvexität}\index{Konvexität}, der in sehr vielen Bereichen der Mathematik und der Informatik eine wichtige Rolle spielt, u.a. auch in der Optimierung.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Konvexe Mengen"                                                             %
+%------------------------------------------------------------------------------%
+
+\section{Konvexe Mengen}
+\index{konvexe Mengen}\index{Menge, konvexe}
+\label{section:4:3}
+
+Es seien $x=(x_1,x_2)$ und $y=(y_1,y_2)$ zwei verschiedene Punkte im $\R^2$. Die Gerade durch $x$ und $y$ ist (in \textit{Parameterform}\index{Parameterform einer Geraden}\index{Gerade!Parameterform einer}) gegeben durch
+\begin{equation}
+\label{eq:4:1}
+z = x + t(y-x) \qquad (t \in \R).
+\end{equation}
+
+Wie Sie wissen, nennt man $x$ in dieser Darstellung \textit{Stützvektor}\index{Stützvektor}\index{Vektor!Stütz-} und $y-x$ ist der \textit{Richtungsvektor}\index{Richtungsvektor}\index{Vektor!Richtungs-} (siehe Skizze).
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(-1.5,-0.25)(7,4.75)
+
+\footnotesize
+\psaxes[linewidth=0.5pt, labels=none, ticks=none]{->}(0,0)(-0.5,-0.5)(7,5)
+\small
+\psline[linewidth=0.5pt]{-}(-1,4.5)(6,1)
+\psline{->}(0,0)(2,3)
+\psline{->}(2,3)(4,2)
+\pscircle*(2,3){0.075}
+\pscircle*(4,2){0.075}
+\uput{0.2}[45](2,3){$x$}
+\uput{0.2}[45](4,2){$y$}
+\small
+
+\end{pspicture}
+\end{center}
+
+Ein Punkt $z=(z_1,z_2)$ liegt genau dann auf der Geraden durch $x$ und $y$, wenn es ein $t \in \R$ gibt, für das (\ref{eq:4:1}) gilt. Gilt dabei $t \geq 0$, so liegt $z$ auf der \textit{Halbgeraden}\index{Halbgerade}\index{Gerade!Halb-}, die im Punkt $x$ beginnt und $y$ enthält; gilt $t \leq 0$, so liegt $z$ auf der Halbgeraden, die in $x$ beginnt und $y$ nicht enthält; gilt $t=0$, so liegt der Fall $z=x$ vor, und wenn $t=1$ gilt, so folgt $z=y$; außerdem können wir feststellen: \textit{Gilt $0 \leq t \leq 1$, so liegt $z$ auf der Strecke, die die Punkte $x$ und $y$ verbindet}.
+
+Umformung der Gleichung aus (\ref{eq:4:1}) ergibt
+\[
+z = x + t(y-x) = x + ty - tx = (1-t)x + ty.
+\]
+
+Wir können also feststellen, dass ein Punkt $z$ genau dann auf der Verbindungsstrecke der Punkte $x$ und $y$ liegt, wenn gilt:
+\[
+z = (1-t)x+ty \qquad (\text{für ein $t$ mit $0 \leq t \leq 1$}).
+\]
+
+\begin{Definition}[Definition]
+Man nennt eine Teilmenge $K \subseteq \R^2$ \textit{konvex}\index{konvex}, falls aus $x,y \in K$ und $0 \leq t \leq 1$ stets $(1-t)x+ty \in K$ folgt.
+\end{Definition}
+
+Mit anderen Worten: $K$ heißt \textit{konvex}, wenn für alle $x,y \in K$ die Verbindungsstrecke zwischen $x$ und $y$ vollständig in $K$ liegt.
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(0,-0.5)(9,3)
+\small
+
+\pspolygon(0,2)(2,0)(4,2)(3,3)(1.5,3)
+\pscircle*(1.25,1.75){0.075}  \uput{0.15}[90](1.25,1.75){$x$}
+\pscircle*(3,2){0.075}        \uput{0.15}[90](3,2){$y$}
+\psline(1.25,1.75)(3,2)
+\uput{0.2}[270](2,0){konvex}
+
+\pspolygon(6,2)(8,0)(9,0)(8,2)(10,2)(9,3)(7.5,3)
+\pscircle*(8,1){0.075}    \uput{0.15}[180](8,1){$x$}
+\pscircle*(9,2.5){0.075}  \uput{0.15}[180](9,2.5){$y$} 
+\psline(8,1)(9,2.5)
+\uput{0.2}[270](8,0){nicht konvex}
+
+\small
+\end{pspicture}
+\end{center}
+
+Welche der skizzierten Mengen sind konvex?
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(0,0)(17,4)
+\small
+
+\pspolygon(0,2)(2,0)(4,2)(2,2)(2,4)
+
+\pscircle(8,2){2}
+
+\psline(14,3)(16,3)
+\psline(14,1)(16,1)
+\psarc(14,2){1}{90}{270}
+\psarc(16,2){1}{270}{90}
+
+\small
+\end{pspicture}
+\end{center}
+
+\begin{Definition}[Definition]
+%\textit{Verallgemeinerung auf $\R^n$}:
+\begin{itemize}
+\item Für $x,y \in \R^n$ definiert man die \textit{Verbindungsstrecke von $x$ und $y$}\index{Verbindungsstrecke} als die Menge aller Punkte $z \in \R^n$, für die es ein $t \in \R$ mit $0 \leq t \leq 1$ gibt, so dass gilt:
+\[
+z = (1-t)x + ty.
+\]
+
+\item Eine Teilmenge $K \subseteq \R^n$ heißt \textit{konvex}\index{konvex}, falls für alle $x,y \in K$ gilt: Mit $x$ und $y$ ist auch die Verbindungsstrecke von $x$ und $y$ in $K$.
+\end{itemize}
+\end{Definition}
+
+Einfache \textbf{Beispiele} konvexer Teilmengen des $\R^n$:
+\begin{enumerate}[(i)]
+\item jede Hyperebene im $\R^n$ ist konvex;
+\item jeder Halbraum des $\R^n$ ist konvex;
+\item $\R^n$ selbst ist konvex;
+\item die leere Menge ist ebenfalls eine konvexe Teilmenge des $\R^n$.
+\end{enumerate}
+
+Hat man es mit einer Menge $\mathcal{M}$ von Teilmengen $T$ des $\R^n$ zu tun, so lässt sich bekanntermaßen der Durchschnitt $D$ dieser Teilmengen bilden: $D$ ist die Menge derjenigen $x \in \R^n$, die in \textit{allen} Teilmengen $T \in \mathcal{M}$ enthalten sind. Man kann $D$ auch so beschreiben:
+\[
+D = \Bigl\{ x \in \R^n : x \in T \text{ für alle } T \in \mathcal{M} \Bigr\}.
+\]
+
+Dasselbe, noch etwas kürzer ausgedrückt:
+\[
+D = \bigcap\limits_{T \in \mathcal{M}}{T}.
+\]
+
+Dabei ist es durchaus möglich, dass $\mathcal{M}$ eine \textit{unendliche} Menge ist, d.h., man bildet den Durchschnitt von unendlich vielen Teilmengen des $\R^n$.
+
+Wir interessieren uns hier für Mengen $\mathcal{M}$ von \textit{konvexen} Teilmengen $T$ des $\R^n$. Als eine einfache Folgerung aus der Definition des Begriffs einer konvexen Menge erhält man die folgende Feststellung.
+
+\begin{Definition}[Feststellung]
+Gegeben sei eine Menge $\mathcal{M}$ von \textit{konvexen} Teilmengen $T$ des $\R^n$. Dann ist der Durchschnitt $D$ dieser Teilmengen ebenfalls eine konvexe Menge.
+\end{Definition}
+
+Der \textbf{Beweis} dieser wichtigen Feststellung ist sehr einfach: Gilt $x,y \in D$, so folgt $x,y \in T$ für alle $T \in \mathcal{M}$. Da alle $T \in \mathcal{M}$ konvex sind, folgt, dass auch die Verbindungsstrecke von $x$ und $y$ in allen $T \in \mathcal{M}$ enthalten ist. Folglich ist diese Verbindungsstrecke auch in $D$ enthalten, wodurch die Konvexität von $D$ nachgewiesen ist. $\Box$
+
+Als Folgerung aus (ii) und (iii) sowie der letzten Feststellung erhält man, dass jedes Polyeder $P \subseteq \R^n$ konvex ist.
+
+Wir halten noch einmal ausdrücklich fest:
+
+\begin{Definition}[Feststellung]
+\begin{itemize}
+\item Polyeder sind konvexe Mengen.
+\item Somit sind die zulässigen Bereiche von LP-Problemen ebenfalls konvex\index{konvexe Mengen}\index{Menge, konvexe}.
+\end{itemize}
+\end{Definition}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Eine Bemerkung zu konvexen Funktionen"                                      %
+%------------------------------------------------------------------------------%
+
+\section{Eine Bemerkung zu konvexen Funktionen}
+\label{section:4:4}
+
+In der Analysis hat man es mit \textit{konvexen Funktionen}\index{konvexe Funktion}\index{Funktion!konvexe} zu tun, während es in Abschnitt \ref{section:4:3} um \textit{konvexe Mengen} ging. Wir wollen kurz auf den Zusammenhang eingehen, der zwischen diesen beiden Begriffen besteht. Hier zunächst die übliche Definition des Begriffs \enquote{konvexe Funktion} (für Funktionen $f: I \rightarrow \R$ mit $I \subseteq \R$).
+
+\begin{Definition}[Definition]
+Es sei $I \subseteq \R$ ein Intervall und $f: I \rightarrow \R$ sei eine Funktion. Man nennt $f$ eine \textit{konvexe Funktion}, falls für alle $x_1,x_2 \in I$ mit $x_1 \leq x_2$ und für alle $t \in [0,1]$ gilt:
+\begin{equation}
+\label{eq:4:2}
+f\bigl( (1-t)x_1 + tx_2 \bigr) \leq (1-t)f(x_1) + tf(x_2).
+\end{equation}
+\end{Definition}
+
+Um die geometrische Bedeutung der Ungleichung (\ref{eq:4:2}) zu erkennen, betrachten wir die Funktion $g$, die die Strecke zwischen den Punkten $(x_1, f(x_1))$ und $(x_2, f(x_2))$ darstellt. In Parameterdarstellung lässt sich diese Strecke wie folgt angeben:
+\[
+\bigl(x_1, f(x_1)\bigr) + t\bigl(x_2-x_1, f(x_2)-f(x_1)\bigr)
+= \bigl( (1-t)x_1 + tx_2, (1-t)f(x_1) + tf(x_2) \bigr) \quad (\text{für } t \in [0,1]).
+\]
+
+Für ein $t \in [0,1]$ setzen wir $x=(1-t)x_1 + tx_2$. Da der Punkt $((1-t)x_1 + tx_2, (1-t)f(x_1) + tf(x_2))$ auf der Strecke $g$ liegt und da $x=(1-t)x_1+tx_2$ gilt, handelt es sich bei diesem Punkt um den Punkt mit den Koordinaten $(x,g(x))$. Es gilt also $(1-t)f(x_1)+tf(x_2) = g(x)$ und die Ungleichung (\ref{eq:4:2}) geht über in $f(x) \leq g(x)$.
+
+Die Ungleichung (\ref{eq:4:2}) besagt also: \textit{Zwischen $x_1$ und $x_2$ verläuft der Graph von $f$ niemals oberhalb der Geraden $g$, die durch die Punkte $(x_1,f(x_1))$ und $(x_2,f(x_2))$ geht} (siehe Zeichnung).
+
+%Die Ungleichung (\ref{eq:4:2}) besagt also: \textit{Zwischen $x_1$ und $x_2$ verläuft der Graph von $f$ niemals oberhalb der Geraden $g$, die durch die Punkte $(x_1,f(x_1))$ und $(x_2,f(x_2))$ geht} (siehe Zeichnung).
+
+\begin{center}
+\psset{linewidth=0.8pt,xunit=3cm,yunit=2cm}
+\begin{pspicture*}(-0.25,-0.25)(4,3)
+\footnotesize
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-0.25,-0.25)(4,3)
+
+\psline(0.5,0.75)(3.5,2.25)
+\psplot{0.5}{3.5}{x 1 sub 0.5 mul 2 exp 1 add}
+
+\pscircle*(1,0){0.075} \uput{0.25}[270](1,0){$x_1$}
+\pscircle*(2,0){0.075} \uput{0.17}[270](2,0){$x=(1-t)x_1+tx_2$}
+\pscircle*(3,0){0.075} \uput{0.25}[270](3,0){$x_2$}
+\pscircle*(1,1){0.075} \uput{0.15}[300](1,1){$\bigl(x_1,f(x_1)\bigr)$}
+\pscircle*(3,2){0.075} \uput{0.15}[315](3,2){$\bigl(x_2,f(x_2)\bigr)$}
+
+\pscircle*(2,1.25){0.075} \uput{0.15}[315](2,1.25){$\bigl(x, f(x) \bigr)$}
+\pscircle*(2,1.5){0.075} \uput{0.15}[135](2,1.5){$\bigl(x, g(x)\bigr)$}
+\psline[linestyle=dashed](2,0)(2,1.5)
+
+\uput{0.05}[270](2.5,1.55){$f$}
+\uput{0.05}[ 90](2.5,1.75){$g$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+Für eine Funktion $f: I \rightarrow \R$ definiert man den Graphen von $f$ bekanntlich als die Menge
+\[
+\Bigl\{ (x,y) \in \R^2 : x \in I, y = f(x) \Bigr\}.
+\]
+
+Als \textit{Epigraph}\index{Epigraph} von $f$ bezeichnet man die folgende Menge:
+\[
+\Bigl\{ (x,y) \in \R^2 : x \in I, y \geq f(x) \Bigr\}.
+\]
+
+Beim Epigraphen einer Funktion $f: I \rightarrow \R$ handelt sich also um die Menge aller Punkte $(x,y) \in \R^2$, für die $x \in I$ gilt und die auf dem Graphen oder oberhalb des Graphen von $f$ liegen.
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-0.5,-0.5)(6,6)
+\footnotesize
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6,6)
+
+\psline(1,-0.1)(1,6)
+\psline(5,-0.1)(5,6)
+\uput{0.15}[270](3,0){$I$}
+\psplot[algebraic]{1}{5}{0.3333*(x-2)^2+1}
+\uput{0.05}[315](4,2.3333){$f$}
+
+\pscustom[fillstyle=hlines,linewidth=0pt,hatchwidth=0.1pt,algebraic]{
+  \psline(1,7)(1,1.3333)
+	\psplot{1}{5}{0.3333*(x-2)^2+1}
+	\psline(5,4)(5,7)
+  \closepath
+}
+
+\small
+\end{pspicture*}
+\end{center}
+
+Zwischen den Begriffen \enquote{konvexe Funktion} und \enquote{konvexe Menge} besteht der folgende Zusammenhang:
+
+\begin{Definition}[Feststellung]
+Es sei $I \subseteq \R$ ein Intervall und $f: I \rightarrow \R$ sei eine Funktion. Dann gilt: $f$ ist genau dann eine konvexe Funktion, wenn der Epigraph von $f$ eine konvexe Menge ist.
+\end{Definition}
+
+\textbf{Beweis}. Wir bezeichnen den Epigraphen von $f$ mit $M$, d.h. $M = \bigl\{ (x,y) \in \R^2 : x \in I, y \geq f(x) \bigr\}$. Klar ist aufgrund der Definitionen: Wenn $M$ konvex ist, so ist $f$ eine konvexe Funktion. Um zu zeigen, dass auch die Umkehrung hiervon gilt, setzen wir nun voraus, dass $f$ eine konvexe Funktion ist. Wir haben zu zeigen, dass $M$ eine konvexe Menge ist. Dementsprechend betrachten wir zwei beliebige Punkte $P_1 = (x_1,y_1)$ und $P_2 = (x_2,y_2)$ aus $M$ sowie einen beliebigen Punkt $Q$, der auf der Strecke von $P_1$ nach $P_2$ liegt. Es gibt also ein $t \in [0,1]$, so dass gilt:
+\begin{align*}
+Q 
+&= (x_1,y_1) + t(x_2-x_1, y_2-y_1) \\
+&= \bigl((1-t)x_1 + tx_2, (1-t)y_1 + ty_2 \bigr).
+\end{align*}
+
+Zu zeigen ist $Q \in M$, d.h., es ist $(1-t)y_1 + ty_2 \geq f((1-t)x_1 + tx_2)$ zu zeigen. Dies folgt so: Wegen $P_1,P_2 \in M$ gilt $y_1 \geq f(x_1)$ und $y_2 \geq f(x_2)$. Da $f$ konvex ist, gilt außerdem die Ungleichung (\ref{eq:4:2}). Es folgt
+\begin{align*}
+f\bigl( (1-t)x_1 + tx_2 \bigr)
+&\leq (1-t) f(x_1) + tf(x_2) \\
+&\leq (1-t) y_1 + ty_2,
+\end{align*}
+was zu zeigen war. $\Box$
+
+Für diejenigen, die mehr über konvexe Mengen und konvexe Funktionen wissen möchten, sei auf das folgende einführende Lehrbuch hingewiesen:
+\begin{itemize}
+\item N. Lauritzen: \textit{Undergraduate Convexity}. World Scientific (2013).
+\end{itemize}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Der Begriff der konvexen Hülle"                                             %
+%------------------------------------------------------------------------------%
+
+\section{Der Begriff der konvexen Hülle}
+\label{section:4:5}
+
+Es sei $X$ eine beliebige Teilmenge des $\R^n$. Wir beginnen mit einer \textit{sehr einfachen Frage}:
+\begin{center}
+Gibt es immer eine konvexe Teilmenge $K$ des $\R^n$, für die $X \subseteq K$ gilt?
+\end{center}
+
+\textit{Antwort}: Ja, selbstverständlich gibt es eine solche Menge $K$; da $\R^n$ selbst eine konvexe Menge ist, braucht man nur $K = \R^n$ zu wählen.
+
+\textit{Nächste Frage}: Nun fragen wir nach \textit{einer möglichst kleinen} konvexen Teilmenge $K$ des $\R^n$, für die  $X \subseteq K$ gilt.
+
+\textit{Antwort}: Eine solche möglichst kleine Menge $K$ gibt es ebenfalls immer -- man nennt diese Menge die \textit{konvexe Hülle} von $X$.
+
+Die Definition der konvexen Hülle wird im Folgenden gegeben.
+
+\begin{Definition}[Definition]
+Es sei $X$ eine Teilmenge des $\R^n$. Unter der \textit{konvexen Hülle}\index{konvexe Hülle}\index{Hülle!konvexe} von $X$ versteht man den Durchschnitt sämtlicher konvexer Teilmengen des $\R^n$, in denen $X$ enthalten ist.
+\end{Definition}
+
+Wir wissen: \textit{Der Durchschnitt von beliebig vielen konvexen Teilmengen des $\R^n$ ist wiederum eine konvexe Menge} (vgl. Abschnitt \ref{section:4:3}). Deshalb gilt für die konvexe Hülle $K$ einer Menge $X$: $K$ ist eine konvexe Menge, für die $X \subseteq K$ gilt. \textit{Im folgenden Sinne ist $K$ die kleinste konvexe Menge, für die $X \subseteq K$ gilt}: Ist $L$ irgendeine konvexe Menge, für die $X \subseteq L$ gilt, so folgt (nach der Definition der konvexen Hülle), dass $K$ in $L$ enthalten ist.\label{page:4:1}
+
+\textbf{Beispiele}.
+\begin{enumerate}[\bfseries 1.]
+\item Die Menge $X \subseteq \R^2$ enthalte nur zwei Punkte, etwa $X = \bigl\{ x_1,x_2 \bigr\}$. Dann ist die konvexe Hülle $K$ von $X$ gleich der Strecke, die $x_1$ und $x_2$ verbindet.
+
+\item Nun gelte $X \subseteq \R^2$ und $X = \bigl\{ x_1,x_2,x_3 \bigr\}$, wobei wir voraussetzen, dass die drei Punkte $x_1,x_2,x_3$ nicht auf einer Geraden liegen. Dann ist die konvexe Hülle $K$ von $X$ gleich dem Dreieck, das von $x_1$, $x_2$ und $x_3$ gebildet wird -- \textit{inklusive des Inneren dieses Dreiecks}.
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-1,-0.5)(9,2.5)
+
+\uput{0}[0](-1,1){$X$}
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(2,2){3pt}{X2} \uput{0.25}[ 90](2,2){$x_2$}
+\cnode*(1,0){3pt}{X3} \uput{0.25}[270](1,0){$x_3$}
+
+\uput{0}[180](9,1){$K$}
+\cnode*(6,2){3pt}{K1} \uput{0.25}[ 90](6,2){$x_1$}
+\cnode*(8,2){3pt}{K2} \uput{0.25}[ 90](8,2){$x_2$}
+\cnode*(7,0){3pt}{K3} \uput{0.25}[270](7,0){$x_3$}
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](6,2)(8,2)(7,0)
+
+\end{pspicture}
+\end{figure}
+
+\item Zur Illustration ein weiteres Beispiel: Links ist eine Teilmenge $X$ abgebildet, die aus neun Punkten des $\R^2$ besteht, rechts ist die konvexe Hülle $K$ von $X$ dargestellt.
+
+\begin{figure}[H]
+\centering
+\psset{xunit=1cm,yunit=1cm,linewidth=0.8pt}
+\begin{pspicture}(-1,-0.5)(12,4.5)
+
+\uput{0}[0](-1,2){$X$}
+\cnode*(2,0){3pt}{X1} 
+\cnode*(4,1){3pt}{X2} 
+\cnode*(4,3){3pt}{X3} 
+\cnode*(2,4){3pt}{X4} 
+\cnode*(0,3){3pt}{X5} 
+\cnode*(0,1){3pt}{X6} 
+\cnode*(2,1.5){3pt}{X7} 
+\cnode*(3,2.5){3pt}{X8} 
+\cnode*(1,2.5){3pt}{X9} 
+
+\uput{0}[180](12,2){$K$}
+\cnode*(9,0){3pt}{K1} 
+\cnode*(11,1){3pt}{K2} 
+\cnode*(11,3){3pt}{K3} 
+\cnode*(9,4){3pt}{K4} 
+\cnode*(7,3){3pt}{K5} 
+\cnode*(7,1){3pt}{K6} 
+\cnode*(9,1.5){3pt}{K7} 
+\cnode*(10,2.5){3pt}{K8} 
+\cnode*(8,2.5){3pt}{K9} 
+
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](9,0)(11,1)(11,3)(9,4)(7,3)(7,1)
+
+\end{pspicture}
+\end{figure}
+
+\end{enumerate}
+
+Wir nehmen das dritte Beispiel zum Anlass, um auf das folgende sehr bekannte Problem der \textit{Algorithmischen Geometrie}\index{Algorithmische Geometrie}\index{Geometrie!Algorithmische} hinzuweisen: Gegeben seien $n$ Punkte des $\R^2$: $P_1=(x_1,y_1), P_2=(x_2,y_2), \ldots, P_n=(x_n,y_n)$. Zu bestimmen sind die \enquote{Extremalpunkte} der konvexen Hülle, wobei die ermittelten Extremalpunkte \enquote{entgegen dem Uhrzeigersinn} auszugeben sind. (Was unter dem Begriff \enquote{Extremalpunkt} sowie unter \enquote{entgegen dem Uhrzeigersinn} zu verstehen ist, soll hier nicht definiert werden -- intuitiv sollte klar sein, was gemeint ist. Wir begnügen uns mit dem Hinweis, dass es im obigen Beispiel 3 genau sechs Extremalpunkte gibt.) Wer effiziente Algorithmen zur Lösung des Problems kennenlernen möchte, greife (beispielsweise) zu einem der folgenden Bücher:
+\begin{itemize}
+\item Th. Cormen, Ch. Leiserson, R. Rivest, C. Stein: \textit{Algorithmen -- Eine Einführung}. Oldenbourg-Verlag (2010, 3. Auflage). 
+\item F. P. Preparata, M. I. Shamos: \textit{Computational Geometry: An Introduction}. Springer (1985).
+\item M. de Berg, O. Cheong, M. van Kreveld, M. Overmars: \textit{Computational Geometry: Algorithms and Applications}. Springer (2008).
+\end{itemize}
+
+Die zuvor gegebene Definition der konvexen Hülle ist zwar kurz und knapp -- und für viele Zwecke auch sehr nützlich --, als \enquote{konstruktiv} kann diese Definition aber nicht angesehen werden. Anders gesagt: \textit{Eine Vorstellung davon, wie man die Elemente von $K$ mithilfe der Elemente von $X$ erhält, wird durch diese Definition nicht geliefert}.
+
+Eine andere Möglichkeit, die konvexe Hülle einer Menge $X$ zu beschreiben, erhält man mithilfe des aus der Linearen Algebra bekannten Begriffs der \textit{Linearkombination}\index{Linearkombination}. Dies wird im Folgenden ausgeführt.
+
+Es sei $X$ eine beliebige Teilmenge des $\R^n$; es sei darauf hingewiesen, dass $X$ nicht unbedingt endlich sein muss. Für reelle Zahlen $\lambda_1,\ldots,\lambda_m$ betrachten wir Linearkombinationen
+\[
+\lambda_1x_1 + \ldots + \lambda_mx_m,
+\]
+wobei die Vektoren $x_1,\ldots,x_m$ aus $X$ stammen sollen. Gilt für eine solche Linearkombination zusätzlich
+\begin{equation}
+\label{eq:4:3}
+\lambda_1,\ldots,\lambda_m \geq 0 \quad \text{ und } \quad \sum\limits_{i=1}^m{\lambda_i} = 1,
+\end{equation}
+so spricht man von einer \textit{Konvexkombination}\index{Konvexkombination}.
+
+Man beachte, dass aus (\ref{eq:4:3}) folgt, dass die Koeffizienten $\lambda_i$ nicht größer als 1 sein können. \textit{Bei Konvexkombinationen handelt es sich also um spezielle Linearkombinationen. Genauer: Die Koeffizienten einer Konvexkombinationen müssen aus dem Intervall $[0,1]$ stammen und sich außerdem zu 1 addieren.}
+
+\textbf{Beispiele}. Gegeben seien die Vektoren $x_1,x_2,x_3 \in \R^n$. Die Linearkombination
+\[
+\frac{1}{2}x_1 + \frac{1}{6}x_2 + \frac{1}{3}x_3
+\]
+ist eine Konvexkombination dieser drei Vektoren und
+\[
+\frac{1}{2}x_1 + \frac{1}{2}x_2 \quad\Bigl[= \frac{1}{2}x_1 + \frac{1}{2}x_2 + 0x_3\Bigr]
+\]
+ist ebenfalls eine Konvexkombination von $x_1,x_2,x_3$. \textit{Keine} Konvexkombination dieser drei Vektoren sind dagegen die folgenden Linearkombinationen:
+\[
+\frac{1}{6}x_1 + \frac{1}{5}x_2 + \frac{2}{3}x_3
+\]
+und
+\[
+\frac{2}{3}x_1 + \frac{2}{3}x_2 - \frac{1}{3}x_3.
+\]
+
+Ist $X \subseteq \R^n$ gegeben, so bezeichnen wir mit $\widetilde{X}$ die Menge \textit{sämtlicher} Konvexkombination von Vektoren aus $X$. Der Deutlichkeit halber: In $\widetilde{X}$ sind recht kurze Konvexkombinationen enthalten, wie z.B. $\frac{1}{2}x_1 + \frac{1}{2}x_2$ (für $x_1,x_2\in X$), aber auch längere wie z.B. $\frac{1}{5}x_1 + \frac{2}{5}x_2 + \frac{1}{5}x_3 + \frac{1}{10}x_4 + \frac{1}{10}x_5$ (für $x_1,x_2,x_3,x_4,x_5 \in X$). Ein einzelner Vektor $x_1 \in X$ stellt für sich genommen ebenfalls eine Konvexkombination dar: Es gilt ja
+\[
+x_1 = 1x_1.
+\]
+
+Die Menge $\widetilde{X}$ enthält also Konvexkombinationen unterschiedlicher Länge und wegen  $x=1x$ gilt $X \subseteq \widetilde{X}$. Man kann $\widetilde{X}$ wie folgt angeben:
+\[
+\widetilde{X} = \Bigl\{ \sum\limits_{i=1}^{m}{\lambda_ix_i} : m \geq 1,\ x_i \in X \text{ und } \lambda_i \geq 0\ (i=1,\ldots,m),\ \sum\limits_{i=1}^{m}{\lambda_i} = 1 \Bigr\}.
+\]
+
+Der Zusammenhang zwischen $\widetilde{X}$ und der konvexen Hülle $K$ von $X$ besteht nun einfach darin, dass es sich um ein und dieselbe Menge handelt. Dies ist der Inhalt des folgenden Satzes.
+
+\begin{Satz}[Satz]
+Für $X \subseteq \R^n$ sei $K$ die konvexe Hülle von $X$ und mit $\widetilde{X}$ sei die Menge aller Konvexkombinationen von Elementen aus $X$ bezeichnet. Dann gilt
+\begin{equation}
+\label{eq:4:4}
+K = \widetilde{X}.
+\end{equation}
+\end{Satz}
+
+\textbf{Beweis}. Zum Nachweis von (\ref{eq:4:4}) sind zwei Dinge zu zeigen:
+\begin{enumerate}[(I)]
+\item $\widetilde{X} \subseteq K$ und
+\item $K \subseteq \widetilde{X}$.
+\end{enumerate}
+
+Wir kümmern uns zunächst um (I), d.h. wir zeigen, dass jede Konvexkombination $x \in \widetilde{X}$ ein Element der konvexen Hülle $K$ ist. Es sei also $x \in \widetilde{X}$, d.h., $x$ besitzt die Darstellung
+\begin{equation}
+\label{eq:4:5}
+x = \sum\limits_{i=1}^{m}{\lambda_ix_i} = \lambda_1x_1 + \ldots + \lambda_mx_m,
+\end{equation}
+wobei $m \geq 1$ und $x_i \in X$ ($i = 1,\ldots,m$) gilt. Außerdem gilt für die Koeffizienten $\lambda_i$:
+\begin{equation}
+\label{eq:4:6}
+\lambda_i \geq 0 \quad (i = 1,\ldots,m)
+\end{equation}
+und
+\begin{equation}
+\label{eq:4:7}
+\sum\limits_{i=1}^{m}{\lambda_i} = 1.
+\end{equation}
+
+Zu zeigen ist $x \in K$. \textit{Dies geschieht durch Induktion nach $m$}. Für $m=1$ ist dies offensichtlich: Im Fall $m=1$ lautet (\ref{eq:4:5}) nämlich $x = \lambda_1x_1$ (für $x_1 \in X$) und wegen (\ref{eq:4:7}) muss $\lambda_1=1$ gelten. Es folgt $x=x_1$ und somit $x \in X$; wegen $X \subseteq K$ erhält man $x \in K$. 
+
+Es sei nun $m \geq 2$; wir nehmen an, dass die Behauptung für Konvexkombinationen mit weniger als $m$ Summanden richtig ist (Induktionsannahme). Es sei $x$ wie in (\ref{eq:4:5}) gegeben. Falls $\lambda_m=1$ gilt, so folgt (aufgrund von (\ref{eq:4:6}) und (\ref{eq:4:7})) $\lambda_i=0$ für $i=1,\ldots,m-1$, woraus $x=x_m$ folgt. Also gilt $x \in X$ und somit auch $x \in K$. Wir dürfen also annehmen, dass $\lambda_m < 1$ gilt. Dies erlaubt uns, Koeffizienten $\lambda_1',\ldots,\lambda_{m-1}'$ wie folgt zu definieren:
+\[
+\lambda_i' = \frac{\lambda_i}{1 - \lambda_m} \quad (i = 1,\ldots,m-1).
+\]
+
+Man beachte, dass $\lambda_i' \geq 0$ ($i=1,\ldots,m-1$) gilt und dass sich die $\lambda_i'$ zu 1 summieren, da (aufgrund von (\ref{eq:4:7})) $\lambda_1+\ldots+\lambda_{m-1} = 1 - \lambda_m$ gilt. Also handelt es sich bei
+\[
+x' = \lambda_1'x_1 + \ldots + \lambda_{m-1}'x_{m-1}
+\]
+um eine Konvexkombination von $x_1,\ldots,x_{m-1}$. Nach Induktionsannahme folgt somit $x' \in K$. Außerdem gilt $x = (1 - \lambda_m)x' + \lambda_mx_m$ sowie $x_m \in K$ (wegen $x_m \in X$ und $X \subseteq K$). Folglich liegt $x$ auf einer Strecke, die zwei Punkte von $K$ verbindet, woraus wegen der Konvexität von $K$ folgt, dass $x \in K$ gilt.
+
+Es bleibt (II) nachzuweisen. \textit{Hierzu zeigen wir zunächst, dass es sich bei $\widetilde{X}$ um eine konvexe Menge handelt}. Zu diesem Zweck seien $x$ und $y$ zwei Elemente aus $\widetilde{X}$. Da $x,y \in \widetilde{X}$ gilt, lassen sich $x$ und $y$ wie folgt darstellen:
+\[
+x = \sum\limits_{i=1}^{m}{\lambda_ix_i}
+\quad\text{ und }\quad
+y = \sum\limits_{i=1}^{\ell}{\mu_iy_i},
+\]
+wobei alle $x_i$ und $y_i$ aus $X$ stammen und außerdem $m \geq 1$, $\ell \geq 1$, $\lambda_i \geq 0$ ($i=1,\ldots,m$), $\mu_i \geq 0$ ($i=1,\ldots,\ell$) gilt sowie
+\[
+\sum\limits_{i=1}^{m}{\lambda_i} = 1 
+\quad\text{ und }\quad
+\sum\limits_{i=1}^{\ell}{\mu_i} = 1 .
+\]
+
+Es sei $z = (1-t)x + ty$ für $t \in [0,1]$ , d.h., $z$ ist ein Punkt auf der Strecke, die $x$  und $y$ verbindet. Um nachzuweisen, dass $\widetilde{X}$ konvex ist, haben wir zu zeigen, dass $z \in \widetilde{X}$ gilt. Dies ergibt sich aus der folgenden einfachen Rechnung:
+\begin{align*}
+z
+&= (1-t)x + ty \\
+&= (1-t)\sum\limits_{i=1}^{m}{\lambda_ix_i} + t \sum\limits_{i=1}^{\ell}{\mu_iy_i} \\
+&= \sum\limits_{i=1}^{m}{(1-t)\lambda_ix_i} + \sum\limits_{i=1}^{\ell}{t\mu_iy_i},
+\end{align*}
+wobei für die Koeffizienten $(1-t)\lambda_1,\ldots,(1-t)\lambda_m,t\mu_1,\ldots,t\mu_\ell$ gilt:
+\begin{align*}
+\sum\limits_{i=1}^{m}{(1-t)\lambda_i} + \sum\limits_{i=1}^{\ell}{t\mu_i} 
+&= (1-t) \sum\limits_{i=1}^{m}{\lambda_i} + t \sum\limits_{i=1}^{\ell}{\mu_i} \\
+&= (1-t) + t \\
+&= 1.
+\end{align*}
+
+Die in der Darstellung von $z$ auftretenden Koeffizienten addieren sich also zu 1; außerdem sind diese Koeffizienten alle nichtnegativ. Folglich ist $z$ eine Konvexkombination von Elementen aus $X$, d.h., $z \in \widetilde{X}$.
+
+\textit{Damit ist gezeigt, dass $\widetilde{X}$ konvex ist.}
+
+Erfreulicherweise sind wir damit bereits fertig: Es gilt nämlich -- wie wir wissen -- $X \subseteq \widetilde{X}$. Da $K$ in jeder konvexen Menge enthalten ist, die $X$ umfasst (vgl. Seite \pageref{page:4:1}), folgt $K \subseteq \widetilde{X}$. $\Box$
+
+Häufig wird die konvexe Hülle einer Menge $X \subseteq \R^n$ mit
+\[
+\conv(X)
+\]
+bezeichnet. Diese Bezeichnung wollen wir ebenfalls verwenden.
+
+\textbf{Zusammenfassung}. Wir haben die konvexe Hülle $\conv(X)$ einer Menge $X \subseteq \R^n$ auf zwei sehr unterschiedliche Arten beschrieben, die wir als Beschreibung \enquote{von außen} bzw. \enquote{von innen} bezeichnen wollen.
+\begin{enumerate}[(I)]
+\item \textit{Beschreibung der Menge $\conv(X)$ von außen}:
+
+$\conv(X)$ ist gleich dem Durchschnitt aller konvexen Teilmengen des $\R^n$, die die Menge $X$ enthalten.
+
+\item \textit{Beschreibung der Menge $\conv(X)$ von innen}:
+
+$\conv(X)$ ist gleich der Menge aller Konvexkombination von Elementen von $X$.
+\end{enumerate}
+
+Wir haben nachgewiesen, dass beide Beschreibungen \textit{äquivalent} sind.
+
+Es ist sehr nützlich, zwei verschiedene Beschreibungen von $\conv(X)$ zur Verfügung zu haben, da dies mit einem \textit{Gewinn an Flexibilität} einhergeht: Man kann immer mit der Beschreibung arbeiten, die besser zum jeweiligen Kontext passt. Beide Beschreibungen werden in der Literatur häufig verwendet.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Konvexe Kegel"                                                              %
+%------------------------------------------------------------------------------%
+
+\section{Konvexe Kegel}
+\label{section:4:6}
+
+Wir wissen: Ist $X \subseteq \R^n$ gegeben, so handelt es sich bei $\conv(X)$ um die \textit{kleinste} konvexe Menge, die $X$ umfasst. Wir wollen zusätzlich eine andere Art von konvexer Menge kurz ansprechen, die ebenfalls $X$ umfasst und ebenso wichtig ist wie die konvexe Hülle $\conv(X)$: Die Rede ist von der \textit{konischen Hülle} von $X$, die man mit
+\[
+\cone(X)
+\] 
+bezeichnet.
+
+Hier ist die Definition der konischen Hülle (für $X \neq \emptyset$):
+
+\begin{Definition}[Definition]
+Es sei $X \subseteq \R^n$, $X \neq \emptyset$. Unter der \textit{konischen Hülle}\index{konische Hülle}\index{Hülle!konische} von $X$ versteht man die Menge aller Linearkombinationen
+\[
+\lambda_1x_1 + \ldots + \lambda_mx_m,
+\] 
+für die gilt: $m \geq 1$, $x_i \in X$ und $\lambda_i \geq 0$ ($i=1,\ldots,m$).
+\end{Definition}
+
+Unter Verwendung der Bezeichnung $\cone(X)$ gilt also (für $X \neq \emptyset$):
+\[
+\cone(X) = \Bigl\{ \sum\limits_{i=1}^{m}{\lambda_ix_i} : m \geq 1, x_i \in X \text{ und } \lambda_i \geq 0\ (i=1,\ldots,m) \Bigr\}.
+\]
+
+Im Unterschied zur Definition der konvexen Hülle fehlt also die Bedingung $\sum\limits_{i=1}^{m}{\lambda_i}=1$, während die Bedingung $\lambda_i \geq 0$ ($i=1,\ldots,m$) beibehalten wurde. (Ganz nebenbei gesagt: Ist $X = \emptyset$, so ergibt sich aus der Definition der konvexen Hülle, dass $\conv(X) = \emptyset$ gilt. Im Gegensatz dazu definiert man für $X = \emptyset$ zusätzlich zur obigen Definition: $\cone(X) = \bigl\{ 0 \bigr\}$.)
+
+\pagebreak
+\textbf{Beispiele}
+\begin{enumerate}[\bfseries 1.]
+\item Die Vektoren $x_1,x_2 \in \R^2$ seien wie in der Zeichnung gegeben:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\psaxes[tickstyle=top,ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,4.5)
+\psline[linewidth=1.25pt]{->}(0,0)(2,4) \uput{0.25}[180](2,4){$x_1$}
+\psline[linewidth=1.25pt]{->}(0,0)(6,2) \uput{0.25}[270](6,2){$x_2$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+In der nachfolgenden Zeichnung ist die konische Hülle der Menge $X = \bigl\{ x_1,x_2 \bigr\}$ dargestellt:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-0.5,-0.5)(7.5,5.5)
+\footnotesize
+
+\psaxes[tickstyle=top,ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,4.5)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(3,6)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(9,3)
+\psline[linewidth=1.25pt]{->}(0,0)(2,4) \uput{0.25}[180](2,4){$x_1$}
+\psline[linewidth=1.25pt]{->}(0,0)(6,2) \uput{0.25}[270](6,2){$x_2$}
+\pspolygon[fillstyle=vlines,linewidth=0pt,hatchwidth=0.1pt](0,0)(3,6)(9,6)(9,3)
+
+\small
+\end{pspicture*}
+\end{center}
+
+\item Nun seien drei Vektoren des $\R^2$ wie in der folgenden Zeichnung gegeben:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\psaxes[tickstyle=top,ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,4.5)
+\psline[linewidth=1.25pt]{->}(0,0)(2,4) \uput{0.25}[180](2,4){$x_1$}
+\psline[linewidth=1.25pt]{->}(0,0)(6,2) \uput{0.25}[270](6,2){$x_2$}
+\psline[linewidth=1.25pt]{->}(0,0)(3,2) \uput{0.25}[270](3,2){$x_3$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+Wie sieht die konische Hülle $\cone(X)$ für $X=\bigl\{ x_1,x_2,x_3 \bigr\}$ aus?
+
+\item Können Sie drei Vektoren $x_1,x_2,x_3 \in \R^2$ angeben, für die $\cone(\bigl\{ x_1,x_2,x_3 \bigr\}) = \R^2$ gilt?
+
+\item Können Sie Vektoren $x_1,x_2 \in \R^2$ angeben, für die $\cone(\bigl\{ x_1,x_2 \bigr\})$ ein Halbgerade ist?
+
+\item Gibt es auch $x_1,x_2 \in \R^2$, so dass $\cone(\bigl\{x_1,x_2 \bigr\})$ eine Gerade ist?
+\end{enumerate}
+
+\textbf{Zur Übung}: Beweisen Sie, dass $\cone(X)$ eine konvexe Menge ist, die $X$ umfasst.
+
+Abschließend noch \textit{zwei Sprechweisen} (und ein Hinweis).
+
+Ist eine Menge $X \subseteq \R^n$ gegeben, so nennt man die Menge
+\[
+\cone(X)
+\]
+auch den von $X$ erzeugten \textit{konvexen Kegel}\index{konvexer Kegel}\index{Kegel!konvexer} (engl. \textit{convex cone}).
+
+Eine Linearkombination
+\[
+\lambda_1x_1 + \ldots + \lambda_mx_m,
+\]
+für die $\lambda_i \geq 0$ ($i=1,\ldots,m$) gilt, nennt man auch eine \textit{konische Linearkombination}\index{konische Linearkombination}\index{Linearkombination!konische}.
+
+\textbf{Hinweis}: Häufig hat man es mit dem Fall zu tun, dass $X$ eine endliche Menge ist. \textit{Dies ist für uns der wichtigste Fall}. Man spricht in diesem Fall auch von einem \textit{endlich erzeugten konvexen Kegel}\index{endlich erzeugter konvexer Kegel}\index{konvexer Kegel!endlich erzeugter}. Dass solche Kegel nicht \enquote{rund}, sondern \enquote{kantig} sind, haben Sie vermutlich längst bemerkt. Zur Illustration ist in der folgenden Zeichnung ein konvexer Kegel im $\R^3$ abgebildet, der von einer Menge $\bigl\{ x_1,x_2,x_3,x_4 \bigr\}$ von vier Vektoren erzeugt wird; es handelt sich also um den endlich erzeugten konvexen Kegel $\cone(\bigl\{ x_1,x_2,x_3,x_4 \bigr\})$.
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(0,0)(6,6)
+\footnotesize
+
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(8,2)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(10,6)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(6,10)
+\psline[linewidth=0.5pt,linestyle=dashed](0,0)(2,8)
+
+\psline[linewidth=1.25pt]{->}(0,0)(4,1) \uput{0.25}[270](4,1){$x_1$}
+\psline[linewidth=1.25pt]{->}(0,0)(5,3) \uput{0.25}[315](5,3){$x_2$}
+\psline[linewidth=1.25pt]{->}(0,0)(3,5) \uput{0.25}[135](3,5){$x_3$}
+\psline[linewidth=1.25pt]{->}(0,0)(1,4) \uput{0.25}[180](1,4){$x_4$}
+
+\psline(4,1)(5,3)
+\psline(5,3)(3,5)
+\psline(3,5)(1,4)
+\psline[linewidth=0.5pt,linestyle=dashed](1,4)(4,1)
+
+\small
+\end{pspicture*}
+\end{center}
+ 
+Beim abgebildeten konvexen Kegel handelt es sich um ein Polyeder. Die einzige Ecke dieses Polyeders ist der Ursprung (\enquote{Spitze des konvexen Kegels}); neben seinen inneren Punkten umfasst das Polyeder die vier Halbgeraden $\lambda x_1,\ldots,\lambda x_4$ ($\lambda \geq 0$) und außerdem besitzt das Polyeder vier Flächen.
+

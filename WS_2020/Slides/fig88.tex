@@ -1,0 +1,39 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.0,-1.0)(13.5,3.5)
+\footnotesize
+
+\psline{|-|}(1.0,3.0)( 3.0,3.0) \uput{0.1}[140]( 3.0,3.0){$v_1=2$}
+\psline{|-|}(2.0,2.5)( 6.0,2.5) \uput{0.1}[140]( 6.0,2.5){$v_2=4$}
+\psline{|-|}(5.0,2.0)( 7.0,2.0) \uput{0.1}[140]( 7.0,2.0){$v_3=4$}
+\psline{|-|}(2.5,1.5)( 9.0,1.5) \uput{0.1}[140]( 9.0,1.5){$v_4=7$}
+\psline{|-|}(8.0,1.0)(10.0,1.0) \uput{0.1}[140](10.0,1.0){$v_5=2$}
+\psline{|-|}(8.5,0.5)(11.0,0.5) \uput{0.1}[140](11.0,0.5){$v_6=1$}
+
+\uput{2.89}[90](0,0){$1$} \uput{2.89}[90](12.5,0){$p(1)=0$}
+\uput{2.39}[90](0,0){$2$} \uput{2.39}[90](12.5,0){$p(2)=0$}
+\uput{1.89}[90](0,0){$3$} \uput{1.89}[90](12.5,0){$p(3)=1$}
+\uput{1.39}[90](0,0){$4$} \uput{1.39}[90](12.5,0){$p(4)=0$}
+\uput{0.89}[90](0,0){$5$} \uput{0.89}[90](12.5,0){$p(5)=3$}
+\uput{0.39}[90](0,0){$6$} \uput{0.39}[90](12.5,0){$p(6)=3$}
+ 
+\psline{->}(0,0)(0,0.25)
+\psline{->}(12.5,0)(12.5,0.25)
+\uput{0.1}[270](0,0){Indizes der} \uput{0.5}[270](0,0){Intervalle}
+\uput{0.1}[270](12.5,0){Dazugehörige} \uput{0.5}[270](12.5,0){Werte $p(j)$}
+
+\small
+\end{pspicture}
+\end{document}

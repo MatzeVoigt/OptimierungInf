@@ -1,0 +1,42 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\begin{document}
+	\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=1pt}
+		\begin{pspicture}(-0.5,-0.5)(6.5,3.5)
+		\footnotesize
+		
+		\cnode*(0,1.5){3pt}{V0} \uput{0.2}[180](0,1.5){$v_0$}
+		\cnode*(2,0.0){3pt}{V1} \uput{0.2}[270](2,0.0){$v_1$}
+		\cnode*(2,1.0){3pt}{V2} \uput{0.2}[ 90](2,1.0){$v_2$}
+		\cnode*(2,2.0){3pt}{V3} \uput{0.2}[270](2,2.0){$v_3$}
+		\cnode*(2,3.0){3pt}{V4} \uput{0.2}[ 90](2,3.0){$v_4$}
+		\cnode*(4,1.5){3pt}{V5} \uput{0.2}[  0](4,1.5){$v_5$}
+		\cnode*(6,0.0){3pt}{V6} \uput{0.2}[270](6,0.0){$v_6$}
+		\cnode*(6,3.0){3pt}{V7} \uput{0.2}[ 90](6,3.0){$v_7$}
+		
+		
+		\ncline{->}{V0}{V1} \uput{0.1}[270](1.0, 0.75){$2$}
+		\ncline{->}{V0}{V2} \uput{0.1}[270](1.0, 1.25){$3$}
+		\ncline{->}{V0}{V3} \uput{0.1}[ 90](1.0, 1.75){$1$}
+		\ncline{->}{V0}{V4} \uput{0.1}[ 90](1.0, 2.25){$1$}
+		\ncline{->}{V1}{V6} \uput{0.1}[270](4.0, 0.00){$4$}
+		\ncline{->}{V2}{V1} \uput{0.1}[  0](2.0, 0.50){$2$}
+		%\ncline{->}{V2}{V5} \uput{0.1}[270](3.0, 1.25){$2$}
+		\ncline{->}{V2}{V6} \uput{0.1}[270](4.0, 0.50){$1$}
+		\ncline{->}{V3}{V4} \uput{0.1}[  0](2.0, 2.50){$5$}
+		\ncline{->}{V3}{V5} \uput{0.1}[ 90](3.0, 1.75){$5$}
+		\ncline{->}{V4}{V7} \uput{0.1}[ 90](4.0, 3.00){$3$}
+		\ncline{->}{V5}{V7} \uput{0.1}[270](5.0, 0.75){$4$}
+		\ncline{->}{V6}{V5} \uput{0.1}[ 90](5.0, 2.25){$8$}
+		\ncline{->}{V6}{V7} \uput{0.1}[  0](6.0, 1.50){$1$}
+		
+		\normalsize
+		\end{pspicture}
+
+\end{document}

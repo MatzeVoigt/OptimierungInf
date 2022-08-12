@@ -1,0 +1,147 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{mathtools}
+\usepackage{eurosym}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 02},
+  pdfauthor={},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2019/20}
+
+\textbf{Blatt 2}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 30. Oktober 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Schauen Sie sich das \textbf{Handout zum Simplexverfahren} an und beantworten Sie die folgenden Fragen:
+\begin{enumerate}[(i)]
+% Aufgabe P-1 (i)
+\item Wie kommt das Starttableau zustande?
+% Aufgabe P-1 (ii)
+\item Weshalb wurde in der 1. Iteration $x_1$ als Eingangsvariable gewählt? Wie kommt die Wahl von $x_4$ als Ausgangsvariable zustande?
+% Aufgabe P-1 (iii)
+\item Als Ergebnis der 1. Iteration erhält man ein neues Tableau. Wie kommt die 1. Zeile in diesem Tableau zustande? Wie ergeben sich die übrigen Zeilen (einschließlich der $z$-Zeile)?
+% Aufgabe P-1 (iv)
+\item Woran erkennt man, dass das Tableau am Ende der 2. Iteration optimal ist? Wie ergibt sich am Schluss die optimale Lösung?
+% Aufgabe P-1 (v)
+\item Können Sie anhand der $z$-Zeile im letzten Tableau begründen, weshalb die gefundene Lösung tatsächlich optimal ist?
+\end{enumerate}
+
+% Aufgabe P-2
+\item Wir betrachten das folgende LP-Problem, das mit dem Simplexverfahren gelöst werden soll; dabei ist genau wie im \textbf{Handout} vorzugehen. Insbesondere ist am Ende jeder Iteration das neue Tableau noch einmal übersichtlich hinzuschreiben (wie im Handout).
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 4x_1 &\ + &\ x_2 &\ - &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -2x_1 &\ - &\ 2x_2 &\ + &\ 3x_3 &\ \leq &\ 2 \\
+&&  2x_1 &\ + &\  x_2 &\   &\      &\ \leq &\ 5 \\
+&&   x_1 &\ - &\  x_2 &\ - &\ 5x_3 &\ \leq &\ 4 \\
+&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 6./7. November 2017}
+
+\textbf{Hinweis}: Es ist in allen Aufgaben genau wie im \textbf{Handout} vorzugehen. Insbesondere ist am Ende jeder Iteration das neue Tableau noch einmal übersichtlich hinzuschreiben (wie im Handout).
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item Lösen Sie die folgenden LP-Probleme mit dem Simplexverfahren:
+\begin{enumerate}[a)]
+
+% Aufgabe H-1a
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & -2x_1 &\ + &\ 3x_2 &\ + &\ \frac{1}{2}x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ \leq &\ 2 \\
+&&   x_1 &    &       &\ + &\ 2x_3 &\ \leq &\ 5 \\
+&&  -x_1 &\ + &\  x_2 &    &       &\ \leq &\ 2 \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0 
+\end{alignedat}
+\end{align*}
+
+% Aufgabe H-1b
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 3x_1 &\ + &\ x_2 &\ - &\ 11x_3 &\ - &\ 9x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& x_1 &\ - &\ x_2 &\ - &\ 7x_3 &\ - &\ 3x_4 &\ \leq &\ 1\ \\
+&& x_1 &\ + &\ x_2 &\ + &\ 3x_3 &\ + &\  x_4 &\ \leq &\ 3\ \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+	% Aufgabe H-2a
+	\item Lösen Sie die folgende Aufgabe mit dem Simplexverfahren:
+	\begin{align*}
+	\begin{alignedat}{5}
+	& \text{maximiere } & -x_1 &\ + &\ 3x_2 &\ + &\ x_3 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+	&& -x_1 &\ + &\ 2x_2 &\ + &\ 2x_3 &\ \leq &\ 8\ \\
+	&&  x_1 &\ - &\ 2x_2 &\ + &\ 3x_3 &\ \leq &\ 8\ \\
+	&&  x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ \leq &\ 8\ \\
+	&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.
+	\end{alignedat}
+	\end{align*}
+	
+	% Aufgabe P-1b
+	\item Falls das Verfahren mit dem Ergebnis \textbf{unbeschränkt} terminiert, so gebe man zulässige Lösungen an, für die der Zielfunktionswert $z$ die folgenden Werte annimmt: $z=20$, $z=1000$ sowie $z=1000000$.
+\end{enumerate}
+
+\end{enumerate}
+\end{enumerate}
+\end{document}

@@ -1,0 +1,644 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 03:                                                                  %
+% "Schwierigkeiten und Hindernisse - und wie man sie überwindet"               %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Schwierigkeiten und Hindernisse -- und wie man sie überwindet}\label{chapter:3}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Axiome der reellen Zahlen"                                              %
+%------------------------------------------------------------------------------%
+
+Die Beispiele des letzten Kapitels waren absichtlich so gewählt, dass alles glatt ging. Es kann in anderen Beispielen jedoch so sein, dass Schwierigkeiten auftreten. Der Zweck dieses Abschnitts ist, die Simplexmethode genau zu analysieren, die wichtigsten Details unter die Lupe zu nehmen und Hindernisse aus dem Weg zu räumen.
+
+Schwierigkeiten könnte es in allen Phasen des Verfahrens geben:
+\begin{enumerate}[(i)]
+\item \textbf{Initialisierung}\index{Initialisierung}. Unsere bisherigen Beispiele waren so gewählt, dass es niemals schwierig war, ein geeignetes Starttableau zu finden. \textit{Wir werden jedoch sehen, dass es nicht in jedem Fall so leicht ist, sich ein geeignetes Starttableau zu verschaffen}. Außerdem könnte es sein, dass es gar kein zulässiges Starttableau gibt, da das vorliegende LP-Problem unlösbar ist. Frage: \textit{Wie findet man heraus, ob ein unlösbares LP-Problem vorliegt?}
+
+\item \textbf{Iteration}\index{Iteration}. Eine der Fragen, die sich hier stellen: Was macht man, wenn im aktuellen Tableau keine geeignete Eingangs- oder Ausgangsvariable zu finden ist? Als Antwort wird sich ergeben, dass man nichts mehr tun braucht: \textit{Falls keine geeignete Eingangsvariable existiert, so ist die vorliegende Lösung optimal; falls eine geeignete Eingangsvariable gefunden werden kann, aber keine dazugehörige Ausgangsvariable existiert, so ist man ebenfalls fertig, da das Problem in diesem Fall unbeschränkt ist}.
+
+\item \textbf{Terminierung}\index{Terminierung}. Könnte das Verfahren in eine unendliche Schleife geraten? \textit{Antwort}: Ja, aber es handelt sich eher um eine theoretische Möglichkeit, die außerdem erfolgreich bekämpft werden kann.
+\end{enumerate}
+
+
+\section{Initialisierung (Vorbemerkungen)}
+\index{Initialisierung}
+
+\textit{Wir beschreiben hier zunächst nur, wo die Schwierigkeit liegt}. Ist das LP-Problem
+\footnotesize
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:3:1}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&& x_j &\ \geq &\ 0 & \qquad (j=1,\ldots,n)
+\end{alignedat}
+\end{align}
+\small
+
+zu lösen, so haben wir bisher immer das Starttableau dadurch erhalten, dass wir die Formeln für die Schlupfvariablen hingeschrieben haben (zusammen mit $z$):
+\footnotesize
+\begin{align*}
+\begin{alignedat}{3}
+x_{n+1} &\ = &\ b_1 &\ - &\ \sum\limits_{j=1}^{n}{a_{1j}x_j}\ \\[-3mm]
+ &\ \ \ \vdots & & & \\[-2mm]
+x_{n+m} &\ = &\ b_m &\ - &\ \sum\limits_{j=1}^{n}{a_{mj}x_j}\ \\ \cline{1-5}
+z &\ = &\ & & \sum\limits_{j=1}^{n}{c_jx_j}.
+\end{alignedat}
+\end{align*}
+\small
+
+Als dazugehörige Startlösung konnten wir bislang immer $x_1=...=x_n=0$, $x_{n+1}=b_1, \ldots, x_{n+m}=b_m$ wählen. Das führt aber nur dann zu einer zulässigen Lösung, wenn $b_i \geq 0\ (i=1,\ldots,m)$ gilt!
+
+\textit{Wenn eines der $b_i$ negativ ist, so erhält man auf diese Art keine zulässige Lösung}. Wie man diese Schwierigkeit bei der Initialisierung überwindet, soll jetzt noch nicht besprochen werden -- gegen Ende des Kapitels greifen wir diese Frage wieder auf (vgl. Abschnitt \ref{section:3:4}).
+
+Zunächst kümmern wir uns um die beiden anderen Punkte: Iteration und Terminierung.
+
+\section{Iteration}\label{section:3:2}
+\index{Iteration}
+
+\subsection{Wahl der Eingangsvariablen}
+\index{Wahl der Eingangsvariable}\index{Variable!Wahl der Eingangs-}\index{Eingangsvariable!Wahl der}
+
+Ist ein zulässiges Tableau gegeben, so hat man für die nächste Iteration zunächst eine Eingangsvariable auszuwählen.
+
+Als Eingangsvariable wählt man, falls dies möglich ist, eine Nichtbasisvariable $x_j$, für die der Koeffizient $\overline{c}_j$ in der letzten Zeile (der \enquote{$z$-Zeile}) des aktuellen Tableaus positiv ist: $\overline{c}_j > 0$.
+
+Falls es kein derartiges $x_j$ gibt, falls also
+\[
+\overline{c}_j \leq 0
+\]
+für alle Koeffizienten $\overline{c}_j$ in der letzten Zeile des aktuellen Tableaus gilt, \textit{so liegt eine optimale Lösung vor}. Genauer: Die letzte Zeile des aktuellen Tableaus lautet
+\[
+z = z^* + \sum\limits_{j \in N}{\overline{c}_jx_j},
+\]
+wobei $N$ die Menge der Indizes $j$ der Nichtbasisvariablen bezeichnet und $z^*$ der aktuelle Wert der Zielfunktion ist. Falls nun $\overline{c}_j \leq 0$ für alle $j \in N$ gilt, so führt jede zulässige Lösung zu einem Wert der Zielfunktion $z$, der höchstens $z^*$ beträgt. (Man beachte, dass dann wegen $\overline{c}_j \leq 0$ und $x_j \geq 0$ gilt: $\sum\limits_{j \in N}{\overline{c}_jx_j} \leq 0$.)
+
+\textit{Falls es mehrere Basisvariablen $x_j$ gibt, für die $\overline{c}_j > 0$ gilt, so kann prinzipiell jede dieser Variablen als Eingangsvariable gewählt werden; rechnet man kleine Beispiele per Hand, so ist es jedoch üblich, ein $x_j$ mit möglichst großem Koeffizienten $\overline{c}_j$ zu wählen\footnote{Die Frage, ob diese Regel immer günstig ist, wird später aufgegriffen werden.}}.
+
+
+
+\subsection{Wahl der Ausgangsvariablen}
+\index{Wahl der Ausgangsvariable}\index{Variable!Wahl der Ausgangs-}\index{Ausgangsvariable!Wahl der}
+
+Ist die Eingangsvariable $x_j$ festgelegt, so ist als Nächstes die Ausgangsvariable auszuwählen. 
+
+Als Ausgangsvariable wählt man, falls dies möglich ist, eine Basisvariable $x_i$, für die die Bedingung $x_i \geq 0$ zu einer möglichst strengen oberen Schranke für die Eingangsvariable führt.
+
+\textit{Falls kein geeigneter Kandidat hierfür zur Verfügung steht, so ist das Problem unbeschränkt}\index{unbeschränkt}. Wir er\-läu\-tern diesen Fall an einem Beispiel:
+\begin{align*}
+\begin{alignedat}{5}
+x_2 &\ = &\ 5 &\ + &\ 2x_3 &\ - &\  x_4 &\ - &\ 3x_1\ \\ 
+x_5 &\ = &\ 7 &    &       &\ - &\ 3x_4 &\ - &\ 4x_1\ \\ \cline{1-9}
+z   &\ = &\ 5 &\ + &\  x_3 &\ - &\  x_4 &\ - &\  x_1.
+\end{alignedat}
+\end{align*}
+
+Hier ist die Eingangsvariable $x_3$, jedoch führt weder die Bedingung $x_2 \geq 0$ noch die Bedingung $x_5 \geq 0$ zu einer oberen Schranke für die Eingangsvariable $x_3$. Mit anderen Worten: \textit{Setzen wir $x_1=x_4=0$, so können wir $x_3$ so groß machen, wie wir wünschen, die Bedingungen $x_2 \geq 0$ und $x_5 \geq 0$ werden dadurch nicht verletzt. Das Problem ist also unbeschränkt}.
+
+Falls es mehrere geeignete Kandidaten für die Wahl der Ausgangsvariablen gibt, d.h., falls es mehrere Basisvariablen gibt, die zur selben möglichst strengen oberen Schranke für die Eingangsvariable führen, so kann man eine dieser Variablen beliebig auswählen.
+
+Hat man eine Eingangsvariable und eine Ausgangsvariable gewählt, so ist die Pivotierung immer möglich.
+
+
+
+\subsection{Entartung}
+\index{Entartung}
+
+Für die Wahl der Ausgangsvariable kann es in bestimmten Fällen mehrere Kandidaten geben. Zu welchen Konsequenzen dies führt, sei an einem \textbf{Beispiel} erläutert:
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\ 1 &\   &       &\   &\      &\ - &\ 2x_3\ \\
+x_5 &\ = &\ 3 &\ - &\ 2x_1 &\ + &\ 4x_2 &\ - &\ 6x_3\ \\ 
+x_6 &\ = &\ 2 &\ + &\  x_1 &\ - &\ 3x_2 &\ - &\ 4x_3\ \\ \cline{1-9}
+z   &\ = &    &\   &\ 2x_1 &\ - &\  x_2 &\ + &\ 8x_3.
+\end{alignedat}
+\end{align*}
+
+Wählen wir $x_3$ als Eingangsvariable, so ergibt sich, dass alle drei Basisvariablen $x_4$, $x_5$ und $x_6$ den Zuwachs von $x_3$ auf $\frac{1}{2}$ beschränken. Alle drei Variablen $x_4$, $x_5$ und $x_6$ kommen also als Ausgangsvariable infrage; wir wählen (willkürlich) $x_4$. Pivotierung ergibt das folgende Tableau:
+\begin{align*}
+\begin{alignedat}{5}
+x_3 &\ = &\ 0.5 &\   &       &\   &\      &\ - &\ 0.5x_4\ \\
+x_5 &\ = &\     &\ - &\ 2x_1 &\ + &\ 4x_2 &\ + &\   3x_4\ \\ 
+x_6 &\ = &\     &\   &\  x_1 &\ - &\ 3x_2 &\ + &\   2x_4\ \\ \cline{1-9}
+z   &\ = &\   4 &\ + &\ 2x_1 &\ - &\  x_2 &\ - &\   4x_4.
+\end{alignedat}
+\end{align*}
+
+\textit{Dieses Tableau unterscheidet sich von allen Tableaus, die bislang vorkamen}, dadurch, dass für die dazugehörige zulässige Lösung gilt: Nicht nur die Nichtbasisvariablen $x_1$, $x_2$ und $x_4$ sind gleich Null, sondern es gibt auch Basisvariablen, die gleich Null sind. Die zugehörige Lösung lautet:
+\[
+x_1=0,\quad x_2=0,\quad x_3=0.5,\quad x_4=0,\quad x_5=0,\quad x_6=0.
+\]
+
+Eine zulässige Basislösung wird \textit{degeneriert}\index{degeneriert} (oder \textit{entartet}\index{entartet}) genannt, wenn eine oder mehrere Basisvariablen gleich Null sind (engl. \textit{degenerate}\index{degenerate}).
+
+\underline{Fortsetzung des Beispiels}:
+
+In der nächsten Iteration ist $x_1$ die Eingangsvariable und $x_5$ ist die Ausgangsvariable. Wie üblich berechnen wir aus $x_3 \geq 0$, $x_5 \geq 0$ und $x_6 \geq 0$ den größtmöglichen Zuwachs für die Eingangsvariable $x_1$. Wir erhalten diesmal (im Unterschied zu allen früheren Fällen), dass kein positiver Zuwachs möglich ist, da sich aus $x_5 \geq 0$ (und $x_2=x_4=0$) ergibt, dass $x_1=0$ gilt. 
+
+Also: $x_1$ bleibt unverändert gleich Null; die übrigen Variablen $x_2$, $x_3$, $x_4$, $x_5$, $x_6$ und $z$ ändern sich ebenfalls nicht, nur das Tableau geht durch den Austausch von $x_1$ und $x_5$ über in
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\     &\   &\ 2x_2 &\ + &\ 1.5x_4 &\ - &\ 0.5x_5\ \\
+x_3 &\ = &\ 0.5 &\   &\      &\ - &\ 0.5x_4 &\   &\         \\ 
+x_6 &\ = &\     &\ - &\  x_2 &\ + &\ 3.5x_4 &\ - &\ 0.5x_5\ \\ \cline{1-9}
+z   &\ = &\   4 &\ + &\ 3x_2 &\ - &\    x_4 &\ - &\    x_5.
+\end{alignedat}
+\end{align*}
+
+\pagebreak
+\begin{Definition}[Definition]
+Eine Iteration im Simplexverfahren heißt \textit{degeneriert} (oder \textit{entartet}), wenn sich die zulässige Basislösung nicht ändert. 
+\index{degenerierter Iterationsschritt}\index{Iterationsschritt!degenerierter}
+\index{entarteter Iterationsschritt}\index{Iterationsschritt!entarteter}
+\end{Definition}
+
+Unsere letzte Iteration war also degeneriert.
+
+\textbf{Übungsaufgabe}. Zeigen Sie, dass in unserem Beispiel auch die nächste Iteration degeneriert ist, die übernächste jedoch nicht.
+
+\textit{Auch in praktischen Anwendungen kommen degenerierte Iterationen vor (sogar häufig); typischerweise wird der Stillstand jedoch, wie in unserem Beispiel, nach einigen Schritten überwunden}.
+
+Entartung könnte aber auch -- zumindest in der Theorie -- dazu führen, dass sich das Verfahren im Kreis bewegt. Mit diesem Phänomen befassen wir uns im Folgenden; man spricht vom \textit{Kreisen} des Verfahrens\index{Kreisen des Simplexverfahrens}\index{Simplexverfahren!Kreisen des} (engl. \textit{cycling}\index{cycling}).
+
+
+
+\section{Terminierung}\label{section:3:3}
+\index{Terminierung}
+
+Man kann -- wie wir gleich sehen werden -- Beispiele konstruieren, für die das Simplexverfahren in eine unendliche Schleife gerät. Aus der Sicht der Praxis ist die allerdings kein Problem: In praktischen Anwendungen scheint dieses Phänomen aller Erfahrung nach niemals aufzutreten.
+
+\textbf{Beispiel}. Unser Anfangstableau lautet
+\begin{align*}
+\begin{alignedat}{6}
+x_5 &\ = &\     &\ - &\ 0.5x_1 &\ + &\ 5.5x_2 &\ + &\ 2.5x_3 &\ - &\  9x_4\ \\
+x_6 &\ = &\     &\ - &\ 0.5x_1 &\ + &\ 1.5x_2 &\ + &\ 0.5x_3 &\ - &\   x_4\ \\
+x_7 &\ = &\   1 &\ - &\    x_1 &\   &\        &\   &\        &\   &\        \\ \cline{1-11}
+z   &\ = &\     &\   &\  10x_1 &\ - &\  57x_2 &\ - &\   9x_3 &\ - &\ 24x_4.
+\end{alignedat}
+\end{align*}
+
+Wir verwenden die folgenden (üblichen) \textit{Regeln}:
+\begin{itemize}
+\item Als Eingangsvariable wird immer eine Nichtbasisvariable mit einem möglichst hohen Koeffizienten in der letzten Zeile gewählt.
+\item Falls es mehrere Basisvariablen gibt, die für das Verlassen der Basis infrage kommen, so wählen wir die Variable mit dem kleinsten Index.
+\end{itemize}
+
+In unserem Beispiel ergeben sich in den ersten sechs Iterationen die folgenden Tableaus.
+
+\underline{Nach der ersten Iteration}:
+\begin{align*}
+\begin{alignedat}{6}
+x_1 &\ = &\     &\   &\ 11x_2 &\ + &\  5x_3 &\ - &\  18x_4 &\ - &\  2x_5\ \\
+x_6 &\ = &\     &\ - &\  4x_2 &\ - &\  2x_3 &\ + &\   8x_4 &\ + &\   x_5\ \\
+x_7 &\ = &\   1 &\ - &\ 11x_2 &\ - &\  5x_3 &\ + &\  18x_4 &\ + &\  2x_5\ \\ \cline{1-11}
+z   &\ = &\     &\   &\ 53x_2 &\ + &\ 41x_3 &\ - &\ 204x_4 &\ - &\ 20x_5.
+\end{alignedat}
+\end{align*}
+
+\underline{Nach der zweiten Iteration}:
+\begin{align*}
+\begin{alignedat}{6}
+x_2 &\ = &\     &\ - &\  0.5x_3 &\ + &\  2x_4 &\ + &\ 0.25x_5 &\ - &\  0.25x_6\ \\
+x_1 &\ = &\     &\ - &\  0.5x_3 &\ + &\  4x_4 &\ + &\ 0.75x_5 &\ - &\  2.75x_6\ \\
+x_7 &\ = &\   1 &\ + &\  0.5x_3 &\ - &\  4x_4 &\ - &\ 0.75x_5 &\ - &\ 13.25x_6\ \\ \cline{1-11}
+z   &\ = &\     &\   &\ 14.5x_3 &\ - &\ 98x_4 &\ - &\ 6.75x_5 &\ - &\ 13.25x_6.
+\end{alignedat}
+\end{align*}
+
+\underline{Nach der dritten Iteration}:
+\begin{align*}
+\begin{alignedat}{6}
+x_3 &\ = &\     &\   &\  8x_4 &\ + &\ 1.5x_5 &\ - &\ 5.5x_6 &\ - &\  2x_1\ \\
+x_2 &\ = &\     &\ - &\  2x_4 &\ - &\ 0.5x_5 &\ + &\ 2.5x_6 &\ + &\   x_1\ \\
+x_7 &\ = &\   1 &\   &\       &\   &\        &\   &\        &\ - &\   x_1\ \\ \cline{1-11}
+z   &\ = &\     &\   &\ 18x_4 &\ + &\  15x_5 &\ - &\  93x_6 &\ - &\ 29x_1.
+\end{alignedat}
+\end{align*}
+
+\underline{Nach der vierten Iteration}:
+\begin{align*}
+\begin{alignedat}{6}
+x_4 &\ = &\     &\ - &\ 0.25x_5 &\ + &\ 1.25x_6 &\ + &\ 0.5x_1 &\ - &\ 0.5x_2\ \\
+x_3 &\ = &\     &\ - &\  0.5x_5 &\ + &\  4.5x_6 &\ + &\   2x_1 &\ - &\   4x_2\ \\
+x_7 &\ = &\   1 &\   &\         &\   &\         &\ - &\    x_1 &\   &\         \\ \cline{1-11}
+z   &\ = &\     &\   &\ 10.5x_5 &\ - &\ 70.5x_6 &\ - &\  20x_1 &\ - &\   9x_2.
+\end{alignedat}
+\end{align*}
+
+\underline{Nach der fünften Iteration}:
+\begin{align*}
+\begin{alignedat}{6}
+x_5 &\ = &\     &\   &\  9x_6 &\ + &\   4x_1 &\ - &\   8x_2 &\ - &\   2x_3\ \\
+x_4 &\ = &\     &\ - &\   x_6 &\ - &\ 0.5x_1 &\ + &\ 1.5x_2 &\ + &\ 0.5x_3\ \\
+x_7 &\ = &\   1 &\   &\       &\ - &\    x_1 &\   &\        &\   &\         \\ \cline{1-11}
+z   &\ = &\     &\   &\ 24x_6 &\ + &\  22x_1 &\ - &\  93x_2 &\ - &\  21x_3.
+\end{alignedat}
+\end{align*}
+
+\underline{Nach der sechsten Iteration}:
+\begin{align*}
+\begin{alignedat}{6}
+x_6 &\ = &\     &\ - &\ 0.5x_1 &\ + &\ 1.5x_2 &\ + &\ 0.5x_3 &\ - &\   x_4\ \\
+x_5 &\ = &\     &\ - &\ 0.5x_1 &\ + &\ 5.5x_2 &\ + &\ 2.5x_3 &\ - &\  9x_4\ \\
+x_7 &\ = &\   1 &\ - &\    x_1 &\   &\        &\   &\        &\   &\        \\ \cline{1-11}
+z   &\ = &\     &\   &\  10x_1 &\ - &\  57x_2 &\ - &\   9x_3 &\ - &\ 24x_4.
+\end{alignedat}
+\end{align*}
+
+\textit{Wir sind also wieder dort, wo wir angefangen haben}. Dies führt zu folgender Definition.
+
+\begin{Definition}[Definition]
+Wir sagen, dass \textit{das Simplexverfahren kreist}\index{Kreisen des Simplexverfahrens}\index{Simplexverfahren!Kreisen des}, falls ein und dasselbe Tableau in zwei verschiedenen Iterationen auftritt.
+\end{Definition}
+
+Kreisen hängt immer mit degenerierten Iterationen zusammen: \index{degenerierter Iterationsschritt}\index{Iterationsschritt!degenerierter}\index{entarteter Iterationsschritt}\index{Iterationsschritt!entarteter}\textit{Sämtliche Iterationen, die dazu geführt haben, dass ein Tableau wiederholt vorkam, müssen degeneriert gewesen sein}. (Weshalb nämlich?)
+
+Es könnte also -- zumindest in der Theorie -- vorkommen, dass das Simplexverfahren nicht endet, da es im Sinne der obigen Definition kreist. \textit{Könnte es noch andere Gründe geben, weshalb das Simplexverfahren nicht terminiert?} Die Antwort ist nein, wie der Beweis des folgenden Satzes zeigt.
+
+\begin{Satz}[Satz]
+Falls das Simplexverfahren nicht terminiert, so kreist es.
+\end{Satz}
+
+\textbf{Beweis}. \textit{Zunächst einmal halten wir fest, dass es nur endlich viele Möglichkeiten gibt, $m$ Basisvariablen aus der Menge $\bigl\{ x_1, \ldots, x_{n+m} \bigr\}$ aller Variablen auszuwählen}. Falls das Simplexverfahren nicht terminiert, so muss demnach ein und dieselbe Basis in zwei verschiedenen Iterationen auftreten.
+
+\textit{Es bleibt also zu zeigen, dass durch die Wahl der Basis das Tableau bereits eindeutig bestimmt ist}. Wenn wir dies gezeigt haben, so sind wir fertig, da damit feststeht, dass nur endlich viele verschiedene Tableaus auftreten können, d.h., bei Nichtterminierung muss sich ein Tableau wiederholen.
+
+Betrachten wir also zwei Tableaus, die zur selben Basis gehören:
+
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:3:2}
+x_i &\ = &\ b_i &\ - &\ \sum\limits_{j \not\in B}{a_{ij}x_j} & \qquad (i \in B) \\ \cline{1-6}
+z   &\ = &\   v &\ + &\ \sum\limits_{j \not\in B}{c_jx_j} &
+\end{alignedat}
+\end{align}
+
+und
+
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:3:3}
+x_i &\ = &\ b_i^* &\ - &\ \sum\limits_{j \not\in B}{a_{ij}^*x_j} & \qquad (i \in B) \\ \cline{1-6}
+  z &\ = &\   v^* &\ + &\ \sum\limits_{j \not\in B}{c_j^*x_j} &
+\end{alignedat}
+\end{align}
+
+Da (\ref{eq:3:2}) und (\ref{eq:3:3}) Tableaus sind, die zum selben LP-Problem gehören, ist jede Lösung $x_1,\ldots,x_{n+m},z$ des Gleichungssystems (\ref{eq:3:2}) auch eine Lösung von (\ref{eq:3:3}); und umgekehrt (vgl. die Definition des Begriffs \enquote{Tableau} in Kapitel \ref{chapter:2}, Seite \pageref{page:2:1}). Man kann in einer Lösung von (\ref{eq:3:2}) bzw. (\ref{eq:3:3}) die Nichtbasisvariablen frei vorgeben; dadurch sind dann die Werte der Basisvariablen $x_i\ (i \in B)$ und der Wert von $z$ eindeutig bestimmt. Gibt man zum Beispiel $x_j=0$ für alle $j \not\in B$ vor, so erhält man $b_i = b_i^*$ für alle $i \in B$ sowie $v=v^*$.
+
+Gibt man für eine beliebig gewählte Nichtbasisvariable $x_j$ vor, dass $x_j=1$ gelten soll, und setzt alle anderen Nichtbasisvariablen gleich Null, so erhält man für alle $i \in B$:
+\[
+b_i - a_{ij} = x_i = b_i^* - a_{ij}^*.
+\]
+
+Hieraus folgt (wegen $b_i = b_i^*$): $a_{ij} = a_{ij}^*$.
+
+Ganz entsprechend erhält man $c_j = c_j^*$ für alle $j \not\in B$. 
+
+Somit haben wir gezeigt, dass die Tableaus (\ref{eq:3:2}) und (\ref{eq:3:3}) gleich sind. Anders gesagt: \textit{Wir haben gezeigt, dass durch die Wahl der Basis das zugehörige Tableau eindeutig bestimmt ist}. $\Box$
+
+
+Beim Kreisen handelt es sich -- wie bereits gesagt -- um eine \textit{theoretische Möglichkeit}. In der Praxis spielt Kreisen keine Rolle. Aus Sicht der Theorie möchte man Kreisen natürlich völlig ausschließen. Dies ist in der Tat möglich: Es gibt verschiedene Möglichkeiten hierfür, von denen die  \textit{Blandsche Regel}\index{Blandsche Regel}\index{Regel!Blandsche} (\textit{Bland's rule}\index{Bland's rule}) die interessanteste ist.
+
+Bei dieser Regel geht es zunächst darum, wie die Eingangsvariable zu wählen ist, wenn es mehrere Nichtbasisvariablen gibt, für die der Koeffizient in der $z$-Zeile positiv ist. Wir wissen: Prinzipiell kommen alle diese Variablen infrage. Bei der Verwendung von Bland's rule spielt die Größe der positiven Koeffizienten in der $z$-Zeile gar keine Rolle; \textit{man wählt unter den Variablen mit positivem Koeffizienten in der $z$-Zeile einfach die Variable $x_k$ mit dem kleinsten Index $k$.} Nach erfolgter Wahl der Eingangsvariablen verfährt man bei der Wahl der Ausgangsvariablen entsprechend: Kommen mehrere Basisvariablen als Ausgangsvariablen in Betracht, so wähle man unter diesen die Variable mit dem kleinsten Index. (Man beachte: Nicht alle Basisvariablen kommen als Ausgangsvariablen in Betracht, da nur zulässige Tableaus entstehen dürfen.) Kurz zusammengefasst ergibt dies die folgende Regel: 
+
+\begin{Satz}[Bland's rule]
+Gibt es mehrere Möglichkeiten für die Wahl der Eingangs- bzw. Ausgangsvariablen, so wähle man immer den Kandidaten $x_k$ mit dem kleinsten Index $k$.
+\end{Satz}
+
+Bland's rule ist leicht zu formulieren und leicht zu merken. Etwas schwieriger ist es dagegen, zu beweisen, dass bei Beachtung von Bland's rule Kreisen nicht möglich ist. 
+
+\begin{Satz}[Satz]
+Bei Verwendung von Bland's rule terminiert das Simplexverfahren.
+\end{Satz}
+
+\textbf{Beweis}. Aufgrund des vorangehenden Satzes haben wir zu zeigen, dass das Simplexverfahren bei Verwendung von Bland's rule nicht kreist. Zu diesem Zweck nehmen wir an, dass Bland's rule verwendet wird und dass es trotzdem ein Tableau $T_0$ gibt, das in einer Folge von degenerierten Iterationen in sich selbst übergeht: $T_0, T_1, \ldots, T_k=T_0$ seien die dabei auftretenden Tableaus ($k \geq 1$). Diese Annahme ist zum Widerspruch zu führen.
+
+Wir nennen eine Variable \textit{unbeständig}, falls sie in den Tableaus $T_0, T_1, \ldots, T_k=T_0$ mindestens einmal als Basis-, aber mindestens einmal auch als Nichtbasisvariable auftritt. Unter allen unbeständigen Variablen sei $x_t$ die Variable mit dem größten Index $t$. Dann gibt es in der Folge $T_0, T_1, \ldots, T_k=T_0$ ein Tableau $T$, in dem $x_t$ Ausgangsvariable ist, d.h., $x_t$ ist Basisvariable in $T$ und Nichtbasisvariable im darauffolgenden Tableau. Die entsprechende Eingangsvariable sei $x_s$, d.h., $x_s$ ist Nichtbasisvariable in $T$ und Basisvariable im darauffolgenden Tableau.
+
+Da es sich bei $T_0, T_1, \ldots, T_k=T_0$ um eine zyklische Folge von Tableaus handelt, muss es in dieser Folge ein Tableau $T^*$ geben, in dem $x_t$ Eingangsvariable ist, und es gibt einen Abschnitt der Folge $T_0, T_1, \ldots, T_k,T_1, \ldots, T_k$, durch den $T$ in $T^*$ überführt wird.
+
+Das Tableau $T$ sei wie folgt dargestellt:
+
+\begin{align*}
+\begin{alignedat}{4}
+x_i &\ = &\ b_i &\ - &\ \sum\limits_{j \not\in B}{a_{ij}x_j} & \qquad (i \in B) \\ \cline{1-6}
+z   &\ = &\   v &\ + &\ \sum\limits_{j \not\in B}{c_jx_j} &
+\end{alignedat}
+\end{align*}
+
+Da alle Iterationen, die von $T$ nach $T^*$ führen, degeneriert sind, hat die Zielfunktion $z$ in beiden Tableaus denselben Wert. Deshalb lässt sich die letzte Zeile von $T^*$ wie folgt schreiben:
+\begin{equation}
+\label{eq:3:4}
+z = v + \sum\limits_{j=1}^{m+n}{c_j^*x_j},
+\end{equation}
+
+wobei $c_j^*=0$ gilt, falls $x_j$ eine Basisvariable von $T^*$ ist. Man beachte, dass Folgendes gilt: Da die Gleichung (\ref{eq:3:4}) aus $T$ durch algebraische Umformungen entstanden ist, wird (\ref{eq:3:4}) von jeder Lösung $x_1,\ldots,x_{m+n},z$ von $T$ erfüllt. Insbesondere wird (\ref{eq:3:4}) von der folgenden Lösung von $T$ erfüllt (für ein beliebig gewähltes $y \in \R$):
+\[
+x_s = y,\quad
+x_j = 0\ (j \notin B,\ j \neq s),\quad
+x_i = b_i - a_{is}y\ (i \in B) \quad\text{und}\quad
+z = v + c_sy.
+\]
+
+Durch Einsetzen in (\ref{eq:3:4}) folgt für alle $y \in \R$
+\[
+v + c_sy = v + c_s^*y + \sum\limits_{i \in B}{c_i^* \bigl(b_i - a_{is}y\bigr)},
+\]
+
+woraus man durch Umformung erhält:
+\begin{equation}
+\label{eq:3:5}
+\left( c_s - c_s^* + \sum\limits_{i \in B}{c_i^*a_{is}} \right) y = \sum\limits_{i \in B}{c_i^*b_i} \quad \text{für alle } y \in \R.
+\end{equation}
+
+Da die rechte Seite von (\ref{eq:3:5}) eine von $y$ unabhängige Konstante ist, ergibt sich als Konsequenz:
+\begin{equation}
+\label{eq:3:6}
+c_s - c_s^* + \sum\limits_{i \in B}{c_i^*a_{is}} = 0.
+\end{equation}
+
+Da $x_s$ Eingangsvariable von $T$ ist, gilt $c_s>0$. Außerdem gilt $c_s^* \leq 0$. (Begründung: $x_s$ ist eine unbeständige Variable mit $s \neq t$, woraus $s<t$ folgt. Wäre $c_s^*>0$, so wäre $x_s$ eine Nichtbasisvariable in $T^*$ mit $c_s^*>0$. Dies ist ein Widerspruch zur Tatsache, dass $x_t$ die Eingangsvariable von $T^*$ ist und dass Bland's rule verwendet wird.) Aus (\ref{eq:3:6}) folgt somit, dass es ein $r \in B$ geben muss, so dass gilt
+\begin{equation}
+\label{eq:3:7}
+c_r^*a_{rs} < 0.
+\end{equation}
+
+Wegen $r \in B$ handelt es sich bei $x_r$ um eine Basisvariable von $T$. Aufgrund von (\ref{eq:3:7}) gilt $c_r^* \neq 0$, weshalb $x_r$ eine Nichtbasisvariable von $T^*$ ist. Also ist auch $x_r$ unbeständig und es gilt $r \leq t$. Da $x_t$ Ausgangsvariable von $T$ ist und $x_s$ Eingangsvariable, gilt $a_{ts} > 0$; ferner gilt $c_t^* > 0$, da $t$ Eingangsvariable von $T^*$ ist. Es folgt $c_t^*a_{ts} > 0$. Vergleicht man dies mit (\ref{eq:3:7}), so erkennt man, dass $r \neq t$ gilt. Insgesamt haben wir also $r < t$ erhalten und außerdem ist $x_r$ nicht die Eingangsvariable von $T^*$. Daraus ergibt sich (wegen Bland's rule), dass nicht $c_r^*>0$ gelten kann. Somit folgt aus (\ref{eq:3:7}):
+\[
+a_{rs} > 0.
+\]
+
+Da alle Iterationen, die $T$ in $T^*$ überführen, degeneriert sind, besitzen $T$ und $T^*$ dieselbe zulässige Basislösung. In der zulässigen Basislösung für $T^*$ gilt $x_r=0$ (da $x_r$ Nichtbasisvariable für $T^*$ ist). Folglich gilt ebenfalls $x_r=0$ in der zulässigen Basislösung für $T$, d.h. $b_r=0$. Es folgt, dass $x_r$ ein geeigneter Kandidat war für das Verlassen der Basis von $T$, für den $r<t$ gilt. Trotzdem wurde $x_t$ gewählt. Dieser Widerspruch beweist unseren Satz. $\Box$ 
+
+
+Nach diesen Ausführungen zu den Punkten Iteration und Terminierung kommen wir -- wie zu Beginn des Kapitels angekündigt -- auf den Punkt Initialisierung zurück.
+
+
+
+
+\section{Das Zweiphasen-Simplexverfahren}\label{section:3:4}
+\index{Initialisierung}
+\label{page:3:2}
+
+Wir betrachten ein Problem in Standardform, wobei mindestens eine der rechten Seiten negativ ist:
+
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & \\
+& \rlap{unter den Nebenbedingungen} & & &\\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} & \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&& x_j &\ \geq &\ 0 & \qquad(j=1,\ldots,n).
+\end{alignedat}
+\end{align*}
+
+Um ein zulässiges Starttableau und damit auch eine zulässige Startlösung zu finden, betrachtet man das folgende LP-Problem, das \textit{Hilfsproblem}\index{Hilfsproblem}\index{Problem!Hilfs-} genannt wird:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{minimiere $x_0$} & & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ - &\ x_0 &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&&                                  &    &\ x_j &\ \geq &\   0 & \qquad(j=0,\ldots,n).
+\end{alignedat}
+\end{align*}
+
+Eine zulässige Lösung des Hilfsproblems lässt sich leicht angeben: Man braucht nur die Variablen $x_1,\ldots,x_n$ gleich Null zu setzen und $x_0$ hinreichend groß zu wählen. \textit{Das Hilfsproblem besitzt also immer eine zulässige Lösung}. Außerdem erkennt man sofort, dass Folgendes gilt:
+
+\begin{Definition}[Feststellung 1]
+Das ursprüngliche Problem besitzt genau dann eine zulässige Lösung, wenn das Hilfsproblem eine zulässige Lösung mit $x_0=0$ besitzt bzw. (anders gesagt), wenn der optimale Wert des Hilfsproblems gleich Null ist.
+\end{Definition}
+
+Genauer gilt, dass sich die zulässigen Lösungen des ursprünglichen Problems und die optimalen Lösungen des Hilfsproblems, für die $x_0=0$ gilt, auf eine sehr einfache Art entsprechen:
+\begin{enumerate}[(i)]
+\item Ist $x_1,\ldots,x_n$ eine zulässige Lösung des ursprünglichen Problems, so erhält man eine optimale Lösung des Hilfsproblems, wenn man zusätzlich $x_0=0$ setzt.
+\item \label{page:3:1} Ist umgekehrt $x_0,\ldots,x_n$ eine optimale Lösung des Hilfsproblems, für die $x_0=0$ gilt, so ist $x_1,\ldots,x_n$ eine zulässige Lösung des ursprünglichen Problems.
+\end{enumerate}
+
+Wir erläutern nun das weitere Vorgehen anhand des folgenden \textbf{Beispiels}:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & x_1 &\ - &\ x_2 &\ + &\ x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 2x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ \leq &\  4\ \\ 
+&& 2x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ \leq &\ -5\ \\ 
+&& -x_1 &\ + &\  x_2 &\ - &\ 2x_3 &\ \leq &\ -1\ \\ 
+&& & & & & \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Das dazugehörige \textit{Hilfsproblem} lautet, wenn es als \textit{Maximierungsproblem} geschrieben wird:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere $-x_0$} & & & & & & & & &\\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 2x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ - &\ x_0 &\ \leq &\  4\ \\ 
+&& 2x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ - &\ x_0 &\ \leq &\ -5\ \\ 
+&& -x_1 &\ + &\  x_2 &\ - &\ 2x_3 &\ - &\ x_0 &\ \leq &\ -1\ \\ 
+&& & & & & & & \llap{$x_0,x_1,x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+
+Schreibt man die Formeln für die Schlupfvariablen $x_4$, $x_5$ und $x_6$ sowie für die Zielfunktion $w$ auf, so erhält man für das Hilfsproblem das folgende Tableau:
+\begin{align*}
+\begin{alignedat}{6}
+x_4 &\ = &\  4 &\ - &\ 2x_1 &\ + &\  x_2 &\ - &\ 2x_3 &\ + &\ x_0\ \\
+x_5 &\ = &\ -5 &\ - &\ 2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ + &\ x_0\ \\
+x_6 &\ = &\ -1 &\ + &\  x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ + &\ x_0\ \\ \cline{1-11}
+w   &\ = &\    &\   &\      &\   &\      &\   &\      &\ - &\ x_0.
+\end{alignedat}
+\end{align*}
+
+\textit{Dieses Tableau ist \textbf{kein zulässiges Tableau}\index{unzulässiges Tableau}\index{Tableau!unzulässiges}, es kann jedoch durch eine einzige Pivotierung in ein zulässiges Tableau verwandelt werden}. Diese Pivotierung folgt jedoch einem etwas anderen Schema, als bislang gewohnt: Man wählt $x_0$ als Eingangsvariable, obwohl $x_0$ in der letzten Zeile des Tableaus mit einem negativen Koeffizienten auftritt. Wählt man zusätzlich $x_5$ als Ausgangsvariable, so erhält man das nunmehr zulässige Tableau:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:3:8}
+x_0 &\ = &\  5 &\ + &\ 2x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ + &\ x_5\ \\
+x_4 &\ = &\  9 &\   &\      &\ - &\ 2x_2 &\ - &\  x_3 &\ + &\ x_5\ \\
+x_6 &\ = &\  4 &\ + &\ 3x_1 &\ - &\ 4x_2 &\ + &\ 3x_3 &\ + &\ x_5\ \\ \cline{1-11}
+w   &\ = &\ -5 &\ - &\ 2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ - &\ x_5.
+\end{alignedat}
+\end{align}
+
+
+Im allgemeinen Fall geht alles ganz entsprechend, man schreibt zunächst das Hilfsproblem als Maximierungsproblem auf:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere $-x_0$} & & & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ - &\ x_0 &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&&                                  &    &\ x_j &\ \geq &\   0 & \qquad (j=0,\ldots,n).
+\end{alignedat}
+\end{align*}
+
+Aufschreiben der Formeln für die Schlupfvariablen $x_{n+1},\ldots,x_{n+m}$ und für die Zielfunktion $w$ führt zum folgenden (nicht zulässigen) Tableau für das Hilfsproblem:
+\begin{align*}
+\begin{alignedat}{6}
+x_{n+i} &\ = &\  b_i - \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ + &\ x_0\ &\ \qquad (i=1,\ldots,m) \\ \cline{1-6}
+     w  &\ = &\                                         &\ - &\ x_0. &
+\end{alignedat}
+\end{align*}
+
+\textit{Dieses Tableau kann durch eine einzige Pivotierung in ein zulässiges Tableau verwandelt werden}: Als Eingangsvariable wählt man $x_0$ und als Ausgangsvariable $x_{n+k}$ wählt man eine Variable mit negativem $b_k$, für die $|b_k|$ maximal ist\footnote{Man überlege sich, dass dies immer zu einem zulässigen Tableau führt (vgl. auch V. Chvátal: \textit{Linear Programming}, Seite 40).}.
+
+Wir fahren mit unserem Beispiel fort. Da wir mit dem Tableau (\ref{eq:3:8}) nun ein \textit{zulässiges} Tableau für unser Hilfsproblem vorliegen haben, können wir das Hilfsproblem wie gewohnt mit dem Simplexalgorithmus lösen. Als Starttableau dient dabei (\ref{eq:3:8}). Im ersten Iterationsschritt ist $x_2$ die Eingangs- und $x_6$ die Ausgangsvariable. Man erhält:
+\begin{align*}
+\begin{alignedat}{6}
+x_2 &\ = &\  1 &\ + &\ 0.75x_1 &\ + &\ 0.75x_3 &\ + &\ 0.25x_5 &\ - &\ 0.25x_6\ \\
+x_0 &\ = &\  2 &\ - &\ 0.25x_1 &\ - &\ 1.25x_3 &\ + &\ 0.25x_5 &\ + &\ 0.75x_6\ \\
+x_4 &\ = &\  7 &\ - &\  1.5x_1 &\ - &\  2.5x_3 &\ + &\  0.5x_5 &\ + &\  0.5x_6\ \\ \cline{1-11}
+w   &\ = &\ -2 &\ + &\ 0.25x_1 &\ + &\ 1.25x_3 &\ - &\ 0.25x_5 &\ - &\ 0.75x_6.
+\end{alignedat}
+\end{align*}\label{page:3:3}
+
+Nach der zweiten Iteration (Eingangsvariable $x_3$ und Ausgangsvariable $x_0$) erhält man:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:3:9}
+x_3 &\ = &\ 1.6 &\ - &\ 0.2x_1 &\ + &\ 0.2x_5 &\ + &\ 0.6x_6 &\ - &\ 0.8x_0\ \\
+x_2 &\ = &\ 2.2 &\ + &\ 0.6x_1 &\ + &\ 0.4x_5 &\ + &\ 0.2x_6 &\ - &\ 0.6x_0\ \\
+x_4 &\ = &\   3 &\ - &\    x_1 &\   &\        &\ - &\    x_6 &\ + &\   2x_0\ \\ \cline{1-11}
+w   &\ = &\     &\   &\        &\   &\        &\   &\        &\ - &\    x_0.
+\end{alignedat}
+\end{align}
+
+Das Tableau (\ref{eq:3:9}) ist optimal. Als optimale Lösung des Hilfsproblems erhält man:
+\[
+x_0=0,\quad
+x_1=0,\quad
+x_2=2.2,\quad
+x_3=1.6.
+\]
+
+Aufgrund von (ii) (Seite \pageref{page:3:1}) ergibt sich als zulässige Lösung für das ursprüngliche Problem:
+\[
+x_1=0,\quad
+x_2=2.2,\quad
+x_3=1.6.
+\]
+
+Wir haben somit herausgefunden, dass das ursprüngliche Problem eine zulässige Lösung besitzt. Noch viel nützlicher ist jedoch die folgende Feststellung.
+
+\begin{Definition}[Feststellung 2]
+Darüber hinaus kann das Tableau (\ref{eq:3:9}) auf einfache Art in ein zulässiges Tableau für unser ursprüngliches Problem verwandelt werden (\textit{Starttableau für unser ursprüngliches Problem!}\index{Starttableau}\index{Tableau!Start-}).
+\end{Definition}
+
+Hier ist das zulässige Tableau für unser ursprüngliches Problem, das sich aus (\ref{eq:3:9}) ergibt:
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:3:10}
+x_3 &\ = &\  1.6 &\ - &\ 0.2x_1 &\ + &\ 0.2x_5 &\ + &\ 0.6x_6 \\
+x_2 &\ = &\  2.2 &\ + &\ 0.6x_1 &\ + &\ 0.4x_5 &\ + &\ 0.2x_6 \\
+x_4 &\ = &\    3 &\ - &\    x_1 &\   &\        &\ - &\    x_6 \\ \cline{1-9}
+  z &\ = &\ -0.6 &\ + &\ 0.2x_1 &\ - &\ 0.2x_5 &\ + &\ 0.4x_6 
+\end{alignedat}
+\end{align}
+
+Die ersten drei Zeilen von (\ref{eq:3:10}) sind aus (\ref{eq:3:9}) dadurch entstanden, dass der letzte Summand (\enquote{derjenige, in dem $x_0$ vorkommt}) in jeder dieser Zeilen weggelassen wurde. Anders gesagt: Man betrachtet nur noch Lösungen von (\ref{eq:3:9}), für die $x_0=0$ gilt. Die letzte Zeile ergibt sich wie folgt: Für die ursprüngliche Zielfunktion $z$ gilt
+\[
+z = x_1 - x_2+x_3.
+\]
+
+Ersetzt man hierin $x_2$ und $x_3$ gemäß der ersten beiden Zeilen von (\ref{eq:3:10}), so erhält man die letzte Zeile von (\ref{eq:3:10}).
+
+Aufgrund von (i) und (ii) auf Seite \pageref{page:3:1} erkennt man, dass die beschriebene Methode zu einem zulässigen Tableau für das ursprüngliche Problem führt, das dann als Starttableau dienen kann. \textit{Klarerweise funktioniert das alles aber nur, wenn es einem wie im Beispiel gelingt, $x_0$ aus der Basis \enquote{rauszuschmeißen}}.
+
+Um dies zu erreichen, verfährt man bei der Lösung des Hilfsproblems nach der folgenden \textbf{Regel}:
+
+\begin{SKBox}
+Gibt es nach erfolgter Wahl der Eingangsvariablen mehrere geeignete Kandidaten für die Wahl der Ausgangsvariablen und ist $x_0$ unter diesen Kandidaten, so entscheide man sich für $x_0$.
+\end{SKBox}
+
+Dass es mehrere geeignete Kandidaten für die Wahl der Ausgangsvariablen gibt, bedeutet natürlich, dass es mehrere Basisvariablen gibt, die zur selben möglichst strengen oberen Schranke für die Eingangsvariable führen. Man beachte: Nachdem man (am Anfang) ein zulässiges Tableau hergestellt hat, löst man das Hilfsproblem wie gewohnt mit dem Simplexverfahren. Das bedeutet: \textit{Es dürfen nur noch zulässige Tableaus auftreten und nur wenn $x_0$ eine Basisvariable ist, die zu einer möglichst strengen Schranke für die Eingangsvariablen führt, kann man $x_0$ aus der Basis ausscheiden lassen.}
+
+Verfährt man nach der obigen Regel, so erhält man unmittelbar im Anschluss an die Anwendung dieser Regel ein Tableau, in dem folgende Situation vorliegt: $x_0$ ist nicht mehr in der Basis, weshalb für die zu diesem Tableau dazugehörige zulässige Basislösung $x_0=0$ gilt. Folglich gilt dann auch
+\[
+w = -x_0 = 0.
+\]
+
+\textit{Kommt die obige Regel zum Einsatz, gelingt es also, $x_0$ aus der Basis ausscheiden zu lassen, so erhält man eine zulässige Basislösung des Hilfsproblems, für die $x_0 = 0$ und folglich auch $w=0$ gilt}. Diese Lösung ist eine \textit{optimale} Lösung des Hilfsproblems, da die Zielfunktion $w =-x_0$ nicht größer als Null werden kann (wegen $x_0 \geq 0$). \textbf{In diesem Fall hat man erreicht, was man wollte}: Aus dem Schlusstableau für das Hilfsproblem kann man -- wie beschrieben -- ein \textit{Starttableau} für das ursprüngliche Problem gewinnen.
+
+Es bleibt der Fall zu betrachten, dass wir mit dem Hilfsproblem fertig sind, obwohl die obige Regel nicht zum Einsatz gekommen ist: \textit{Dann wäre das Hilfsproblem gelöst, aber $x_0$ wäre am Ende immer noch eine Basisvariable}.
+
+\textbf{Behauptung}. Liegt dieser Fall vor, so gilt am Ende $w<0$.
+
+\textbf{Beweis}. Angenommen $x_0$ wäre am Ende immer noch eine Basisvariable und es würde $w=0$ gelten. Wegen $w=-x_0$ würde am Ende dann auch $x_0=0$ gelten. Wir betrachten das vorletzte Tableau: Dieses war noch nicht optimal, d.h., es galt $w=-x_0<0$. Beim Übergang vom vorletzten zum letzten Tableau hat sich der Wert von $x_0$ also von einem positiven Wert zu $x_0=0$ geändert. Man erkennt unschwer, dass hieraus folgt: Bei diesem Übergang wäre auch $x_0$ als Ausgangsvariable infrage gekommen, aber $x_0$ wurde entgegen der obigen Regel nicht gewählt. Dieser Widerspruch beweist die Behauptung. $\Box$
+
+Man beachte: Dass man bei der Lösung des Hilfsproblems am Schluss den optimalen Zielfunktionswert $w<0$ erhält, bedeutet, dass es nur Lösungen des Hilfsproblems mit $x_0>0$ gibt (wegen $w=-x_0$). Das heißt (vgl. Feststellung 1): \textit{Das ursprüngliche Problem besitzt keine zulässige Lösung.}
+
+Das beschriebene Verfahren ist unter dem Namen \textit{Zweiphasen-Simplexverfahren}\index{Zweiphasen-Simplexverfahren}\index{Simplexverfahren!Zweiphasen-}\index{Verfahren!Zweiphasen-Simplex-} bekannt:
+\begin{itemize}
+\item Liegt ein \textit{LP-Problem in Standardform} vor, so stellt man in der \textit{ersten Phase} zunächst das Hilfsproblem auf und löst es wie beschrieben; falls dies mit $w<0$ endet, so besitzt das ursprüngliche Problem keine zulässige Lösung; falls am Ende der ersten Phase $w=0$ gilt, so erhält man ein \textit{Starttableau für die zweiten Phase}\footnote{Vgl. Seite \pageref{page:3:3}.}.
+
+\item In der \textit{zweiten Phase} löst man das ursprüngliche Problem.
+\end{itemize}
+
+Gilt $b_i \geq 0\ (i=1,\ldots,m)$, so entfällt die 1. Phase.
+
+Auf Grundlage des beschriebenen Verfahrens ergibt sich folgender Satz, den man \textit{Fundamentalsatz der Linearen Programmierung} nennt.
+
+\begin{Satz}[Satz (Fundamentalsatz der Linearen Programmierung)]
+\index{Fundamentalsatz der Linearen Programmierung}\index{Lineare Programmierung, Fundamentalsatz der}\index{Satz!Fundamental- der Linearen Programmierung}\index{Programmierung, Fundamentalsatz der Linearen}
+Jedes LP-Problem in Standardform besitzt die folgenden Eigenschaften:
+\begin{enumerate}[(i)]
+\item Falls es eine zulässige Lösung gibt, so gibt es auch eine zulässige Basislösung.
+\item Falls es eine optimale Lösung gibt, so gibt es auch eine optimale Basislösung.
+\item Falls es keine optimale Lösung gibt, so ist das Problem entweder unlösbar oder unbeschränkt.
+\end{enumerate}
+\end{Satz}
+
+\textbf{Beweis}\index{Beweis!des Fundamentalsatzes der Linearen Programmierung}\index{Fundamentalsatz der Linearen Programmierung!Beweis}. In der ersten Phase des Zweiphasen-Simplexverfahrens wird entweder festgestellt, dass das Problem unlösbar ist, oder es wird eine zulässige Basislösung gefunden. Also gilt (i). In der zweiten Phase wird entweder festgestellt, dass das Problem unbeschränkt ist, oder man erhält eine optimale Basislösung. Also gelten (ii) und (iii). $\Box$
+
+In manchen Lehrbüchern (vgl. etwa Cormen et al) wird auch die folgende Aussage als \enquote{Fundamentalsatz der Linearen Programmierung} bezeichnet.
+
+\begin{Satz}[Satz]
+Für jedes LP-Problem $L$ in Standardform gilt genau eine der folgenden drei Aussagen:
+\begin{enumerate}[(i)]
+\item $L$ besitzt eine optimale Lösung.
+\item $L$ ist unlösbar.
+\item $L$ ist unbeschränkt.
+\end{enumerate}
+\end{Satz}
+
+\textbf{Beweis}. Die erste Phase des Zweiphasen-Simplexverfahrens führt entweder zu der Feststellung, dass $L$ unlösbar ist, oder man erhält ein Starttableau für die zweite Phase. In der zweiten Phase wird entweder festgestellt, dass das Problem unbeschränkt ist, oder man erhält eine optimale Lösung. $\Box$
+
+\pagebreak
+Die Aussage dieses Satzes lässt sich wie folgt darstellen:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(0,0)(16,6.5)
+\footnotesize
+
+\psframe(5,5)(10,6.5) \uput{0.90}[90](7.5,5){LP-Problem in} \uput{0.35}[90](7.5,5){Standardform}
+\psframe(2,2.5)(7,4)  \uput{0.65}[90](4.5,2.5){unlösbar}
+\psframe(8,2.5)(13,4) \uput{0.90}[90](10.5,2.5){Es existiert eine} \uput{0.35}[90](10.5,2.5){zulässige Lösung}
+\psframe(5,0)(10,1.5) \uput{0.65}[90](7.5,0){unbeschränkt}
+\psframe(11,0)(16,1.5) \uput{0.90}[90](13.5,0){Es existiert eine} \uput{0.35}[90](13.5,0){optimale Lösung}
+
+\psline(7.5,5)( 4.5,4)
+\psline(7.5,5)(10.5,4)
+\psline(10.5,2.5)( 7.5,1.5)
+\psline(10.5,2.5)(13.5,1.5)
+
+
+
+
+
+\small
+\end{pspicture*}
+\end{center}

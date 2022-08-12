@@ -1,0 +1,39 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.1)(5.5,2.5)
+\footnotesize
+
+\pscircle(1,1){1}
+\pscircle(4,1){1}
+
+\cnode*(1.4,1.4){3pt}{X}
+\cnode*(0.5,0.75){3pt}{S}
+\cnode*(3.6,1.4){3pt}{Y} 
+\cnode*(4.5,0.75){3pt}{T}
+
+\ncarc[arcangle=25]{->}{X}{Y}
+\psbcurve(0.5,0.75)(0.75,0.75)(1.25,0.5)(1.4,1.4)
+
+
+\uput{0.2}[180](0.5,0.75){$s$}
+\uput{0.2}[  0](4.5,0.75){$t$}
+\uput{0.2}[180](1.4,1.4){$x$}
+\uput{0.2}[  0](3.6,1.4){$y$}
+\uput{0.2}[ 90](1,2){$S$}
+\uput{0.2}[ 90](4,2){$T$}
+\uput{0.2}[270](1,0.65){$P_x$}
+
+\small
+\end{pspicture}
+\end{document}

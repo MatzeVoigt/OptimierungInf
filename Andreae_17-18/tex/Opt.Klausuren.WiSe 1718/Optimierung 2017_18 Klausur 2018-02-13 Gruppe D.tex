@@ -1,0 +1,315 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[greek,ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{eurosym}
+\usepackage{pst-all}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Klausur zur Vorlesung: Optimierung für Studierende der Informatik},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+%\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Klausur zur Vorlesung \enquote{Optimierung für Studierende der Informatik}}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{13. Februar 2018, 10:00 bis 12:00 Uhr}
+
+\vspace{0.5cm}
+
+\textbf{Gruppe D}
+
+\vspace{0.25cm}
+\end{center}
+
+%\small
+
+Insgesamt sind 50 Punkte zu erreichen. Es genügt in der Regel nicht, nur das Ergebnis einer Rechnung bzw. die Antwort auf eine Frage anzugeben, sondern es sollte auch der Rechenweg ersichtlich sein bzw. eine kurze Begründung für die Antwort gegeben werden. Viel Erfolg!
+
+
+% ----------------------------------------------------------------------
+% Aufgabe 1
+\bigskip
+\textbf{Aufgabe 1} (\textit{10 Punkte})
+\medskip
+
+\begin{enumerate}[a)]
+% Aufgabe 1a
+\item Wir betrachten das folgende LP-Problem (P):
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & -x_1 &\ + &\ 2x_2 &\ + &\ x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  6x_1 &\ - &\ 7x_2 &\ + &\ x_3 &\ =    &\ 5 \\
+&& -3x_1 &\ + &\ 4x_2 &\ - &\ x_3 &\ \leq &\ 8 \\
+&& & & & & \llap{$x_1, x_3$} &\ \geq &\ 0 
+\end{alignedat}
+\end{align*}
+
+\begin{enumerate}[(i)]
+	\item Bilden Sie das Duale von (P). (\textit{2 Punkte})
+	\item Formen Sie (P) in Standardform um. (\textit{2 Punkte})
+\end{enumerate}
+
+% Aufgabe 1b
+\item Lösen Sie das folgende LP-Problem mit dem Standardsimplexverfahren. Am Ende jeder Iteration ist das neue Tableau in übersichtlicher Form anzugeben. Als Pivotierungsregel ist (wie üblich) die Regel vom größten Koeffizienten zu verwenden. (\textit{4 Punkte})
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & x_1 &\ - &\ 3x_2 &\ + &\ 7x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -2x_1 &\ + &\ 3x_2 &\ - &\ 2x_3 &\ \leq &\ 2 \\
+&&   x_1 &\   &\      &\ + &\ 3x_3 &\ \leq &\ 9 \\
+&&  -x_1 &\ - &\ 5x_2 &\ + &\  x_3 &\ \leq &\ 4 \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\  0 
+\end{alignedat}
+\end{align*}
+
+% Aufgabe 1c
+\item Das LP-Problem aus a) sei mit (P) bezeichnet. Geben Sie das zu (P) duale Problem (D) an und lesen Sie eine optimale Lösung von (D) aus dem Schlusstableau für (P) ab. (\textit{2 Punkte})
+
+\end{enumerate}
+
+
+
+% ----------------------------------------------------------------------
+% Aufgabe 2
+\bigskip
+\textbf{Aufgabe 2} (\textit{10 Punkte})
+\medskip
+
+\begin{enumerate}[a)]
+% Aufgabe 2a
+\item Gegeben sei ein LP-Problem (P) in Standardform mit Variablen $x_1, x_2, x_3$. Nehmen Sie an, dass man bei der Lösung von (P) mit dem Standardsimplexverfahren nach einigen Iterationen das folgende Tableau erhalten hat:
+\begin{align*}
+\begin{alignedat}{5}
+x_6 &\ = &\  \frac{1}{2} &\ - &\ \frac{3}{2}x_1 &\   &\                &\ + &\            x_4 \\
+x_5 &\ = &\            3 &\ + &\           2x_1 &\ + &\            x_2 &\   &\ \\
+x_3 &\ = &\            2 &\ - &\ \frac{1}{4}x_1 &\ + &\ \frac{1}{4}x_2 &\ - &\ \frac{5}{4}x_4 \\ \cline{1-9}
+  z &\ = &\           -9 &\ - &\            x_1 &\ + &\ \frac{1}{3}x_2 &\ - &\ \frac{3}{4}x_4
+\end{alignedat}
+\end{align*}
+
+Was bedeutet dies für die Lösung von (P)? Was bedeutet dies für das dazugehörige duale Problem (D)? (Kurze Antworten ohne Erläuterungen genügen.) \textit{(2 Punkte)}
+
+% Aufgabe 2b
+\item Bestimmen Sie für das folgende LP-Problem ein zulässiges Starttableau bzw. stellen Sie fest, dass das Problem unlösbar ist. Erreichen Sie dies, indem Sie die 1. Phase des Zweiphasen-Simplexverfahrens durchführen. (Auch hier gilt: Tableaus sind immer in übersichtlicher Form anzugeben und in Situationen, in denen dies infrage kommt, ist die Regel vom größten Koeffizienten anzuwenden.) (\textit{8 Punkte})
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & 4x_1 &\ - &\ 3x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& -4x_1 &\ + &\            x_2 &\ \leq &\ 7 \\
+&&  -x_1 &\ - &\ \frac{1}{2}x_2 &\ \leq &\ -6 \\
+&& & & \llap{$x_1,x_2$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+
+
+% ----------------------------------------------------------------------
+% Aufgabe 3
+\bigskip
+\textbf{Aufgabe 3} (\textit{10 Punkte})
+\medskip
+
+\begin{enumerate}[a)]
+% Aufgabe 3a
+\item Wir betrachten das Rucksackproblem in der Variante, in der jeder Gegenstand nur einmal vorhanden ist. Es seien die folgenden Eingangsdaten gegeben:
+\[
+\begin{array}{c||c|c|c|c|c}
+\text{Item}   & 1 & 2 & 3 & 4 & 5  \\ \hline\hline
+\text{Weight} & 5 & 1 & 2 & 5 & 4  \\ \hline
+\text{Value}  & 4 & 1 & 1 & 3 & 2 
+\end{array}
+\]
+
+Mit dem Rucksack kann eine Last von maximal $W = 11$ transportiert werden.
+
+\begin{enumerate}[(i)]
+	% Aufgabe 3a (i)
+	\item Bestimmen Sie den Wert einer optimalen Lösung mithilfe Dynamischer Programmierung. (Er\-läu\-te\-rung: Es ist eine Tabelle anzulegen und der Wert einer optimalen Lösung abzulesen.) (\textit{3 Punkte})
+	
+	% Aufgabe 3a (ii)
+	\item Ermitteln Sie anhand der angelegten Tabelle, welche Gegenstände eine optimale Rucksackfüllung umfasst. Unterstreichen Sie diejenigen Werte in der Tabelle, die bei der Berechnung einer optimalen Rucksackfüllung eine Rolle spielen. (\textit{1 Punkt})
+\end{enumerate}
+
+
+% Aufgabe 3b
+\item Mit $m(G)$ bezeichnen wir die Matchingzahl eines ungerichteten Graphen $G$, und $c(G)$ bezeichne die Knotenüberdeckungszahl von $G$. Gibt es Graphen, für die $c(G) = m(G)+3$ gilt? Falls ja, so gebe man einen solchen Graphen an. Falls nein, so begründe man kurz, weshalb es keinen solchen Graphen geben kann. (\textit{2 Punkte})
+
+
+% Aufgabe 3c
+\item Bestimmen Sie für den nachfolgend angegebenen bipartiten Graphen ein Matching mit maximaler Kantenzahl sowie eine minimale Knotenüberdeckung. Verwenden Sie hierzu den Algorithmus von Edmonds und Karp, wobei die folgende Regel zu beachten ist: Gibt es mehrere Kandidaten für den nächsten zu markierenden Knoten, so sind Knoten mit kleinerem Index vorzuziehen. Geht man wie beschrieben vor, so erhält man zunächst ein Matching $M_1$ mit genau einer Kante, danach ein Matching $M_2$ mit genau zwei Kanten, anschließend ein Matching $M_3$ mit genau drei Kanten, danach ein $M_4$ mit genau 4 Kanten und schließlich eine minimale Knotenüberdeckung $U$.
+
+Geben Sie $M_1$, $M_2$, $M_3$, $M_4$ und $U$ an! Geben Sie ebenfalls den augmentierenden Pfad $P$ an, mit dessen Hilfe $M_3$ zu $M_4$ verbessert wurde! (\textit{4 Punkte})
+
+\begin{center}
+	\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+	\begin{pspicture}(-0.5,-0.5)(3.5,2.5)
+	
+	\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+	\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+	\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+	\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+	\cnode*(4,2){3pt}{X5} \uput{0.25}[ 90](4,2){$x_5$}
+	\cnode*(0,0){3pt}{Y1} \uput{0.25}[270](0,0){$y_1$}
+	\cnode*(1,0){3pt}{Y2} \uput{0.25}[270](1,0){$y_2$}
+	\cnode*(2,0){3pt}{Y3} \uput{0.25}[270](2,0){$y_3$}
+	\cnode*(3,0){3pt}{Y4} \uput{0.25}[270](3,0){$y_4$}
+	
+	\ncline{-}{X1}{Y2}
+	\ncline{-}{X1}{Y3}
+	\ncline{-}{X2}{Y1}
+	\ncline{-}{X2}{Y2}
+	\ncline{-}{X3}{Y1}
+	\ncline{-}{X3}{Y4}
+	\ncline{-}{X4}{Y4}
+	\ncline{-}{X5}{Y1}
+	\ncline{-}{X5}{Y4}
+	
+	\end{pspicture}
+\end{center}
+
+\end{enumerate}
+
+
+% ----------------------------------------------------------------------
+% Aufgabe 4
+\pagebreak
+\textbf{Aufgabe 4} (\textit{10 Punkte})
+\medskip
+
+In dieser Aufgabe werden beliebige Graphen betrachtet -- nicht ausschließlich bipartite Graphen.
+
+\begin{enumerate}[a)]
+	% Aufgabe 4a
+	\item Gegeben sei eine Menge $S = \bigl\{s_1, \ldots, s_n \bigr\}$ und eine Kollektion $M_1, \ldots , M_t$ von 4-elementigen Teilmengen von $S$. Außerdem besitze jedes Element $s_i$ ein Gewicht $w_i \geq 0$ mit $w_i \in \mathbb{Q}$ ($i=1,\ldots,n$).
+	
+	Zur Erinnerung: Eine Teilmenge $H \subseteq S$ wird ein \textit{Hitting Set} genannt, falls $H \cap M_i \neq \emptyset$ für alle $i = 1, \ldots, t$ gilt. Gesucht ist ein Hitting Set $H$, dessen Gewicht so klein wie möglich ist. Anders gesagt: Die Summe
+	\[
+	\sum\limits_{s_i \in H}{w_i}
+	\]
+	soll so klein wie möglich sein.
+	
+	\begin{enumerate}[(i)]
+		% Aufgabe 4a (i)
+		\item Formulieren Sie dieses Problem als ein ganzzahliges lineares Programmierungsproblem, das Sie (ILP)
+		nennen. (\textit{2 Punkte})
+		
+		% Aufgabe 4a (ii)
+		\item Wie lautet die LP-Relaxation (LP) dieses Problems? (\textit{1 Punkt})
+		
+		% Aufhabe 4a (iii)
+		\item Geben Sie basierend auf (LP) einen (polynomiellen) Approximationsalgorithmus für das beschriebene Hitting Set Problem an, bei dem es sich um einen 4-Approximations\-al\-go\-rith\-mus handelt. (\textit{2 Punkte})
+		
+		\textbf{Anmerkung}: Es soll nicht irgendein Algorithmus erfunden werden, sondern der zu beschreibende Algorithmus soll LP-basiert sein. Genauer: Die LP-Relaxation (LP) soll zum Einsatz kommen. Der Nachweis, dass es sich bei dem beschriebenen Algorithmus tat\-säch\-lich um einen 4-Approximationsalgorithmus handelt, braucht \textit{nicht} gegeben zu werden.
+	\end{enumerate}
+
+	% Aufgabe 4b
+	\item Beschreiben Sie einen 2-Approximationsalgorithmus für das (ungewichtete) Knoten\-über\-deck\-ungs\-problem und weisen Sie nach, dass es sich bei dem von Ihnen beschriebenen Algorithmus tatsächlich um einen 2-Approximationsalgorithmus handelt. (\textit{3 Punkte})
+	
+
+
+% Aufgabe 4c
+\item Gibt es einen bipartiten Graphen $G$, der ein nicht erweiterbares Matching $M$ mit $|M|=3$ enthält und für den außerdem $m(G)=6$ gilt? (Mit $m(G)$ sei die Matchingzahl von $G$ bezeichnet.) Falls ja, so gebe man einen derartigen Graphen an. Falls nein, so begründe man kurz, weshalb es einen solchen Graphen nicht geben kann. (\textit{2 Punkte})
+	
+\end{enumerate}
+
+
+
+% ----------------------------------------------------------------------
+% Aufgabe 5
+\textbf{Aufgabe 5} (\textit{10 Punkte})
+\medskip
+
+\begin{enumerate}[a)]
+	% Aufgabe 5a
+	\item Betrachtet werde das folgende LP-Problem:
+	\begin{align*}
+	\begin{alignedat}{5}
+	& \text{maximiere } & 4x_1 &\ + &\ 5x_2 &\ + &\ 2x_3 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+	&& 2x_1 &\ + &\  x_2 &\ + &\  x_3 &\ \leq &\ 4\ \\
+	&& 3x_1 &\ + &\ 2x_2 &\   &\      &\ \leq &\ 5\ \\
+	&& 3x_1 &\ + &\ 2x_2 &\ + &\ 2x_3 &\ \leq &\ 7\ \\
+	&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0. 
+	\end{alignedat}
+	\end{align*}
+	
+	Löst man dieses LP-Problem mit dem revidierten Simplexverfahren, so erhält man am Ende der 1. Iteration die Basismatrix
+	\[
+	B = \bordermatrix{ & x_4 & x_2 & x_6 \cr & 1 & 1 & 0 \cr & 0 & 2 & 0 \cr & 0 & 2 & 1}.
+	\]
+	
+	\begin{enumerate}[(i)]
+		% Aufgabe 4a (i)
+		\item In der 2. Iteration ist zunächst das Gleichungssystem $y^TB = c_B^T$ zu lösen. Führen Sie dies durch! (\textit{2 Punkte})
+		
+		% Aufgabe 4a (ii)
+		\item Führen Sie auch den nächsten Schritt der 2. Iteration des revidierten Simplexverfahrens aus: Bestimmen Sie, welche Spalten von $A_N$ als Eingangsspalte $a$ infrage kommen. (Möglicherweise finden Sie den folgenden Hinweis zu (ii) nützlich: In der Matrixdarstellung eines Tableaus lautet die letzte Zeile:
+		\[
+		z = c_B^TB^{-1}b + \left( c_N^T - c_B^TB^{-1}A_N \right) x_N.
+		\]
+		
+		Außerdem gilt $y^T = c_B^TB^{-1}$.) (\textit{2 Punkte})
+	\end{enumerate}
+	
+	
+	% Aufgabe 5b
+	\item Es sei $G$ ein gerichteter Graph mit 7 Knoten. Für alle Kanten seien Kosten gegeben. Es sei bekannt, dass $G$ keine negativen Kreise enthält. Die Knoten seien mit $v_1,\ldots,v_7$ bezeichnet. Es werde der Algorithmus von Floyd und Warshall auf $G$ angewendet. Dabei gehen wir wie üblich von der Adjazenzmatrix $D_0$ aus, wobei die Knoten in der Reihenfolge $v_1,\ldots,v_7$ den Zeilen bzw. Spalten entsprechen sollen. Bekanntlich erzeugt der Algorithmus von Floyd und Warshall nacheinander Matrizen $D_1,\ldots,D_7$. Wir nehmen an, dass in der Matrix $D_3$ in der Zeile, die zu $v_5$ gehört, der letzte Eintrag gleich $10$ ist. Was gibt dieser Eintrag an? (\textit{3 Punkte})
+	
+	% Aufgabe 5c
+	\item Es sei $G$ ein gerichteter Graph mit Knotenmenge $V(G)=\bigl\{ s,a,b,c,d,e \bigr\}$. Für alle Kanten seien Kosten gegeben. Es sei bekannt, dass $G$ keine negativen Kreise enthält. Es werde der Algorithmus von Bellman/Ford auf $G$ angewendet, wobei $s$ der Startknoten ist und wie im Skript beschrieben vorgegangen wird. Es wird also eine Tabelle der folgenden Art angelegt:
+	
+	\begin{center}
+		\psset{unit=0.67cm,linewidth=0.8pt,nodesep=0.5pt}
+		\begin{pspicture}(-1,-0.5)(6,7)
+		\small
+		
+		% rows
+		\psline(0,0)(6,0) \psline(0,2)(6,2) \psline(0,4)(6,4) \psline(0,6)(6,6) 
+		\psline(0,1)(6,1) \psline(0,3)(6,3) \psline(0,5)(6,5) 
+		% columns
+		\psline(0,0)(0,6) \psline(2,0)(2,6) \psline(4,0)(4,6) \psline(6,0)(6,6) 
+		\psline(1,0)(1,6) \psline(3,0)(3,6) \psline(5,0)(5,6) 
+		% cell
+		\uput{0.25}[90]( 4.5,3){$-6b$}
+		% outer labels
+		\uput{0.25}[180](0,5.5){$0$} \uput{0.25}[ 90](0.5,6){$s$}
+		\uput{0.25}[180](0,4.5){$1$} \uput{0.25}[ 90](1.5,6){$a$}
+		\uput{0.25}[180](0,3.5){$2$} \uput{0.25}[ 90](2.5,6){$b$}
+		\uput{0.25}[180](0,2.5){$3$} \uput{0.25}[ 90](3.5,6){$c$}
+		\uput{0.25}[180](0,1.5){$4$} \uput{0.25}[ 90](4.5,6){$d$}
+		\uput{0.25}[180](0,0.5){$5$} \uput{0.25}[ 90](5.5,6){$e$}
+		
+		\small
+		\end{pspicture}
+	\end{center}
+	
+	Hier ist nur ein einziger Eintrag der Tabelle wiedergegeben. Was gibt dieser Eintrag an? (\textit{3 Punkte})
+	
+\end{enumerate}
+
+\end{document}

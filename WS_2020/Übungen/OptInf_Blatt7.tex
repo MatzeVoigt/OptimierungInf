@@ -1,0 +1,49 @@
+\def\nr{7. Aufgabenblatt}
+\def\kopf{\\\hfill\normalsize\mdseries}
+\documentclass[11pt,a4paper,fleqn]{scrartcl}
+\usepackage{eurosym}
+\input{header_OptInf}
+
+\subsection*{Präsenzaufgaben am 04./05.01.2021}
+
+\Aufgabe[ (revidierter Simplexalgorithmus)]{P1}
+Lösen Sie das folgende LP-Problem mit dem revidierten Simplexverfahren:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & x_1 &\  &\  &\ - &\ 2x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -x_1 &\ - &\ 2x_2 &\ + &\ 3x_3 &\ \leq &\ 2,\ \\
+&& 2x_1 &\ + &\  x_2 &\   &\      &\ \leq &\ 5,\ \\
+&&  x_1 &\ - &\  x_2 &\ - &\ 3x_3 &\ \leq &\ 4,\ \\
+&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+
+\subsection*{Hausaufgaben bis zum 13.01.2021 (12:00 Uhr)}
+\emph{Bitte reichen Sie Ihre Hausaufgaben in festen Zweier- oder Dreiergruppen bei Moodle ein. Bitte laden Sie ausschließlich \textbf{PDF-Dokumente} hoch, andernfalls können Ihre Hausaufgaben nicht korrigiert werden.}
+
+\Aufgabe[ (revidierter Simplexalgorithmus, 10 Punkte)]{H1}
+Lösen Sie die folgenden LP-Problem mit dem revidierten Simplexverfahren:
+\begin{enumerate}[a)]
+\item \begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  x_1 &\ + &\     &\ + &\  x_3 &\ \leq &\  4,\ \\
+&&      &\   &\ x_2 &\ + &\  x_3 &\ \leq &\  8,\ \\
+&&  x_1 &\ - &\ x_2 &\   &\      &\ \leq &\  6,\ \\
+&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 4x_1 &\ - &\ 3x_2 &\ + &\ 3x_3 &\ - &\ 6x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&&  x_1 &\ - &\ 3x_2 &\ - &\ x_3 &\ - &\ 2x_4 &\ \leq &\  2,\ \\
+&& 2x_1 &\ + &\ 2x_2 &\ + &\ x_3 &\ + &\  x_4 &\ \leq &\  2,\ \\
+&&&&&&&& \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+\end{document}

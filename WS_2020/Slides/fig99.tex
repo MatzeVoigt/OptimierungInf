@@ -1,0 +1,39 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color,amsmath,amssymb}
+\DeclareMathOperator{\ssum}{Subset-Sum}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.6,-0.8)(4.6,4.8)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(4,4){3pt}{A} \uput{0.2}[  0](4,4){$a$}
+\cnode*(4,2){3pt}{B} \uput{0.2}[  0](4,2){$b$}
+\cnode*(4,0){3pt}{C} \uput{0.2}[  0](4,0){$c$}
+\cnode*(2,3){3pt}{D} \uput{0.2}[270](2,3){$d$}
+\cnode*(2,1){3pt}{E} \uput{0.2}[270](2,1){$e$}
+
+\ncarc[arcangle=30]{->}{S}{A}  \uput{0.05}[135](2.0,3.7){$-3$}
+\ncarc[arcangle=330]{->}{S}{C} \uput{0.05}[225](2.0,0.3){$3$}
+\ncline{->}{S}{D} \uput{0.10}[ 90](1.0,2.5){$4$}
+\ncline{->}{S}{E} \uput{0.10}[270](1.0,1.5){$2$}
+\ncline{->}{A}{D} \uput{0.10}[ 90](3.0,3.5){$6$}
+\ncline{->}{B}{A} \uput{0.10}[  0](4.0,3.0){$-4$}
+\ncline{->}{B}{C} \uput{0.10}[  0](4.0,1.0){$8$}
+\ncline{->}{C}{E} \uput{0.10}[270](3.0,0.5){$-3$}
+\ncline{->}{D}{B} \uput{0.10}[ 90](3.0,2.5){$-1$}
+\ncline{->}{E}{B} \uput{0.10}[270](3.0,1.5){$-2$}
+
+\small
+\end{pspicture}
+\end{document}

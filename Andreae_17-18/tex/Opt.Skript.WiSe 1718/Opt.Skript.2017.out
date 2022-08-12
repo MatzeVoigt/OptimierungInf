@@ -1,0 +1,105 @@
+\BOOKMARK [0][-]{chapter.1}{Einf\374hrung}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Ein Di\344tproblem}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Bemerkungen zur Grafischen Methode}{chapter.1}% 3
+\BOOKMARK [0][-]{chapter.2}{Wie das Simplexverfahren funktioniert}{}% 4
+\BOOKMARK [0][-]{chapter.3}{Schwierigkeiten und Hindernisse \205 und wie man sie \374berwindet}{}% 5
+\BOOKMARK [1][-]{section.3.1}{Initialisierung \(Vorbemerkungen\)}{chapter.3}% 6
+\BOOKMARK [1][-]{section.3.2}{Iteration}{chapter.3}% 7
+\BOOKMARK [2][-]{subsection.3.2.1}{Wahl der Eingangsvariablen}{section.3.2}% 8
+\BOOKMARK [2][-]{subsection.3.2.2}{Wahl der Ausgangsvariablen}{section.3.2}% 9
+\BOOKMARK [2][-]{subsection.3.2.3}{Entartung}{section.3.2}% 10
+\BOOKMARK [1][-]{section.3.3}{Terminierung}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.4}{Das Zweiphasen-Simplexverfahren}{chapter.3}% 12
+\BOOKMARK [0][-]{chapter.4}{Verbindungen zur Geometrie}{}% 13
+\BOOKMARK [1][-]{section.4.1}{Polyeder}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.2}{Geometrische Interpretation des Simplexverfahrens}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.3}{Konvexe Mengen}{chapter.4}% 16
+\BOOKMARK [1][-]{section.4.4}{Eine Bemerkung zu konvexen Funktionen}{chapter.4}% 17
+\BOOKMARK [1][-]{section.4.5}{Der Begriff der konvexen H\374lle}{chapter.4}% 18
+\BOOKMARK [1][-]{section.4.6}{Konvexe Kegel}{chapter.4}% 19
+\BOOKMARK [0][-]{chapter.5}{Wie schnell ist das Simplexverfahren?}{}% 20
+\BOOKMARK [1][-]{section.5.1}{Beispiele von Klee und Minty}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.2}{Alternative Pivotierungsregeln}{chapter.5}% 22
+\BOOKMARK [0][-]{chapter.6}{Einige Anwendungsbeispiele}{}% 23
+\BOOKMARK [1][-]{section.6.1}{Das allgemeine Di\344tproblem}{chapter.6}% 24
+\BOOKMARK [2][-]{subsection.6.1.1}{Ein Beispiel aus der Politik}{section.6.1}% 25
+\BOOKMARK [2][-]{subsection.6.1.2}{Weitere Beispiele}{section.6.1}% 26
+\BOOKMARK [1][-]{section.6.2}{Energieflussproblem}{chapter.6}% 27
+\BOOKMARK [1][-]{section.6.3}{Das Rucksackproblem \(Knapsack Problem\)}{chapter.6}% 28
+\BOOKMARK [1][-]{section.6.4}{Cutting Paper Rolls}{chapter.6}% 29
+\BOOKMARK [0][-]{chapter.7}{Dualit\344t}{}% 30
+\BOOKMARK [1][-]{section.7.1}{Motivation: obere Schranken f\374r den optimalen Wert}{chapter.7}% 31
+\BOOKMARK [1][-]{section.7.2}{Das duale Problem}{chapter.7}% 32
+\BOOKMARK [1][-]{section.7.3}{Der Dualit\344tssatz und sein Beweis}{chapter.7}% 33
+\BOOKMARK [1][-]{section.7.4}{Wie die komplement\344ren Schlupfbedingungen eingesetzt werden k\366nnen, um auf Optimalit\344t zu testen}{chapter.7}% 34
+\BOOKMARK [1][-]{section.7.5}{Zur \366konomischen Bedeutung der dualen Variablen}{chapter.7}% 35
+\BOOKMARK [1][-]{section.7.6}{Dualit\344t im Fall eines allgemeinen LP-Problems}{chapter.7}% 36
+\BOOKMARK [1][-]{section.7.7}{Das Lemma von Farkas}{chapter.7}% 37
+\BOOKMARK [0][-]{chapter.8}{Die revidierte Simplexmethode}{}% 38
+\BOOKMARK [1][-]{section.8.1}{Matrixdarstellung}{chapter.8}% 39
+\BOOKMARK [1][-]{section.8.2}{Beschreibung des revidierten Simplexverfahrens anhand eines Beispiels}{chapter.8}% 40
+\BOOKMARK [1][-]{section.8.3}{Eine Iteration im revidierten Simplexverfahren}{chapter.8}% 41
+\BOOKMARK [1][-]{section.8.4}{Vergleich der Standardsimplexmethode mit dem revidierten Verfahren}{chapter.8}% 42
+\BOOKMARK [1][-]{section.8.5}{Anhang zu Abschnitt 8}{chapter.8}% 43
+\BOOKMARK [0][-]{chapter.9}{Maximale Fl\374sse und minimale Schnitte in Netzwerken}{}% 44
+\BOOKMARK [1][-]{section.9.1}{Fl\374sse in Netzwerken}{chapter.9}% 45
+\BOOKMARK [1][-]{section.9.2}{Schnitte}{chapter.9}% 46
+\BOOKMARK [1][-]{section.9.3}{Das Max-Flow Min-Cut Theorem und der Labelling-Algorithmus von Ford und Fulkerson}{chapter.9}% 47
+\BOOKMARK [1][-]{section.9.4}{Der Algorithmus von Edmonds und Karp}{chapter.9}% 48
+\BOOKMARK [1][-]{section.9.5}{Der Begriff des Residualgraphen}{chapter.9}% 49
+\BOOKMARK [0][-]{chapter.10}{Max-Flow und Min-Cut als LP-Probleme}{}% 50
+\BOOKMARK [1][-]{section.10.1}{Ein einf\374hrendes Beispiel}{chapter.10}% 51
+\BOOKMARK [1][-]{section.10.2}{Das primale Problem \(Max-Flow\)}{chapter.10}% 52
+\BOOKMARK [1][-]{section.10.3}{Das duale Problem \(Min-Cut\)}{chapter.10}% 53
+\BOOKMARK [0][-]{chapter.11}{Matchings und Knoten\374berdeckungen in bipartiten Graphen}{}% 54
+\BOOKMARK [1][-]{section.11.1}{Grundbegriffe}{chapter.11}% 55
+\BOOKMARK [1][-]{section.11.2}{Ein Algorithmus zur L\366sung des Matching-Problems f\374r bipartite Graphen}{chapter.11}% 56
+\BOOKMARK [2][-]{subsection.11.2.1}{Das Problem}{section.11.2}% 57
+\BOOKMARK [2][-]{subsection.11.2.2}{Der Algorithmus}{section.11.2}% 58
+\BOOKMARK [2][-]{subsection.11.2.3}{Analyse des Algorithmus}{section.11.2}% 59
+\BOOKMARK [2][-]{subsection.11.2.4}{Bemerkung zur Komplexit\344t}{section.11.2}% 60
+\BOOKMARK [1][-]{section.11.3}{Alternierende und augmentierende Pfade}{chapter.11}% 61
+\BOOKMARK [1][-]{section.11.4}{Knoten\374berdeckungen in bipartiten Graphen: der Satz von K\366nig}{chapter.11}% 62
+\BOOKMARK [1][-]{section.11.5}{Zwei Beispiele}{chapter.11}% 63
+\BOOKMARK [1][-]{section.11.6}{Der Heiratssatz}{chapter.11}% 64
+\BOOKMARK [1][-]{section.11.7}{Knoten\374berdeckungen in beliebigen Graphen}{chapter.11}% 65
+\BOOKMARK [2][-]{subsection.11.7.1}{Ein 2-Approximationsalgorithmus f\374r das Knoten\374berdeckungsproblem}{section.11.7}% 66
+\BOOKMARK [2][-]{subsection.11.7.2}{Gewichtete Knoten\374berdeckungen}{section.11.7}% 67
+\BOOKMARK [2][-]{subsection.11.7.3}{Relaxieren und Runden: Ein 2-Approximationsalgorithmus f\374r das gewichtete Knoten\374berdeckungsproblem}{section.11.7}% 68
+\BOOKMARK [0][-]{chapter.12}{Greedy-Algorithmen oder: Is Greed Good? Does Greed work?}{}% 69
+\BOOKMARK [1][-]{section.12.1}{Intervall-Scheduling: The Greedy Algorithm Stays Ahead}{chapter.12}% 70
+\BOOKMARK [2][-]{subsection.12.1.1}{Das Intervall-Scheduling-Problem}{section.12.1}% 71
+\BOOKMARK [2][-]{subsection.12.1.2}{Entwurf eines Greedy-Algorithmus}{section.12.1}% 72
+\BOOKMARK [1][-]{section.12.2}{Ein Algorithmus, der auf einem Austauschargument basiert}{chapter.12}% 73
+\BOOKMARK [1][-]{section.12.3}{K\374rzeste Pfade in Graphen}{chapter.12}% 74
+\BOOKMARK [1][-]{section.12.4}{Minimale aufspannende B\344ume}{chapter.12}% 75
+\BOOKMARK [2][-]{subsection.12.4.1}{Algorithmen f\374r das Minimum Spanning Tree Problem}{section.12.4}% 76
+\BOOKMARK [2][-]{subsection.12.4.2}{Analyse der Algorithmen}{section.12.4}% 77
+\BOOKMARK [1][-]{section.12.5}{Die Union-Find-Datenstruktur}{chapter.12}% 78
+\BOOKMARK [2][-]{subsection.12.5.1}{Das Problem}{section.12.5}% 79
+\BOOKMARK [2][-]{subsection.12.5.2}{Eine einfache Datenstruktur f\374r das Union-Find-Problem}{section.12.5}% 80
+\BOOKMARK [2][-]{subsection.12.5.3}{Eine bessere Datenstruktur f\374r Union-Find}{section.12.5}% 81
+\BOOKMARK [2][-]{subsection.12.5.4}{Weitere Verbesserungen durch Pfadverk\374rzung \(path compression\)}{section.12.5}% 82
+\BOOKMARK [1][-]{section.12.6}{Die Laufzeit der Algorithmen von Kruskal und Prim}{chapter.12}% 83
+\BOOKMARK [2][-]{subsection.12.6.1}{Zur Laufzeit von Kruskals Algorithmus}{section.12.6}% 84
+\BOOKMARK [2][-]{subsection.12.6.2}{Zur Laufzeit von Prims Algorithmus}{section.12.6}% 85
+\BOOKMARK [0][-]{chapter.13}{Dynamisches Programmieren}{}% 86
+\BOOKMARK [1][-]{section.13.1}{Das gewichtete Intervall-Scheduling-Problem}{chapter.13}% 87
+\BOOKMARK [1][-]{section.13.2}{Ein Algorithmus zur L\366sung des Rucksackproblems}{chapter.13}% 88
+\BOOKMARK [2][-]{subsection.13.2.1}{Das Subset-Sum-Problem}{section.13.2}% 89
+\BOOKMARK [2][-]{subsection.13.2.2}{Das Rucksackproblem}{section.13.2}% 90
+\BOOKMARK [1][-]{section.13.3}{Der Algorithmus von Bellman und Ford}{chapter.13}% 91
+\BOOKMARK [1][-]{section.13.4}{K\374rzeste Pfade "all-to-all": Der Algorithmus von Floyd und Warshall}{chapter.13}% 92
+\BOOKMARK [0][-]{chapter.14}{Polynomielle Algorithmen f\374r Lineare Programmierung}{}% 93
+\BOOKMARK [1][-]{section.14.1}{Einf\374hrende Bemerkungen}{chapter.14}% 94
+\BOOKMARK [1][-]{section.14.2}{Die Eingabel\344nge eines LP-Problems und der Begriff des polynomiellen Algorithmus}{chapter.14}% 95
+\BOOKMARK [1][-]{section.14.3}{Ellipsen im R\1362}{chapter.14}% 96
+\BOOKMARK [1][-]{section.14.4}{Lineare und affine Abbildungen}{chapter.14}% 97
+\BOOKMARK [1][-]{section.14.5}{Ellipsoide im R\136n}{chapter.14}% 98
+\BOOKMARK [1][-]{section.14.6}{Eine Reduktion}{chapter.14}% 99
+\BOOKMARK [1][-]{section.14.7}{Die Ellipsoid-Methode}{chapter.14}% 100
+\BOOKMARK [1][-]{section.14.8}{Theorie und Praxis}{chapter.14}% 101
+\BOOKMARK [1][-]{section.14.9}{Innere-Punkte-Methoden}{chapter.14}% 102
+\BOOKMARK [2][-]{subsection.14.9.1}{Logarithmische Barriere-Funktionen}{section.14.9}% 103
+\BOOKMARK [2][-]{subsection.14.9.2}{Der Begriff des zentralen Pfades}{section.14.9}% 104
+\BOOKMARK [0][-]{chapter.15}{Literatur}{}% 105

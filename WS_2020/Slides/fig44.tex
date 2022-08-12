@@ -1,0 +1,34 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.1,-0.6)(3.1,2.1)
+\footnotesize
+
+\psframe[framearc=0.2](0,0)(1,2) \uput{0.2}[270](0.5,0){$X$}
+\psframe[framearc=0.2](2,0)(3,2) \uput{0.2}[270](2.5,0){$Y$}
+\cnode*(0.5,1.5){3pt}{X1} \pscircle(0.5, 1.5){0.2}
+\cnode*(0.5,1.0){3pt}{X2}
+\cnode*(0.5,0.5){3pt}{X3}
+\cnode*(2.5,1.5){3pt}{Y1}
+\cnode*(2.5,1.0){3pt}{Y2}
+\cnode*(2.5,0.5){3pt}{Y3} \pscircle(2.5, 0.5){0.2}
+\ncline{-}{X1}{Y1}
+\ncline{-}{X2}{Y2}
+\ncline{-}{X3}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X3}{Y2}
+
+\small
+\end{pspicture}
+\end{document}

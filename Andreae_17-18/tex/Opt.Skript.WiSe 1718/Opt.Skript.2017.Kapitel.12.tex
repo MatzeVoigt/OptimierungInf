@@ -1,0 +1,1780 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 12:                                                                  %
+% "Greedy-Algorithmen oder: Is Greed Good? Does Greed work?"                   %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Greedy-Algorithmen oder: Is Greed Good? Does Greed work?}\label{chapter:12}
+\index{Greedy-Algorithmus}\index{Algorithmus!Greedy-}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Axiome der reellen Zahlen"                                              %
+%------------------------------------------------------------------------------%
+
+Wir folgen in diesem Kapitel größtenteils der Darstellung in Jon Kleinberg, Éva Tardos: \textit{Algorithm Design} (Pearson 2006) und geben als Einstieg zwei Absätze aus diesem Lehrbuch wieder.
+
+%\medskip
+
+In Wall Street, that iconic movie of the 1980s, Michael Douglas gets up in front of a room full of stockholders and proclaims, \foreignquote{english}{Greed $\ldots$ is good. Greed is right. Greed works.} In this chapter, we'll be taking a much more understated perspective as we investigate the pros and cons of short-sighted  greed in the design of algorithms. Indeed, our aim is to approach a number of different computational problems with a recurring set of questions: Is greed good? Does greed work?
+
+It is hard, if not impossible, to define precisely what is meant by a \textit{greedy algorithm}. An algorithm is greedy if it builds up a solution in small steps, choosing a decision at each step myopically to optimize some underlying criterion\footnote{Mit \textit{decision} ist hier eine \textit{nicht-revidierbare Entscheidung} gemeint, d.h., man hat nicht die Möglichkeit, die getroffene Entscheidung im weiteren Verlauf des Algorithmus noch einmal abzuändern; \textit{myopically} bedeutet \textit{kurzsichtig}.}. One can often design many different greedy algorithms for the same problem, each one locally, incrementally optimizing some different measure on its way to a solution.
+
+%\medskip
+
+Zu ein und demselben Problem kann man sich häufig unterschiedliche Greedy-Algorithmen (\enquote{gierige Algorithmen}) ausdenken, \textit{die aber ebenso häufig ihr Ziel, eine optimale Lösung zu finden, verfehlen.} Andererseits gibt es aber auch Fälle, in denen man mit einer Greedy-Strategie Erfolg hat: Die vielleicht prominentesten Beispiele sind 
+\begin{itemize}
+\item der \textit{Algorithmus von Dijkstra} zum Auffinden kürzester Pfade in Graphen,
+\item der \textit{Algorithmus von Kruskal} sowie der \textit{Algorithmus von Prim} zur Bestimmung eines minimalen aufspannenden Baums.
+\end{itemize}
+
+Wir werden die genannten Algorithmen erst etwas später besprechen. Der Darstellung von Kleinberg und Tardos folgend werden wir zunächst \textit{zwei Methoden} herausarbeiten, mit deren Hilfe man nachweisen kann, dass eine vorgeschlagene Greedy-Strategie tatsächlich funktioniert, d.h., dass man mit dieser Strategie immer eine optimale Lösung erhält. Um es noch einmal mit den Worten von Kleinberg/Tardos zu sagen:
+
+\begin{SKBox}
+It is easy to invent greedy algorithms for almost any problem; finding cases in which they work well, and proving that they work well, is the interesting challenge.
+\end{SKBox}
+
+Der ersten der beiden grundlegenden Methoden wird von Kleinberg und Tardos der Name \foreignquote{english}{\textit{the greedy algorithm stays ahead}} gegeben, die zweite Methode wird \textit{Austauschargument}\index{Austauschargument} (engl. \textit{exchange argument}\index{exchange argument}) genannt.
+
+Im Folgenden werden die beiden Methoden kurz geschildert, wobei keine präzise Beschreibung angestrebt wird, sondern an einigen Stellen bewusst etwas vage geblieben wird.
+
+\textit{Zur 1. Methode (\foreignquote{english}{the greedy algorithm stays ahead})}: Bei dieser Methode misst man in gewissen Ab\-ständen, welchen Fortschritt der Greedy-Algorithmus erzielt hat, und stellt jedes Mal fest, dass er \enquote{vorne liegt} -- typischerweise im Vergleich zu einem beliebigen optimalen Algorithmus. Daraus ergibt sich dann, dass der Greedy-Algorithmus auch am Schluss \enquote{vorne liegt}, d.h. ein optimales Ergebnis abliefert. Der Greedy-Algorithmus hat dann sozusagen einen Start-Ziel-Sieg eingefahren.
+
+\textit{Zur 2. Methode (\enquote{Austauschargument})}: Die Grundidee dieser Methode ist es nachzuweisen, dass man eine optimale Lösung $\mathcal{O}$ schrittweise in die vom Greedy-Algorithmus gefundene Lösung $A$ umformen kann -- und zwar so, dass in keinem Schritt eine Verschlechterung der betrachteten Lösung eintritt\footnote{Natürlich gibt es Varianten: Beispielsweise kann es in bestimmten Fällen reichen, $\mathcal{O}$ in eine Lösung umzuformen, die sich von $A$ ein wenig unterscheidet.}. Da bei dieser Vorgehensweise eine Umformung häufig aus einem Austausch besteht, spricht man von einem \textit{Austauschargument}\index{Austauschargument}.
+
+Wir studieren beide Methoden anhand von sogenannten \textit{Schedulingproblemen}.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Intervall-Scheduling: The Greedy Algorithm Stays Ahead"                     %
+%------------------------------------------------------------------------------%
+
+\section{Intervall-Scheduling: The Greedy Algorithm Stays Ahead}
+\label{section:12:1}
+
+\subsection{Das Intervall-Scheduling-Problem}
+\index{Intervall-Scheduling-Problem}\index{Problem!Intervall-Scheduling-}
+
+Gegeben seien eine \textit{Ressource}\index{Ressource} (etwa ein Hörsaal, ein Elektronenmikroskop oder ein Arbeitsplatz an einem Computer) sowie zahlreiche Anfragen; eine \textit{Anfrage}\index{Anfrage} enthält die Angabe eines Zeitintervalls $[s,f]$\footnote{$s$ steht für \textit{starting time}\index{starting time}, $f$ steht für \textit{finishing time}\index{finishing time}; wir nehmen stets $s<f$ an.} (\enquote{Ich würde die Ressource gerne vom Zeitpunkt $s$ bis zum Zeitpunkt $f$ benutzen.}). Die Ressource kann immer nur von einer Person zur selben Zeit benutzt werden. Die Aufgabe des Schedulers besteht darin, möglichst viele Anfragen in einem Zeitplan unterzubringen.
+
+Etwas formaler: Wir bezeichnen die Anfragen mit $1,\ldots,n$; $\bigl\{ 1,\ldots,n \bigr\}$ ist also die \textit{Menge der Anfragen}. Zur $i$-ten Anfrage gehört das Zeitintervall $[s(i), f(i)]$ ($i=1,\ldots,n$). Zwei Anfragen heißen \textit{kompatibel}\index{kompatibel}\index{kompatible Anfrage}\index{Anfrage!kompatible}, wenn die dazugehörigen Intervalle sich \textit{nicht überlappen}\index{überlappen}\index{überlappende Intervalle}\index{Intervalle, überlappende}, d.h., die Intervalle haben höchstens einen Randpunkt gemeinsam. \textit{Gesucht ist eine Teilmenge von möglichst vielen paarweise kompatiblen Anfragen}.
+
+\subsection{Entwurf eines Greedy-Algorithmus}
+
+Mit dem Intervall-Scheduling-Problem haben wir ein Beispiel an der Hand, durch das unsere Diskussion über Greedy-Algorithmen \textit{wesentlich konkreter} wird.
+
+\textit{Die \textbf{grundlegende Idee} in einem Algorithmus für das Intervall-Scheduling-Problem ist, eine \textbf{einfache Regel} anzugeben, mit deren Hilfe man die erste Anfrage $i_1$ auswählt, die akzeptiert werden soll}. Hat man einmal $i_1$ nach dieser Regel ausgewählt, so sortiert man alle Anfragen aus, die nicht kompatibel mit $i_1$ sind; danach wählt man $i_2$ nach derselben Regel aus, und anschließend werden alle Anfragen aussortiert, die nicht mit $i_2$ kompatibel sind, usw.
+
+Die Herausforderung beim Entwurf eines guten Greedy-Algorithmus besteht also darin zu entscheiden, \textit{welche} einfache Regel verwendet werden soll. Sorgfalt ist dabei geboten, denn häufig gibt es naheliegende Regeln, die nicht zu guten Lösungen führen. Schauen wir uns einige naheliegende Regeln für das Intervall-Scheduling-Problem an:
+
+\medskip
+\begin{tabular}{p{0.5cm}p{14cm}} 
+\circled{1} & Eine besonders naheliegende Regel ist möglicherweise, immer diejenige Anfrage zu wählen, die am frühesten beginnt, für die $s(i)$ also so klein wie möglich ist; auf diese Art wird die Ressource immer so schnell wie möglich wieder benutzt.
+\end{tabular}
+\medskip
+
+Da das Ziel ist, möglichst viele Anfragen zu akzeptieren, kann dies jedoch zu sehr schlechten Ergebnissen führen, wie das folgende Beispiel zeigt:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0.5)(12.5,1)
+ 
+\psline{|-|}(1,0.5)(11.5, 0.5)
+\psline{|-|}(1.5,1)(3.5,1)
+\psline{|-|}(4.0,1)(6.0,1)
+\psline{|-|}(6.5,1)(8.5,1)
+\psline{|-|}(9.0,1)(11.0,1)
+
+\end{pspicture}
+\end{center}
+
+\medskip
+\begin{tabular}{p{0.5cm}p{14cm}} 
+\circled{2} & Versucht man aus dem Fehlschlag der ersten Regel zu lernen, so könnte man auf die Idee kommen, immer ein möglichst kurzes Intervall zu wählen -- dann können Effekte wie unter \circled{1} nicht auftreten. Neue Regel: Man wähle immer diejenige Anfrage, für die $f(i)-s(i)$ so klein wie möglich ist.
+\end{tabular}
+\medskip
+
+Diese Regel scheint etwas besser zu sein -- aber leider führt auch diese zu suboptimalen Ergebnissen, wie man am folgenden Beispiel erkennt:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0.5)(12.5,1)
+\footnotesize
+
+\psline{|-|}(1,1)(6, 1) 
+\psline{|-|}(6.5,1)(11.5,1)
+\psline{|-|}(5.5,0.5)(7,0.5)
+
+\small
+\end{pspicture}
+\end{center}
+
+\medskip
+\begin{tabular}{p{0.5cm}p{14cm}} 
+\circled{3} & Bei der vorherigen Regel \circled{2} lag das Problem darin, dass die zweite Anfrage sowohl mit der ersten als auch mit der dritten Anfrage inkompatibel war. Da ist es naheliegend, eine Regel aufzustellen, die besagt, dass immer eine Anfrage zu wählen ist, die mit möglichst wenigen anderen Anfragen kollidiert. Das würde zumindest im Falle des Beispiels \circled{2} helfen und scheint auch ansonsten recht vielversprechend zu sein: Man möchte ja insgesamt möglichst viele Anfragen akzeptieren; deshalb erscheint es einleuchtend, die Wahl immer so zu treffen, dass unmittelbar nach einer getroffenen Wahl möglichst wenige Anfragen ausscheiden müssen.
+\end{tabular}
+\medskip
+
+In der Tat muss man sich diesmal etwas mehr anstrengen, um ein entsprechendes Beispiel zu finden. Das folgende Beispiel zeigt jedoch, dass auch diese Regel suboptimale Ergebnisse liefert:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0.5)(12.5,2.5)
+\footnotesize
+
+\psline{|-|}(1.5,2)( 3.5,2)
+\psline{|-|}(4.0,2)( 6.0,2)
+\psline{|-|}(6.5,2)( 8.5,2)
+\psline{|-|}(9.0,2)(11.0,2)
+
+\psline{|-|}(3.0,1.5)(4.5,1.5)
+\psline{|-|}(3.0,1.0)(4.5,1.0)
+\psline{|-|}(3.0,0.5)(4.5,0.5)
+
+\psline{|-|}(5.5,1.5)(7.0,1.5)
+
+\psline{|-|}(8.0,1.5)(9.5,1.5)
+\psline{|-|}(8.0,1.0)(9.5,1.0)
+\psline{|-|}(8.0,0.5)(9.5,0.5)
+
+\small
+\end{pspicture}
+\end{center}
+
+\medskip
+\begin{tabular}{p{0.5cm}p{14cm}} 
+\circled{4} & Nächster Versuch: Man richtet sich nach den Endzeiten der Anfragen und wählt immer diejenige Anfrage aus, für die $f(i)$ minimal ist. Auch für diese Regel gibt es ein Plausibilitätsargument: Je eher eine Anfrage beendet ist, desto eher kann die nächste Anfrage zum Zuge kommen.
+\end{tabular}
+\medskip
+
+\textit{Nach unseren Erfahrungen mit den Regeln \textnormal{\circled{1} - \circled{3}} sollten wir allerdings skeptisch sein}: Auch diesen Regeln lagen auf den ersten Blick einleuchtende Plausibilitätsargumente zugrunde.
+
+Allerdings fallen einem diesmal keine Beispiele ein, die die Suboptimalität der Regel \circled{4} belegen. So hat man den Verdacht, dass die vierte Regel (möglicherweise) immer eine optimale Lösung liefert. Um dies nachzuweisen, formulieren wir den dazugehörigen Algorithmus etwas formaler: Mit $R$ bezeichnen wir die Menge der Anfragen (engl. requests), über die noch zu entscheiden ist, die also bislang weder akzeptiert noch zurückgewiesen wurden; mit $A$ bezeichnen wir die Menge der bereits akzeptierten Anfragen.
+
+Hier nun der Algorithmus, den wir den \textit{Intervall-Scheduling-Algorithmus}\index{Intervall-Scheduling-Algorithmus}\index{Algorithmus!Intervall-Scheduling-} nennen (aus Kleinberg/Tardos: \textit{Algorithm Design}):
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{\textbf{Interval Scheduling Algorithm}} \\
+& \\
+ (1)& Initially let $R$ be the set of all requests, and let $A$ be empty \\
+ (2)& \textbf{While} $R$ is not yet empty \\
+ (3)& \qquad Choose a request $i \in R$ that has the smallest finishing time \\
+ (4)& \qquad Add request $i$ to $A$ \\
+ (5)& \qquad Delete all requests from $R$ that are not compatible with request $i$ \\
+ (6)& \textbf{EndWhile} \\
+ (7)& \textbf{Return} the set $A$ as the set of accepted requests
+\end{tabular}
+\end{center}
+
+\pagebreak
+Ein \textbf{Beispiel}, das den Ablauf des Intervall-Scheduling-Algorithmus illustriert (ebenfalls aus dem Buch von Kleinberg/Tardos):
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-4,-1)(10,10.5)
+\footnotesize
+
+\rput(0,8){
+\uput{0}[180](0,1){Intervals numbered in order}
+\psline{|-|}(1.0,1.0)(2.0,1.0) \uput{0.1}[90](1.50,1.0){$1$}
+\psline{|-|}(1.0,0.5)(3.0,0.5) \uput{0.1}[90](2.00,0.5){$2$}
+\psline{|-|}(2.5,1.0)(4.0,1.0) \uput{0.1}[90](3.25,1.0){$3$}
+\psline{|-|}(3.5,0.5)(4.7,0.5) \uput{0.1}[90](4.10,0.5){$4$}
+\psline{|-|}(4.5,1.0)(6.5,1.0) \uput{0.1}[90](5.50,1.0){$5$}
+\psline{|-|}(1.0,1.5)(6.7,1.5) \uput{0.1}[90](3.85,1.5){$6$}
+\psline{|-|}(5.0,0.5)(7.0,0.5) \uput{0.1}[90](6.00,0.5){$7$}
+\psline{|-|}(7.5,1.5)(8.5,1.5) \uput{0.1}[90](8.00,1.5){$8$}
+\psline{|-|}(7.2,1.0)(9.0,1.0) \uput{0.1}[90](8.10,1.0){$9$}}
+
+\rput(0,6){
+\uput{0}[180](0,1){Selecting interval 1}
+\psline[linewidth=1.5pt]{|-|}(1.0,1.0)(2.0,1.0) \uput{0.1}[90](1.50,1.0){$1$}
+\psline[linestyle=dashed]{|-|}(1.0,0.5)(3.0,0.5) 
+\psline{|-|}(2.5,1.0)(4.0,1.0) \uput{0.1}[90](3.25,1.0){$3$}
+\psline{|-|}(3.5,0.5)(4.7,0.5) \uput{0.1}[90](4.10,0.5){$4$}
+\psline{|-|}(4.5,1.0)(6.5,1.0) \uput{0.1}[90](5.50,1.0){$5$}
+\psline[linestyle=dashed]{|-|}(1.0,1.5)(6.7,1.5) 
+\psline{|-|}(5.0,0.5)(7.0,0.5) \uput{0.1}[90](6.00,0.5){$7$}
+\psline{|-|}(7.5,1.5)(8.5,1.5) \uput{0.1}[90](8.00,1.5){$8$}
+\psline{|-|}(7.2,1.0)(9.0,1.0) \uput{0.1}[90](8.10,1.0){$9$}}
+
+\rput(0,4){
+\uput{0}[180](0,1){Selecting interval 3}
+\psline[linewidth=1.5pt]{|-|}(1.0,1.0)(2.0,1.0) \uput{0.1}[90](1.50,1.0){$1$}
+\psline[linewidth=1.5pt]{|-|}(2.5,1.0)(4.0,1.0) \uput{0.1}[90](3.25,1.0){$3$}
+\psline[linestyle=dashed]{|-|}(3.5,0.5)(4.7,0.5) 
+\psline{|-|}(4.5,1.0)(6.5,1.0) \uput{0.1}[90](5.50,1.0){$5$}
+\psline{|-|}(5.0,0.5)(7.0,0.5) \uput{0.1}[90](6.00,0.5){$7$}
+\psline{|-|}(7.5,1.5)(8.5,1.5) \uput{0.1}[90](8.00,1.5){$8$}
+\psline{|-|}(7.2,1.0)(9.0,1.0) \uput{0.1}[90](8.10,1.0){$9$}}
+
+\rput(0,2){
+\uput{0}[180](0,1){Selecting interval 5}
+\psline[linewidth=1.5pt]{|-|}(1.0,1.0)(2.0,1.0) \uput{0.1}[90](1.50,1.0){$1$}
+\psline[linewidth=1.5pt]{|-|}(2.5,1.0)(4.0,1.0) \uput{0.1}[90](3.25,1.0){$3$}
+\psline[linewidth=1.5pt]{|-|}(4.5,1.0)(6.5,1.0) \uput{0.1}[90](5.50,1.0){$5$}
+\psline[linestyle=dashed]{|-|}(5.0,0.5)(7.0,0.5) 
+\psline{|-|}(7.5,1.5)(8.5,1.5) \uput{0.1}[90](8.00,1.5){$8$}
+\psline{|-|}(7.2,1.0)(9.0,1.0) \uput{0.1}[90](8.10,1.0){$9$}}
+
+\rput(0,0){
+\uput{0}[180](0,1){Selecting interval 8}
+\psline[linewidth=1.5pt]{|-|}(1.0,1.0)(2.0,1.0) \uput{0.1}[90](1.50,1.0){$1$}
+\psline[linewidth=1.5pt]{|-|}(2.5,1.0)(4.0,1.0) \uput{0.1}[90](3.25,1.0){$3$}
+\psline[linewidth=1.5pt]{|-|}(4.5,1.0)(6.5,1.0) \uput{0.1}[90](5.50,1.0){$5$}
+\psline[linewidth=1.5pt]{|-|}(7.5,1.5)(8.5,1.5) \uput{0.1}[90](8.00,1.5){$8$}
+\psline[linestyle=dashed]{|-|}(7.2,1.0)(9.0,1.0) }
+
+\uput{0.15}[270](3,0.5){Sample run of the Interval Scheduling Algorithm. At each step the selected intervals are}
+\uput{0.50}[270](3,0.5){darker lines, and the intervals deleted at the corresponding step are indicated with dashed lines.}
+
+\small
+\end{pspicture}
+\end{center}
+
+Im Folgenden befassen wir uns mit der \textit{Analyse des Intervall-Scheduling-Algorithmus}. Dabei geht es uns weniger um die Laufzeit, sondern vielmehr um die Korrektheit des Algorithmus: Nachdem wir gesehen haben, dass das Greedy-Verfahren bei Verwendung der Regeln \circled{1} - \circled{3} nicht optimal arbeitet, wollen wir uns nun davon überzeugen, dass man bei Verwendung der Regel \circled{4} \textit{immer} eine optimale Lösung erhält.
+
+In Zukunft wollen wir nicht mehr streng zwischen Anfragen und den dazugehörigen Intervallen unterscheiden. Mit $A$ bezeichnen wir die Menge der Anfragen (Intervalle), die der Intervall-Scheduling-Algorithmus am Schluss liefert. Zum Zweck des Vergleichs betrachten wir außerdem eine optimale Lösung $\mathcal{O}$ des Problems. Wir haben zu zeigen, dass $A$ ebenfalls optimal ist, d.h., wir müssen
+\[
+|A| = |\mathcal{O}|
+\]
+
+zeigen. Mit $i_1,\ldots,i_k$ wollen wir die Intervalle von $A$ bezeichnen -- in der Reihenfolge, in der sie vom Intervall-Scheduling-Algorithmus ausgewählt wurden. Dann gilt $f(i_r) \leq s(i_{r+1})$ für $r=1,\ldots,k-1$, d.h., die Intervalle von $A$ sind paarweise kompatibel und wie in der folgenden Zeichnung illustriert \enquote{von links nach rechts angeordnet}.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0.5)(12.5,1.0)
+\footnotesize
+
+\psline{|-|}(1.0,0.5)( 2.0,0.5) \uput{0.1}[90](1.50, 0.5){$i_1$}
+\psline{|-|}(2.5,0.5)( 4.0,0.5) \uput{0.1}[90](3.25, 0.5){$i_2$}
+\psline{|-|}(4.5,0.5)( 5.0,0.5) \uput{0.1}[90](4.75, 0.5){$i_3$}
+\uput{0}[90](6.25,0.5){$\ldots$}
+\psline{|-|}(8.0,0.5)(11.5,0.5) \uput{0.1}[90](9.75, 0.5){$i_k$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Da $\mathcal{O}$ eine Lösung des Problems ist, überlappen sich auch die Intervalle von $\mathcal{O}$ nicht, d.h., die Intervalle von $\mathcal{O}$ liegen ebenfalls auf der reellen Achse \enquote{von links nach rechts angeordnet}. Dementsprechend wollen wir die Intervalle von $\mathcal{O}$ mit $j_1,\ldots,j_m$ bezeichnen, wobei $f(j_r) \leq s(j_{r+1})$ für alle $r=1,\ldots,m-1$ gilt.
+
+Da $\mathcal{O}$ eine optimale Lösung ist, gilt $k \leq m$; unser Ziel ist es, $k=m$ nachzuweisen. Um dies zu erreichen, zeigen wir (Dies ist der entscheidende Schritt!), dass Folgendes gilt:
+\begin{equation}
+\label{eq:12:1}
+f(i_r) \leq f(j_r) \quad \text{für alle } r = 1,\ldots,k.
+\end{equation}
+
+Dasselbe in Worten: \textit{Für alle Intervalle $i_r$ von $A$ vergleichen wir den rechten Randpunkt $f(i_r)$ mit dem rechten Randpunkt $f(j_r)$ des entsprechende Intervalls $j_r$ von $\mathcal{O}$ und behaupten, dass $f(i_r)$ niemals rechts von $f(j_r)$ liegt}. Dies ist der präzise Inhalt der Feststellung, dass unser Intervall-Scheduling-Algorithmus \enquote{immer vorne liegt}.
+
+\textbf{Beweis von (\ref{eq:12:1})}. Zunächst einmal stellen wir fest, dass $f(i_1) \leq f(j_1)$ gilt; der einfache Grund hierfür ist, dass unser Intervall-Scheduling-Algorithmus $i_1$ so wählt, dass $f(i_1)$ so klein wie möglich ist. Die Behauptung (\ref{eq:12:1}) gilt also für $r=1$.
+
+Wir nehmen nun an, dass (\ref{eq:12:1}) für ein $r \geq 2$ nicht gilt und führen diese Annahme zum Widerspruch. Hierzu betrachten wir den \textit{kleinsten} Index $r \geq 2$, für den (\ref{eq:12:1}) falsch ist. Dann gilt also $f(j_r) < f(i_r)$ und $f(i_{r-1}) \leq f(j_{r-1})$.
+
+Aus $f(i_{r-1}) \leq f(j_{r-1})$ folgt (wegen $f(j_{r-1}) \leq s(j_r)$), dass $f(i_{r-1}) \leq s(j_r)$ gilt. Das bedeutet, dass das Intervall $j_r$ \enquote{noch im Rennen ist}, wenn unser Intervall-Scheduling-Algorithmus das $r$-te Intervall auswählt. Wegen $f(j_r) < f(i_r)$ hätte der Algorithmus also nicht $i_r$ als $r$-tes Intervall auswählen dürfen.
+
+Dieser Widerspruch beweist (\ref{eq:12:1}). $\Box$
+
+Nachdem (\ref{eq:12:1}) als richtig erkannt wurde, fällt der Nachweis von $k=m$ nicht schwer: Angenommen es gelte $k<m$. Dann gibt es ein Intervall $j_{k+1}$ in $\mathcal{O}$ und es gilt $f(j_k) \leq s(j_{k+1})$. Wegen (\ref{eq:12:1}) gilt außerdem $f(i_k) \leq f(j_k)$. Es folgt $f(i_k) \leq s(j_{k+1})$. Dies würde jedoch Folgendes bedeuten: Nachdem am Ende unseres Intervall-Scheduling-Algorithmus $i_k$ ausgewählt wurde, ist immer noch das Intervall $j_{k+1}$ in $R$. Dieser Widerspruch beweist $k=m$.
+
+Wir haben somit ein Beispiel für die Methode
+
+\begin{center}
+\textit{The Greedy Algorithm Stays Ahead}
+\end{center}
+
+kennengelernt. Im Buch von Kleinberg und Tardos finden sich noch viele interessante Ergänzungen sowohl zu dieser Methode als auch zum Thema Intervall-Scheduling. Wir fahren nun fort mit der zweiten Methode, die den Namen
+
+\begin{center}
+\textit{Austauschargument}\index{Austauschargument}
+\end{center}
+
+trägt.
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ein Algorithmus, der auf einem Austauschargument basiert"                   %
+%------------------------------------------------------------------------------%
+
+\section{Ein Algorithmus, der auf einem Austauschargument basiert} 
+
+Es geht auch hier wieder um ein Schedulingproblem -- diesmal sollen jedoch \textit{alle} Anfragen akzeptiert werden, wobei es allerdings zu \textit{Verspätungen} kommen kann.
+
+Genauer: Wir haben wieder eine Ressource, die wir uns als eine \textit{Maschine} vorstellen wollen, an der immer nur ein \textit{Job} zur selben Zeit erledigt werden kann; statt \enquote{Anfrage} wollen jetzt immer \enquote{Job} sagen. Es gebe $n$ Jobs und jeder Job besitze eine \textit{Ausführungszeit} $t_i > 0$; Anfangs- und Endpunkt eines Jobs sollen diesmal aber nicht feststehen -- stattdessen soll es eine \textit{Deadline}\index{Deadline} $d_i$ für jeden Job geben.
+
+Wir nehmen an, dass die Maschine zum Zeitpunkt $s$ bereitsteht. Die Jobs seien mit $1,\ldots,n$ bezeichnet. Jedem Job $i$ ist ein Intervall $[s(i), f(i)]$ zuzuordnen, wobei gelten soll:
+\[
+s \leq s(i) \quad \text{und} \quad f(i)-s(i) = t_i \ (i=1,\ldots,n).
+\]
+
+Klar ist: Die Intervalle $[s(i),f(i)]$ sollen sich nicht überlappen. \textit{Was ist nun aber zu optimieren}? Es gibt verschiedene Möglichkeiten, die zu Problemen von unterschiedlichem Schwierigkeitsgrad führen. Wir wollen hier die \textit{Variante} betrachten, \textit{bei der die maximale Verspätung zu minimieren ist}. Genauer:
+
+Wir nennen den Job $i$ \textit{verspätet}\index{verspätet} (engl. \textit{late}\index{late}), falls $d_i < f(i)$ gilt; wir setzen
+\[
+\ell_i = 
+\begin{cases}
+f(i) - d_i & \text{, falls der Job  $i$ verspätet ist}; \\
+0 & \text{, falls der Job $i$ nicht verspätet ist\footnotemark{}}.
+\end{cases}
+\]
+\footnotetext{Man nennt $\ell_i$ die \textit{Verspätung}\index{Verspätung} (engl. \textit{lateness}\index{lateness}) des $i$-ten Jobs.}
+
+Zu minimieren ist
+\[
+L = \max{\Bigl\{ \ell_i : i = 1,\ldots,n \Bigr\}}.
+\]
+
+Hier ein \textbf{Beispiel}, für das $L=0$ gilt (aus Kleinberg/Tardos): 
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-2,-1.4)(13.9,5.5)
+\footnotesize
+
+\uput{1.50}[270](6,0.0){A sample instance of scheduling to minimize lateness.}
+
+\uput{0.2}[180](0,0.25){Solution:}
+\psframe[fillstyle=solid,fillcolor=light-gray](0,0)( 2,0.5)
+\uput{0.10}[270](1,0){Job 1:}
+\uput{0.43}[270](1,0){done at}
+\uput{0.76}[270](1,0){time 1}
+
+\psframe[fillstyle=solid,fillcolor=light-gray](2,0)( 6,0.5)
+\uput{0.10}[270](4,0){Job 2:}
+\uput{0.43}[270](4,0){done at}
+\uput{0.76}[270](4,0){time 1+2=3}
+
+\psframe[fillstyle=solid,fillcolor=light-gray](6,0)(12,0.5)
+\uput{0.10}[270](9,0){Job 3:}
+\uput{0.43}[270](9,0){done at}
+\uput{0.76}[270](9,0){time 1+2+3=6}
+
+\uput{0.2}[180](0,1.75){Job 3}
+\uput{0}[0](0,2.20){Length 3}
+\uput{0.1}[90](12,2.0){Deadline 6}
+\psframe(0,1.5)(6,2.0)
+\psline(12,1.5)(12,2.0)
+
+\uput{0.2}[180](0,3.25){Job 2}
+\uput{0}[0](0,3.70){Length 2}
+\uput{0.1}[90](8,3.5){Deadline 4}
+\psframe(0,3.0)(4,3.5)
+\psline(8,3.0)(8,3.5)
+
+\uput{0.2}[180](0,4.75){Job 1}
+\uput{0}[0](0,5.20){Length 1}
+\uput{0.1}[90](4,5.0){Deadline 2}
+\psframe(0,4.5)(2,5.0)
+\psline(4,4.5)(4,5.0)
+
+\small
+\end{pspicture}
+\end{center}
+
+Wie könnte ein Greedy-Algorithmus für unser Problem aussehen?
+
+Es bieten sich wieder etliche Möglichkeiten an, den Jobs\index{Job} mithilfe einer einfachen Regel Zeitintervalle zuzuordnen:
+
+\begin{longtable}{p{0.5cm}p{14cm}} 
+\circled{1} & Eine dieser Möglichkeiten wäre, die Jobs zunächst nach aufsteigender Länge $t_i$ zu ordnen und ihnen dann in dieser Reihenfolge nach dem Motto \enquote{die Kleinen zuerst} ein Zeitintervall zuzuordnen; zumindest im obigen Beispiel hat das geklappt -- die kleinen Jobs so früh wie möglich aus dem Weg zu kriegen, könnte eine gute Idee sein.
+\end{longtable}
+
+Andererseits werden bei dieser Strategie die Deadlines überhaupt nicht berücksichtigt; man braucht sich also nicht zu wundern, dass es \enquote{schlechte Beispiele} bereits dann gibt, wenn nur zwei Jobs im Spiel sind:
+
+\begin{center}
+\begin{tabular}{rl}
+1. Job: & $t_1=1, d_1=100$; \\
+2. Job: & $t_2=10, d_2=10$.
+\end{tabular}
+\end{center}
+
+\begin{longtable}{p{0.5cm}p{14cm}} 
+\circled{2} & Das Beispiel zu \circled{1} legt nahe, mehr auf die \enquote{slack time} $d_i - t_i$ zu achten und die Jobs vorzuziehen, für die $d_i-t_i$ klein ist: Diese Jobs vertragen nur wenig Aufschub und sollten deshalb so schnell wie möglich erledigt werden.
+\end{longtable}
+
+Leider verfehlt auch diese Greedy-Regel ihr Ziel; man betrachte das folgende Beispiel:
+
+\begin{center}
+\begin{tabular}{rl}
+1. Job: & $t_1=1, d_1=2$; \\
+2. Job: & $t_2=10, d_2=10$.
+\end{tabular}
+\end{center}
+
+\begin{longtable}{p{0.5cm}p{14cm}} 
+\circled{3} & Nun kommt eine Regel, die genauso einfach wie die beiden anderen ist, von der sich aber herausstellen wird, dass sie immer eine optimale Lösung liefert: Man ordnet die Jobs nach ihren Deadlines, wobei die frühen Deadlines zuerst drankommen; diese Regel ist unter dem folgenden Namen bekannt:
+\begin{center}
+\textit{Earliest Deadline First}\index{Earliest Deadline First}
+\end{center}
+\end{longtable}
+
+So einfach geht das? Und das soll funktionieren? \textit{Man hat allen Grund gegenüber dieser Regel skeptisch zu sein}: Beispielsweise war einer der Einwände gegen die Regel \circled{1}, dass sie die Hälfte der Eingangsdaten -- die Deadlines $d_i$ -- gar nicht berücksichtigt. Und nun soll eine Regel optimal sein, die die andere Hälfte der Eingangsdaten -- die Intervalllängen $t_i$ -- komplett ignoriert?
+
+Es gibt natürlich Plausibilitätsargumente für die Regel \circled{3}: Beispielsweise könnte man argumentieren, dass ein Job, der früh erledigt sein muss, auch früh angefangen werden sollte. Andererseits: Was von solchen Plausibilitätsargumenten zu halten ist, haben wir ja bereits gesehen.
+
+Es soll nun \textit{nachgewiesen} werden, dass die Regel \textit{Earliest Deadline First} immer eine optimale Lösung hervorbringt.
+
+Wir starten damit, dass wir die Jobs neu benennen: Die Bezeichnungen $1,\ldots,n$ für die Jobs sollen in der Reihenfolge der Deadlines vergeben werden, d.h., es soll
+\[
+d_1 \leq \ldots \leq d_n
+\]
+
+gelten. Unsere Strategie besagt dann, dass Job 1 die Startzeit $s(1)=s$ und die Endzeit $f(1)=s(1)+t_1$ erhält; und dass Job 2 die Startzeit $s(2) = f(1)$ und die Endzeit $f(2) = s(2) + t_2$ bekommt; usw. 
+
+Hier ist die Beschreibung des Algorithmus, wie sie im Buch von Kleinberg/Tardos zu finden ist:
+
+\begin{center}
+\begin{tabular}{rl}
+ (1)& Order the jobs in order of their deadlines \\
+ (2)& Assume for simplicity of notation that $d_1 \leq \ldots \leq d_n$ \\
+ (3)& Initially, $f=s$ \\
+ (4)& \textbf{Consider} the jobs $i = 1,\ldots,n$ in this order \\
+ (5)& \qquad Assign job $i$ to the time interval from $s(i)=f$ to $f(i)=f+t_i$ \\
+ (6)& \qquad Let $f=f+t_i$ \\
+ (7)& \textbf{End} \\
+ (8)& \textbf{Return} the set of scheduled intervals $[s(i), f(i)]$ for $i=1,\ldots,n$
+\end{tabular}
+\end{center}
+
+Als erstes beobachten wir, dass dieser Algorithmus einen Zeitplan (engl. schedule) liefert, bei dem es keine Lücken\index{Lücken} (\foreignquote{english}{no idle time}\index{idle time}) gibt. Ferner ist klar, dass es auch einen optimalen\footnote{Optimal bedeutet in unserem Fall natürlich immer, dass $L=\max{\bigl\{ \ell_i : i = 1,\ldots,n \bigr\}}$ so klein wie möglich ist.} Zeitplan ohne Lücken gibt, da Lücken leicht beseitigt werden können, ohne die Optimalität zu zerstören.
+
+Wir nennen den von unserem Greedy-Algorithmus produzierten Zeitplan $A$; mit $\mathcal{O}$ sei ein optimaler Zeitplan bezeichnet.
+
+\begin{SKBox}
+Unser Ziel ist, $\mathcal{O}$ durch schrittweise Änderung in $A$ zu überführen, wobei in jedem Änderungsschritt die Optimalität erhalten bleiben soll. Diese Vorgehensweise nennen wir \textit{Austauschargument}\index{Austauschargument} (engl. \textit{exchange argument}\index{exchange argument}).
+\end{SKBox}
+
+Wir sagen, dass in einem gegebenen Zeitplan eine \textit{Inversion}\index{Inversion} vorkommt, falls es in diesem Zeitplan zwei Jobs $i$ und $j$ gibt, für die gilt: $i$ liegt in diesem Zeitplan vor $j$, obwohl $d_j < d_i$ gilt.
+
+Man beachte, dass unser Zeitplan $A$ keine Inversionen besitzt. Falls es verschiedene Jobs mit gleicher Deadline gibt, so könnte es außerdem etliche andere Zeitpläne ohne Inversionen und ohne Lücken geben. Wir zeigen nun, dass alle diese Zeitpläne dieselbe maximale Verspätung $L$ besitzen.
+
+\begin{equation}
+\label{eq:12:*}
+\tag{$\star$}
+\textit{Alle Zeitpläne ohne Inversionen und ohne Lücken besitzen dieselbe maximale Verspätung.}
+\end{equation}
+
+\textbf{Beweis}. Falls zwei verschiedene Zeitpläne weder Inversionen noch Lücken besitzen, dann können sie sich nur dadurch unterscheiden, dass Jobs mit gleicher Deadline in unterschiedlicher Reihenfolge ausgeführt werden. Es sei $d$ eine solche Deadline. In beiden Zeitplänen liegen die Jobs mit Deadline $d$ dann lückenlos aneinandergereiht -- nur eben in unterschiedlicher Reihenfolge. Unter diesem Jobs mit Deadline $d$ besitzt der letzte die größte Verspätung -- und diese ist unabhängig von der Reihenfolge dieser Jobs. $\Box$
+
+\textit{Wie funktioniert nun das Austauschargument\index{Austauschargument}}? Wir schildern hier nur die \textit{Grundidee}; die Details findet man im Buch von Kleinberg/Tardos. Man startet von einem optimalen Zeitplan $\mathcal{O}$ ohne Lücken; dass es einen solchen Zeitplan gibt, haben wir bereits festgestellt. $\mathcal{O}$ wird nun schrittweise abgeändert, \textit{wobei in jedem Schritt ein Paar von benachbarten Intervallen die Reihenfolge wechselt und alle anderen Intervalle unverändert bleiben}. Dies geschieht so, dass gilt:
+\begin{itemize}
+\item Die auftretenden Zeitpläne haben niemals Lücken.
+\item In jedem Schritt sinkt die Anzahl der Inversionen um 1.
+\item In keinem Schritt vergrößert sich $L$, d.h., alle auftretenden Zeitpläne bleiben optimal.
+\end{itemize}
+
+Nach endlich vielen Schritten erhält man somit einen optimalen Zeitplan, der keine Inversionen und keine Lücken aufweist.
+
+Damit ist gezeigt, dass ein optimaler Zeitplan ohne Inversionen und ohne Lücken existiert. Da unser Zeitplan $A$ ebenfalls weder Lücken noch Inversionen aufweist, folgt wegen (\ref{eq:12:*}), dass auch $A$ optimal ist.
+
+
+
+
+
+\section{Kürzeste Pfade in Graphen}
+\index{kürzeste Pfade}\index{Pfad!kürzester}
+
+Wir betrachten gerichtete Graphen $G=(V,E)$, in denen jeder Kante $e$ eine reelle Zahl $\ell(e) \geq 0$ zugeordnet ist, die wir die \textit{Länge}\index{Länge einer Kante}\index{Kante!Länge einer} von $e$ nennen.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{V1} 
+\cnode*(2,0){3pt}{V2} 
+\cnode*(4,2){3pt}{V3} 
+\cnode*(2,4){3pt}{V4} 
+\cnode*(6,2){3pt}{V5} 
+
+\ncline{->}{V1}{V2} \uput{0.10}[225](1.0, 1.0){$5$}
+\ncline{->}{V1}{V4} \uput{0.10}[135](1.0, 3.0){$3$}
+\ncarc[arcangle=25]{->}{V2}{V3} \uput{0.40}[135](3.0, 1.0){$2$}
+\ncarc[arcangle=335]{->}{V2}{V5} \uput{0}[ 0](4.5, 0.5){$7$}
+\ncarc[arcangle=25]{->}{V3}{V2} \uput{0.40}[315](3.0, 1.0){$1$}
+\ncline{->}{V3}{V5} \uput{0.10}[ 90](5.0, 2.0){$1$}
+\ncline{->}{V4}{V3} \uput{0.10}[ 45](3.0, 3.0){$5$}
+\ncarc[arcangle=25]{->}{V4}{V5} \uput{0}[ 0](4.5, 3.5){$4$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Je nach Anwendung kann man sich unter den Zahlen $\ell(e)$ auch etwas anderes als Längen vorstellen, beispielsweise Kosten, Zeitangaben oder Wahrscheinlichkeiten.
+
+\textit{Ein grundlegendes algorithmisches Problem}: Gegeben seien $u,v \in V$. Finde in $G$ einen kürzesten Pfad von $u$ nach $v$ (sofern ein solcher existiert). Die Länge $\ell(P)$ eines $u,v$-Pfades $P$ \index{Länge eines $u,v$-Pfades}\index{$u,v$-Pfad, Länge eines} ist dabei wie folgt definiert: Durchläuft $P$ nacheinander die Kanten $e_1,\ldots,e_t$, so gilt
+\[
+\ell(P) = \sum\limits_{i=1}^t{\ell(e_i)}.
+\]
+
+Wir haben unser \enquote{grundlegendes Problem} als ein \enquote{point-to-point} Problem formuliert. In vielen Fällen will man aber mehr wissen: Man fragt nach kürzesten Pfaden von einem festen Knoten $s$ (\enquote{Startpunkt}) \textit{zu allen anderen Knoten} $v$. Wenn nichts anderes gesagt ist, wollen wir voraussetzen, dass es zu jedem Knoten $v$ des betrachteten Graphen mindestens einen $s,v$-Pfad gibt. Unser Problem lässt sich dann wie folgt formulieren.
+
+
+\begin{Definition}[Problem der kürzesten Pfade (Version: \foreignquote{english}{one-to-all})]
+Gegeben seien ein gerichteter Graph $G=(V,E)$ mit Kantenlängen $\ell(e) \in \R$, $\ell(e) \geq 0$, sowie ein Knoten $s \in V$. Finde kürzeste Pfade von $s$ zu allen anderen Knoten. 
+\end{Definition}
+
+Wir haben das Problem der kürzesten Pfade für \textit{gerichtete} Graphen formuliert. Ein entsprechendes Problem für ungerichtete Graphen gesondert zu betrachten, ist nicht nötig, da man den ungerichteten Fall auf den gerichteten zurückführen kann. Dies ist durch einen sehr einfachen Trick zu erreichen: Man ersetzt, wie in der folgenden Zeichnung angedeutet, jede ungerichtete Kante durch zwei gerichtete Kanten derselben Länge.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,2.5)
+\footnotesize
+
+\cnode*(0,0){3pt}{V1} 
+\cnode*(0,2){3pt}{V2} 
+\cnode*(4,0){3pt}{V3} 
+\cnode*(4,2){3pt}{V4} 
+\ncline{-}{V1}{V2} \uput{0.10}[180](0.0,1.0){$7$}
+\ncarc[arcangle=25]{->}{V3}{V4} \uput{0.35}[  0](4.0, 1.0){$7$}
+\ncarc[arcangle=25]{->}{V4}{V3} \uput{0.35}[180](4.0, 1.0){$7$}
+
+\psline[linewidth=1.5pt]{->}(1.25,1)(2.75,1)
+
+\small
+\end{pspicture}
+\end{center}
+
+Der Algorithmus, den wir im Folgenden besprechen, ist der sehr bekannte \textit{Algorithmus von Dijkstra}\index{Algorithmus!von Dijkstra}\index{Dijkstra, Algorithmus von}, bei dem es sich -- wie wir noch sehen werden -- um einen Greedy-Algorithmus handelt. Wir erwähnen bereits jetzt, dass der Algorithmus nur deshalb korrekt arbeitet, weil wir $\ell(e) \geq 0$ für alle Kanten $e$ vorausgesetzt haben. Der Fall, dass auch Kanten negativer Länge ($\ell(e) < 0$) auftreten, erfordert etwas kompliziertere Methoden -- da kommt man mit einem einfachen Greedy-Verfahren nicht mehr zum Ziel. Wir werden diesen Fall später behandeln, wenn wir im Kapitel über \textit{Dynamisches Programmieren} den \textit{Algorithmus von Bellman und Ford} sowie den \textit{Algorithmus von Floyd und Warshall} kennenlernen.
+
+Wir beschreiben den Algorithmus von Dijkstra in einer Variante, bei der \textit{nur die Längen der kürzesten Pfade} ermittelt werden. Es ist jedoch einfach, den Algorithmus so zu ergänzen, dass auch die kürzesten Pfade selbst mitgeliefert werden.
+
+Im Algorithmus von Dijkstra spielt eine Menge $S \subseteq V$ eine wichtige Rolle: Wir nennen $S$ den \textit{bereits erforschten Teil des Graphen} (\foreignquote{english}{set of explored nodes}), da in jeder Phase des Algorithmus für die Knoten $u$ der aktuellen Menge $S$ ein Wert $d(u)$ vorliegt, von dem wir nachweisen werden, dass er die Länge eines kürzesten $s,u$-Pfades von $G$ bereits korrekt angibt. Darüber hinaus gilt sogar, dass es einen solchen Pfad gibt, der ganz in $S$ verläuft.
+
+Am Anfang gilt $S= \bigl\{ s\bigr\}$ und $d(s) = 0$; im Laufe des Algorithmus kommen dann schrittweise Knoten zu $S$ hinzu, bis am Ende $S=V$ gilt. Genauer: Gilt $S \neq V$, so betrachtet man diejenigen Knoten $v \in V \setminus S$, die von $S$ aus direkt erreichbar sind, d.h., zu denen mindestens eine Kante $e=(u,v)$ mit $u \in S$ führt. Für jeden solchen Knoten $v \in V \setminus S$ stellt man sich vor, dass die minimale Länge eines $s,v$-Pfades zu berechnen ist, der -- abgesehen von $v$ und seiner letzten Kante $e=(u,v)$ -- ganz in $S$ verläuft (siehe Zeichnung). Dementsprechend betrachtet man die Größe
+\[
+d'(v) = \min{\Bigl\{ d(u) + \ell(u,v) : u \in S \text{ und } (u,v) \in E \Bigr\}}.
+\]
+
+In Worten: Für alle $u \in S$, von denen eine Kante $(u,v) \in E$ zu $v$ führt, betrachtet man die Summe $d(u) + \ell(u,v)$; $d'(v)$ ist dann der kleinste unter den betrachteten Werten.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,0.0)(5.5,2.5)
+\footnotesize
+
+\pscircle(1,1){1}
+\pscircle(4,1){1}
+
+\cnode*(1.4,1.4){3pt}{U}
+\cnode*(0.5,0.75){3pt}{S}
+\cnode*(3.6,1.4){3pt}{V} 
+
+\ncarc[arcangle=25]{->}{U}{V}
+\psbcurve(0.5,0.75)(0.75,0.75)(1.25,0.5)(1.4,1.4)
+
+
+\uput{0.2}[180](0.5,0.75){$s$}
+\uput{0.3}[ 90](2.5,1.5){$e$}
+\uput{0.2}[180](1.4,1.4){$u$}
+\uput{0.2}[  0](3.6,1.4){$v$}
+\uput{0.2}[ 90](1,2){$S$}
+\uput{0.2}[ 90](4,2){$V \setminus S$}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+Im Algorithmus von Dijkstra wird nun dasjenige $v \in V \setminus S$ ausgewählt, für das $d'(v)$ so klein wie möglich ist; dieses $v$ wird zu $S$ hinzugefügt und $d(v)$ wird dadurch definiert, dass man $d(v) = d'(v)$ setzt.
+
+Es ergibt sich der folgende Algorithmus (Darstellung nach Kleinberg/Tardos)\index{Algorithmus!von Dijkstra}\index{Dijkstra, Algorithmus von}:
+
+\begin{center}
+\label{page:12:1}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{\textbf{Dijkstra's Algorithm $\mathbf{(G, \ell, s)}$}} \\
+& \\
+ (1)& Let $S$ be the set of explored nodes \\
+ (2)& For each $u \in S$, we store a distance $d(u)$ \\
+ (3)& Initially $S = \bigl\{ s \bigr\}$ and $d(s)=0$ \\
+ (4)& \textbf{While} $S \neq V$ \\
+ (5)& \qquad Select a node $v \in V \setminus S$ with at least one edge from $S$ to $v$ such that \\
+    & \qquad\qquad $d'(v) = \min{\bigl\{ d(u) + \ell(u,v) : \ u \in S \text{ and } (u,v) \in E \bigr\}}$ is as small as possible \\
+ (6)& \qquad Add $v$ to $S$ and define $d(v) = d'(v)$ \\
+ (7)& \textbf{EndWhile}
+\end{tabular}
+\end{center}
+
+Am Ende liefert der Algorithmus von Dijkstra zu jedem $v \in V$ einen Wert $d(v)$. Noch wissen wir nicht, ob $d(v)$ tatsächlich die Länge eines kürzesten $s,v$-Pfades von $G$ angibt -- das wird erst später nachgewiesen werden. Wir wollen uns zunächst nur davon überzeugen, dass es überhaupt einen $s,v$-Pfad $P_v$ in $G$ gibt, der die Länge $d(v)$ besitzt. Dies ist nicht schwer einzusehen; man erhält einen solchen Pfad $P_v$ für $v \neq s$ dadurch, dass man im Algorithmus von Dijkstra eine leichte Erweiterung vornimmt: Bei Aufnahme von $v \neq s$ in die Menge $S$ speichert man zusätzlich immer eine Kante $(u,v)$, die für die Aufnahme von $v$ in $S$ \enquote{verantwortlich} ist, d.h., man speichert eine Kante $(u,v)$ mit $u \in S$, für die $d(u) + \ell(u,v)$ minimal ist. 
+
+Um einen $s,v$-Pfad $P_v$ der Länge $d(v)$ für $v \neq s$ zu erhalten, braucht man dann nur noch die entsprechenden Kanten rückwärts zu durchlaufen: Man startet in $v$ und durchläuft die für $v$ gespeicherte Kante $(u,v)$ rückwärts; dadurch kommt man von $v$ zum Knoten $u$, der früher als $v$ in $S$ aufgenommen wurde. Falls $u \neq s$, so durchläuft man danach die zu $u$ gespeicherte Kante $(w,u)$ rückwärts und kommt zum Knoten $w$, der noch früher in $S$ aufgenommen wurde. Dies führt man fort, bis man bei $s$ angelangt ist. Durchläuft man diese Kanten umgekehrt von $s$ nach $v$, so erhält man den gewünschten $s,v$-Pfad $P_v$ der Länge $d(v)$.
+
+Man definiert zusätzlich den Pfad $P_s$ als den nur aus $s$ bestehenden Pfad der Länge 0.
+
+\textbf{Übungsaufgabe}. Man beweise durch vollständige Induktion nach der Anzahl $k$ der Kanten von $P_v$, dass $P_v$ tatsächlich die Länge $d(v)$ besitzt. (\textit{Hinweis}: Gilt $v \neq s$, so betrachte man die letzte Kante von $P_v$.)
+
+Zu jedem vom Algorithmus gelieferten Wert $d(v)$ gehört also ein $s,v$-Pfad $P_v$, der die Länge $d(v)$ besitzt und den man wie beschrieben erhält. Weiter unten werden wir uns davon überzeugen, dass dieser $s,v$-Pfad $P_v$ sogar immer ein \textit{kürzester $s,v$-Pfad von $G$} ist. Wir halten dieses Ergebnis bereits hier fest:
+
+\begin{equation}
+\label{eq:12:2}
+\begin{array}{c}
+\textit{Der vom Algorithmus von Dijkstra gelieferte Wert $d(v)$ gibt für jeden } \\
+\textit{Knoten $v$ die Länge eines kürzesten $s,v$-Pfades in $G$ an und der} \\
+\textit{dazugehörige Pfad $P_v$ ist ein solcher kürzester Pfad.}
+\end{array}
+\end{equation}
+
+Wir schauen uns den Ablauf des Algorithmus von Dijkstra anhand eines \textbf{Beispiels} an; $G$ sei der folgende Graph:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(2,3){3pt}{U} \uput{0.2}[ 90](2,3){$u$}
+\cnode*(2,1){3pt}{V} \uput{0.2}[270](2,1){$v$} 
+\cnode*(4,2){3pt}{X} \uput{0.2}[  0](4,2){$x$}
+\cnode*(4,4){3pt}{Y} \uput{0.2}[ 90](4,4){$y$}
+\cnode*(4,0){3pt}{Z} \uput{0.2}[270](4,0){$z$}
+
+\ncline{->}{S}{U} \uput{0.1}[ 90](1.0,2.5){$1$}
+\ncline{->}{S}{V} \uput{0.1}[270](1.0,1.5){$2$}
+\ncline{->}{S}{X} \uput{0.1}[ 90](2.0,2.0){$4$}
+\ncline{->}{U}{X} \uput{0.1}[ 90](3.0,2.5){$1$}
+\ncline{->}{U}{Y} \uput{0.1}[ 90](3.0,3.5){$3$}
+\ncline{->}{V}{X} \uput{0.1}[270](3.0,1.5){$2$}
+\ncline{->}{V}{Z} \uput{0.1}[270](3.0,0.5){$3$}
+\ncline{->}{X}{Y} \uput{0.1}[  0](4.0,3.0){$1$}
+\ncline{->}{X}{Z} \uput{0.1}[  0](4.0,1.0){$2$}
+
+\small
+\end{pspicture}
+\end{center}
+
+\underline{Initialisierung}:
+
+Es sei $S = \bigl\{ s \bigr\}$ und $d(s) = 0$.
+
+\underline{1.	Durchlauf der While-Schleife}: 
+
+Die Knoten aus $V \setminus S$, zu denen Kanten aus $S$ führen, sind $u$, $v$, $x$; man erhält $d'(u) = 1$, $d'(v) = 2$, $d'(x) = 4$. Es folgt $S = \bigl\{ s,u \bigr\}$ und $d(u) = 1$.
+
+\underline{2.	Durchlauf der While-Schleife}: 
+
+Die Knoten aus $V \setminus S$, zu denen Kanten aus $S$ führen, sind $v$, $x$, $y$; man erhält $d'(v) = 2$, $d'(x) = 2$, $d'(y) = 4$. Man kann $v$ oder $x$ in $S$ aufnehmen; wir entscheiden uns (willkürlich) für $v$. Es folgt $S = \bigl\{ s,u,v \bigr\}$ und $d(v) = 2$.
+
+\underline{3.	Durchlauf der While-Schleife}: 
+
+Die Knoten aus $V \setminus S$, zu denen Kanten aus $S$ führen, sind $x$, $y$, $z$;  man erhält $d'(x) = 2$, $d'(y) = 4$, $d'(z) = 5$. Es folgt $S = \bigl\{ s,u,v,x \bigr\}$ und $d(x) = 2$.
+
+
+\underline{4.	Durchlauf der While-Schleife}: 
+
+Die Knoten aus $V \setminus S$, zu denen Kanten aus $S$ führen, sind $y$ und $z$;  man erhält $d'(y) = 3$, $d'(z) = 4$. Es folgt $S = \bigl\{ s,u,v,x,y \bigr\}$ und $d(y) = 3$.
+
+\underline{5.	Durchlauf der While-Schleife}: 
+
+Für den verbliebenen Knoten $z$ erhält man $d'(z)=4$. Es folgt $S = \bigl\{ s,u,v,x,y,z \bigr\}$ und $d(z) = 4$.
+
+\bigskip
+
+Der Algorithmus von Dijkstra ist ein Greedy-Algorithmus, da er in jedem Schritt \textit{kurzsichtig} vorgeht: Wenn es darum geht, $S$ zu erweitern, so schaut sich der Algorithmus nur Kanten an, die direkt von $S$ ausgehen -- gerade so, als ob er Kanten, die weiter von $S$ entfernt sind, nicht erkennen könnte.
+
+Bei so viel Kurzsichtigkeit braucht man sich nicht zu wundern, dass der Algorithmus im Allgemeinen keine korrekten Ergebnisse liefert, wenn Kanten negativer Länge im Spiel sind. Hier ein \textbf{Beispiel}, an dem zu erkennen ist, was im Falle negativer Kantenlängen schiefgehen kann:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(2,4){3pt}{U} \uput{0.2}[ 90](2,4){$u$}
+\cnode*(2,0){3pt}{V} \uput{0.2}[270](2,0){$v$}
+\cnode*(4,2){3pt}{W} \uput{0.2}[  0](4,2){$w$} 
+
+\ncline{->}{S}{U} \uput{0.1}[135](1,3){$1$}
+\ncline{->}{S}{V} \uput{0.1}[225](1,1){$3$}
+\ncline{->}{U}{W} \uput{0.1}[ 45](3,3){$1$}
+\ncline{->}{V}{W} \uput{0.1}[315](3,1){$-2$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Wir setzen nun wieder $\ell(e) \geq 0$ für alle Kanten $e$ voraus und kommen zum Beweis von (\ref{eq:12:2}) (\enquote{Korrektheitsbeweis für den Algorithmus von Dijkstra}). Da der Algorithmus von Dijkstra der vielleicht bekannteste Algorithmus zum Berechnen von kürzesten Pfaden in Graphen ist, findet man Beweise für seine Korrektheit in vielen Lehrbüchern. Wir schauen uns die Darstellung von Kleinberg und Tardos an:
+
+\bigskip
+
+\begin{equation}
+\tag{4.14}
+\begin{array}{c}
+\textit{Consider the set $S$ at any point in the algorithm's execution.}\\
+\textit{For each $u \in S$, the path $P_u$ is a shortest $s-u$ path.}
+\end{array}
+\end{equation}
+
+Note that this fact immediately establishes the correctness of Dijkstra's algorithm, since we can apply it when the algorithm terminates, at which point $S$ includes all nodes.
+
+\textbf{Proof}. We prove this by induction on the size of $S$. The case $|S| = 1$ is easy, since then we have $S = \bigl\{ s \bigr\}$ and $d(s) = 0$. Suppose the claim holds when $|S| = k$ for some value of $k \geq 1$; we now grow $S$ to size $k + 1$ by adding the node $v$. Let $(u, v)$ be the final edge on our $s-v$ path $P_v$.
+
+By induction hypothesis, $P_u$ is the shortest $s-u$ path for each $u \in S$. Now consider any other $s-v$ path $P$; we wish to show that it is at least as long as $P_v$. In order to reach $v$, this path $P$ must leave the set $S$ \textit{somewhere}; let $y$ be the first node on $P$ that is not in $S$, and let $x \in S$ be the node just before $y$.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-1.0)(11.5,4.5)
+\footnotesize
+
+\pscircle[fillstyle=solid,fillcolor=light-gray](1,2){2}
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(2,1){3pt}{U} \uput{0.2}[270](2,1){$u$}
+\cnode*(4,1){3pt}{V} \uput{0.2}[270](4,1){$v$}
+\cnode*(2,3){3pt}{X} \uput{0.2}[ 90](2,3){$x$}
+\cnode*(4,3){3pt}{Y} \uput{0.2}[ 90](4,3){$y$} 
+
+%\ncline{->}{S}{U} \uput{0.1}[225](1,1.5){$P_u$}
+%\ncline{->}{S}{X} \uput{0.1}[135](1,2.5){$P$}
+\pscurve{->}(0,2)(0.5,1.5)(1.5,1.5)(1.925,1.075) \uput{0.1}[270](1,1.5){$P_u$}
+\pscurve{->}(0,2)(0.5,2.5)(1.5,2.5)(1.925,2.925) \uput{0.1}[ 90](1,2.5){$P'$}
+\ncline{->}{U}{V} 
+\ncline{->}{X}{Y} 
+%\ncline{->}{Y}{V} 
+\pscurve{->}(4,3)(3.75,2.5)(4.25,1.5)(4.075,1.075) 
+
+\uput{0}[0](0,3.5){$S$}
+
+\psframe[framearc=0.2](5,1.5)(11,2.75)
+\uput{0}[90](8,2.33){The alternate $s-v$ path $P$ through}
+\uput{0}[90](8,2.00){$x$ and $y$ is already too long by}
+\uput{0}[90](8,1.66){the time it has left the set $S$.}
+
+\uput{0.5}[270](5,0){\textbf{Figure 4.8} The shortest path $P_v$ and an alternate $s-v$ path $P$ through the node $y$.}
+
+\small
+\end{pspicture}
+\end{center}
+
+The situation is now as depicted in Figure 4.8, and the crux of the proof is very simple: $P$ cannot be shorter than $P_v$ because it is already at least as long as $P_v$ by the time it has left the set $S$. Indeed, in iteration $k + 1$, Dijkstra's
+Algorithm must have considered adding node $y$ to the set $S$ via the edge $(x, y)$ and rejected this option in favor of adding $v$. This means that there is no path from $s$ to $y$ through $x$ that is shorter than $P_v$. But the subpath of $P$ up to $y$ is such a path, and so this subpath is at least as long as $P_v$. Since edge length are nonnegative, the full path $P$ is at least as long as $P_v$ as well.
+
+This is a complete proof; one can also spell out the argument in the previous paragraph using the following inequalities. Let $P'$ be the subpath of $P$ from $s$ to $x$. Since $x \in S$, we know by the induction hypothesis that $P_x$ is a shortest $s-x$ path (of length $d(x)$), and so $\ell(P') \geq \ell(P_x) = d(x)$. Thus the subpath of $P$ out to node $y$ has length $\ell(P') + \ell(x, y) \geq d(x) + \ell(x, y) \geq d'(y)$, and the full path $P$ is at least as long as this subpath. Finally, since Dijkstra's Algorithm selected $v$ in this iteration, we know that $d'(y) \geq d'(v) = \ell(P_v)$. Combining these inequalities shows that $\ell(P) \geq \ell(P') + \ell(x, y) \geq \ell(P_v)$. $\Box$
+
+\bigskip
+
+Der obige Beweis der Korrektheit des Algorithmus von Dijkstra läuft übrigens nach dem Schema \foreignquote{english}{the greedy algorithm stays ahead} ab: Der Algorithmus von Dijkstra baut die Gesamtlösung schrittweise auf und im Beweis wird gezeigt, dass die vom Dijkstra-Algorithmus in diesem Prozess gelieferten Teillösungen für die Mengen $S$ bereits optimal sind (und deshalb von keinem anderen Algorithmus übertroffen werden können). Anders gesagt: Es wird gezeigt, dass der Dijkstra-Algorithmus für jede Menge $S$ \enquote{vorne liegt}.
+
+
+
+
+Bei der auf Seite \pageref{page:12:1} präsentierten Darstellung des Dijkstra-Algorithmus fehlt noch ein \textit{wichtiges Detail}: Die Frage, wie man in jedem Durchlauf der While-Schleife den Knoten $v$ auf eine effiziente Art findet, wurde bislang ausgespart. Auf den ersten Blick hat man den Eindruck, dass man wie folgt vorgehen müsste: Für jeden Knoten $v \notin S$, zu dem mindestens eine von $S$ ausgehende Kante hinführt, hat man für sämtliche Kanten $e = (u,v)$ mit $u \in S$ den Wert $d(u) + \ell(e)$ zu bilden und $v$ das Minimum $d'(v)$ all dieser Werte zuzuordnen. Unter allen $v \notin S$, denen auf diese Art ein $d'(v)$ zugeordnet wurde, wählt man sich dann einen Knoten $v$, für den $d'(v)$ so klein wie möglich ist. Dieses $v$ nimmt man zu $S$ hinzu, setzt $d(v) = d'(v)$ und steigt ggf. in den nächsten Durchlauf der While-Schleife ein.
+
+Im nächsten Durchlauf der While-Schleife könnte man nun ganz entsprechend vorgehen; dabei würde man jedoch merken, dass etliche Rechnungen, die bereits im vorangegangenen Durchlauf der While-Schleife durchgeführt wurden, nur wiederholt werden. In manchen Fällen würden sich die im vorangegangenen Durchlauf berechneten Werte nicht ändern:
+\begin{itemize}
+\item Wurde beim vorangegangenen Durchlauf der While-Schleife $v$ zu $S$ hinzugefügt und ist für einen Knoten $w \notin S$ die Kante $(v,w)$ nicht vorhanden, so ändert sich der Wert $d'(w)$ gegenüber dem vorangegangenen Durchlauf nicht, da es immer noch genau dieselben Kanten $e=(u,w)$ sind, die zur Berechnung von $d'(w)$ herangezogen werden.
+
+\item Und wie ändert sich der Wert $d'(w)$ für ein $w \notin S$, wenn die Kante $(v,w)$ vorhanden ist? Offenbar hat man den alten Wert $d'(w)$ mit dem Wert $d(v) + \ell(v,w)$ zu vergleichen und hierbei nach der folgenden Update-Formel vorzugehen:
+\[
+d'(w) = \min{\Bigl\{ d'(w), d(v)+\ell(v,w) \Bigr\}}.
+\]
+\end{itemize}
+
+Es wäre also unökonomisch, die erhaltenen Werte $d'(w)$ am Ende des vorangegangenen Durchlaufs der While-Schleife einfach \enquote{wegzuschmeißen}. Diese Überlegungen führen zur folgenden \textit{modifizierten Version des Algorithmus von Dijkstra}.
+
+\begin{center}
+\label{page:12:2}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{\textbf{Dijkstra's Algorithm (modified version) $\mathbf{(G, \ell, s)}$}} \\
+& \\
+ (1)& Let $S$ be the set of explored nodes \\
+ (2)& For each $u \in V$, we store a value $d(u)$ \\
+ (3)& Initially $S = \bigl\{ s \bigr\}$ and $d(s)=0$ \\
+ (4)& \qquad For each $u \neq s$ let $d(u) = \ell(s,u)$ if $(s,u)\in E$ and $d(u)=\infty$ otherwise \\
+ (5)& \textbf{While} $S \neq V$ \\
+ (6)& \qquad Select a node $v \in V \setminus S$ with $d(v) = \min{\bigl\{ d(u) : u \in V \setminus S \bigr\}}$ \\
+ (7)& \qquad Add $v$ to $S$ \\
+ (8)& \qquad For each $u \in V \setminus S$ with $(v,u) \in E$, let $d(u) = \min{\bigl\{ d(u), d(v) + \ell(v,u) \bigr\}}$ \\
+ (9)& \textbf{EndWhile}
+\end{tabular}
+\end{center}
+
+Die Laufzeit dieser Version des Dijkstra-Algorithmus ist $O(n^2)$ für $n = |V|$, da die While-Schleife $n-1$ mal durchlaufen wird und die Zeilen (6)-(8) offenbar in $O(n)$ Zeit ausgeführt werden können. Liegt ein dichtbesetzter Graph vor, d.h., für $m=|E|$ gilt $m = \Theta(n^2)$, so ist die Laufzeitschranke $O(n^2)$ bestmöglich, da jede Kante inspiziert werden muss. Ist $m$ dagegen asymptotisch kleiner als $n^2$, so lassen sich durch Einsatz geeigneter Datenstrukturen Laufzeitverbesserungen erreichen (vgl. etwa Kleinberg/Tardos, Seite 141f). Stichwort hierzu: Prioritätswarteschlange.
+
+
+
+Bevor wir die Arbeitsweise des Algorithmus anhand eines Beispiels illustrieren, noch ein Wort zu den Werten $d(u)$: Für $u \in S$ gibt $d(u)$ wie bisher die Länge eines kürzesten $s,u$-Pfades in $G$ an. Für Knoten $u \notin S$, zu denen mindestens eine von $S$ ausgehende Kante hinführt, bezeichnet $d(u)$ die Größe, die wir bislang $d'(u)$ genannt haben; für die übrigen Knoten $u \notin S$ gilt $d(u) = \infty$. Für alle $u \in V \setminus S$ gibt $d(u)$ somit eine obere Schranke für die Länge eines kürzesten $s,u$-Pfades in $G$ an; der Wert $d(u)$ kann in diesem Fall noch verändert werden; er ist \textit{vorläufig}. Nach Aufnahme von $u$ in $S$ ändert sich der Wert von $d(u)$ nicht mehr -- er ist \textit{endgültig} und gibt den Abstand von $s$ und $u$ in $G$ an.
+
+\textbf{Beispiel}. Der Graph $G=(V,E)$ mit Längenfunktion $\ell$ sei durch die folgende Zeichnung gegeben:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(4.5,2.5)
+
+\cnode*(2,2){3pt}{A} \uput{0.25}[ 90](2,2){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.25}[270](2,0){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.25}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{E} \uput{0.25}[270](4,0){$e$}
+\cnode*(0,1){3pt}{S} \uput{0.25}[180](0,1){$s$}
+
+\ncarc[arcangle=22.5]{->}{A}{B} \uput{0.10}[  0](2.2, 1.0){$3$}
+\ncline{->}{A}{C} \uput{0.10}[ 90](3.0, 2.0){$2$}
+\ncline{->}{A}{E} \uput{0.05}[225](3.5, 0.5){$3$}
+\ncarc[arcangle=22.5]{->}{B}{A} \uput{0.10}[180](1.8, 1.0){$1$}
+\ncline{->}{B}{C} \uput{0.10}[135](3.5, 1.5){$4$}
+\ncline{->}{B}{E} \uput{0.05}[270](3.0, 0.0){$5$}
+\ncline{->}{E}{C} \uput{0.10}[  0](4.0, 1.0){$1$}
+\ncline{->}{S}{A} \uput{0.10}[135](1.0, 1.5){$4$}
+\ncline{->}{S}{B} \uput{0.05}[225](1.0, 0.5){$2$}
+
+\end{pspicture}
+\end{center}
+
+Wir geben für jeden Knoten $u$ an, welchen Wert $d(u)$ nach der Initialisierung und nach jedem Durchlauf der While-Schleife besitzt. Außerdem wird das jeweils aktuelle $S$ angegeben. Ist ein Wert $d(u)$ endgültig (man sagt auch \textit{permanent}), so wird er unterstrichen.
+
+\underline{Initialisierung}:
+\[
+S = \Bigl\{ s \Bigr\}
+\]
+\begin{center}
+\begin{tabular}{c|ccccc}
+$u$ & $s$ & $a$ & $b$ & $c$ & $e$ \\ \hline
+$d(u)$ & $\underline{0}$ & 4 & 2 & $\infty$ & $\infty$
+\end{tabular}
+\end{center}
+
+\underline{1. Durchlauf der Schleife}:
+\[
+S = \Bigl\{ s,b \Bigr\}
+\]
+\begin{center}
+\begin{tabular}{c|ccccc}
+$u$ & $s$ & $a$ & $b$ & $c$ & $e$ \\ \hline
+$d(u)$ & $\underline{0}$ & $3$ & $\underline{2}$ & $6$ & $7$
+\end{tabular}
+\end{center}
+
+\underline{2. Durchlauf der Schleife}:
+\[
+S = \Bigl\{ s,b,a \Bigr\}
+\]
+\begin{center}
+\begin{tabular}{c|ccccc}
+$u$ & $s$ & $a$ & $b$ & $c$ & $e$ \\ \hline
+$d(u)$ & $\underline{0}$ & $\underline{3}$ & $\underline{2}$ & $5$ & $6$
+\end{tabular}
+\end{center}
+
+\underline{3. Durchlauf der Schleife}:
+\[
+S = \Bigl\{ s,b,a,c \Bigr\}
+\]
+\begin{center}
+\begin{tabular}{c|ccccc}
+$u$ & $s$ & $a$ & $b$ & $c$ & $e$ \\ \hline
+$d(u)$ & $\underline{0}$ & $\underline{3}$ & $\underline{2}$ & $\underline{5}$ & $6$
+\end{tabular}
+\end{center}
+
+\underline{4. Durchlauf der Schleife}:
+\[
+S = \Bigl\{ s,b,a,c,e \Bigr\}
+\]
+\begin{center}
+\begin{tabular}{c|ccccc}
+$u$ & $s$ & $a$ & $b$ & $c$ & $e$ \\ \hline
+$d(u)$ & $\underline{0}$ & $\underline{3}$ & $\underline{2}$ & $\underline{5}$ & $\underline{6}$
+\end{tabular}
+\end{center}
+
+\underline{Übersichtliche Zusammenfassung}:
+\begin{center}
+\begin{tabular}{c||c|c|c|c|c||l}
+ & $s$ & $a$ & $b$ & $c$ & $e$ & \ $S$ \\ \hline\hline
+$0$ & $\underline{0}$ & $4$ & $2$ & $\infty$ & $\infty$ & $\bigl\{ s \bigr\}$ \\ \hline
+$1$ & $\underline{0}$ & $3$ & $\underline{2}$ & $6$ & $7$ & $\bigl\{ s,b \bigr\}$ \\ \hline
+$2$ & $\underline{0}$ & $\underline{3}$ & $\underline{2}$ & $5$ & $6$ & $\bigl\{ s,b,a \bigr\}$ \\ \hline
+$3$ & $\underline{0}$ & $\underline{3}$ & $\underline{2}$ & $\underline{5}$ & $6$ & $\bigl\{ s,b,a,c \bigr\}$ \\ \hline
+$4$ & $\underline{0}$ & $\underline{3}$ & $\underline{2}$ & $\underline{5}$ & $\underline{6}$ & $\bigl\{ s,b,a,c,e \bigr\}$
+\end{tabular}
+\end{center}
+
+Einen kürzeste-Pfade-Baum $\widetilde{B}$ kann man leicht am  Graphen ablesen:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.5,-0.5)(4.5,2.5)
+
+\cnode*(2,2){3pt}{A} \uput{0.25}[ 90](2,2){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.25}[270](2,0){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.25}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{E} \uput{0.25}[270](4,0){$e$}
+\cnode*(0,1){3pt}{S} \uput{0.25}[180](0,1){$s$}
+
+\ncline{->}{A}{C} \uput{0.10}[ 90](3.0, 2.0){$2$}
+\ncline{->}{A}{E} \uput{0.05}[225](3.0, 1.0){$3$}
+\ncline{->}{B}{A} \uput{0.10}[180](2.0, 1.0){$1$}
+\ncline{->}{S}{B} \uput{0.05}[225](1.0, 0.5){$2$}
+
+\uput{1}[180](0, 1.05){$\widetilde{B}$}
+
+\end{pspicture}
+\end{center}
+
+\textbf{Eine Bemerkung zur Terminologie}: Unter einem \textit{Baum} versteht man bekanntlich einen ungerichteten Graphen, der kreislos und zusammenhängend ist. Im Sinne dieser Definition ist der \enquote{kürzeste-Pfade-Baum} $\widetilde{B}$ (streng genommen) gar kein Baum, da $\widetilde{B}$ ein gerichteter Graph ist. Die Bezeichnung von $\widetilde{B}$ als \enquote{kürzester-Pfade-Baum} ist trotzdem üblich: Das rechtfertigt sich dadurch, dass es einen Baum $B$ mit Wurzel $s$ gibt, von dem $\widetilde{B}$ \enquote{abstammt}. Das soll heißen: $\widetilde{B}$ entsteht aus $B$ dadurch, dass man alle Kanten von $s$ weg orientiert.
+
+Um einen kürzeste-Pfade-Baum \textit{systematisch} zu finden, ist der Algorithmus von Dijkstra zu erweitern: Für $u \neq s$ speichert man im Fall $d(u) \neq \infty$ nicht nur den Wert $d(u)$, sondern auch einen dazugehörigen \enquote{Vorgängerknoten} $w$ aus $S$, d.h., nach dem $i$-ten Durchlauf der While-Schleife gilt $d(u) = d(w) + \ell(w,u)$ für den angegebenen Knoten $w \in S$. Im Beispiel sieht das so aus:
+
+\begin{center}
+\begin{tabular}{c||c|c|c|c|c||l}
+ & $s$ & $a$ & $b$ & $c$ & $e$ & \ $S$ \\ \hline\hline
+$0$ & $\underline{0}$ & $4\ s$ & $2\ s$ & $\infty$ & $\infty$ & $\bigl\{ s \bigr\}$ \\ \hline
+$1$ & $\underline{0}$ & $3\ b$ & $\underline{2}\ s$ & $6\ b$ & $7\ b$ & $\bigl\{ s,b \bigr\}$ \\ \hline
+$2$ & $\underline{0}$ & $\underline{3}\ b$ & $\underline{2}\ s$ & $5\ a$ & $6\ a$ & $\bigl\{ s,b,a \bigr\}$ \\ \hline
+$3$ & $\underline{0}$ & $\underline{3}\ b$ & $\underline{2}\ s$ & $\underline{5}\ a$ & $6\ a$ & $\bigl\{ s,b,a,c \bigr\}$ \\ \hline
+$4$ & $\underline{0}$ & $\underline{3}\ b$ & $\underline{2}\ s$ & $\underline{5}\ a$ & $\underline{6}\ a$ & $\bigl\{ s,b,a,c,e \bigr\}$
+\end{tabular}
+\end{center}
+
+Anhand der letzten Zeile kann man zu jedem $u \neq s$ einen Vorgänger auf einem kürzesten $s,u$-Pfad ablesen.
+
+Auf Seite 141f findet man im Buch von Kleinberg und Tardos weitere Ausführungen zum Algorithmus von Dijkstra, vor allen Dingen zur Verbesserung der Laufzeit und, damit zusammenhängend, zum Einsatz einer \textit{Prioritätswarteschlange} (engl. \textit{priority queue}) bei der Implementierung des Algorithmus von Dijkstra. \textit{Empfehlung}: Schauen Sie sich diese Ergänzungen an.
+
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Minimale aufspannende Bäume"                                                %
+%------------------------------------------------------------------------------%
+
+\section{Minimale aufspannende Bäume}
+\index{minimaler aufspannender Baum}\index{Baum!minimaler aufspannender}
+
+Wir befassen uns in diesem Abschnitt mit einem Problem, das ebenso grundlegend wie das zuvor behandelte Problem der kürzesten Pfade ist.
+
+Gegeben sei eine Menge $V$ von $n$ Knoten, sagen wir $V = \bigl\{ v_1, \ldots, v_n \bigr\}$. Wir stellen uns vor, dass zwischen diesen Knoten ein \textit{Kommunikationsnetzwerk}\index{Kommunikationsnetzwerk}\index{Netzwerk!Kommunikations-} eingerichtet werden soll. Dabei muss es nicht unbedingt für alle Paare $v_i,v_j$ möglich sein, eine direkte Verbindung einzurichten -- für gewisse Paare $v_i,v_j$ von verschiedenen Knoten soll dies aber infrage kommen, wobei der Aufbau einer solchen direkten Verbindung \textit{Kosten} verursacht.
+
+Kommunikationsverbindungen sollen immer in beide Richtungen nutzbar sein, d.h., zur Modellierung werden wir ungerichtete Graphen verwenden. 
+
+Das zu errichtende Kommunikationsnetzwerk soll natürlich \textit{zusammenhängend}\index{zusammenhängend} sein, d.h., zwischen zwei verschiedenen Knoten $v_i$ und $v_j$ soll es immer einen Pfad geben, der $v_i$ mit $v_j$ verbindet. \textit{Das Ziel ist, die Gesamtkosten zu minimieren}. Wir gelangen zu folgendem \textit{Problem}.
+
+\textit{Gegeben}: ein zusammenhängender Graph $G=(V,E)$; jeder Kante $e \in E$ sei eine reelle Zahl $c(e) > 0$ zugeordnet (\enquote{Kosten von $e$}).
+
+\textit{Gesucht}: eine Teilmenge $F$ der Kantenmenge $E$, so dass der Graph $(V,F)$ zusammenhängend ist und außerdem die Gesamtkosten
+\[
+\sum\limits_{e \in F}{c(e)}
+\]
+minimal sind.
+
+Wir erinnern noch einmal an die Definition eines Baums.
+
+\begin{Definition}[Definition]
+Unter einem \textit{Baum}\index{Baum} versteht man einen ungerichteten Graphen, der zusammenhängend und kreislos ist.
+\end{Definition}
+
+Wir schließen eine \textit{einfache Beobachtung} an.
+
+\begin{SKBox}
+\textbf{Feststellung}.
+\begin{equation}
+\label{eq:12:**}
+\tag{$\star\star$}
+\begin{array}{c}
+\text{Es sei $(V,F)$ eine Lösung unseres Problems, d.h., der Graph $(V,F)$ ist zusammenhängend} \\
+\text{ und die Gesamtkosten $\sum\limits_{e \in F}{c(e)}$ sind minimal. Dann ist $(V,F)$ ein Baum.}
+\end{array}
+\end{equation}
+\end{SKBox}
+
+\textbf{Beweis}. Da $(V,F)$ zusammenhängend ist, muss nur noch gezeigt werden, dass $(V,F)$ kreislos ist. Angenommen, $(V,F)$ enthielte einen Kreis $C$. Dann könnte man eine beliebige Kante $f$ von $C$ weglassen: $(V, F \setminus \bigl\{ f\bigr\})$ wäre immer noch ein zusammenhängender Graph und wegen $c(f) > 0$ wären die Gesamtkosten für $(V, F \setminus \bigl\{ f \bigr\})$ kleiner als $\sum\limits_{e \in F}{c(e)}$, d.h., $\sum\limits_{e \in F}{c(e)}$ wäre nicht minimal. Dieser Widerspruch zeigt, dass $(V,F)$ kreislos ist. $\Box$
+
+Ist $G=(V,E)$ ein Graph und $T=(V,F)$ ein Baum mit $F \subseteq E$, so nennt man $T$ einen \textit{aufspannenden Baum}\index{aufspannender Baum}\index{Baum!aufspannender} von $G$. Anders gesagt: Ein aufspannender Baum von $G$ ist ein Teilgraph von $G$, der alle Knoten von $G$ enthält und bei dem es sich um einen Baum handelt.
+
+Die Feststellung (\ref{eq:12:**}) besagt, dass als Lösung unseres Problems nur aufspannende Bäume infrage kommen. Gesucht ist also ein \textit{minimaler aufspannender Baum}\index{minimaler aufspannender Baum}\index{Baum!minimaler aufspannender} von $G$ (engl. \textit{minimum spanning tree}\index{minimum spanning tree}, kurz: \textit{MST}\index{MST}).
+
+Ein Graph $G$ hat -- wenn man einmal von sehr einfachen Fällen absieht -- in der Regel sehr viele aufspannende Bäume. Beispielsweise besagt ein bekannter Satz von Cayley\index{Satz!von Cayley}\index{Cayley, Satz von}, dass ein vollständiger Graph mit $n$ Knoten genau
+\[
+n^{n-2}
+\]
+aufspannende Bäume besitzt. Es ist also auf den ersten Blick alles andere als klar, wie man unter all diesen Bäumen einen Baum $T=(V,F)$ finden soll, für den 
+\[
+\sum\limits_{e \in F}{c(e)}
+\]
+minimal ist.
+
+
+
+
+\subsection{Algorithmen für das Minimum Spanning Tree Problem}
+
+In früheren Beispielen aus dem Gebiet des Schedulings haben wir gesehen, wie leicht es ist, sich eine Reihe von natürlich erscheinenden Greedy-Algorithmen auszudenken, für die es in jedem Einzelfall durchaus einleuchtende Plausibilitätsargumente gibt. Häufig funktionierten diese Algorithmen jedoch nicht.
+
+Auch beim Problem des minimalen aufspannenden Baums ist es möglich, sich etliche Greedy-Algorithmen einfallen zu lassen -- diesmal ist es aber erstaunlicherweise so, dass viele der Greedy-Algorithmen, die einem in den Sinn kommen, auch tatsächlich funktionieren. Für das Problem des minimalen aufspannenden Baums kann demnach völlig zu Recht behauptet werden: \foreignquote{english}{Greed works.}
+
+Hier sind \textit{drei einfache Greedy-Algorithmen} für das Problem des minimalen aufspannenden Baums, die alle drei korrekt arbeiten, d.h., einen minimalen aufspannenden Baum auch tatsächlich finden. Wir beschreiben zunächst diese Algorithmen und kümmern uns erst danach um die Frage nach ihrer Korrektheit.
+\begin{itemize}
+\item Der erste dieser drei Greedy-Algorithmen geht wie folgt vor. Zunächst werden die Kanten von $E$ nach ihren Kosten sortiert, und zwar in aufsteigender Reihenfolge: $e_1,\ldots,e_m$ mit $c(e_i) \leq c(e_{i+1})$ ($i = 1,\ldots,m-1$). Man startet nun mit dem kantenlosen Graphen $(V, \emptyset)$, geht die aufsteigend sortierten Kanten von links nach rechts durch und stellt jedes Mal die Frage: \textit{Entsteht ein Kreis, wenn $e_i$ zum bereits konstruierten Teilgraphen hinzugenommen wird}? Falls ja, so wird $e_i$ zurückgewiesen; falls nein, so wird $e_i$ zum bereits konstruierten Teilgraphen hinzugefügt. Diese Vorgehensweise wird \textbf{Kruskals Algorithmus}\index{Algorithmus!von Kruskal}\index{Kruskal, Algorithmus von} genannt.
+
+\item Ein anderer, ebenso einfacher Algorithmus weist große Ähnlichkeit mit Dijkstras Algorithmus zum Auffinden kürzester Pfade auf. Man startet mit einem einzelnen Knoten $s$ (\enquote{Startknoten}, \enquote{Wurzel}) und baut ausgehend von $s$ einen Baum auf, indem man in jedem Schritt eine weitere Kante $e=\bigl\{u,v\bigr\}$ hinzunimmt, die genau einen Knoten mit dem bereits konstruierten Teilbaum gemeinsam hat; dabei wird $e$ jedes Mal so gewählt, dass $c(e)$ möglichst klein ist. Dieses Verfahren wird \textbf{Prims Algorithmus}\index{Algorithmus!von Prim}\index{Prim, Algorithmus von} genannt.
+
+\item Der dritte diese Algorithmen kann als eine \enquote{Rückwärtsversion} von Kruskals Algorithmus angesehen werden. Zunächst werden die Kanten von $E$ wieder nach ihren Kosten sortiert, diesmal aber in absteigender Reihenfolge: $e_1,\ldots, e_m$ mit $c(e_i) \geq c(e_{i+1})$ ($i=1,\ldots,m-1$). Man startet mit dem Graphen $G=(V,E)$, geht die Kanten in der Reihenfolge $e_1,\ldots,e_m$ durch und stellt jedes Mal die Frage: \textit{Bleibt der aktuelle Teilgraph zusammenhängend, wenn man die Kante $e_i$ entfernt}? Falls ja, so wird $e_i$ aus dem aktuellen Teilgraphen entfernt; falls nein, so bleibt $e_i$ im aktuellen Teilgraphen. Diese Methode wird \textbf{Reverse-Delete-Algorithmus}\index{Reverse-Delete-Algorithmus}\index{Algorithmus!Reverse-Delete-} genannt.
+\end{itemize}
+
+Woran liegt es nun, dass alle drei beschriebenen Algorithmen korrekt arbeiten, d.h. einen minimalen aufspannenden Baum liefern? Die Antwort, die sich aufgrund der nachfolgenden Analyse ergeben wird, ist, dass ein \textit{Austauschargument}\index{Austauschargument} dahinter steckt.
+
+\textit{Genauer}: Um die Korrektheit der Algorithmen nachzuweisen, werden wir zunächst einen Hilfssatz vorstellen, der für unsere Zwecke sehr nützlich sein wird. Schaut man sich den Beweisteil (d) $\Rightarrow$ (a) dieses Hilfssatzes an, so erkennt man: Hier geht es um ein Austauschargument.  
+
+
+
+\subsection{Analyse der Algorithmen}
+
+Alle drei Algorithmen arbeiten ähnlich, nämlich mit wiederholtem Hinzu- bzw. Wegnehmen von Kanten. Um diese Vorgehensweise zu analysieren fragen wir:
+\begin{itemize}
+\item Kann man beim Algorithmus von Kruskal bzw. Prim sicher sein, dass man nichts falsch macht, wenn man eine Kante zu einer bereits existierenden Teillösung hinzunimmt?
+\item Kann man beim Reverse-Delete-Algorithmus sicher sein, dass man keine Kante vorschnell aussortiert hat?
+\end{itemize}
+
+Die Antworten auf die aufgeworfenen Fragen werden sich aus dem Folgenden ergeben, wobei wir den Schwerpunkt auf die Analyse der \textit{Algorithmen von Kruskal und Prim} legen.
+
+Wir werden größtenteils nach dem folgenden Lehrbuch vorgehen:
+\begin{itemize}
+	\item B. Korte, J. Vygen:
+	
+	\textit{Combinatorial Optimization. Theory and Algorithms}. Springer. 2012. 5. Auflage.
+\end{itemize}
+
+\pagebreak
+Das Problem, um das es geht, lässt sich wie folgt beschreiben:
+
+\medskip
+\begin{center}
+	\begin{minipage}{0.875\textwidth}
+		\textbf{MINIMUM-SPANNING-TREE-PROBLEM}
+		
+		\medskip
+		\textbf{Instanz}: Ein ungerichteter, zusammenhängender Graph $G$ mit Kantengewichten $c(e) > 0$.
+		
+		\medskip
+		\textbf{Aufgabe}: Bestimme einen aufspannenden Baum von $G$ mit minimalem Gewicht.
+	\end{minipage}
+\index{Minimum-Spanning-Tree-Problem}
+\index{Problem!Minimum-Spanning-Tree-}
+\end{center}
+\medskip
+
+Wir beginnen mit der \textit{Zusammenstellung einiger Bezeichnungen}.
+
+Ist ein Graph $G$ gegeben, so bezeichnen wir die Knotenmenge von $G$ mit $V(G)$; $E(G)$ bezeichnet die Kantenmenge von $G$. Für $X \subseteq V(G)$ sei mit $\delta(X)$ die Menge derjenigen Kanten $e \in E(G)$ bezeichnet, für die gilt: Genau ein Endpunkt von $e$ liegt in $X$ (siehe Zeichnung).
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-2.5,-1)(2.5,1)
+	\footnotesize
+	
+	\psellipse[linewidth=1pt](0,0)(2,1) 
+	\uput{0.05}[135](-1,1){$X$} 
+	
+	\cnode*(1.5,0){3pt}{A} 
+	\cnode*(2.5,0.5){3pt}{B}
+	\ncline{A}{B}
+	\uput{0}[315](2.25,0.25){$e$} 
+	
+	\small
+	\end{pspicture}
+\end{center}
+
+Man kann die Menge $\delta(X)$ auch so beschreiben:
+\[
+\delta(X) = \Bigl\{ e \in E(G) : |e \cap X| = 1 \Bigr\}.
+\]
+
+Soll betont werden, dass wir uns auf den Graphen $G$ beziehen, so schreiben wir $\delta_G(X)$ anstelle von $\delta(X)$.
+
+Für $e \in E(G)$ bezeichnet $G-e$ den Graphen, den man aus $G$ dadurch erhält, dass man die Kante $e$ löscht. Falls eine neue Kante $e$ zu $G$ hinzugenommen wird, so wird der entstehende Graph mit $G+e$ bezeichnet.
+
+Mit $c$ bezeichnen wir die Funktion, die jeder Kante $e \in E(G)$ ihr Gewicht zuordnet. Ist $T$ ein minimaler aufspannender Baum, so sagen wir hierfür kurz: $T$ ist \textit{optimal}. Im Folgenden sei (wie üblich) $n = |V(G)|$ und $m=|E(G)|$.
+
+Es werden nun drei \textit{Optimalitätsbedingungen} vorgestellt, die wir anschließend benutzen werden, um die Korrektheit der Algorithmen von Kruskal und Prim sowie des Reverse-Delete-Algorithmus nachzuweisen.
+
+\begin{Satz}[Hilfssatz]
+	Es sei $(G,c)$ eine Instanz des MINIMUM-SPANNING-TREE-PROBLEMS und $T$ sei ein aufspannender Baum von $G$. Dann sind die folgenden vier Aussagen äquivalent:
+	\begin{enumerate}[(a)]
+		\item $T$ ist optimal.
+		
+		\item Für jede Kante $e = \bigl\{ x,y \bigr\} \in E(G) \setminus E(T)$ gilt: Keine Kante des $x,y$-Pfades in $T$ hat höheres Gewicht als $e$.
+		
+		\item Für jedes $e \in E(T)$ gilt: Ist $B$ eine der beiden Zusammenhangskomponenten von $T-e$, so ist $e$ eine Kante aus $\delta(V(B))$, die unter allen Kanten aus $\delta(V(B))$ minimales Gewicht hat.
+		
+		\item Es existiert eine Reihenfolge $e_1,\ldots,e_{n-1}$ der Kanten von $T$ mit der Eigenschaft, dass es zu jeder der Kanten $e_i$ eine Menge $X \subseteq V(G)$ gibt, die Folgendes erfüllt:
+		\begin{itemize}
+			\item $e_i \in \delta(X)$ und unter allen Kanten aus $\delta(X)$ hat $e_i$ minimales Gewicht;
+			
+			\item $e_j \notin \delta(X)$ für alle $j \in \bigl\{ 1,\ldots, i-1\bigr\}$. 
+		\end{itemize}
+	\end{enumerate}
+\end{Satz}
+ 
+Bevor wir diesen Satz beweisen, schauen wir uns die Bedingungen (b), (c) und (d) genauer an. Wir beginnen mit (b).
+ 
+\pagebreak
+In der folgenden Zeichnung wird die Bedingung (b) veranschaulicht: Der $x,y$-Pfad in $T$ besteht aus den Kanten $e_1,e_2,e_3$. Ist (b) erfüllt, so gilt $c(e_i) \leq c(e)$ für alle drei Kanten $e_i$.
+
+\begin{figure}[H]
+	\centering
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(0, 0)(6,7)
+	\footnotesize
+	
+	\cnode*(1,0){3pt}{V01} 
+	\cnode*(3,0){3pt}{V02}
+	\cnode*(2,1){3pt}{V03} \uput{0.15}[180](2,1){$y$}
+	\cnode*(4,1){3pt}{V04}
+	\cnode*(3,2){3pt}{V05} 
+	\cnode*(4,2){3pt}{V06}
+	\cnode*(3,4){3pt}{V07} 
+	\cnode*(2,5){3pt}{V08} \uput{0.15}[180](2,5){$x$}
+	\cnode*(4,5){3pt}{V09} 
+	\cnode*(5,5){3pt}{V10}
+	\cnode*(1,6){3pt}{V11} 
+	\cnode*(3,6){3pt}{V12}
+	\cnode*(4,6){3pt}{V13} 
+	\cnode*(5,6){3pt}{V14}
+	\cnode*(0,7){3pt}{V15} 
+	\cnode*(2,7){3pt}{V16}
+	
+	\ncline{V01}{V03}
+	\ncline{V02}{V03}
+	\ncline{V03}{V05} \uput{0.05}[315](2.5,1.5){$e_3$}
+	\ncarc[arcangle=30,linestyle=dashed]{V03}{V08} \uput{0.15}[180](1.5,3){$e$}
+	\ncline{V04}{V05}
+	\ncline{V05}{V06}
+	\ncline{V05}{V07} \uput{0.15}[0](3,3){$e_2$}
+	\ncline{V07}{V08} \uput{0.05}[45](2.5,4.5){$e_1$}
+	\ncline{V07}{V09}
+	\ncline{V08}{V11}
+	\ncline{V08}{V12}
+	\ncline{V09}{V10}
+	\ncline{V09}{V13}
+	\ncline{V09}{V14}
+	\ncline{V11}{V15}
+	\ncline{V11}{V16}
+	
+	\uput{0.15}[0](4,3){$T$}
+	
+	\small
+	\end{pspicture}
+\end{figure}
+ 
+In der nächsten Figur wird die Bedingung (c) illustriert: Ist (c) erfüllt, so gilt $c(e) \leq c(f)$ für alle Kanten $f \in \delta(V(B))$.
+ 
+\begin{figure}[H]
+	\centering
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-1, 0)(7,7.25)
+	\footnotesize
+	
+	\psellipticwedge[fillcolor=lightgray, fillstyle=solid](3,7.25)(4, 3.75){180}{0}
+	
+	\cnode*(1,0){3pt}{V01} 
+	\cnode*(3,0){3pt}{V02}
+	\cnode*(2,1){3pt}{V03}
+	\cnode*(4,1){3pt}{V04}
+	\cnode*(3,2){3pt}{V05} 
+	\cnode*(4,2){3pt}{V06}
+	\cnode*(3,4){3pt}{V07} 
+	\cnode*(2,5){3pt}{V08}
+	\cnode*(4,5){3pt}{V09} 
+	\cnode*(5,5){3pt}{V10}
+	\cnode*(1,6){3pt}{V11} 
+	\cnode*(3,6){3pt}{V12}
+	\cnode*(4,6){3pt}{V13} 
+	\cnode*(5,6){3pt}{V14}
+	\cnode*(0,7){3pt}{V15} 
+	\cnode*(2,7){3pt}{V16}
+	
+	\ncline{V01}{V03}
+	\ncline{V02}{V03}
+	\ncline{V03}{V05}
+	\ncarc[arcangle=30,linestyle=dashed]{V03}{V08} \uput{0.15}[180](1.5,3){$f$}
+	\ncline{V04}{V05}
+	\ncline{V05}{V06}
+	\ncline{V05}{V07} \uput{0.15}[0](3,3){$e$}
+	\ncline{V07}{V08}
+	\ncline{V07}{V09}
+	\ncline{V08}{V11}
+	\ncline{V08}{V12}
+	\ncline{V09}{V10}
+	\ncline{V09}{V13}
+	\ncline{V09}{V14}
+	\ncline{V11}{V15}
+	\ncline{V11}{V16}
+	
+	\uput{0.15}[0](4,3){$T$}
+	\uput{0.15}[0](5.5,6.5){$B$}
+	
+	\small
+	\end{pspicture}
+\end{figure}
+ 
+Die folgende Figur dient der Illustration der Bedingung (d). Dabei wird angenommen, dass eine Reihenfolge $e_1,\ldots,e_{n-1}$ wie in (d) gegeben ist; $e_1,e_2,e_3,e_4$ seien die ersten vier Kanten dieser Reihenfolge und es gelte $i=4$. Die Menge $X \subseteq V(G)$ sei die zu $e_4$ gehörige Menge. Es gilt $e_4 \in \delta(X)$, aber $e_1,e_2,e_3 \notin \delta(X)$. Außerdem hat $e_4$ minimales Gewicht unter allen Kanten aus $\delta(X)$.
+ 
+\begin{figure}[H]
+	\centering
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-2.5,-1)(2.5,1.5)
+	\footnotesize
+	
+	\psellipse[linewidth=1pt](0,0)(2,1) 
+	\uput{0.05}[135](-1,1){$X$} 
+	
+	\cnode*(-0.5,-0.50){3pt}{V1} 
+	\cnode*(-1.5, 0.25){3pt}{V2}
+	\cnode*( 1.5, 1){3pt}{V3} 
+	\cnode*( 2.5, 1.5){3pt}{V4}
+	\cnode*(   0,-0.50){3pt}{V5} 
+	\cnode*( 0.5, 0.50){3pt}{V6}
+	\cnode*( 1.5, 0){3pt}{V7} 
+	\cnode*( 2.5, 0.5){3pt}{V8}
+	\ncline{V1}{V2} \uput{0.1}[225](-1,-0.13){$e_1$} 
+	\ncline{V3}{V4}	\uput{0}[315](2.25,1.25){$e_2$} 
+	\ncline{V5}{V6}	\uput{0.1}[180](0.25,0){$e_3$} 
+	\ncline{V7}{V8}	\uput{0}[315](2.25,0.25){$e_4$} 
+	
+	\small
+	\end{pspicture}
+\end{figure}
+
+ 
+In der Bedingung (b) steht der $x,y$-Pfad von $T$ im Mittelpunkt. Deshalb wollen wir (b) die \textit{Pfadbedingung}\index{Pfadbedingung}\index{Bedingung!Pfad-} nennen. In der Bedingung (c) geht es vor allem um einen Schnitt von $G$, nämlich um den Schnitt $(V(B), V(G) \setminus V(B))$\footnote{Unter einem \textit{Schnitt} des ungerichteten Graphen $G$ verstehen wir eine Zerlegung von $V(G)$ in zwei disjunkte, nichtleere Teilmengen.}. Deshalb wollen wir (c) die \textit{Schnittbedingung}\index{Schnittbedingung}\index{Bedingung!Schnitt-} nennen. Auch (d) soll einen Namen bekommen: Da es um die Reihenfolge der Kanten geht, nennen wir (d) die \textit{Reihenfolgebedingung}\index{Reihenfolgebedingung}\index{Bedingung!Reihenfolge-}.
+ 
+\textbf{Beweis des Hilfssatzes}. Wir weisen die Äquivalenz der vier Aussagen dadurch nach, dass wir nacheinander die folgenden Implikationen zeigen: (a) $\Rightarrow$ (b), (b) $\Rightarrow$ (c), (c) $\Rightarrow$ (d) und (d) $\Rightarrow$ (a).
+ 
+\medskip
+\underline{(a) $\Rightarrow$ (b)}:
+ 
+\medskip
+Wir setzen voraus, dass $T$ optimal ist, und haben zu zeigen, dass $T$ die Pfadbedingung (b) erfüllt. Hierzu nehmen wir an, dass (b) nicht gilt und führen diese Annahme zum Widerspruch.
+
+Aufgrund der Annahme, dass (b) nicht gilt, gibt es eine Kante $e=\bigl\{x,y\bigr\} \in E(G) \setminus E(T)$ und eine Kante $e'$ auf dem $x,y$-Pfad von $T$ mit $c(e') > c(e)$. Dann ist aber $(T-e')+e$ ein aufspannender Baum von $G$ mit kleineren Kosten als $T$ -- im Widerspruch zur Voraussetzung, dass $T$ optimal ist.
+
+
+\medskip
+\underline{(b) $\Rightarrow$ (c)}:
+
+\medskip
+Wir setzen voraus, dass $T$ die Pfadbedingung (b) erfüllt, und haben zu zeigen, dass dann für $T$ auch die Schnittbedingung (c) erfüllt ist. Wir gehen analog zum Beweis der Implikation (a) $\Rightarrow$ (b) vor: Es wird angenommen, dass (c) nicht gilt, und nachgewiesen, dass sich aus dieser Annahme ein Widerspruch ergibt.
+
+Aufgrund der Annahme, dass (c) nicht gilt, gibt es eine Kante $e \in E(T)$, eine Komponente\footnote{Es ist üblich, statt \textit{Zusammenhangskomponente} nur \textit{Komponente}\index{Komponente} zu sagen.} $B$ von $T-e$ sowie eine Kante $f=\bigl\{ x,y\bigr\} \in \delta(V(B))$, so dass $c(f) < c(e)$ gilt. Man beachte, dass der $x,y$-Pfad $P$ in $T$ eine Kante aus $\delta_G(V(B))$ enthalten muss. Die einzige Kante von $G$, die sowohl in $T$ als auch in $\delta_G(V(B))$ liegt, ist jedoch $e$. Die Kante $e$ liegt also auf $P$. Aus (b) folgt demnach $c(e) \leq c(f)$ -- im Widerspruch zu $c(f) < c(e)$.
+
+\medskip
+\underline{(c) $\Rightarrow$ (d)}:
+
+\medskip
+Wir setzen voraus, dass (c) gilt und wählen eine \textit{beliebige} Reihenfolge $e_1,\ldots,e_{n-1}$ der Kanten von $T$. Wir betrachten die Kante $e_i$ ($i$-te Kante in dieser Reihenfolge) und wählen eine der beiden Komponenten $B$ von $T-e_i$.
+
+Wir setzen $X = V(B)$. Aufgrund von (c) gilt dann (d).
+
+\medskip
+\underline{(d) $\Rightarrow$ (a)}:
+
+\medskip
+Es sei $e_1,\ldots,e_{n-1}$ eine Reihenfolge der Kanten von $T$, für die (d) erfüllt ist. Wir haben nachzuweisen, dass $T$ optimal ist. Hierzu betrachten wir einen optimalen Baum $T^*$.
+
+Der Baum $T^*$ sei unter allen optimalen Bäumen so gewählt, dass $T^*$ ein \textit{möglichst langes Anfangsstück} der Folge $e_1,\ldots,e_{n-1}$ enthält.
+
+Falls $T^*$ sämtliche Kanten $e_1,\ldots,e_{n-1}$ enthält, so folgt $T=T^*$, da $T^*$ (wegen $|E(T^*)| = n-1$) keine weiteren Kanten enthalten kann. In diesem Fall sind wir fertig.
+
+Andernfalls bezeichnen wir mit $h$ den kleinsten Index aus $\bigl\{ 1,\ldots,n-1 \bigr\}$, für den $e_h \notin E(T^*)$ gilt.
+
+Hieraus leiten wir nun einen Widerspruch ab. (Man beachte: Gelingt uns dies, so sind wir fertig.)
+
+Da (d) für die Reihenfolge $e_1,\ldots,e_{n-1}$ erfüllt ist, gibt es ein $X \subseteq V(G)$, für das Folgendes erfüllt ist:
+\begin{itemize}
+	\item $e_h \in \delta(X)$ und unter allen Kanten aus $\delta(X)$ hat $e_h$ minimales Gewicht;
+	
+	\item $e_j \notin \delta(X)$ für alle $j \in \bigl\{ 1,\ldots,h-1 \bigr\}$.
+\end{itemize}
+
+Wegen $e_h \notin E(T^*)$ enthält $T^*+e_h$ einen Kreis $C$. Da $T^*$ keinen Kreis enthält, folgt $e_h \in E(C)$. Somit gilt $e_h \in E(C) \cap \delta(X)$ (siehe Zeichnung).
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-2,-1)(3.5,1)
+	\footnotesize
+	
+	\psellipse[linewidth=1pt](0,0)(2,1) 
+	\psellipticarc[linestyle=dashed](2.5, 0)(1, 0.5){180}{90}
+	\uput{0.05}[135](-1,1){$X$} 
+	\uput{0.05}[ 45](3.25,0.5){$C$} 
+	
+	\cnode*(1.5,0){3pt}{A} 
+	\cnode*(2.5,0.5){3pt}{B}
+	\ncline{A}{B}
+	\uput{0}[315](2.25,0.25){$e_h$} 
+	
+	\small
+	\end{pspicture}
+\end{center}
+
+Da $C$ ein Kreis ist, muss es mindestens eine weitere Kante $f$ auf $C$ geben, für die $f \in \delta(X)$ gilt ($f \neq e$). Da $e_h$ unter allen Kanten aus $\delta(X)$ minimales Gewicht hat, folgt
+\[
+c(f) \geq c(e_h).
+\]
+
+Man beachte, dass $(T^*+e_h)-f$ ein aufspannender Baum von $G$ ist. Da $T^*$ optimal ist, kann nicht $c(f) > c(e_h)$ gelten, da andernfalls $(T^*+e_h)-f$ ein aufspannender Baum von $G$ mit kleinerem Gewicht als $T^*$ wäre. Es folgt 
+\[
+c(f) = c(e_h).
+\]
+
+Somit ist $(T^*+e_h)-f$ ein aufspannender Baum von $G$, der dasselbe Gewicht wie $T^*$ besitzt, d.h., $(T^*+e_h)-f$ ist ebenfalls optimal. 
+
+Dies ist jedoch ein Widerspruch zur Wahl von $T^*$. Denn: $(T^*+e_h)-f$ enthält das Anfangsstück $e_1,\ldots,e_{h-1},e_h$ der Folge $e_1,\ldots,e_{n-1}$ und dies ist ein längeres Anfangsstück als das entsprechende Anfangsstück für $T^*$. $\Box$ 
+
+\textbf{Zusammenfassung}. In unserem Hilfssatz haben wir drei Möglichkeiten beschrieben, die optimalen Bäume zu charakterisieren. Insbesondere gilt:
+\begin{itemize}
+	\item $T$ ist genau dann optimal, wenn $T$ die \textit{Pfadbedingung}\index{Pfadbedingung}\index{Bedingung!Pfad-} (b) erfüllt.
+\end{itemize}
+
+Ebenso gilt:
+\begin{itemize}
+	\item $T$ ist genau dann optimal, wenn $T$ die \textit{Schnittbedingung}\index{Schnittbedingung}\index{Bedingung!Schnitt-} (c) erfüllt.
+	\item $T$ ist genau dann optimal, wenn $T$ die \textit{Reihenfolgebedingung}\index{Reihenfolgebedingung}\index{Bedingung!Reihenfolge-} (d) erfüllt.
+\end{itemize}
+
+Wir werden sehen, dass der Hilfssatz äußerst nützlich ist, wenn es darum geht, die Korrektheit unserer drei Algorithmen für das MINIMUM-SPANNING-TREE-PROBLEM nachzuweisen.
+
+Zunächst schauen wir uns dies für den Algorithmus von Kruskal an. Dieser lässt sich auch wie folgt beschreiben.
+
+\begin{center}
+	\begin{tabular}{rl}
+		\multicolumn{2}{l}{\textbf{Kruskals Algorithmus}} \\
+		& \\
+		(1)& Sortiere die Kanten von $G$, so dass $c(e_1) \leq c(e_2) \leq \ldots \leq c(e_m)$ gilt. \\
+		(2)& Setze $T = (V(G), \emptyset)$. \\
+		(3)& \textbf{For} i=1 \textbf{to} $m$ \textbf{do} \\
+		   & \qquad \textbf{If} $T+e_i$ ist kreislos \textbf{then} setze $T=T+e_i$.
+	\end{tabular}
+\index{Kruskals Algorithmus}
+\index{Algorithmus!von Kruskal}
+\end{center}
+
+\begin{Satz}[Theorem 1]
+	Kruskals Algorithmus arbeitet korrekt.
+\end{Satz}
+
+\textbf{Beweis}. Zunächst überlegen wir uns, dass Kruskals Algorithmus tatsächlich einen Baum abliefert. Offensichtlich ist das am Schluss erhaltene $T$ kreislos. Es bleibt also zu zeigen, dass $T$ zusammenhängend ist.
+
+Angenommen, $T$ wäre unzusammenhängend. Da $G$ zusammenhängend ist, existiert eine Kante $e_i \in E(G) \setminus E(T)$, die Knoten aus zwei verschiedenen Komponenten von $T$ verbindet. Es folgt: $T+e_i$ ist kreislos, und somit ist auch jeder Teilgraph von $T+e_i$ kreislos. Bei der Durchführung von Kruskals Algorithmus hätte $e_i$ demnach in $T$ aufgenommen werden müssen -- im Widerspruch zu $e_i \in E(G) \setminus E(T)$. \textit{Fazit}: Das am Schluss erhaltene $T$ ist zusammenhängend und somit ein Baum.
+
+Es bleibt zu zeigen: Das am Schluss vorliegende $T$ ist optimal.
+
+Wir zeigen dies, indem wir für dieses $T$ das Erfülltsein der \textit{Schnittbedingung} (c) nachweisen. Angenommen (c) wäre nicht erfüllt. Dann gibt es eine Kante $e \in E(T)$, eine Komponente $B$ von $T-e$ und ein $f \in \delta(V(B))$ mit $c(f) < c(e)$. Da $e$ die einzige Kante von $T$ ist, die in $\delta(V(B))$ liegt, gilt $f \notin E(T)$.
+
+Aus $c(f)<c(e)$ folgt, dass $f=e_i$ und $e=e_j$ für $i<j$ gilt. Die Kante $f$ wurde in Zeile (3) also vor $e$ betrachtet. Hieraus ergibt sich zusammen mit der Tatsache, dass $(T+f)-e$ kreislos ist: Als die Kante $f$ bei der Durchführung von Zeile (3) an der Reihe war, hätte $f$ in $T$ aufgenommen werden müssen -- im Widerspruch zur obigen Feststellung, dass am Schluss $f \notin E(T)$ gilt. $\Box$
+
+\textbf{Zur Laufzeit des Algorithmus von Kruskal}. Wir werden, nachdem wir die Union-Find-Daten\-struk\-tur behandelt haben, eine wesentlich bessere Laufzeitschranke als die hier gegebene herleiten (vgl. Abschnitt \ref{section:12:6}). Hier begnügen wir uns zunächst mit der folgenden Feststellung: Die Laufzeit des Algorithmus von Kruskal ist $O(mn)$.
+
+\textbf{Begründung}. Die Kanten von $G$ können in $O(m \log m)$ Zeit sortiert werden. Wegen $m \leq n^2$ gilt $\log m \leq 2 \log n \leq 2n$; wir können also festhalten: Der Schritt (1) im Algorithmus von Kruskal lässt sich in $O(mn)$ Zeit erledigen. Ob in Zeile (3) $T+e_i$ kreislos ist, lässt sich in $O(n)$ Zeit ermitteln: Man braucht nur die Komponenten von $T$ mittels BFS (oder DFS) zu bestimmen und dabei zu prüfen, ob $e_i$ zwei Knoten aus derselben Komponente verbindet oder nicht. Da dies $m$ mal auszuführen ist, ergibt sich die behauptete Laufzeitschranke $O(mn)$.
+
+\bigskip
+Prims Algorithmus lässt sich wie folgt beschreiben.
+
+\begin{center}
+	\begin{tabular}{rl}
+		\multicolumn{2}{l}{\textbf{Prims Algorithmus}} \\
+		& \\
+		(1)& Wähle $s \in V(G)$ und setze $T= (\bigl\{ s \bigr\}, \emptyset)$. \\
+		(2)& \textbf{While} $V(T) \neq V(G)$ \textbf{do} \\
+		   & \qquad Wähle eine Kante $e \in \delta_G(V(T))$ mit minimalem Gewicht und setze $T=T+e$.
+	\end{tabular}
+\end{center}
+
+\begin{Satz}[Theorem 2]
+	Prims Algorithmus arbeitet korrekt.
+\end{Satz}
+
+\textbf{Beweis}. Während des gesamten Algorithmus ist $T$ ein Baum. Zu zeigen ist, dass der am Schluss abgelieferte Baum $T$ optimal ist. Wir zeigen dies, indem wir für dieses $T$ nachweisen, dass die Reihenfolgebedingung (d) erfüllt ist.
+
+Da die Reihenfolgebedingung Prims Algorithmus auf den Leib geschneidert ist, gibt es nicht viel zu tun: Als Reihenfolge $e_1,\ldots,e_{n-1}$ wählen wir gerade die Reihenfolge, in der die Kanten von $T$ von Prims Algorithmus ausgewählt werden. Für $e_i$ ($i$-te Kante in dieser Reihenfolge) betrachten wir den Baum $T$ direkt vor dem Hinzufügen von $e_i$ und setzen $X := V(T)$. Die Bedingung (d) ist dann aufgrund der Auswahl von $e$ in (2) und aufgrund der Definition von $X$ erfüllt. $\Box$
+
+Die Laufzeit von Prims Algorithmus wird in Abschnitt \ref{section:12:6} behandelt werden.
+
+%\pagebreak
+\textbf{Aufgabe}. 
+\begin{enumerate}[a)]
+	\item Formulieren Sie den Reverse-Delete-Algorithmus auf ähnliche Weise wie Kruskals Algorithmus, d.h. ähnlich zur Darstellung von Kruskals Algorithmus vor Theorem 1.
+	
+	\item Beweisen Sie die Korrektheit des Reverse-Delete-Algorithmus, indem Sie dem Aufbau des Beweises von Theorem 1 folgen.
+\end{enumerate}
+
+\textbf{Hinweise zu b)}. 
+\begin{enumerate}[\bfseries 1.]
+	\item Der Nachweis, dass tatsächlich ein Baum abgeliefert wird, ist keineswegs schwieriger als im Fall von Kruskals Algorithmus.
+	
+	\item Es bietet sich an, die Pfadbedingung (b) anstelle von (c) zum Einsatz zu bringen.
+\end{enumerate}
+
+
+
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Union-Find-Datenstruktur"'                                              %
+%------------------------------------------------------------------------------%
+
+\section{Die Union-Find-Datenstruktur}
+\index{Union-Find-Datenstruktur}
+\index{Datenstruktur, Union-Find-}
+\label{section:12:5}
+
+Wir gehen auch in diesem Abschnitt nach dem bekannten Lehrbuch \textit{Algorithm Design} von Kleinberg und Tardos vor. 
+
+Gegeben sei eine endliche Knotenmenge. Wir befassen uns mit dem Vorgang, dass aus dieser Knotenmenge ein Graph dadurch \enquote{heranwächst}, dass Kanten schrittweise hinzugenommen werden (pro Schritt niemals mehr als eine Kante).
+
+Am Anfang besteht der Graph nur aus isolierten Knoten, von denen jeder für sich eine Zusammenhangskomponente\index{Zusammenhangskomponente} darstellt. Im Laufe des Verfahrens können Zusammenhangskomponenten zu größeren Komponenten\footnote{Statt \enquote{Zusammenhangskomponente} sagen wir im Folgenden meist \enquote{Komponente}.}\index{Komponente} zusammenwachsen.
+
+Wenn eine Kante hinzugefügt wird, so wollen wir die Komponenten natürlich nicht jedes Mal völlig neu berechnen; stattdessen soll eine Datenstruktur zum Einsatz kommen, die ein schnelles Update der Komponenten unterstützt. Außerdem soll diese Datenstruktur erlauben, zu einem gegebenen Knoten $u$ den Namen der Komponente, der $u$ angehört, schnell zu ermitteln. Man spricht von einer \textit{Union-Find-Datenstruktur}.
+
+\textit{Um den Algorithmus von Kruskal\index{Algorithmus von Kruskal}\index{Kruskal!Algorithmus von} effizient zu implementieren, benötigt man eine Datenstruktur, die das Beschriebene leistet.} Wird im Algorithmus von Kruskal für eine Kante $e=\bigl\{u,v\bigr\}$ gefragt, ob durch die Hinzunahme von $e$ zum aktuellen Graphen ein Kreis entsteht, so kommt es darauf an, die aktuellen Komponenten von $u$ und $v$ zu bestimmen; man fragt dann, ob diese Komponenten gleich sind:
+\begin{itemize}
+\item Falls ja, so wird $e$ zurückgewiesen, da sonst ein Kreis entstünde.
+\item Falls nein, so wird $e$ zum aktuellen Graphen hinzugefügt, wodurch kein Kreis entsteht. Anschließend hat man ein Update der Komponenten vorzunehmen (\enquote{Zusammenlegung der Komponenten von $u$ und $v$}).
+\end{itemize}
+
+Union-Find-Datenstrukturen spielen nicht nur im Zusammenhang mit Kruskals Algorithmus eine wichtige Rolle, sondern ebenso im Zusammenhang mit anderen Fragestellungen, bei denen \textit{Partitionen}\index{Partition} von Mengen zu verwalten sind. Aus diesem Grund behandeln wir das Problem, eine geeignete Union-Find-Datenstruktur zu entwickeln, ab jetzt unabhängig von Kruskals Algorithmus und kommen nur gelegentlich darauf zurück.
+
+
+
+\subsection{Das Problem}
+
+Wir beschreiben noch einmal, worum es beim Union-Find-Problem geht. \textit{Die zu entwickelnde Union-Find-Datenstruktur soll es ermöglichen, disjunkte Mengen (wie beispielsweise die Knotenmengen der Komponenten eines Graphen) zu verwalten, womit Folgendes gemeint ist}:
+\begin{itemize}
+\item Für jeden Knoten\footnote{Die Elemente der betrachteten Mengen bezeichnen wir auch dann als Knoten, wenn keine Graphen im Spiel sind.} $u$ soll die \textit{Operation Find($u$)}\index{Operation Find($u$)} den Namen der Menge liefern, die $u$ enthält. Die Operation $\opfind{(u)}$ kann benutzt werden, um zu testen, ob $u$ und $v$ derselben Menge angehören: Man muss lediglich prüfen, ob $\opfind{(u)} = \opfind{(v)}$ gilt.
+
+\item Neben der Operation $\opfind{(u)}$ soll es eine \textit{Operation Union($A,B$)}\index{Operation Union($A$,$B$)} geben, durch die die beiden Mengen $A$ und $B$ zu einer einzigen Menge vereinigt werden.
+\end{itemize}
+
+Wie wir bereits gesehen haben, können diese Operationen eingesetzt werden, um die Zusammenhangskomponenten eines Graphen $G=(V,E)$ zu verwalten, dessen Knotenmenge $V$ fest gegeben ist, dessen Kantenmenge $E$ sich jedoch im Aufbau befindet. Die zu verwaltenden Mengen sind in diesem Prozess die Knotenmengen der Zusammenhangskomponenten und für einen Knoten $u$ liefert $\opfind{(u)}$ den Namen der aktuellen Komponente von $u$. Wenn eine Kante $(u,v)$ zum Graphen hinzugefügt werden soll, so ist zunächst zu testen, ob
+\[
+\opfind{(u)} = \opfind{(v)}
+\]
+gilt. Ist dies \textit{nicht} der Fall, so ist
+\[
+\opunion{(\opfind{(u)}, \opfind{(v)})}
+\]
+auszuführen, wodurch die Komponenten von $u$ und $v$ zusammengelegt werden.
+
+Neben den Operationen $\opunion{(A,B)}$ und $\opfind{(u)}$ spielt außerdem die \textit{Operation MakeUnionFind($S$)}\index{Operation MakeUnionFind($S$)} eine Rolle. Die Operation MakeUnionFind($S$) dient der Initialisierung. Zusammenfassend halten wir fest, dass die Union-Find-Datenstruktur drei Operationen unterstützen soll:
+\begin{itemize}
+\item Für eine Menge $S$ soll \textit{MakeUnionFind($S$)} eine Partition von $S$ in disjunkte Klassen\footnote{Statt Partition sagt man bekanntlich auch Zerlegung\index{Zerlegung} und spricht von \textit{Klassen}\index{Klasse} der Partition (bzw. Zerlegung).} liefern, die alle nur aus einem einzigen Element bestehen. $\opmakeunionfind{(S)}$ wird in $O(n)$ Zeit implementiert werden (für $n = |S|$).
+
+\item Für ein $u \in S$ soll \textit{Find($u$)} den Namen der Klasse liefern, die $u$ enthält. Unser Ziel ist, $\opfind{(u)}$ so zu implementieren, dass $\opfind{(u)}$ nur $O(\log{n})$ Zeit benötigt. (In einigen der vorgestellten Implementierungen wird $\opfind{(u)}$ sogar nur $O(1)$ Zeit in Anspruch nehmen.)
+
+\item Durch \textit{Union($A$,$B$)} sollen zwei Klassen $A$ und $B$ vereinigt werden. Unser Ziel wird sein, die Operation $\opunion{(A,B)}$ so zu implementieren, dass sie nur $O(\log{n})$ Zeit in Anspruch nimmt.
+\end{itemize}
+
+Eine Bemerkung dazu, was unter dem \textit{Namen einer Klasse} zu verstehen ist: Das Wichtigste in diesem Zusammenhang ist, dass die Namensgebung \textit{konsistent} ist, d.h., dass $\opfind{(v)}$ und $\opfind{(w)}$ denselben Namen liefern, wenn $v$ und $w$ aus derselben Klasse stammen und außerdem muss natürlich auch $\opfind{(v)} \neq \opfind{(w)}$ gelten, wenn dies nicht der Fall ist. Darüber hinaus hat man große Freiheiten bei der Namenswahl. \textit{Im Folgenden wird immer die naheliegende Lösung gewählt werden, dass eine Klasse nach einem ihrer Elemente benannt wird.}
+
+
+\subsection{Eine einfache Datenstruktur für das Union-Find-Problem}
+
+Eine einfache Art, eine Union-Find-Datenstruktur einzurichten, ist mittels eines Arrays, in dem für jedes Element der Name der zugehörigen Klasse angegeben wird. \textit{Genauer}: Es sei $S$ die betrachtete Menge, es gelte $|S|=n$ und die Elemente von $S$ seien mit $1,\ldots,n$ bezeichnet. Es sei $\component$ ein Array der Länge $n$, wobei $\component[s]$ der Name der Klasse sei, der $s$ angehört ($s=1,\ldots,n$). Zur Durchführung von $\opmakeunionfind{(S)}$ wird $\component[s]=s$ gesetzt ($s=1,\ldots,n$); dies bedeutet, dass am Anfang jedes Element $s$ seine eigene individuelle Klasse bildet. $\opmakeunionfind{(S)}$ ist klarerweise in $O(n)$ Zeit durchführbar.
+
+Die Implementierung einer Union-Find-Datenstruktur mittels eines Arrays führt dazu, dass die Durch\-füh\-rung von $\opfind{(u)}$ sehr einfach ist: \textit{$\opfind{(u)}$ ist in $O(1)$ Zeit durchführbar, da nichts weiter zu tun ist, als den aktuellen Wert von Component$[u]$ abzulesen}.
+
+\textit{Im Gegensatz dazu kann die Operation $\opunion{(A,B)}$ jedoch einen Zeitaufwand von $O(n)$ erfordern}, da im Fall $A \neq B$ für eine der beiden Mengen $A$, $B$ sämtliche Einträge $\component[s]$ abzuändern sind. (Man beachte: Beide Mengen $A$ und $B$ können einen konstanten Anteil von $S$ ausmachen, etwa $|A| = \frac{1}{3}n$ und $|B| = \frac{1}{4}n$.)
+
+Wir betrachten \textit{zwei Maßnahmen}, um die Operation $\opunion{(A,B)}$ zu verbessern:
+\begin{itemize}
+\item Es ist nützlich, für jede Klasse zusätzlich eine Liste ihrer Elemente zu führen; dadurch erreicht man, dass nicht jedes Mal das gesamte Array durchgegangen werden muss, wenn für die Elemente einer Klasse ein Update durchzuführen ist.
+
+\item Darüber hinaus spart man einige Zeit, wenn als Name für die durch Zusammenlegung entstandene Klasse der Name von $A$ oder von $B$ übernommen wird. Das hat den Vorteil, dass nur für die Elemente von einer der beiden Klassen ein Update vorgenommen werden muss. Dabei gilt aus naheliegenden Gründen die folgende \textit{Regel}:
+
+\begin{center}
+\begin{framebox}
+{\begin{minipage}{12cm}
+\begin{center}
+Falls $A$ und $B$ unterschiedliche Größe haben, so übernimmt man den Namen der größeren Klasse.
+\end{center}
+\end{minipage}}
+\end{framebox}
+\end{center}
+
+Um festzustellen, welche der beiden Klassen die größere ist, kann ein zusätzliches Array Size der Länge $n$ verwendet werden, in dem für jedes $s$, das aktuell als Name einer Klasse auftritt, die Größe Size$[s]$ dieser Klasse abgelesen werden kann; hierzu sind pro Union-Operation zwei Einträge des Arrays Size abzuändern.
+\end{itemize}
+
+Auch mit diesen beiden Verbesserungen bleibt es \textit{im schlechtesten Fall} bei einem Zeitaufwand der Größenordnung $O(n)$ für die Union-Operation: Dieser Fall tritt ein, wenn es sich bei beiden Mengen $A$ und $B$ um große Mengen handelt, was heißen soll, dass sowohl $A$ als auch $B$ einen konstanten Anteil der Elemente von $S$ umfasst. \textit{Solche schlechten Fälle für $\opunion{(A,B)}$ können allerdings nicht allzu häufig auftreten, da es sich bei $A \cup B$ um eine noch größere Menge handelt}. Diese wichtige, aber noch etwas vage Feststellung soll im Folgenden präzisiert werden. Dies geschieht dadurch, dass wir uns weniger die Laufzeit einer einzelnen Operation $\opunion{(A,B)}$ anschauen, sondern die Folge der ersten $k$ Union-Operationen unter die Lupe nehmen, wobei es um die \textit{Gesamtlaufzeit} (bzw. die \textit{durchschnittliche Laufzeit}) dieser $k$ Operationen geht.
+
+\begin{Satz}[Satz 1]
+Betrachtet werde die \textit{Array-Implementierung der Union-Find-Datenstruktur}\index{Array-Implementierung der Union-Find-Datenstruktur}\index{Union-Find-Datenstruktur!Array-Implementierung} für eine Menge $S$ mit $|S|=n$, wobei Vereinigungen den Namen der größeren Menge übernehmen sollen. Eine $\opfind$-Operation benötigt dann $O(1)$ Zeit, $\opmakeunionfind{(S)}$ erfordert $O(n)$ Zeit und für die Folge der ersten $k$ $\opunion$-Operationen wird insgesamt höchstens $O(k \log{k})$ Zeit benötigt (für alle $k$, die kleiner oder gleich der Gesamtzahl der Union-Operationen sind).
+\end{Satz}
+
+\textbf{Beweis}. Die Behauptungen über die $\opfind$-Operation und über $\opmakeunionfind{(S)}$ sind leicht einzusehen. Es geht also um die letzte Behauptung, zu deren Beweis wir die ersten $k$ $\opunion$-Operationen betrachten. Der einzige Teil einer $\opunion$-Operation, der mehr als $O(1)$ Zeit in Anspruch nimmt, ist das Update des Arrays $\component$. \textit{Wir betrachten ein festes $v \in S$ und fragen uns, wie oft $\component[v]$ bei der Durchführung unserer $k$ Union-Operationen höchstens geändert werden kann.}
+
+Es sei daran erinnert, dass am Anfang, nachdem $\opmakeunionfind{(S)}$ ausgeführt wurde, alle $n$ Elemente von $S$ eine eigene Klasse bilden. Eine einzige $\opunion$-Operation kann immer nur für höchstens zwei dieser 1-elementigen Klassen bewirken, dass sie zu einer 2-elementigen Klasse verschmelzen. Dies bedeutet, dass nach $k$ $\opunion$-Operationen alle bis auf höchstens $2k$ Elemente von $S$ noch völlig unberührt sind und immer noch lauter 1-elementige Klassen bilden.
+
+Wir betrachten ein festes Element $v$ aus $S$. Sobald die Klasse von $v$ in eine unserer $k$ $\opunion$-Operationen involviert ist, wächst sie an. Es kann nun sein, dass bei einigen dieser Operationen der Eintrag von $\component[v]$ geändert wird. Aufgrund unserer Regel, dass immer der Name der größeren Klasse übernommen wird, ist jede Änderung von $\component[v]$ mit mindestens einer Verdopplung der Größe der Klasse von $v$ verbunden. Da -- wie oben ausgeführt -- höchstens $2k$ Elemente von $S$ von den ersten $k$ $\opunion$-Operationen betroffen sind, kann die Klasse von $v$ auf höchstens $2k$ anwachsen, d.h., \textit{es kann nicht mehr als $\log_2{(2k)}$ Updates von $\component[v]$ während der ersten $k$ Union-Operationen geben}.
+
+Insgesamt bedeutet das, dass es in den ersten $k$ $\opunion$-Operationen höchstens $2k \cdot \log_2{(2k)}$ Updates von irgendwelchen Einträgen des Arrays $\component$ geben kann. (Man beachte: Nur höchstens $2k$ Elemente sind involviert!) Es folgt (wie behauptet), dass für die ersten $k$ $\opunion$-Operationen höchstens $O(k\log{k})$ Zeit benötigt wird. $\Box$
+
+\medskip
+
+\textit{Satz 1 besagt, dass die Array-Implementierung der Union-Find-Datenstruktur bereits ein gutes Ergebnis liefert}: $\opmakeunionfind{(S)}$ und $\opfind{(u)}$ benötigen $O(n)$ bzw. O(1) Zeit und erfüllen somit unsere Vorgaben. Aber auch $\opunion{(A,B)}$ kommt unseren Zielvorstellungen bereits nahe: Im Einzelfall kann $\opunion{(A,B)}$ zwar $O(n)$ Zeit in Anspruch nehmen, aber \textit{im Durchschnitt} benötigen die ersten $k$ $\opunion$-Operationen $O(\log{k})$ Zeit. (Außerdem ist die Einfachheit der Array-Implementierung positiv hervorzuheben.)
+
+\textit{Defizit der Array-Implementierung von Union-Find}: Wie bereits gesagt, kann eine einzelne $\opunion$-Operation $O(n)$ Zeit erfordern, d.h., unsere Zielsetzung für $\opunion{(A,B)}$ ist nicht erfüllt.
+
+
+\subsection{Eine bessere Datenstruktur für Union-Find}
+
+Die Datenstruktur für diese alternative Implementierung verwendet Zeiger. Jeder Knoten $v \in S$ ist in einem Record gespeichert -- zusammen mit einem dazugehörigen Zeiger, durch den man direkt oder dadurch, dass man weiteren Zeigern folgt, zum Namen der Klasse gelangt, die $v$ enthält\footnote{Falls Sie mit Zeigern wenig vertraut sind: Im vorliegenden Kontext reicht es aus, sich einen Zeiger als einen Verweis auf ein Objekt vorzustellen.}. Wie zuvor benutzen wir die Elemente der Menge $S$ als mögliche Namen für die Klassen und betrachten Partitionen, in denen jede Klasse nach einem ihrer Elemente benannt ist.
+
+Der \textit{Initialisierung} dient die \textit{Operation MakeUnionFind($S$)}\index{Operation $\opmakeunionfind{(S)}$}, durch die zu jedem $v \in S$ ein Record eingerichtet wird, in dem $v$ zusammen mit einem Zeiger gespeichert wird, der auf $v$ selbst verweist\footnote{Alternativ könnte man hier den Nullzeiger verwenden.}. Das bedeutet, dass am Anfang jedes $v$ eine 1-elementige Klasse bildet.
+
+Als nächstes betrachten wir die \textit{Union-Operation}\index{Operation $\opunion$}: Wir nehmen an, dass $A$ und $B$ zwei verschiedene Klassen sind, die zusammengelegt werden sollen; die Klasse $A$ sei nach dem Knoten $v \in A$ benannt, während die Klasse $B$ nach dem Knoten $u \in B$ benannt sei. Es wird dann entweder $u$ oder $v$ als Name für die Vereinigungsmenge gewählt, sagen wir, $v$ sei der Name für die Vereinigungsmenge $A \cup B$. \textit{Dies wird dadurch umgesetzt, dass nichts weiter getan wird, als den Zeiger von $u$ abzuändern: Der Zeiger von $u$ wird so geändert, dass er nun auf $v$ verweist}. Die Zeiger, die zu anderen Elementen von $B$ gehören, werden nicht abgeändert. Für Elemente $w \in B$, $w \neq u$, bedeutet dies, dass man einer Reihe von Zeigern folgen muss, um den Namen der Klasse zu erfahren, der $w$ angehört: Zunächst wird man dabei zum \enquote{alten Namen} $u$ hingeführt und erst über den Zeiger von $u$ nach $v$ gelangt man zum \enquote{neuen Namen} $v$.
+
+
+Zur Illustration anhand eines Beispiels sei $S = \bigl\{ p,q,r,s,t,u,v,w,x,y,z\bigr\}$. Es gebe drei Klassen $\bigl\{s,u,w\bigr\}$, $\bigl\{ p,t,v,z \bigr\}$ und $\bigl\{ q,r,x,y \bigr\}$. Es soll die folgende Situation vorliegen:
+
+\begin{center}
+\psset{unit=0.75cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(17,6)
+
+% top
+\psframe[framearc=0.2]( 1.5,4)( 3.5,5) \psline( 2.5,4)( 2.5,5) \uput{0.4}[0]( 1.5,4.5){$u$} \pscircle*( 3.0,4.5){3pt}
+\psframe[framearc=0.2]( 7.5,4)( 9.5,5) \psline( 8.5,4)( 8.5,5) \uput{0.4}[0]( 7.5,4.5){$v$} \pscircle*( 9.0,4.5){3pt}
+\psframe[framearc=0.2](13.5,4)(15.5,5) \psline(14.5,4)(14.5,5) \uput{0.4}[0](13.5,4.5){$r$} \pscircle*(15.0,4.5){3pt}
+
+% middle
+\psframe[framearc=0.2]( 0,2)( 2,3) \psline( 1,2)( 1,3) \uput{0.4}[0]( 0,2.5){$w$} \pscircle*( 1.5,2.5){3pt}
+\psframe[framearc=0.2]( 3,2)( 5,3) \psline( 4,2)( 4,3) \uput{0.4}[0]( 3,2.5){$s$} \pscircle*( 4.5,2.5){3pt}
+\psframe[framearc=0.2]( 6,2)( 8,3) \psline( 7,2)( 7,3) \uput{0.4}[0]( 6,2.5){$t$} \pscircle*( 7.5,2.5){3pt}
+\psframe[framearc=0.2]( 9,2)(11,3) \psline(10,2)(10,3) \uput{0.4}[0]( 9,2.5){$z$} \pscircle*(10.5,2.5){3pt}
+\psframe[framearc=0.2](12,2)(14,3) \psline(13,2)(13,3) \uput{0.4}[0](12,2.5){$x$} \pscircle*(13.5,2.5){3pt}
+\psframe[framearc=0.2](15,2)(17,3) \psline(16,2)(16,3) \uput{0.4}[0](15,2.5){$y$} \pscircle*(16.5,2.5){3pt}
+
+% bottom
+\psframe[framearc=0.2]( 6,0)( 8,1) \psline( 7,0)( 7,1) \uput{0.4}[0]( 6,0.5){$p$} \pscircle*( 7.5,0.5){3pt}
+\psframe[framearc=0.2](12,0)(14,1) \psline(13,0)(13,1) \uput{0.4}[0](12,0.5){$q$} \pscircle*(13.5,0.5){3pt}
+
+\psline{->}( 1.5, 2.5)( 2.0,4.0) % w->u
+\psline{->}( 4.5, 2.5)( 2.5,4.0) % s->u
+\psline{->}( 7.5, 2.5)( 8.0,4.0) % t->v
+\psline{->}(10.5, 2.5)( 8.5,4.0) % z->v
+\psline{->}(13.5, 2.5)(14.0,4.0) % x->r
+\psline{->}(16.5, 2.5)(14.5,4.0) % y->r
+\psline{->}( 7.5, 0.5)( 6.5,2.0) % p->t
+\psline{->}(13.5, 0.5)(12.5,2.0) % q->x
+\psline{-}( 3.0, 4.5)( 3.0,5.0) \psarc{->}( 2.5, 5.0){0.5}{0}{180} % u->u
+\psline{-}( 9.0, 4.5)( 9.0,5.0) \psarc{->}( 8.5, 5.0){0.5}{0}{180} % v->v
+\psline{-}(15.0, 4.5)(15.0,5.0) \psarc{->}(14.5, 5.0){0.5}{0}{180} % r->r
+
+\end{pspicture}
+\end{center}
+
+Die drei Mengen dieses Beispiels könnten etwa durch den folgenden Ablauf von $\opunion$-Operationen entstanden sein: $\opunion{(w,u)}$, $\opunion{(s,u)}$, $\opunion{(p,t)}$, $\opunion{(z,v)}$, $\opunion{(t,v)}$, $\opunion{(q,x)}$, $\opunion{(y,r)}$, $\opunion{(x,r)}$.
+
+\pagebreak
+Wenn nun als nächste Vereinigung die Operation $\opunion{(v,r)}$ ausgeführt wird, wobei $r$ der Name der durch Vereinigung entstandenen neuen Klasse sein soll, so ergibt sich die folgende Darstellung:
+
+\begin{center}
+\psset{unit=0.75cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(17,6)
+
+% top
+\psframe[framearc=0.2]( 1.5,4)( 3.5,5) \psline( 2.5,4)( 2.5,5) \uput{0.4}[0]( 1.5,4.5){$u$} \pscircle*( 3.0,4.5){3pt}
+\psframe[framearc=0.2]( 7.5,4)( 9.5,5) \psline( 8.5,4)( 8.5,5) \uput{0.4}[0]( 7.5,4.5){$v$} \pscircle*( 9.0,4.5){3pt}
+\psframe[framearc=0.2](13.5,4)(15.5,5) \psline(14.5,4)(14.5,5) \uput{0.4}[0](13.5,4.5){$r$} \pscircle*(15.0,4.5){3pt}
+
+% middle
+\psframe[framearc=0.2]( 0,2)( 2,3) \psline( 1,2)( 1,3) \uput{0.4}[0]( 0,2.5){$w$} \pscircle*( 1.5,2.5){3pt}
+\psframe[framearc=0.2]( 3,2)( 5,3) \psline( 4,2)( 4,3) \uput{0.4}[0]( 3,2.5){$s$} \pscircle*( 4.5,2.5){3pt}
+\psframe[framearc=0.2]( 6,2)( 8,3) \psline( 7,2)( 7,3) \uput{0.4}[0]( 6,2.5){$t$} \pscircle*( 7.5,2.5){3pt}
+\psframe[framearc=0.2]( 9,2)(11,3) \psline(10,2)(10,3) \uput{0.4}[0]( 9,2.5){$z$} \pscircle*(10.5,2.5){3pt}
+\psframe[framearc=0.2](12,2)(14,3) \psline(13,2)(13,3) \uput{0.4}[0](12,2.5){$x$} \pscircle*(13.5,2.5){3pt}
+\psframe[framearc=0.2](15,2)(17,3) \psline(16,2)(16,3) \uput{0.4}[0](15,2.5){$y$} \pscircle*(16.5,2.5){3pt}
+
+% bottom
+\psframe[framearc=0.2]( 6,0)( 8,1) \psline( 7,0)( 7,1) \uput{0.4}[0]( 6,0.5){$p$} \pscircle*( 7.5,0.5){3pt}
+\psframe[framearc=0.2](12,0)(14,1) \psline(13,0)(13,1) \uput{0.4}[0](12,0.5){$q$} \pscircle*(13.5,0.5){3pt}
+
+\psline{->}( 1.5, 2.5)( 2.0,4.0) % w->u
+\psline{->}( 4.5, 2.5)( 2.5,4.0) % s->u
+\psline{->}( 7.5, 2.5)( 8.0,4.0) % t->v
+\psline{->}(10.5, 2.5)( 8.5,4.0) % z->v
+\psline{->}(13.5, 2.5)(14.0,4.0) % x->r
+\psline{->}(16.5, 2.5)(14.5,4.0) % y->r
+\psline{->}( 7.5, 0.5)( 6.5,2.0) % p->t
+\psline{->}(13.5, 0.5)(12.5,2.0) % q->x
+\psline{->}( 9.0, 4.5)(13.5,4.5) % v->r
+\psline{-}( 3.0, 4.5)( 3.0,5.0) \psarc{->}( 2.5, 5.0){0.5}{0}{180} % u->u
+\psline{-}(15.0, 4.5)(15.0,5.0) \psarc{->}(14.5, 5.0){0.5}{0}{180} % r->r
+
+\end{pspicture}
+\end{center}
+
+In dieser zeigerbasierten Datenstruktur ist eine \textit{Union-Operation in $O(1)$ Zeit}\index{Operation $\opunion$} durchführbar: Man hat nichts weiter zu tun, als einen einzigen Zeiger abzuändern. \textit{Die Find-Operation\index{Operation $\opfind$} ist dagegen nicht mehr in konstanter Zeit durchführbar}, da wir einer Reihe von Zeigern folgen müssen, um den Namen der Klasse zu erfahren, der ein Element angehört. Bevor wir diesen aktuellen Namen mitgeteilt bekommen, durchlaufen wir zunächst die komplette Historie der alten Namen von Klassen, denen das betreffende Element früher einmal angehört hat.
+
+\textit{Wie viele Schritte benötigt eine einzelne Find-Operation?} Die Antwort fällt leicht: Die Anzahl der Schritte, die $\opfind{(u)}$ benötigt, ist gleich der Anzahl der Namen, die die Klasse von $u$ bislang gehabt hat. Ebenso wie bei der Array-Implementierung verfahren wir nach der \textit{Regel, dass bei unterschiedlicher Größe der beiden zu vereinigenden Mengen immer der Name der größeren Menge übernommen wird}.
+
+Man beachte: Die genannte Regel über die $\opunion$-Operation dient jetzt dazu, die Zeit zu reduzieren, die für eine $\opfind$-Operation aufgewendet werden muss.
+
+Die Regel kann dadurch effizient implementiert werden, dass man für jeden Knoten $v$ in dem dazugehörigen Record \textit{ein drittes Datenfeld} einrichtet: \textit{Für alle Knoten $v$, die aktuell als Name für eine Klasse dienen, soll in diesem Datenfeld die Größe dieser Klasse gespeichert sein}. Um bei Ausführung einer Union-Operation die Einträge im dritten Datenfeld zu aktualisieren, ist pro $\opunion$-Operation nur eine Addition und nur ein Update nötig.
+
+Unsere Überlegungen laufen auf den folgenden Satz hinaus.
+
+\begin{Satz}[Satz 2]
+Betrachtet werde die zuvor beschriebene \textit{zeigerbasierte Implementierung der Union-Find-Datenstruktur}\index{zeigerbasierte Implementierung der Union-Find-Datenstruktur}\index{Union-Find-Datenstruktur!zeigerbasierte Implementierung} für eine Menge $S$ mit $|S|=n$, wobei Vereinigungen den Namen der größeren Menge übernehmen sollen. Eine $\opunion$-Operation benötigt dann $O(1)$ Zeit, $\opmakeunionfind{(S)}$ erfordert $O(n)$ Zeit und eine $\opfind$-Operation nimmt $O(\log{n})$ Zeit in Anspruch.
+\end{Satz}
+
+\textbf{Beweis}. Die Behauptungen über $\opunion$ und $\opmakeunionfind$ sind leicht zu prüfen: Die Richtigkeit ergibt sich direkt aus der Beschreibung der zeigerbasierten Implementierung. Auch die über die $\opfind$-Operation gemachte Behauptung ist leicht einzusehen: Die Zeit, die für die Durchführung von $\opfind{(v)}$ für einen Knoten $v$ in einer bestimmten Situation nötig ist, ergibt sich direkt aus der Häufigkeit, mit der der Name der Klasse von $v$ bislang geändert wurde. Da bei Vereinigungen immer der Name der größeren Menge übernommen wird, findet bei jeder Namensänderung der Klasse von $v$ mindestens eine Verdopplung der Klassengröße statt. Da es insgesamt nur $n$ Elemente gibt, kann es demnach höchstens $\log_2{n}$ Namensänderungen der Klasse von $v$ geben. $\Box$
+
+
+
+\subsection{Weitere Verbesserungen durch Pfadverkürzung (path compression)}
+\index{Pfadverkürzung}
+\index{path compression}
+\label{section:12:5:4}
+
+Wir begnügen uns in diesem Abschnitt damit, die \textit{Idee} anzudeuten, auf der Verbesserungen durch Pfadverkürzung beruhen.
+
+Stellen Sie sich vor, dass wir (wie im letzten Abschnitt) eine zeigerbasierte Union-Find-Datenstruktur vorliegen haben und dass $\opfind{(v)}$ für einen Knoten $v$ auszuführen ist. Es kann -- wie wir wissen -- einige Zeit in Anspruch nehmen, den Namen $x$ der Klasse von $v$ zu ermitteln: Zunächst muss ein Pfad $P$ durchlaufen werden (siehe linke Zeichnung).
+
+\begin{center}
+\psset{unit=0.75cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(12,8)
+
+% left side
+\psframe[framearc=0.2](0,0)(2,1) \psline(1,0)(1,1) \uput{0.4}[0](0,0.5){$v$} \pscircle*(1.5,0.5){3pt}
+\psframe[framearc=0.2](0,2)(2,3) \psline(1,2)(1,3) \uput{0.4}[0](0,2.5){$w$} \pscircle*(1.5,2.5){3pt}
+\psframe[framearc=0.2](2,4)(4,5) \psline(3,4)(3,5) \uput{0.4}[0](2,4.5){$ $} \pscircle*(3.5,4.5){3pt}
+\psframe[framearc=0.2](2,6)(4,7) \psline(3,6)(3,7) \uput{0.4}[0](2,6.5){$x$} \pscircle*(3.5,6.5){3pt}
+\psline{->}(1.5, 0.5)(0.5, 2.0)
+\psline{->}(1.5, 2.5)(2.5, 4.0)
+\psline{->}(3.5, 4.5)(2.5, 6.0)
+\psline{-}(3.5, 6.5)(3.5, 7.0) \psarc{->}( 3.0, 7.0){0.5}{0}{180}
+\uput{0.4}[0](0,4.5){$P$}
+
+% right side
+\psframe[framearc=0.2]( 8,0)(10,1) \psline( 9,0)( 9,1) \uput{0.4}[0]( 8,0.5){$v$} \pscircle*( 9.5,0.5){3pt}
+\psframe[framearc=0.2]( 8,2)(10,3) \psline( 9,2)( 9,3) \uput{0.4}[0]( 8,2.5){$w$} \pscircle*( 9.5,2.5){3pt}
+\psframe[framearc=0.2](10,4)(12,5) \psline(11,4)(11,5) \uput{0.4}[0](10,4.5){$ $} \pscircle*(11.5,4.5){3pt}
+\psframe[framearc=0.2](10,6)(12,7) \psline(11,6)(11,7) \uput{0.4}[0](10,6.5){$x$} \pscircle*(11.5,6.5){3pt}
+\pscurve{->}(9.5,0.5)(10.5,2.5)(9.5,4.5)(10,6)
+\pscurve{->}(9.5,2.5)(9, 4.5)(10,6.5)
+\psline{->}(1.5, 2.5)(2.5, 4.0)
+\psline{->}(11.5, 4.5)(10.5, 6.0)
+\psline{-}(11.5, 6.5)(11.5, 7.0) \psarc{->}( 11.0, 7.0){0.5}{0}{180}
+
+
+\end{pspicture}
+\end{center}
+
+Nun kann es durchaus sein, dass $\opfind{(v)}$ im Laufe des weiteren Verfahrens noch öfter auszuführen ist -- möglicherweise sogar sehr oft. In diesem Fall möchte man nicht jedes Mal denselben Pfad $P$ durchlaufen müssen, nur um die längst bekannte Information zu erhalten, dass $v$ in derselben Klasse wie $x$ liegt. Entsprechendes gilt, wenn $\opfind{(w)}$ für einen Knoten $w$ durchzuführen ist, der auf $P$ liegt: Auch in diesem Fall möchte man gerne erneutes Durchlaufen von $w$ nach $x$ längs $P$ vermeiden.
+
+Aus den genannten Gründen geht man wie folgt vor: Direkt nach der Ausführung von $\opfind{(v)}$ durchläuft man den Pfad $P$ noch ein zweites Mal, wobei man für alle Knoten von $P$ den Zeiger so abändert, dass dieser nun auf $x$ verweist (siehe rechte Zeichnung).
+
+Das Verfahren, dessen Grundidee wir soeben beschrieben haben, nennt man \textit{Pfadverkürzung} (engl. \textit{path compression}).
+
+\textit{Durch den Einsatz von Pfadverkürzung lässt sich die Union-Find-Datenstruktur noch einmal wesentlich verbessern}: Details hierzu findet man in Lehrbüchern über Algorithmen und Datenstrukturen, beispielsweise in dem bekannten Lehrbuch von Cormen, Leiserson, Rivest und Stein.
+
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Laufzeit der Algorithmen von Kruskal und Prim"                          %
+%------------------------------------------------------------------------------%
+
+\section{Die Laufzeit der Algorithmen von Kruskal und Prim}
+\label{section:12:6}
+
+\subsection{Zur Laufzeit von Kruskals Algorithmus}
+
+Wir wollen die Union-Find-Datenstruktur verwenden, um Kruskals Algorithmus zu implementieren.
+
+Zunächst haben wir allerdings die Kanten von $G$ in aufsteigender Reihenfolge zu sortieren. Dies geht in $O(m \log m)$ Zeit. Da es zwischen zwei Knoten nur höchstens eine Kante gibt, gilt $m \leq n^2$, woraus man $\log m \leq \log{(n^2)} = 2 \log n$ erhält. Deshalb lässt sich die \textit{Laufzeit für das Sortieren der Kanten} auch angeben als
+\[
+O(m \log n).
+\]
+
+Nachdem die Kanten sortiert sind, verwenden wir die Union-Find-Datenstruktur, \textit{um die Zusammenhangskomponenten zu verwalten}, die beim schrittweisen Aufbau eines minimalen aufspannenden Baums entstehen.
+
+Wie wir wissen, geht man die Kanten in aufsteigender Reihenfolge durch. Ist dabei die Kante $e = \bigl\{ u,v \bigr\}$ an der Reihe, so sind $\opfind{(u)}$ und $\opfind{(v)}$ zu berechnen und zu testen, ob $\opfind{(u)} \neq \opfind{(v)}$ gilt.
+
+Falls ja, so wird $e$ in den Baum aufgenommen und es hat
+\[
+\opunion{(\opfind{(u)}, \opfind{(v)})}
+\]
+zu erfolgen.
+
+Im Laufe des Kruskal-Algorithmus finden also statt:
+\begin{equation*}
+\text{$2m$ $\opfind$-Operationen und $n-1$ $\opunion$-Operationen.}
+\end{equation*}
+
+Aus Satz 1 für die Array-Implementierung der Union-Find-Datenstruktur bzw. Satz 2 für die zeigerbasierte Implementierung ergibt sich zusammen mit den obigen Anzahlangaben, dass in beiden Fällen
+\[
+O(m \log n)
+\]
+eine obere Schranke für die Zeit ist, die im Algorithmus von Kruskal für die $\opunion$- und $\opfind$-Operationen aufgewendet wird.
+
+Man kann für die zeigerbasierte Union-Find-Datenstruktur durch Pfadverkürzung (path compression) noch bessere Laufzeiten für die $\opfind$-Operation herausholen (vgl. Abschnitt \ref{section:12:5:4}) -- für den Algorithmus von Kruskal bringt das jedoch keine Verbesserung der Gesamtlaufzeit: Die Laufzeit des Algorithmus von Kruskal wird unabänderlich durch den Term $O(m \log n)$ dominiert, der durch das Sortieren der Kanten ins Spiel kommt.
+
+Kurz zusammengefasst können wir feststellen:
+
+\begin{SKBox}
+	Kruskals Algorithmus kann so implementiert werden, dass sich für Graphen mit $n$ Knoten und $m$ Kanten die Laufzeit $O(m \log n)$ ergibt.
+\end{SKBox}
+
+
+\subsection{Zur Laufzeit von Prims Algorithmus}
+
+Der \textit{Algorithmus von Prim} besitzt große Ähnlichkeit mit dem \textit{Algorithmus von Dijkstra}. (Die Gültigkeitsbeweise dieser beiden Algorithmen sind jedoch sehr unterschiedlich.)
+
+Um die Ähnlichkeit zu verdeutlichen, wird der Algorithmus von Prim so beschrieben, dass er der Formulierung des Algorithmus von Dijkstra auf Seite \pageref{page:12:2} \textit{möglichst nahe kommt}.
+
+Dabei wird vorausgesetzt, dass der betrachtete Graph $G=(V,E)$ zusammenhängend ist. Der Knoten $s$ (\enquote{Startknoten}, \enquote{Wurzel}) sei vorgegeben.
+
+\begin{center}
+	\begin{tabular}{rl}
+		\multicolumn{2}{l}{\textbf{Prim's Algorithm $\mathbf{(G, c, s)}$}} \\
+		& \\
+		(1) & Let $T$ denote a tree contained in $G$ and let $S$ be the node set of $T$ \\
+		(2) & For each $u \in V$, we store a value $d(u)$ and, if $u \neq s$ and $d(u) \neq \infty$, \\
+		    & \qquad we also store a node $\operatorname{pred}(u) \in S$ \\
+		(3) & Initially let $T$ be the tree with node set $S = \bigl\{ s \bigr\}$ and let $d(s)=0$ \\
+		(4) & \qquad For each $u \neq s$ let $d(u) = c(\bigl\{s,u\bigr\})$ if $\bigl\{s,u\bigr\}\in E$ and $d(u)=\infty$ otherwise \\
+		(5) & \qquad Let $\operatorname{pred}(u) = s$ for all $u$ with $\bigl\{ s,u \bigr\} \in E$ \\
+		(6) & \textbf{While} $S \neq V$ \\
+		(7) & \qquad Select a node $v \in V \setminus S$ with $d(v) = \min{\bigl\{ d(u) : u \in V \setminus S \bigr\}}$ \\
+		(8) & \qquad Add $v$ to $S$ and add the edge $\bigl\{ v, \operatorname{pred}(v) \bigr\}$ to $T$ \\
+		(9) & \qquad For each $u \in V \setminus S$ with $\bigl\{v,u\bigr\} \in E$ and $c(\bigl\{ v,u \bigr\}) < d(u)$, \\
+		    & \qquad\qquad let $d(u) = c(\bigl\{ v,u \bigr\})$ and $\operatorname{pred}(u)=v$ \\
+		(10)& \textbf{EndWhile}
+	\end{tabular}
+\end{center}
+
+Aufgrund der Ähnlichkeit zum Algorithmus von Dijkstra ergeben sich Feststellungen zur Laufzeit, die wir auf ähnliche Art für den Algorithmus von Dijkstra getroffen haben.
+\begin{itemize}
+	\item Die Laufzeit für die beschriebene Version des Algorithmus von Prim ist $O(n^2)$ für $n=|V|$, da die While-Schleife $n-1$ mal durchlaufen wird und die Zeilen (7)-(9) offenbar in $O(n)$ Zeit ausgeführt werden können.
+	
+	\item Mithilfe einer Prioritätswarteschlange lässt sich die Laufzeit $O(m \log n)$ erzielen, was beispielsweise für Graphen mit $m = \Theta(n)$ eine Verbesserung gegenüber der Laufzeitschranke $O(n^2)$ bedeutet.
+\end{itemize}
+
+Genauer gilt sowohl für Dijkstra als auch für Prim: Die genannte Laufzeit $O(m \log n)$ ergibt sich, wenn die Prioritätswarteschlange mittels eines Binärheaps implementiert wird (vgl. Kleinberg/Tardos).
+
+Wie im Fall von Kruskals Algorithmus können wir also zusammengefasst feststellen:
+
+\begin{SKBox}
+	Prims Algorithmus kann so implementiert werden, dass sich für Graphen mit $n$ Knoten und $m$ Kanten die Laufzeit $O(m \log n)$ ergibt.
+\end{SKBox}
+
+
+

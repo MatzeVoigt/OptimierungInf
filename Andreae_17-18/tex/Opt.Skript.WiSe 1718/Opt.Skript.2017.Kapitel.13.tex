@@ -1,0 +1,1440 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 13:                                                                  %
+% "Dynamisches Programmieren"                                                  %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Dynamisches Programmieren}\label{chapter:13}
+
+
+Auch in diesem Kapitel gehen wir größtenteils nach dem Lehrbuch von Kleinberg und Tardos vor. Beim \textit{Dynamischen Programmieren}\index{Dynamisches Programmieren}\index{Programmieren, Dynamisches} (engl. \textit{dynamic programming}\index{dynamic programming}) handelt es sich um eine Entwurfsmethode für Algorithmen, die \textit{häufig bei Optimierungsproblemen} zum Einsatz kommt.
+
+Im letzten Kapitel haben wir Probleme kennengelernt, die erfolgreich mit einer Greedy-Strategie behandelt werden konnten. Dass man mit einer Greedy-Strategie Erfolg hat, ist jedoch eher die Ausnahme: \textit{Für die meisten Probleme sind keine funktionierenden Greedy-Verfahren bekannt}. Man ist also auf andere Methoden angewiesen. Eine dieser Methoden, die die meisten von Ihnen vermutlich kennen, wird \textit{Divide and Conquer} genannt.
+
+Beim Divide-and-Conquer-Verfahren\index{Divide and Conquer} zerlegt man ein gegebenes Problem in Teilprobleme, die man rekursiv löst; aus den Lösungen der Teilprobleme gewinnt man dann die Lösung des Ausgangsproblems. Ein typisches Beispiel hierfür ist der \textit{Mergesort-Algorithmus}\index{Mergesort-Algorithmus}\index{Algorithmus!Mergesort-}. Auch der berühmte \textit{Algorithmus von Strassen}\index{Algorithmus!von Strassen}\index{Strassen, Algorithmus von} zur Matrizenmultiplikation ist ein Divide-and-Conquer-Algorithmus, ebenso wie der \textit{Karatsuba-Algorithmus} zur Multiplikation zweier ganzer Zahlen. Häufig führt aber auch Divide and Conquer nicht zum Erfolg; dann ist nicht selten \textit{Dynamisches Programmieren} das Mittel der Wahl.
+
+Worum es beim Dynamischen Programmieren geht, erläutert man am besten anhand eines Beispiels. Zu diesem Zweck betrachten wir ein Beispiel aus dem Bereich des Schedulings, nämlich das \textit{gewichtete Intervall-Scheduling-Problem}\index{gewichtetes Intervall-Scheduling-Problem}\index{Intervall-Scheduling-Problem!gewichtetes}\index{Problem!gewichtetes Intervall-Scheduling-}.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Das gewichtete Intervall-Scheduling-Problem"                                %
+%------------------------------------------------------------------------------%
+
+\section{Das gewichtete Intervall-Scheduling-Problem}
+\label{section:13:1}
+
+In Abschnitt \ref{section:12:1} haben wir das \textit{ungewichtete} Intervall-Scheduling-Problem behandelt und mithilfe eines Greedy-Verfahrens gelöst. \textit{Hier betrachten wir nun die gewichtete Variante des Intervall-Scheduling-Problems}: Wir bezeichnen die Anfragen wie zuvor mit $1,\ldots,n$; zur $i$-ten Anfrage gehört (ebenfalls wie zuvor) ein Zeitintervall $[s(i),f(i)]$ ($i=1,\ldots,n$). Darüber hinaus besitzt jedes Intervall einen \textit{Wert} $v_i \geq 0$ ($i=1,\ldots,n$); statt vom Wert sprechen wir auch vom \textit{Gewicht} $v_i$ ($i=1,\ldots,n$).
+
+Gesucht ist eine Menge $S \subseteq \bigl\{ 1,\ldots,n \bigr\}$ von paarweise kompatiblen Anfragen, \textit{für die die Summe}
+\[
+\sum\limits_{i \in S}{v_i}
+\]
+\textit{maximal ist}.
+
+Das ursprüngliche (ungewichtete) Intervall-Scheduling-Problem ist ein Spezialfall des gewichteten In\-ter\-vall-Scheduling-Problems: Um dies zu erkennen, setzt man $v_i=1$ für alle $i \in \bigl\{ 1,\ldots,n \bigr\}$. 
+
+Der Greedy-Algorithmus, den wir in Abschnitt \ref{section:12:1} für das ungewichtete Problem erhalten haben (\enquote{wiederholtes Wählen eines kompatiblen Intervalls, das zuerst endet}), funktioniert im gewichteten Fall nicht mehr, wie das folgende einfache Beispiel zeigt:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0.5)(12.5,2)
+\footnotesize
+ 
+\psline{|-|}(1,1.5)( 5,1.5) \uput{0.05}[90](3,1.5){Intervall 1 mit $v_1=1$}
+\psline{|-|}(4,1.0)( 8,1.0) \uput{0.05}[90](6,1.0){Intervall 2 mit $v_2=3$}
+\psline{|-|}(7,0.5)(11,0.5) \uput{0.05}[90](9,0.5){Intervall 3 mit $v_3=1$}
+
+
+\small
+\end{pspicture}
+\end{center}
+
+Für das gewichtete Intervall-Scheduling-Problem ist auch kein alternativer Greedy-Algorithmus bekannt -- dies ist für uns der Anlass, das Problem mit der Methode des Dynamischen Programmierens anzugehen.
+
+\textit{Wir setzen ab jetzt immer voraus, dass die Nummerierung der Anfragen so gewählt ist, dass}
+\[
+f(1) \leq \ldots \leq f(n)
+\]
+\textit{gilt}\footnote{Zur Erinnerung: Zu jeder Anfrage $i$ gehört ein Zeitintervall $[s(i),f(i)]$ ($i=1,\ldots,n$). Wir unterscheiden nicht immer streng zwischen einer Anfrage und dem zugehörigen Zeitintervall und sprechen auch vom Intervall $i$.}. Für jedes Intervall $j \in \bigl\{ 1,\ldots,n \bigr\}$ definieren wir $p(j) \in \bigl\{ 0, \ldots,n \bigr\}$ wie folgt:
+\begin{itemize}
+\item Falls es ein Intervall $i<j$ gibt, so dass $i$ und $j$ sich nicht überlappen, so sei mit $p(j)$ das größte $i<j$ bezeichnet, für das dies gilt;
+\item Falls es kein solches $i$ gibt, so setzen wir $p(j)=0$.
+\end{itemize}
+
+Das folgende \textbf{Beispiel} aus dem Buch von Kleinberg/Tardos illustriert die Definition von $p(j)$:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(12.5,3.25)
+\footnotesize
+
+\psline{|-|}(1.0,3.0)( 3.0,3.0) \uput{0.1}[140]( 3.0,3.0){$v_1=2$}
+\psline{|-|}(2.0,2.5)( 6.0,2.5) \uput{0.1}[140]( 6.0,2.5){$v_2=4$}
+\psline{|-|}(5.0,2.0)( 7.0,2.0) \uput{0.1}[140]( 7.0,2.0){$v_3=4$}
+\psline{|-|}(2.5,1.5)( 9.0,1.5) \uput{0.1}[140]( 9.0,1.5){$v_4=7$}
+\psline{|-|}(8.0,1.0)(10.0,1.0) \uput{0.1}[140](10.0,1.0){$v_5=2$}
+\psline{|-|}(8.5,0.5)(11.0,0.5) \uput{0.1}[140](11.0,0.5){$v_6=1$}
+
+\uput{2.89}[90](0,0){$1$} \uput{2.89}[90](12.5,0){$p(1)=0$}
+\uput{2.39}[90](0,0){$2$} \uput{2.39}[90](12.5,0){$p(2)=0$}
+\uput{1.89}[90](0,0){$3$} \uput{1.89}[90](12.5,0){$p(3)=1$}
+\uput{1.39}[90](0,0){$4$} \uput{1.39}[90](12.5,0){$p(4)=0$}
+\uput{0.89}[90](0,0){$5$} \uput{0.89}[90](12.5,0){$p(5)=3$}
+\uput{0.39}[90](0,0){$6$} \uput{0.39}[90](12.5,0){$p(6)=3$}
+ 
+\psline{->}(0,0)(0,0.25)
+\psline{->}(12.5,0)(12.5,0.25)
+\uput{0.1}[270](0,0){Indizes der} \uput{0.5}[270](0,0){Intervalle}
+\uput{0.1}[270](12.5,0){Dazugehörige} \uput{0.5}[270](12.5,0){Werte $p(j)$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Gegeben seien nun Intervalle $1,\ldots,n$ mit Gewichten (Werten) $v_1,\ldots,v_n$ und $\O$ sei eine dazugehörige optimale Lösung des (gewichteten) Intervall-Scheduling-Problems. Dann gibt es offensichtlich zwei Mög\-lich\-kei\-ten: $n \in \O$ oder $n \notin \O$.
+
+
+\underline{1. Fall: $n \in \mathcal{O}$.}
+
+In diesem Fall können wir feststellen, dass sämtliche Intervalle $p(n)+1,\ldots,n-1$ nicht zu $\O$ gehören, da sich diese Intervalle mit $n$ überlappen.
+
+\textit{Außerdem}: Lässt man das Intervall $n$ aus $\O$ weg, so bilden die übrigen Intervalle von $\O$ eine optimale Lösung für das Teilproblem, bei dem die Eingabe aus den Intervallen $1,\ldots,p(n)$ besteht, denn andernfalls könnte man die Intervalle aus $\O \cap \bigl\{ 1,\ldots,p(n) \bigr\}$ durch eine bessere Wahl ersetzen.
+
+\underline{2. Fall: $n \notin \O$.}
+
+In diesem Fall ist $\O$ eine optimale Lösung des Problems, bei dem die Eingabe nur aus den Intervallen $1,\ldots,n-1$ besteht, denn andernfalls hätte man eine bessere Lösung für das Problem mit Eingabe $1,\ldots,n$.
+
+\medskip
+
+Die vorangegangenen Überlegungen legen Folgendes nahe: \textit{Um eine optimale Lösung für eine gegebene Intervallmenge}
+\[
+\bigl\{ 1,\ldots,n\bigr\}
+\] 
+\textit{zu finden, hat man sein Augenmerk auf die optimalen Lösungen für kleinere Intervallmengen der Form}
+\[
+\bigl\{ 1,\ldots,j \bigr\}
+\]
+\textit{zu richten}.
+
+Für jeden Wert $j$ mit $1 \leq j \leq n$ wollen wir mit $\O_j$ eine optimale Lösung des \textit{Teilproblems} bezeichnen, das aus den Intervallen $\bigl\{ 1,\ldots,j \bigr\}$ besteht, und mit $\opt(j)$ bezeichnen wir den dazugehörigen optimalen Wert, d.h.
+\[
+\opt(j) = \sum\limits_{i \in \O_j}{v_i}.
+\]
+
+Darüber hinaus definieren wir noch
+\[
+\opt(0)=0.
+\]
+
+Also: Unser ursprüngliches Problem ist die Bestimmung von $\O_n$ und $\opt(n)$; zu diesem Zweck betrachten wir \textit{geeignet gewählte Teilprobleme}, für die wir die optimalen Lösungen $\O_j$ bzw. $\opt(j)$ zu bestimmen haben.
+
+Für $\O_j$ und die Intervallmenge $\bigl\{ 1,\ldots,j \bigr\}$ erhält man analog zu unseren obigen Überlegungen:
+\begin{itemize}
+\item Entweder gilt $j \in \O_j$; in diesem Fall erhält man $\opt(j) = v_j + \opt{(p(j))}$.
+\item Oder es gilt $j \notin \O_j$; in diesem Fall hat man $\opt{(j)} = \opt{(j-1)}$.
+\end{itemize}
+
+Da eine der beiden Möglichkeiten ($j \in \O$ oder $j \notin \O$) vorliegen muss, können wir als Ergebnis also festhalten:
+\begin{equation}
+\label{eq:13:1}
+\opt{(j)} = \max{\bigl( v_j + \opt{(p(j))}, \opt{(j-1)} \bigr)}
+\end{equation}
+
+Aus dem Vorangegangenen ergibt sich ebenfalls, wie über die Zugehörigkeit von $j$ zu $\O_j$ entschieden werden kann:
+\begin{equation}
+\label{eq:13:2}
+\begin{array}{c}
+\textit{Anfrage $j$ gehört zu einer optimalen Lösung für das Teilproblem $\bigl\{ 1,\ldots,j \bigr\}$} \\
+\textit{genau dann, wenn} \\[1mm]
+v_j + \opt{(p(j))} \geq \opt{(j-1)}.
+\end{array}
+\end{equation}
+
+(\ref{eq:13:1}) stellt (zusammen mit (\ref{eq:13:2})) die erste wichtige Komponente dar, die bei jeder Lösung durch Dynamisches Programmieren vorhanden sein muss: Es muss eine \textbf{Rekursionsgleichung} vorliegen, die die optimale Lösung bzw. ihren Wert mithilfe von optimalen Lösungen kleinerer Teilprobleme ausdrückt.
+
+Anknüpfend an (\ref{eq:13:1}) ist der folgende rekursive Algorithmus zur Berechnung von $\opt{(j)}$ naheliegend, bei dem vorausgesetzt wird, dass die Anfragen nach ihren Endzeiten aufsteigend geordnet sind und dass die Werte $p(j)$ für alle $j$ vorliegen.
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{$\copt{(j)}$} \\
+& \\
+ (1)& \textbf{If} $j=0$ \textbf{then} \\
+ (2)& \qquad \textbf{Return} 0 \\
+ (3)& \textbf{Else} \\
+ (4)& \qquad \textbf{Return} $\max{\bigl( v_j + \copt{(p(j))}, \copt{(j-1)} \bigr)}$ \\
+ (5)& \textbf{Endif}
+\end{tabular}
+\end{center}
+
+Die Korrektheit des Algorithmus ergibt sich leicht durch vollständige Induktion (vgl. Kleinberg/Tardos). \textit{Nun gibt es aber einen wichtigen Grund, weshalb man sich mit diesem Algorithmus auf keinen Fall zufrieden geben kann}.
+
+Dieser Grund wird sehr schnell klar, wenn man sich die zugehörigen Rekursionsbäume anschaut. Die folgende Abbildung gibt beispielsweise den Rekursionsbaum wieder, der zu unserem früheren Beispiel mit sechs Intervallen gehört:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(8.5,5.5)
+\tiny
+
+\cnode*(5,5){3pt}{V00} \uput{0.2}[ 90](5,5){$\opt{(6)}$}
+\cnode*(3,4){3pt}{V10} \uput{0.2}[180](3,4){$\opt{(5)}$}
+\cnode*(7,4){3pt}{V11} \uput{0.2}[  0](7,4){$\opt{(3)}$}
+\cnode*(2,3){3pt}{V20} \uput{0.2}[180](2,3){$\opt{(4)}$}
+\cnode*(4,3){3pt}{V21} \uput{0.2}[180](4,3){$\opt{(3)}$}
+\cnode*(6,3){3pt}{V22} \uput{0.2}[  0](6,3){$\opt{(2)}$}
+\cnode*(8,3){3pt}{V23} \uput{0.2}[  0](8,3){$\opt{(1)}$}
+\cnode*(1,2){3pt}{V30} \uput{0.2}[180](1,2){$\opt{(3)}$}
+\cnode*(3,2){3pt}{V31} \uput{0.2}[180](3,2){$\opt{(2)}$}
+\cnode*(5,2){3pt}{V32} \uput{0.2}[270](5,2){$\opt{(1)}$}
+\cnode*(6,2){3pt}{V33} \uput{0.2}[270](6,2){$\opt{(1)}$}
+\cnode*(0,1){3pt}{V40} \uput{0.2}[180](0,1){$\opt{(2)}$}
+\cnode*(2,1){3pt}{V41} \uput{0.2}[270](2,1){$\opt{(1)}$}
+\cnode*(3,1){3pt}{V42} \uput{0.2}[270](3,1){$\opt{(1)}$}
+\cnode*(0,0){3pt}{V50} \uput{0.2}[270](0,0){$\opt{(1)}$}
+
+\ncline{->}{V00}{V10}
+\ncline{->}{V00}{V11}
+\ncline{->}{V10}{V20}
+\ncline{->}{V10}{V21}
+\ncline{->}{V11}{V22}
+\ncline{->}{V11}{V23}
+\ncline{->}{V20}{V30}
+\ncline{->}{V21}{V31}
+\ncline{->}{V21}{V32}
+\ncline{->}{V22}{V33}
+\ncline{->}{V30}{V40}
+\ncline{->}{V30}{V41}
+\ncline{->}{V31}{V42}
+\ncline{->}{V40}{V50}
+
+\footnotesize
+\psframe[framearc=0.2](5,0.25)(9,1.05)
+\uput{0}[90](7,0.67){The tree of subproblems}
+\uput{0}[90](7,0.33){grows very quickly.}
+
+\small
+\end{pspicture}
+\end{center}
+
+Wie man sieht, steigt die Zahl der rekursiven Aufrufe stark an, da etliche Berechnungen mehrfach ausgeführt werden. \textit{Bereits bei sehr einfachen Beispielen kommt es zu extrem vielen rekursiven Aufrufen}. Um dies zu erkennen, betrachten wir ein recht \enquote{harmlos} wirkendes Beispiel: Es seien $n$ Intervalle $1,\ldots,n$ nach dem Schema der folgenden Figur angeordnet:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0)(13,3.5)
+\footnotesize
+
+\psline{|-|}( 0,3.0)( 3,3.0)
+\psline{|-|}( 2,2.5)( 5,2.5)
+\psline{|-|}( 4,2.0)( 7,2.0)
+\psline{|-|}( 6,1.5)( 9,1.5)
+\psline{|-|}( 8,1.0)(11,1.0)
+\psline{|-|}(10,0.5)(13,0.5)
+
+\small
+\end{pspicture}
+\end{center}
+
+In diesem Beispiel gilt $p(j) = j-2$ für alle $j = 2,\ldots,n$. Für $j \geq 2$ erzeugt $\copt{(j)}$ also immer die rekursiven Aufrufe von $\copt{(j-1)}$ und von $\copt{(j-2)}$, d.h., die Gesamtzahl der rekursiven Aufrufe wächst wie die Fibonacci-Zahlen\index{Fibonacci-Zahlen}\index{Zahlen!Fibonacci-}, welche exponentiell zunehmen. (Man beachte, dass für die Fibonacci-Zahlen $f(0), f(1), f(2), \ldots$ gilt: $f(n+2) = f(n+1) + f(n) \geq 2f(n)$. Das heißt: $f(n+2)$ ist bereits mindestens doppelt so groß wie $f(n)$.)
+
+Aufgrund der hohen Zahl der rekursiven Aufrufe können wir mit unserem Algorithmus alles andere als zufrieden sein. Trotzdem sind wir gar nicht so weit davon entfernt, unser Problem auf eine weitaus bessere Art zu lösen: \textit{Die entscheidende Beobachtung ist, dass unser rekursiver Algorithmus $\copt$ in Wirklichkeit nur $n+1$ verschiedene Teilprobleme löst}:
+\[
+\copt{(0)}, \ldots, \copt{(n)}.
+\]
+
+Als \textit{erste wichtige Komponente}, die bei einer Lösung mittels Dynamischer Programmierung\label{page:13:1} vorhanden sein muss, hatten wir das \textit{Vorliegen einer Rekursionsgleichung} bezeichnet. Die \textit{zweite wichtige Komponente} haben wir soeben kennengelernt: Es muss eine Sammlung von \enquote{nicht allzu vielen\footnote{Die vage Formulierung \enquote{nicht allzu viele} Teilprobleme lässt sich dadurch präzisieren, dass man stattdessen von einer \textit{polynomiellen Anzahl} von Teilproblemen spricht. Genauer: Die Anzahl der Teilprobleme soll \textit{polynomiell} in $n$ sein, wobei $n$ ein Maß für die Größe der Eingabe ist. Anhand unseres Beispiels erläutert: $n$ ist die Anzahl der Intervalle und es geht um $n+1$ Teilprobleme. In unserem Beispiel ist die Anzahl der Teilprobleme also sogar \textit{linear} in $n$.}} Teilproblemen vorliegen, auf die sich die rekursiven Aufrufe beschränken.
+
+Das große Defizit unseres rekursiven Algorithmus lag in der extremen Häufigkeit, mit der immer wieder dieselben Teilprobleme aufgerufen werden. Wie kann man dies nun aber vermeiden? Es gibt zwei Möglichkeiten, die im Wesentlichen äquivalent sind: 
+\begin{itemize}
+\item Die eine nennt man \textit{Memoisation}\index{Memoisation}; diese Möglichkeit soll hier nicht besprochen werden -- wir verweisen auf die Literatur (z.B. Kleinberg/Tardos oder Cormen et al.).
+\item Die andere Möglichkeit ist, \textit{iterativ} vorzugehen.
+\end{itemize}
+
+Im Fall unseres Scheduling-Problems geht das wie folgt: Wir nutzen aus, dass die Teilprobleme bereits in einer sich anbietenden Reihenfolge vorliegen; deswegen benutzen wir ein Array $M[0 \ldots n]$ der Länge $n+1$, in dem die Werte $\opt{(0)}, \ldots, \opt{(n)}$ gespeichert werden. Beachtet man $\opt{(0)}=0$ sowie die Rekursionsformel (\ref{eq:13:1}), \textit{so ergibt sich der folgende iterative Algorithmus}.
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{$\icopt$} \\
+& \\
+ (1)& $M[0] = 0$ \\
+ (2)& \textbf{For} $j=1,\ldots,n$ \\
+ (3)& \qquad $M[j] = \max{\bigl( v_j + M[p(j)], M[j-1] \bigr)}$ \\
+ (4)& \textbf{Endfor}
+\end{tabular}
+\end{center}
+
+Die Korrektheit dieses Algorithmus ergibt sich aus (\ref{eq:13:1}) und $\opt{(0)}=0$. Die Laufzeit von Iterative-Compute-Opt ist $O(n)$, da $n+1$ Einträge von $M[0 \ldots n]$ berechnet werden und die Berechnung jedes Eintrags in konstanter Zeit erfolgt.
+
+Wir greifen noch einmal das obige Beispiel aus Kleinberg/Tardos auf, um die Arbeitsweise von Iterative-Compute-OPT zu illustrieren:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(12.5,3.5)
+\footnotesize
+
+\psline{|-|}(1.0,3.0)( 3.0,3.0) \uput{0.1}[140]( 3.0,3.0){$v_1=2$}
+\psline{|-|}(2.0,2.5)( 6.0,2.5) \uput{0.1}[140]( 6.0,2.5){$v_2=4$}
+\psline{|-|}(5.0,2.0)( 7.0,2.0) \uput{0.1}[140]( 7.0,2.0){$v_3=4$}
+\psline{|-|}(2.5,1.5)( 9.0,1.5) \uput{0.1}[140]( 9.0,1.5){$v_4=7$}
+\psline{|-|}(8.0,1.0)(10.0,1.0) \uput{0.1}[140](10.0,1.0){$v_5=2$}
+\psline{|-|}(8.5,0.5)(11.0,0.5) \uput{0.1}[140](11.0,0.5){$v_6=1$}
+
+\uput{2.89}[90](0,0){$1$} \uput{2.89}[90](12.5,0){$p(1)=0$}
+\uput{2.39}[90](0,0){$2$} \uput{2.39}[90](12.5,0){$p(2)=0$}
+\uput{1.89}[90](0,0){$3$} \uput{1.89}[90](12.5,0){$p(3)=1$}
+\uput{1.39}[90](0,0){$4$} \uput{1.39}[90](12.5,0){$p(4)=0$}
+\uput{0.89}[90](0,0){$5$} \uput{0.89}[90](12.5,0){$p(5)=3$}
+\uput{0.39}[90](0,0){$6$} \uput{0.39}[90](12.5,0){$p(6)=3$}
+ 
+\psline{->}(0,0)(0,0.25)
+\uput{0.1}[270](0,0){Index}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+%----------------------------------------------------------------
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt,framesize=0.5cm}
+\begin{pspicture}(0,0)(4,5.50)
+\footnotesize
+
+\fnode(0.25,0.25){V00} \rput(V00){$0$}
+\fnode(0.75,0.25){V01} \rput(V01){$2$}
+\fnode(1.25,0.25){V02} \rput(V02){$4$}
+\fnode(1.75,0.25){V03} \rput(V03){$6$}
+\fnode(2.25,0.25){V04} \rput(V04){$7$}
+\fnode(2.75,0.25){V05} \rput(V05){$8$}
+\fnode(3.25,0.25){V06} \rput(V06){$8$}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V06}{V05}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V06}{V03}
+
+\fnode(0.25,1.25){V10} \rput(V10){$0$}
+\fnode(0.75,1.25){V11} \rput(V11){$2$}
+\fnode(1.25,1.25){V12} \rput(V12){$4$}
+\fnode(1.75,1.25){V13} \rput(V13){$6$}
+\fnode(2.25,1.25){V14} \rput(V14){$7$}
+\fnode(2.75,1.25){V15} \rput(V15){$8$}
+\fnode(3.25,1.25){V16}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V15}{V14}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V15}{V13}
+
+\fnode(0.25,2.25){V20} \rput(V20){$0$}
+\fnode(0.75,2.25){V21} \rput(V21){$2$}
+\fnode(1.25,2.25){V22} \rput(V22){$4$}
+\fnode(1.75,2.25){V23} \rput(V23){$6$}
+\fnode(2.25,2.25){V24} \rput(V24){$7$}
+\fnode(2.75,2.25){V25} 
+\fnode(3.25,2.25){V26}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V24}{V20}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V24}{V23}
+
+\fnode(0.25,3.25){V30} \rput(V30){$0$}
+\fnode(0.75,3.25){V31} \rput(V31){$2$}
+\fnode(1.25,3.25){V32} \rput(V32){$4$}
+\fnode(1.75,3.25){V33} \rput(V33){$6$}
+\fnode(2.25,3.25){V34} 
+\fnode(2.75,3.25){V35} 
+\fnode(3.25,3.25){V36}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V33}{V31}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V33}{V32}
+
+\fnode(0.25,4.25){V40} \rput(V40){$0$}
+\fnode(0.75,4.25){V41} \rput(V41){$2$}
+\fnode(1.25,4.25){V42} \rput(V42){$4$}
+\fnode(1.75,4.25){V43} 
+\fnode(2.25,4.25){V44} 
+\fnode(2.75,4.25){V45} 
+\fnode(3.25,4.25){V46}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V42}{V40}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V42}{V41}
+
+\fnode(0.25,5.25){V50} \rput(V50){$0$}
+\fnode(0.75,5.25){V51} \rput(V51){$2$}
+\fnode(1.25,5.25){V52} 
+\fnode(1.75,5.25){V53} 
+\fnode(2.25,5.25){V54} 
+\fnode(2.75,5.25){V55} 
+\fnode(3.25,5.25){V56}
+
+\uput{0.25}[180](0,5.25){$M=$}
+\uput{0.25}[ 90](0.25,5.5){$0$}
+\uput{0.25}[ 90](0.75,5.5){$1$}
+\uput{0.25}[ 90](1.25,5.5){$2$}
+\uput{0.25}[ 90](1.75,5.5){$3$}
+\uput{0.25}[ 90](2.25,5.5){$4$}
+\uput{0.25}[ 90](2.75,5.5){$5$}
+\uput{0.25}[ 90](3.25,5.5){$6$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Möchte man nicht nur $\opt{(n)}$, sondern auch die dazugehörigen Intervalle der Menge $\O_n$ bestimmen, so ist dies auf der Basis von (\ref{eq:13:2}) leicht möglich; die (einfachen) Details findet man im Buch von Kleinberg und Tardos.
+
+Unser Beispiel des gewichteten Intervall-Schedulings liefert eine \textit{grobe Richtlinie} für den Entwurf von Algorithmen mittels Dynamischer Programmierung. Man benötigt vor allem eine \textit{Menge von Teilproblemen} des Ausgangsproblems, die gewissen Grundbedingungen genügen:  
+\begin{enumerate}[(i)]
+\item Es handelt sich um \enquote{nicht allzu viele} Teilprobleme.
+\item Die Lösung des Ausgangsproblems kann leicht aus den Lösungen der Teilprobleme berechnet werden. (Einfachster Fall: Das Ausgangsproblem selbst befindet sich unter den Teilproblemen.)
+\item Es gibt eine \enquote{natürliche Ordnung} unter den Teilproblemen sowie eine rekursive Beziehung, die es erlaubt, die Lösung eines Teilproblems auf die Lösung von kleineren Teilproblemen zurückzuführen. (\enquote{Kleiner} bezieht sich dabei auf die erwähnte Ordnung.)
+\end{enumerate}
+
+Natürlich ist dies nur eine informelle Richtlinie, die teilweise etwas vage bleiben muss. \textit{Die Schwierigkeit besteht meist darin, geeignete Teilprobleme zu einem gegebenen Problem aufzuspüren}.
+
+Eine Vielzahl von interessanten Problemen, die mit Dynamischer Programmierung gelöst werden, findet man in den folgenden bekannten Lehrbüchern:
+\begin{itemize}
+\item Th. Cormen, Ch. Leiserson, R. Rivest, C. Stein: \textit{Introduction to Algorithms};
+\item S. Dasgupta, Ch. Papadimitriou, U. Vazirani: \textit{Algorithms};
+\item J. Kleinberg, É. Tardos: \textit{Algorithm Design}.
+\end{itemize}
+
+Wir behandeln hier \textit{zwei sehr grundlegende Probleme}, die häufig als Teilaufgabe bei der Lösung komplexerer Probleme auftreten:
+\begin{itemize}
+\item das \textit{Rucksackproblem} (engl. \textit{Knapsack Problem});
+\item das \textit{Problem der kürzesten Wege}\index{Problem!der kürzesten Wege} in einem Graphen, in dem auch negative Kantenkosten vorkommen.
+\end{itemize}
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ein Algorithmus zur Lösung des Rucksackproblems"                            %
+%------------------------------------------------------------------------------%
+
+\section{Ein Algorithmus zur Lösung des Rucksackproblems}
+
+
+Wir haben das \textit{Rucksackproblem}\index{Rucksackproblem}\index{Problem!Rucksack-} (engl. \textit{Knapsack Problem}\index{Knapsack-Problem}) bereits zuvor kennengelernt. Hier befassen wir uns zunächst mit einem \textit{Spezialfall des Rucksackproblems}, dass man das \textit{Subset-Sum-Problem} nennt.
+
+
+\subsection{Das Subset-Sum-Problem}
+\index{Subset-Sum-Problem}\index{Problem!Subset-Sum-}
+
+Gegeben seien $n$ \textit{Gegenstände} (engl. \textit{items}), die wir mit $1,\ldots,n$ bezeichnen wollen. Der Gegenstand $i$ habe das Gewicht $w_i \geq 0$, $w_i \in \Z$ ($i=1,\ldots,n$). Außerdem ist eine Schranke $W \geq 0$, $W \in \Z$ gegeben. Gesucht ist eine Teilmenge $S$ von $\bigl\{ 1,\ldots,n \bigr\}$, für die
+\[
+\sum\limits_{i \in S}{w_i} \leq W
+\]
+gilt und für die die links stehende Summe so groß wie möglich ist.
+
+Vergleichen wir das Subset-Sum-Problem mit dem Rucksackproblem, so stellen wir fest, dass es sich beim Subset-Sum-Problem um einen Sonderfall des Rucksackproblems (in binärer Variante) handelt: um den Spezialfall nämlich, dass $v_i=w_i$ gilt ($i=1,\ldots,n$)\footnote{$v_i$ bezeichnet den \textit{Wert} (engl. \textit{value}) des Gegenstands $i$. Mit \enquote{Rucksackproblem} meinen wir im Folgenden immer die Version 1 auf Seite \pageref{page:6:1}, bei der jeder Gegenstand nur einmal vorhanden ist (0,1-Problem).}. Die deutsche Bezeichnung für Subset-Sum-Problem ist \textit{Teilsummenproblem}\index{Teilsummenproblem}\index{Problem!Teilsummen-}.
+
+
+\subsubsection{Entwurf des Algorithmus}
+
+Zunächst: \textit{ein falscher Start}.
+
+Da wir das Problem mit Dynamischer Programmierung behandeln wollen, müssen wir zunächst geeignete Teilprobleme finden. Wir orientieren uns am Problem des gewichteten Intervall-Schedulings und versuchen ähnlich vorzugehen, d.h., wir betrachten Teilprobleme der Form $\bigl\{ 1,\ldots,i \bigr\}$ und benutzen die Bezeichnung $\opt{(i)}$ analog zur Bedeutung in Abschnitt \ref{section:13:1}.
+
+Mit $\O \subseteq \bigl\{ 1,\ldots,n \bigr\}$ wollen wir eine optimale Lösung des Subset-Sum-Problems bezeichnen. Ebenso wie beim gewichteten Intervall-Scheduling-Problem unterscheiden wir die beiden Fälle $n \notin \O$ und $n \in \O$. Der Fall $n \notin \O$ geht ebenso wie zuvor, d.h., wir können auch diesmal feststellen: 
+\begin{itemize}
+\item Falls $n \notin \O$, so gilt $\opt{(n)} = \opt{(n-1)}$.
+\end{itemize}
+
+Nun zum Fall $n \in \O$. Beim gewichteten Intervall-Scheduling war auch dieser Fall einfach: Wir konnten alle Anfragen weglassen, die nicht kompatibel mit $n$ waren, und dann mit den restlichen Anfragen weiterarbeiten. \textit{Diesmal hat $n \in \O$ aber etwas anderes zur Folge}: Die Aufnahme von $n$ in $\O$ impliziert, dass für die Gegenstände aus $\bigl\{ 1,\ldots,n-1 \bigr\}$ nur noch das Gewicht
+\[
+W-w_n
+\]
+zur Verfügung steht. Das bedeutet, dass es nicht ausreicht, Teilprobleme der Form $\bigl\{ 1,\ldots,i \bigr\}$ zu betrachten -- es müssen zusätzlich auch noch kleinere Schranken $w$ mit $0 \leq w \leq W$ Berücksichtigung finden.
+
+\textit{Ganz so falsch war unser Start also doch nicht} -- \textit{wir müssen unseren Ansatz nur modifizieren, indem wir weitere Teilprobleme hinzunehmen}. Dies wird im Folgenden durchgeführt.
+
+
+Wie wir gesehen haben, ist es also nötig, für jede Menge $\bigl\{ 1,\ldots,i \bigr\}$ von Gegenständen und für jede Gewichtsobergrenze $w$ mit $0 \leq w \leq W$ und $w \in \Z$ ein eigenes Teilproblem zu betrachten. Dementsprechend bezeichnen wir mit $\opt{(i,w)}$ das Gewicht einer optimalen Lösung des Subset-Sum-Problems für die Menge $\bigl\{ 1,\ldots,i \bigr\}$ und für das maximal zulässige Gewicht $w$.
+
+Man beachte, dass im Fall $w=0$ immer $\opt{(i,w)}=0$ gilt, da das maximal zulässige Gewicht gleich $0$ ist. Es gilt also immer $\opt{(i,0)}=0$. Darüber hinaus definiert man noch $\opt{(0,w)}=0$. (Dies entspricht dem einleuchtenden Umstand, dass das Gewicht einer optimalen Lösung gleich 0 ist, wenn keine Gegenstände vorhanden sind.)
+
+Für alle $i=0,\ldots,n$ und alle ganzen Zahlen $0 \leq w \leq W$ haben wir somit den Wert $\opt{(i,w)}$ definiert. Es sei daran erinnert, dass die Größe, die wir letzten Endes haben möchten, der Wert von $\opt{(n,W)}$ ist. Wie zuvor sei $\O \subseteq \bigl\{ 1,\ldots,n \bigr\}$ eine dazugehörige optimale Lösung. Aufgrund unserer Überlegungen können wir feststellen:
+\begin{itemize}
+\item Falls $n \notin \O$, so gilt $\opt{(n,W)} = \opt{(n-1,W)}$.
+\item Falls $n \in \O$, so gilt $\opt{(n,W)} = w_n + \opt{(n-1,W-w_n)}$.
+\end{itemize}
+
+Falls $W < w_n$ gilt, d.h., falls der $n$-te Gegenstand zu groß ist, so liegt klarerweise der Fall $n \notin \O$ vor und es gilt $\opt{(n,W)}=\opt{(n-1,W)}$. Andernfalls ergibt sich, da einer der beiden Fälle $n \notin \O$ oder $n \in \O$ vorliegen muss:
+\[
+\opt{(n,W)} = \max{\bigl( \opt{(n-1,W)}, w_n + \opt{(n-1, W-w_n)} \bigr)}.
+\]
+
+Entsprechendes gilt auch, wenn wir für $i \geq 1$ die Menge $\bigl\{ 1,\ldots,i \bigr\}$ anstelle von $\bigl\{ 1,\ldots,n \bigr\}$ sowie die Schranke $w$ anstelle von $W$ betrachten. Somit erhalten wir das folgende Ergebnis (für $i \geq 1$).
+\begin{equation}
+\label{eq:13:3}
+\opt{(i,w)} = \begin{cases}
+\opt{(i-1,w)} & \text{, für } w < w_i \\
+\max{\bigl( \opt{(i-1,w)}, w_i + \opt{(i-1, w-w_i)} \bigr)} & \text{, sonst}
+\end{cases}
+\end{equation}
+
+Damit haben wir die gewünschte \textit{Rekursionsgleichung} aufgestellt. Anknüpfend an (\ref{eq:13:3}) erhält man den folgenden Algorithmus\index{Subset-Sum-Algorithmus}\index{Algorithmus!Subset-Sum-} zur Berechnung von $\opt{(n,W)}$.
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{$\ssum{(n,W)}$} \\
+& \\
+ (1)& Array $M[0 \ldots n, 0 \ldots W]$ \\
+ (2)& Initialize $M[0,w] = 0$ \textbf{for each} $w=0,\ldots,W$ \\
+ (3)& \textbf{For} $i=1,\ldots,n$ \\
+ (4)& \qquad \textbf{For} $w=0,\ldots,W$ \\ 
+ (5)& \qquad\qquad Use the recurrence (\ref{eq:13:3}) to compute $M[i,w]$ \\
+ (6)& \qquad \textbf{Endfor}\\
+ (7)& \textbf{Endfor} \\
+ (8)& \textbf{Return} $M[n,W]$
+\end{tabular}
+\end{center}
+
+Aufgrund von (\ref{eq:13:3}) ergibt sich (durch vollständige Induktion), dass dieser Algorithmus korrekt ist, d.h., dass der gelieferte Wert von $M[n,W]$ gleich $\opt{(n,W)}$ ist.
+
+Ähnlich wie wir im Fall des gewichteten Intervall-Scheduling-Problems das Array $M$ in Form einer Tabelle dargestellt haben, deren Einträge schrittweise aus früheren Einträgen berechnet wurden, können wir uns $M$ auch diesmal als eine Tabelle vorstellen. \textit{Unterschied: Im vorliegenden Fall handelt es sich um eine 2-dimensionale Tabelle} (siehe nachfolgende Figur aus Kleinberg/Tardos), während wir es beim Intervall-Scheduling-Problem aus Abschnitt \ref{section:13:1} nur mit einer einzigen Zeile zu tun hatten.
+
+\begin{center}
+\psset{unit=0.5cm,linewidth=0.5pt,nodesep=0.5pt}
+\begin{pspicture}(-2,-3.5)(15,12)
+\footnotesize
+
+\psline(0, 0)(15, 0) \psline(0, 4)(15, 4) \psline(0, 7)(15, 7) \psline(0,10)(15,10)
+\psline(0, 1)(15, 1) \psline(0, 5)(15, 5) \psline(0, 8)(15, 8) \psline(0,11)(15,11)
+\psline(0, 2)(15, 2) \psline(0, 6)(15, 6) \psline(0, 9)(15, 9) \psline(0,12)(15,12)
+\psline(0, 3)(15, 3)
+
+\psline( 0,0)( 0,12) \psline( 4,0)( 4,12) \psline( 7,0)( 7,12) \psline(10,0)(10,12) \psline(13,0)(13,12)
+\psline( 1,0)( 1,12) \psline( 5,0)( 5,12) \psline( 8,0)( 8,12) \psline(11,0)(11,12) \psline(14,0)(14,12)
+\psline( 2,0)( 2,12) \psline( 6,0)( 6,12) \psline( 9,0)( 9,12) \psline(12,0)(12,12) \psline(15,0)(15,12)
+\psline( 3,0)( 3,12)
+
+\psline{->}(5.5,6.5)(8.5,7.5)
+\psline{->}(8.5,6.5)(8.5,7.5)
+
+\uput{0.25}[90]( 0.5,0){$0$} \uput{0.25}[90]( 3.5,0){$0$} \uput{0.25}[90]( 6.5,0){$0$} \uput{0.25}[90]( 9.5,0){$0$} \uput{0.25}[90](12.5,0){$0$}
+\uput{0.25}[90]( 1.5,0){$0$} \uput{0.25}[90]( 4.5,0){$0$} \uput{0.25}[90]( 7.5,0){$0$} \uput{0.25}[90](10.5,0){$0$} \uput{0.25}[90](13.5,0){$0$}
+\uput{0.25}[90]( 2.5,0){$0$} \uput{0.25}[90]( 5.5,0){$0$} \uput{0.25}[90]( 8.5,0){$0$} \uput{0.25}[90](11.5,0){$0$} \uput{0.25}[90](14.5,0){$0$}
+
+\uput{0.25}[90](0.5, 1){$0$} \uput{0.25}[90](0.5, 4){$0$} \uput{0.25}[90](0.5, 7){$0$} \uput{0.25}[90](0.5,10){$0$}
+\uput{0.25}[90](0.5, 2){$0$} \uput{0.25}[90](0.5, 5){$0$} \uput{0.25}[90](0.5, 8){$0$} \uput{0.25}[90](0.5,11){$0$}
+\uput{0.25}[90](0.5, 3){$0$} \uput{0.25}[90](0.5, 6){$0$} \uput{0.25}[90](0.5, 9){$0$}
+
+\uput{0.25}[270](0.5, 0){$0$} \uput{0.25}[180](0,0.5){$0$}
+\uput{0.25}[270](1.5, 0){$1$} \uput{0.25}[180](0,1.5){$1$}
+\uput{0.25}[270](2.5, 0){$2$} \uput{0.25}[180](0,2.5){$2$}
+
+\uput{0.25}[270]( 5.5,0){$w-w_i$}
+\uput{0.25}[270]( 8.5,0){$w$}
+\uput{0.25}[270](14.5,0){$W$}
+
+\uput{0.25}[180](0, 6.5){$i-1$}
+\uput{0.25}[180](0, 7.5){$i$}
+\uput{0.25}[180](0,11.5){$n$}
+
+\uput{1.5}[270](7.5,0){The two-dimensional table of $\opt$ values. The leftmost column and bottom row is always 0.}
+\uput{2.3}[270](7.5,0){The entry $\opt{(i,w)}$ is computed from two other entries $\opt{(i-1,w)}$ and $\opt{(i-1,w-w_i)}$,}
+\uput{3.1}[270](7.5,0){as indicated by the arrows.}
+
+\small
+\end{pspicture}
+\end{center}
+
+Das folgende \textbf{Beispiel} aus Kleinberg/Tardos zeigt, wie die Tabelle zeilenweise von unten nach oben mit den Werten $\opt{(i,w)}$ aufgefüllt wird.
+
+\begin{center}
+\psset{unit=0.5cm,linewidth=0.5pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-3)(20,12.5)
+\footnotesize
+
+\rput(0,7){
+% rows
+\psline(0,0)(7,0) \psline(0,2)(7,2) \psline(0,4)(7,4)
+\psline(0,1)(7,1) \psline(0,3)(7,3)
+% columns
+\psline(0,0)(0,4) \psline(2,0)(2,4) \psline(4,0)(4,4) \psline(6,0)(6,4) 
+\psline(1,0)(1,4) \psline(3,0)(3,4) \psline(5,0)(5,4) \psline(7,0)(7,4)
+% row 0
+\uput{0.25}[90]( 0.5,0){$0$} \uput{0.25}[90]( 2.5,0){$0$} \uput{0.25}[90]( 4.5,0){$0$} \uput{0.25}[90]( 6.5,0){$0$}
+\uput{0.25}[90]( 1.5,0){$0$} \uput{0.25}[90]( 3.5,0){$0$} \uput{0.25}[90]( 5.5,0){$0$}
+% outer labels
+\uput{0.25}[270](0.5, 0){$0$} \uput{0.25}[180](0,0.5){$0$}
+\uput{0.25}[270](1.5, 0){$1$} \uput{0.25}[180](0,1.5){$1$}
+\uput{0.25}[270](2.5, 0){$2$} \uput{0.25}[180](0,2.5){$2$}
+\uput{0.25}[270](3.5, 0){$3$} \uput{0.25}[180](0,3.5){$3$}
+\uput{0.25}[270](4.5, 0){$4$}
+\uput{0.25}[270](5.5, 0){$5$}
+\uput{0.25}[270](6.5, 0){$6$}
+% label
+\uput{1.0}[270](3.5,0){\textbf{Initial values}}}
+
+
+
+\rput(12,7){
+% rows
+\psline(0,0)(7,0) \psline(0,2)(7,2) \psline(0,4)(7,4)
+\psline(0,1)(7,1) \psline(0,3)(7,3)
+% columns
+\psline(0,0)(0,4) \psline(2,0)(2,4) \psline(4,0)(4,4) \psline(6,0)(6,4) 
+\psline(1,0)(1,4) \psline(3,0)(3,4) \psline(5,0)(5,4) \psline(7,0)(7,4)
+% row 0
+\uput{0.25}[90]( 0.5,0){$0$} \uput{0.25}[90]( 2.5,0){$0$} \uput{0.25}[90]( 4.5,0){$0$} \uput{0.25}[90]( 6.5,0){$0$}
+\uput{0.25}[90]( 1.5,0){$0$} \uput{0.25}[90]( 3.5,0){$0$} \uput{0.25}[90]( 5.5,0){$0$}
+% row 1
+\uput{0.25}[90]( 0.5,1){$0$} \uput{0.25}[90]( 2.5,1){$2$} \uput{0.25}[90]( 4.5,1){$2$} \uput{0.25}[90]( 6.5,1){$2$}
+\uput{0.25}[90]( 1.5,1){$0$} \uput{0.25}[90]( 3.5,1){$2$} \uput{0.25}[90]( 5.5,1){$2$}
+\pscircle(-0.42,1.5){0.4}
+% outer labels
+\uput{0.25}[270](0.5, 0){$0$} \uput{0.25}[180](0,0.5){$0$}
+\uput{0.25}[270](1.5, 0){$1$} \uput{0.25}[180](0,1.5){$1$}
+\uput{0.25}[270](2.5, 0){$2$} \uput{0.25}[180](0,2.5){$2$}
+\uput{0.25}[270](3.5, 0){$3$} \uput{0.25}[180](0,3.5){$3$}
+\uput{0.25}[270](4.5, 0){$4$}
+\uput{0.25}[270](5.5, 0){$5$}
+\uput{0.25}[270](6.5, 0){$6$}
+% label
+\uput{1.0}[270](3.5,0){\textbf{Filling in values for $\mathbf{i=1}$}}}
+
+
+\rput(0,0){
+% rows
+\psline(0,0)(7,0) \psline(0,2)(7,2) \psline(0,4)(7,4)
+\psline(0,1)(7,1) \psline(0,3)(7,3)
+% columns
+\psline(0,0)(0,4) \psline(2,0)(2,4) \psline(4,0)(4,4) \psline(6,0)(6,4) 
+\psline(1,0)(1,4) \psline(3,0)(3,4) \psline(5,0)(5,4) \psline(7,0)(7,4)
+% row 0
+\uput{0.25}[90]( 0.5,0){$0$} \uput{0.25}[90]( 2.5,0){$0$} \uput{0.25}[90]( 4.5,0){$0$} \uput{0.25}[90]( 6.5,0){$0$}
+\uput{0.25}[90]( 1.5,0){$0$} \uput{0.25}[90]( 3.5,0){$0$} \uput{0.25}[90]( 5.5,0){$0$}
+% row 1
+\uput{0.25}[90]( 0.5,1){$0$} \uput{0.25}[90]( 2.5,1){$2$} \uput{0.25}[90]( 4.5,1){$2$} \uput{0.25}[90]( 6.5,1){$2$}
+\uput{0.25}[90]( 1.5,1){$0$} \uput{0.25}[90]( 3.5,1){$2$} \uput{0.25}[90]( 5.5,1){$2$}
+% row 2
+\uput{0.25}[90]( 0.5,2){$0$} \uput{0.25}[90]( 2.5,2){$2$} \uput{0.25}[90]( 4.5,2){$4$} \uput{0.25}[90]( 6.5,2){$4$}
+\uput{0.25}[90]( 1.5,2){$0$} \uput{0.25}[90]( 3.5,2){$2$} \uput{0.25}[90]( 5.5,2){$4$}
+\pscircle(-0.42,2.5){0.4}
+% outer labels
+\uput{0.25}[270](0.5, 0){$0$} \uput{0.25}[180](0,0.5){$0$}
+\uput{0.25}[270](1.5, 0){$1$} \uput{0.25}[180](0,1.5){$1$}
+\uput{0.25}[270](2.5, 0){$2$} \uput{0.25}[180](0,2.5){$2$}
+\uput{0.25}[270](3.5, 0){$3$} \uput{0.25}[180](0,3.5){$3$}
+\uput{0.25}[270](4.5, 0){$4$}
+\uput{0.25}[270](5.5, 0){$5$}
+\uput{0.25}[270](6.5, 0){$6$}
+% label
+\uput{1.0}[270](3.5,0){\textbf{Filling in values for $\mathbf{i=2}$}}}
+
+
+
+\rput(12,0){
+% rows
+\psline(0,0)(7,0) \psline(0,2)(7,2) \psline(0,4)(7,4)
+\psline(0,1)(7,1) \psline(0,3)(7,3)
+% columns
+\psline(0,0)(0,4) \psline(2,0)(2,4) \psline(4,0)(4,4) \psline(6,0)(6,4) 
+\psline(1,0)(1,4) \psline(3,0)(3,4) \psline(5,0)(5,4) \psline(7,0)(7,4)
+% row 0
+\uput{0.25}[90]( 0.5,0){$0$} \uput{0.25}[90]( 2.5,0){$0$} \uput{0.25}[90]( 4.5,0){$0$} \uput{0.25}[90]( 6.5,0){$0$}
+\uput{0.25}[90]( 1.5,0){$0$} \uput{0.25}[90]( 3.5,0){$0$} \uput{0.25}[90]( 5.5,0){$0$}
+% row 1
+\uput{0.25}[90]( 0.5,1){$0$} \uput{0.25}[90]( 2.5,1){$2$} \uput{0.25}[90]( 4.5,1){$2$} \uput{0.25}[90]( 6.5,1){$2$}
+\uput{0.25}[90]( 1.5,1){$0$} \uput{0.25}[90]( 3.5,1){$2$} \uput{0.25}[90]( 5.5,1){$2$}
+% row 2
+\uput{0.25}[90]( 0.5,2){$0$} \uput{0.25}[90]( 2.5,2){$2$} \uput{0.25}[90]( 4.5,2){$4$} \uput{0.25}[90]( 6.5,2){$4$}
+\uput{0.25}[90]( 1.5,2){$0$} \uput{0.25}[90]( 3.5,2){$2$} \uput{0.25}[90]( 5.5,2){$4$}
+% row 3
+\uput{0.25}[90]( 0.5,3){$0$} \uput{0.25}[90]( 2.5,3){$2$} \uput{0.25}[90]( 4.5,3){$4$} \uput{0.25}[90]( 6.5,3){$5$}
+\uput{0.25}[90]( 1.5,3){$0$} \uput{0.25}[90]( 3.5,3){$3$} \uput{0.25}[90]( 5.5,3){$5$}
+\pscircle(-0.42,3.5){0.4}
+% outer labels
+\uput{0.25}[270](0.5, 0){$0$} \uput{0.25}[180](0,0.5){$0$}
+\uput{0.25}[270](1.5, 0){$1$} \uput{0.25}[180](0,1.5){$1$}
+\uput{0.25}[270](2.5, 0){$2$} \uput{0.25}[180](0,2.5){$2$}
+\uput{0.25}[270](3.5, 0){$3$} \uput{0.25}[180](0,3.5){$3$}
+\uput{0.25}[270](4.5, 0){$4$}
+\uput{0.25}[270](5.5, 0){$5$}
+\uput{0.25}[270](6.5, 0){$6$}
+% label
+\uput{1.0}[270](3.5,0){\textbf{Filling in values for $\mathbf{i=3}$}}}
+
+\uput{1.0}[ 90](9.5,11){Knapsack size $W=6$, items $w_1=2$, $w_2=2$, $w_3=3$}
+\uput{2.5}[270](9.5,0){The iterations of the algorithm on a sample instance of the $\ssum$-Problem.}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+
+
+
+\subsubsection{Zur Laufzeit von Subset-Sum(n,W)}
+
+Es werden $(n+1)(W+1)$ Einträge berechnet und die Berechnung jedes Eintrags erfordert eine konstante Zahl von Operationen. Also beträgt die Laufzeit $O(nW)$. \textit{Damit ist der $\ssum$-Algorithmus\index{Subset-Sum-Algorithmus}\index{Algorithmus!Subset-Sum-} nicht so effizient wie unser ebenfalls auf Dynamischer Programmierung basierender Algorithmus zum gewichteten Intervall-Scheduling-Problem} (vgl. Abschnitt \ref{section:13:1}). Insbesondere handelt es sich \textbf{nicht} um einen polynomiellen Algorithmus. (Man beachte: Um die Schranke $W$ zu kodieren benötigt man lediglich $\left\lceil \log_2{(W+1)} \right\rceil$ Bits, während beim Aufstellen einer Zeile der 2-dimensionalen Tabelle $W+1$ Einträge zu berechnen sind.) $\ssum{(n,W)}$ arbeitet jedoch effizient, wenn die Schranke $W$ im Vergleich zu $n$ nicht \enquote{übermäßig groß} ist\footnote{Man spricht von einem \textit{pseudo-polynomiellen Algorithmus}\index{pseudo-polynomieller Algorithmus}\index{Algorithmus!pseudo-polynomieller}; Genaueres hierzu findet man beispielsweise im Buch von Kleinberg und Tardos.}.
+
+Der Algorithmus $\ssum{(n,W)}$ lässt sich leicht zu einem Algorithmus erweitern, der nicht nur den optimalen Wert $\opt{(n,W)}$ liefert, sondern auch eine dazugehörige optimale Menge $\O \subseteq \bigl\{ 1,\ldots,n \bigr\}$ von Gegenständen. Um $\O$ zu erhalten, führt man zunächst den Algorithmus $\ssum{(n,W)}$ wie beschrieben durch. Anschließend bestimmt man $\O$ mithilfe des Arrays $M[0 \ldots n, 0 \ldots W]$. Wir nehmen an, dass $M[0 \ldots n, 0 \ldots W]$ in Form einer Tabelle vorliegt, die -- wie zuvor beschrieben -- von unten nach oben aufgebaut wurde. Das von $\ssum{(n,W)}$ gelieferte Ergebnis ist dann der Eintrag $M[n,W]$, der in dieser Tabelle an der Stelle $[n,W]$ steht (\enquote{rechts oben}). Ausgehend von der Stelle $[n,W]$ wandert man nun durch die Tabelle, bis man unten angekommen ist, wobei man nach der folgenden Regel verfährt: Steht man auf der Stelle $[i,w]$ für $i>0$ und gilt $M[i,w] = M[i-1,w]$, so nehme man $i$ nicht in $\O$ auf und gehe nach $[i-1,w]$; gilt dagegen $M[i,w] > M[i-1,w]$, so nehme man $i$ in $\O$ auf und gehe nach $[i-1,w-w_i]$.
+
+Nun sind wir auch nicht mehr weit davon entfernt, einen Dynamischen-Programmierungs-Algorithmus für das \textit{Rucksackproblem} zu haben. Kurz gesagt: \textit{Beim Rucksackproblem läuft alles analog zum Subset-Sum-Problem; einziger Unterschied}: Es gilt nicht mehr unbedingt $v_i=w_i$. Dies wirkt sich nur insofern aus, dass man an einigen Stellen $v_i$ statt $w_i$ schreiben muss -- ansonsten bleibt alles beim Alten.
+
+
+
+
+\subsection{Das Rucksackproblem}
+\index{Rucksackproblem}\index{Problem!Rucksack-}
+
+Hier ist die Originaldarstellung aus dem Buch von Kleinberg und Tardos:
+
+\bigskip
+% begin kleinberg/stardos
+
+The Knapsack Problem is a bit more complex than the scheduling problem we discussed earlier. Consider a situation in which each item $i$ has a nonnegative weight $w_i$ as before, and also a distinct \textit{value} $v_i$. Our goal is now to find a subset $S$ of maximum value $\sum\limits_{i \in S}{v_i}$, subject to the restriction that the total weight of the set should not exceed $W$: $\sum\limits_{i \in S}{w_i} \leq W$.
+
+It is not hard to extend our dynamic programming algorithm to this more general problem. We use the analogous set of subproblems, $\opt{(i, w)}$, to denote the value of the optimal solution using a subset of the items $\bigl\{1, \ldots, i \bigr\}$ and maximum available weight $w$. We consider an optimal solution $\O$, and identify
+two cases depending on whether or not $n \in \O$:
+\begin{itemize}
+\item If $n \notin \O$, then $\opt{(n,W)} = \opt{(n-1,W)}$.
+\item If $n \in \O$, then $\opt{(n,W)} = v_n + \opt{(n-1, W-w_n)}$.
+\end{itemize}
+
+Using this line of argument for the subproblems implies the following:
+\begin{equation*}
+\opt{(i,w)} = \begin{cases}
+\opt{(i-1,w)} & \text{, if } w < w_i; \\
+\max{\bigl( \opt{(i-1,w)}, v_i + \opt{(i-1,w-w_i)} \bigr)} & \text{, otherwise.}
+\end{cases}
+\end{equation*}
+
+Using this recurrence, we can write down a completely analogous dynamic programming algorithm, and this implies the following fact.
+\begin{equation*}
+\text{The Knapsack Problem can be solved in $O(nW)$ time.}
+\end{equation*}
+
+% end kleinberg/tardos
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Der Algorithmus von Bellman-Ford"                                           %
+%------------------------------------------------------------------------------%
+
+\section{Der Algorithmus von Bellman und Ford}
+\index{Algorithmus!von Bellman und Ford}\index{Bellman und Ford, Algorithmus von}
+
+Es sei $G=(V,E)$ ein gerichteter Graph; jede Kante $e$ von $G$ sei mit einem \textit{Gewicht} $c(e) \in \R$ versehen, wobei auch $c(e) < 0$ gelten kann.
+
+Mögliche Interpretationen: Die Zahlen $c(e)$ geben \textit{Kosten} an; negative Kosten lassen sich als Einnahmen interpretieren. Statt \enquote{Gewicht} werden wir im Folgenden häufig auch \enquote{Kosten} oder \enquote{Länge} sagen.
+
+Ist $G'=(V',E')$ ein Teilgraph von $G=(V,E)$, so bezeichnen wir mit $c(G')$ die Summe der Gewichte $c(e)$ für alle Kanten $e$ von $G'$. Es gilt also
+\[
+c(G') = \sum\limits_{e \in E'}{c(e)}.
+\]
+
+\begin{Definition}[Definition]
+Ein gerichteter Kreis $C$ von $G$ wird ein \textit{negativer Kreis}\index{negativer Kreis}\index{Kreise, negative} genannt, falls $c(C)<0$ gilt.
+\end{Definition}
+
+Ein negativer Kreis:
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(4,4)
+\footnotesize
+
+\psrotate(2,2){  0}{\cnode*(2,4){3pt}{V1}}
+\psrotate(2,2){ 72}{\cnode*(2,4){3pt}{V2}}
+\psrotate(2,2){144}{\cnode*(2,4){3pt}{V3}}
+\psrotate(2,2){216}{\cnode*(2,4){3pt}{V4}}
+\psrotate(2,2){288}{\cnode*(2,4){3pt}{V5}}
+\ncline{->}{V1}{V5} \naput{$-2$}
+\ncline{->}{V5}{V4} \naput{$-2$}
+\ncline{->}{V4}{V3} \naput{$2$}
+\ncline{->}{V3}{V2} \naput{$-4$}
+\ncline{->}{V2}{V1} \naput{$3$}
+
+
+\small
+\end{pspicture}
+\end{center}
+
+Zwei eng verwandte Probleme:
+\begin{itemize}
+\item \textit{Das Problem der negativen Kreise}\index{Problem!der negativen Kreise}\index{Kreise, negative!Problem der}: Entscheide, ob $G$ einen negativen Kreis besitzt.
+\item \textit{Das Problem der kostenminimalen Pfade}\index{kostenminimaler Pfad}\index{kostenminimaler Pfad!Problem des}\index{Pfad!kostenminimaler}\index{Problem!des kostenminimalen Pfades}: Gegeben seien ein Graph $G$ ohne negative Kreise sowie ein Knoten $s$ von $G$. Finde für jedes $t$, das von $s$ aus erreichbar ist, einen $s,t$-Pfad $P: s~=~v_0,\ldots,v_k=t$ mit Kanten $e_i=(v_{i-1},v_i)$ ($i=1,\ldots,k$), so dass die Summe
+\[
+c(P) = \sum\limits_{i=1}^k{c(e_i)}
+\]
+so klein wie möglich ist.
+\end{itemize}
+
+Statt \enquote{kostenminimaler $s,t$-Pfad} sagen wir auch \textit{kürzester $s,t$-Pfad}.
+
+Wir wollen uns zunächst mit dem zweiten Problem, dem Problem der kostenminimalen Pfade be\-schäf\-ti\-gen. Der Grund, weshalb in diesem Problem die Existenz negativer Kreise ausgeschlossen wird, liegt auf der Hand: Andernfalls könnte es vorkommen, dass $t$ zwar von $s$ aus erreichbar ist, es aber trotzdem keinen kürzesten $s,t$-Pfad gibt. Man erkennt dies beispielsweise an der folgenden Darstellung: Zu jeder Zahl $K < 0$ kann man im dargestellten Graphen einen $s,t$-Pfad finden, dessen Länge kleiner als $K$ ist -- man muss den Kreis nur oft genug durchlaufen.
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(6,2.5)
+\footnotesize
+
+\cnode*(0,1){3pt}{V1} \uput{0.2}[180](0,1){$s$}
+\cnode*(2,2){3pt}{V2}
+\cnode*(3,0){3pt}{V3}
+\cnode*(4,2){3pt}{V4}
+\cnode*(6,1){3pt}{V5} \uput{0.2}[  0](6,1){$t$}
+
+\ncline{->}{V1}{V2} \uput{0.1}[135](1,1.5){$2$}
+\ncline{->}{V2}{V4} \uput{0.1}[ 90](3,2){$-1$}
+\ncline{->}{V4}{V3} \uput{0.1}[315](3.5,1){$1$}
+\ncline{->}{V4}{V5} \uput{0.1}[ 45](5,1.5){$1$}
+\ncline{->}{V3}{V2} \uput{0.1}[225](2.5,1){$-3$}
+
+\small
+\end{pspicture}
+\end{center}
+
+
+
+Der Dynamische-Programmierungs-Algorithmus, den wir entwickeln werden, fußt auf der folgenden Feststellung.
+
+\begin{Definition}[Feststellung 1]
+Der Graph $G$ besitze keine negativen Kreise und $t$ sei ein von $s$ aus erreichbarer Knoten. Dann gibt es immer einen kürzesten $s,t$-Pfad, der einfach\index{einfacher Pfad}\index{Pfad!einfacher} ist und demnach höchstens $n-1$ Kanten besitzt\footnotemark.
+\end{Definition}
+\footnotetext{Erklärung: Unter einem \textit{einfachen Pfad} wird hier ein Pfad ohne Knotenwiederholung verstanden. Mit $n$ sei immer die Anzahl der Knoten von $G$ bezeichnet.}
+
+\textbf{Beweis}. Wir zeigen zunächst, dass unter den Voraussetzungen von Feststellung 1 Folgendes gilt:
+\begin{equation}
+\text{In $G$ gibt es zu jedem $s,t$-Pfad $Q$ einen einfachen $s,t$-Pfad $P$ mit $c(P) \leq c(Q)$.}
+\label{eq:13:4}
+\end{equation}
+
+\textit{Nachweis von (\ref{eq:13:4})}: Ist $Q$ einfach, so ist (\ref{eq:13:4}) richtig, da man nur $P=Q$ zu wählen braucht. Wir können also annehmen, dass der Pfad
+\[
+Q:\ s=v_0,\ldots,v_k=t
+\]
+nicht einfach ist. Es gibt also eine Knotenwiederholung in $Q$, d.h., es gibt $i<j$ mit $v_i = v_j$. Wir betrachten eine Knotenwiederholung, für die $j-i$ so klein wie möglich ist. Dann sind die Knoten $v_i,v_{i+1},\ldots,v_{j-1}$ alle verschieden, d.h., bei
+\[
+C:\ v_i,v_{i+1},\ldots,v_{j-1},v_j
+\]
+handelt es sich um einen Kreis. Wir betrachten den $s,t$-Pfad $Q'$, bei dem der Kreis $C$ ausgelassen wird:
+\[
+Q':\ s=v_0,\ldots,v_i,v_{j+1},\ldots,v_k=t.
+\]
+
+Da $C$ kein negativer Kreis ist, gilt $c(Q') \leq c(Q)$. Falls es in $Q'$ nun immer noch Knotenwiederholungen gibt, so kann man das beschriebene Verfahren wiederholen, wodurch man nach endlich vielen Wiederholungen einen einfachen $s,t$-Pfad $P$ mit $c(P) \leq c(Q)$ erhält. Dies zeigt die Richtigkeit von (\ref{eq:13:4}).
+
+Nach dieser Vorarbeit ist es nicht schwer, die Richtigkeit von Feststellung 1 zu erkennen. Es sei $\mathcal{Q}$ die Menge sämtlicher $s,t$-Pfade in $G$ und $\mathcal{P}$ sei die Menge aller einfachen $s,t$-Pfade in $G$. Aufgrund der Voraussetzung, dass $t$ von $s$ aus erreichbar ist, gilt $\mathcal{Q} \neq \emptyset$, woraus sich aufgrund von (\ref{eq:13:4}) ergibt, dass auch $\mathcal{P} \neq \emptyset$ gilt. Ein wesentlicher Unterschied zwischen $\mathcal{Q}$ und $\mathcal{P}$ besteht darin, dass $\mathcal{Q}$ eine unendliche Menge sein kann, während $\mathcal{P}$ garantiert eine \textit{endliche} Menge ist. (\enquote{Es kann unendlich viele $s,t$-Pfade in $G$ geben; da jeder einfache $s,t$-Pfad in $G$ höchstens $n-1$ Kanten besitzt, gibt es aber nur endlich viele einfache $s,t$-Pfade in $G$.})
+
+Da $\mathcal{P}$, wie soeben festgestellt, eine endliche nichtleere Menge ist, gibt es ein $P_0 \in \mathcal{P}$, so dass $c(P_0) \leq c(P)$ für alle $P \in \mathcal{P}$ gilt.
+
+Es sei $Q \in \mathcal{Q}$ beliebig. Dann gibt es nach (\ref{eq:13:4}) ein $P \in \mathcal{P}$ mit $c(P) \leq c(Q)$. Es folgt
+\[
+c(P_0) \leq c(P) \leq c(Q).
+\]
+
+Der Pfad $P_0$ ist also ein kürzester $s,t$-Pfad, der einfach ist. Damit ist Feststellung 1 bewiesen. $\Box$
+
+
+
+Im Folgenden sei immer ein Knoten $s$ als \enquote{Startpunkt} fest gewählt. Für $v \in V$ und $i \in \bigl\{ 0,1,2,\ldots \bigr\}$ bezeichne $\opt{(i,v)}$ die kleinstmöglichen Kosten $c(P)$ eines $s,v$-Pfades $P$ \textit{mit höchstens $i$ Kanten} -- vorausgesetzt, ein solcher $s,v$-Pfad existiert.
+
+Falls kein $s,v$-Pfad mit höchstens $i$ Kanten existiert, so setzen wir $\opt{(i,v)}=\infty$. Beispielsweise gilt $\opt{(0,s)}=0$ und $\opt{(0,v)}=\infty$ für alle Knoten $v \neq s$.
+
+Aufgrund der vorangegangenen Feststellung 1 handelt es sich bei
+\[
+\opt{(n-1,t)}
+\]
+um die Größe, die wir berechnen wollen (für alle $t \in V$).
+
+Zunächst geht es aber darum, für $i > 0$ die Größe $\opt{(i,v)}$ mithilfe von kleineren Teilproblemen auf eine möglichst einfache Art auszudrücken. Bislang war dies immer dadurch geschehen, dass wir zwei Fälle unterschieden haben ($n \in \O$ und $n \notin \O$). \textit{Diesmal werden wir jedoch wesentlich mehr Fälle unterscheiden}. Wir nehmen an, dass $i > 0$ gilt und stellen uns vor, dass $P$ ein $s,v$-Pfad mit höchstens $i$ Kanten ist, für den $c(P) = \opt{(i,v)}$ gilt.
+
+Wir unterscheiden die Fälle, dass $P$ höchstens $i-1$ Kanten besitzt und dass $P$ genau $i$ Kanten hat. Im ersten Fall ergibt sich Folgendes:
+\begin{itemize}
+\item Falls $P$ höchstens $i-1$ Kanten besitzt, so gilt $\opt{(i,v)} = \opt{(i-1,v)}$.
+\end{itemize}
+
+Im Fall, dass $P$ genau $i$ Kanten hat, sei der Vorgänger von $v$ auf $P$ mit $u$ bezeichnet (siehe Zeichnung). Es folgt:
+\begin{itemize}
+\item Falls $P$ genau $i$ Kanten enthält, so gilt $\opt{(i,v)} = \opt{(i-1,u)} + c(u,v)$.
+\end{itemize}
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.15)(12.5,2.15)
+\footnotesize
+
+\cnode*( 0,2.0){3pt}{V1} \uput{0.2}[270](0,2){$s$}
+\cnode*( 2,0.5){3pt}{V2}
+\cnode*( 4,1.0){3pt}{V3}
+\cnode*( 6,1.5){3pt}{V4}
+\cnode*( 8,0.5){3pt}{V5} 
+\cnode*(10,0.0){3pt}{V6} \uput{0.2}[270](10,0){$u$}
+\cnode*(12,2.0){3pt}{V7} \uput{0.2}[270](12,2){$v$}
+
+\ncline{->}{V1}{V2}
+\ncline{->}{V2}{V3}
+\ncline{->}{V3}{V4}
+\ncline{->}{V4}{V5}
+\ncline{->}{V5}{V6}
+\ncline{->}{V6}{V7}
+
+\uput{0}[0](5,0.5){$P$}
+
+\small
+\end{pspicture}
+\end{center}
+
+\textbf{Bezeichnung}: Ist ein beliebiges $v \in V$ gegeben, so betrachten wir die Menge aller Knoten $w \in V$, für die die Kante $(w,v)$ in $G$ vorhanden ist. Da diese Menge im Folgenden eine besondere Rolle spielen wird, führen wir eine Bezeichnung für sie ein:
+\[
+N^-(v) = \Bigl\{ w \in V : (w,v) \in E \Bigr\}
+\]
+
+Zur Illustration ein \textbf{Beispiel}: $G=(V,E)$ sei der folgende Graph.
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.15)(4,4.15)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(4,4){3pt}{A} \uput{0.2}[  0](4,4){$a$}
+\cnode*(4,2){3pt}{B} \uput{0.2}[  0](4,2){$b$}
+\cnode*(4,0){3pt}{C} \uput{0.2}[  0](4,0){$c$}
+\cnode*(2,3){3pt}{D} \uput{0.2}[270](2,3){$d$}
+\cnode*(2,1){3pt}{E} \uput{0.2}[270](2,1){$e$}
+
+\ncarc[arcangle=30]{->}{S}{A}
+\ncarc[arcangle=330]{->}{S}{C}
+\ncline{->}{S}{D}
+\ncline{->}{S}{E}
+\ncline{->}{A}{D}
+\ncline{->}{B}{A}
+\ncline{->}{B}{C}
+\ncline{->}{C}{E}
+\ncline{->}{D}{B}
+\ncline{->}{E}{B}
+
+\small
+\end{pspicture}
+\end{center}
+
+Dann gilt:
+\begin{align*}
+N^-(s) &= \emptyset \\
+N^-(a) &= \bigl\{ s,b \bigr\} \\
+N^-(b) &= \bigl\{ d,e \bigr\} \\
+N^-(c) &= \bigl\{ s,b \bigr\} \\
+N^-(d) &= \bigl\{ s,a \bigr\} \\
+N^-(e) &= \bigl\{ s,c \bigr\}.
+\end{align*}
+
+Aus den zuvor gemachten Beobachtungen ergibt sich die folgende rekursive Formel:
+\begin{equation}
+\label{eq:13:5}
+\opt{(i,v)} = \min \Bigl( \opt{(i-1,v)}, \min\limits_{w \in N^-(v)}{\bigl( \opt{(i-1,w)} + c(w,v) \bigr)}\Bigr) 
+\quad (\text{für } i>0).
+\end{equation}
+
+Unter Verwendung der Rekursionsformel (\ref{eq:13:5}) erhält man den folgenden Dynamischen-Pro\-gram\-mie\-rungs-Algorithmus zur Berechnung von $\opt{(n-1,t)}$ für alle $t \in V$, der als \textit{Algorithmus von Bellman und Ford}\index{Algorithmus!von Bellman und Ford}\index{Bellman und Ford, Algorithmus von} bekannt ist.
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{Shortest-Path$(G,c,s)$} \\
+& \\
+ (1)& $n$ = number of nodes in $G$\\
+ (2)& Array $M[0\ldots n-1,V]$ \\
+ (3)& Define $M[0,s]=0$ and $M[0,v]=\infty$ for all $v \neq s$ \\
+ (4)& \textbf{For} $i=1,\ldots,n-1$ \\ 
+ (5)& \qquad \textbf{For} $v \in V$ in any order \\
+ (6)& \qquad\qquad Compute $M[i,v]$ using (\ref{eq:13:5}) \\
+ (7)& \qquad \textbf{Endfor} \\
+ (8)& \textbf{Endfor} \\
+ (9)& \textbf{Return} $M[n-1,t]$ for all $t \in V$
+\end{tabular}
+\end{center}
+
+Die Korrektheit dieser Methode ergibt sich direkt aus der Rekursion (\ref{eq:13:5}) (durch vollständige Induktion). Für die Laufzeit erhält man Folgendes: Das Array $M$ hat $n^2$ Einträge und zur Berechnung eines einzelnen Eintrags sind höchstens $n$ Additionen und höchstens $n$ Vergleiche zweier Zahlen erforderlich (vgl. (\ref{eq:13:5})). Insgesamt benötigt der Algorithmus also $O(n^3)$ Operationen, wobei unter einer Operation hier eine Addition oder ein Vergleich zweier Zahlen verstanden werden soll.
+
+Wir erläutern die Arbeitsweise des Algorithmus von Bellman-Ford anhand des folgenden \textbf{Beispiels}:
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(4,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(4,4){3pt}{A} \uput{0.2}[  0](4,4){$a$}
+\cnode*(4,2){3pt}{B} \uput{0.2}[  0](4,2){$b$}
+\cnode*(4,0){3pt}{C} \uput{0.2}[  0](4,0){$c$}
+\cnode*(2,3){3pt}{D} \uput{0.2}[270](2,3){$d$}
+\cnode*(2,1){3pt}{E} \uput{0.2}[270](2,1){$e$}
+
+\ncarc[arcangle=30]{->}{S}{A}  \uput{0.05}[135](2.0,3.7){$-3$}
+\ncarc[arcangle=330]{->}{S}{C} \uput{0.05}[225](2.0,0.3){$3$}
+\ncline{->}{S}{D} \uput{0.10}[ 90](1.0,2.5){$4$}
+\ncline{->}{S}{E} \uput{0.10}[270](1.0,1.5){$2$}
+\ncline{->}{A}{D} \uput{0.10}[ 90](3.0,3.5){$6$}
+\ncline{->}{B}{A} \uput{0.10}[  0](4.0,3.0){$-4$}
+\ncline{->}{B}{C} \uput{0.10}[  0](4.0,1.0){$8$}
+\ncline{->}{C}{E} \uput{0.10}[270](3.0,0.5){$-3$}
+\ncline{->}{D}{B} \uput{0.10}[ 90](3.0,2.5){$-1$}
+\ncline{->}{E}{B} \uput{0.10}[270](3.0,1.5){$-2$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Das Array $M$ stellen wir als eine $6 \times 6$-Matrix dar, in die anfangs nur die Werte der ersten Zeile eingetragen sind. Danach werden die Einträge zeilenweise berechnet, wobei sich die Werte der $i$-ten Zeile unter Benutzung von (\ref{eq:13:5}) aus der $(i-1)$-ten Zeile ergeben. Man erhält die folgende Matrix $M$:
+
+\begin{center}
+\psset{unit=0.5cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.5)(6,7)
+\footnotesize
+
+% rows
+\psline(0,0)(6,0) \psline(0,2)(6,2) \psline(0,4)(6,4) \psline(0,6)(6,6) 
+\psline(0,1)(6,1) \psline(0,3)(6,3) \psline(0,5)(6,5) 
+% columns
+\psline(0,0)(0,6) \psline(2,0)(2,6) \psline(4,0)(4,6) \psline(6,0)(6,6) 
+\psline(1,0)(1,6) \psline(3,0)(3,6) \psline(5,0)(5,6) 
+% row 0
+\uput{0.25}[90]( 0.5,0){$ 0$} \uput{0.20}[90]( 2.5,0){$-2$} \uput{0.25}[90]( 4.5,0){$0$} 
+\uput{0.20}[90]( 1.5,0){$-6$} \uput{0.25}[90]( 3.5,0){$ 3$} \uput{0.25}[90]( 5.5,0){$0$}
+% row 1
+\uput{0.25}[90]( 0.5,1){$ 0$} \uput{0.20}[90]( 2.5,1){$-2$} \uput{0.25}[90]( 4.5,1){$2$} 
+\uput{0.20}[90]( 1.5,1){$-6$} \uput{0.25}[90]( 3.5,1){$ 3$} \uput{0.25}[90]( 5.5,1){$0$}
+% row 2
+\uput{0.25}[90]( 0.5,2){$ 0$} \uput{0.20}[90]( 2.5,2){$-2$} \uput{0.25}[90]( 4.5,2){$3$} 
+\uput{0.20}[90]( 1.5,2){$-4$} \uput{0.25}[90]( 3.5,2){$ 3$} \uput{0.25}[90]( 5.5,2){$0$}
+% row 3
+\uput{0.25}[90]( 0.5,3){$ 0$} \uput{0.25}[90]( 2.5,3){$ 0$} \uput{0.25}[90]( 4.5,3){$3$}
+\uput{0.20}[90]( 1.5,3){$-3$} \uput{0.25}[90]( 3.5,3){$ 3$} \uput{0.25}[90]( 5.5,3){$0$}
+% row 4
+\uput{0.25}[90]( 0.5,4){$ 0$} \uput{0.30}[90]( 2.5,4){$\infty$} \uput{0.25}[90]( 4.5,4){$4$} 
+\uput{0.20}[90]( 1.5,4){$-3$} \uput{0.25}[90]( 3.5,4){$3$} \uput{0.25}[90]( 5.5,4){$2$}
+% row 5
+\uput{0.30}[90]( 0.5,5){$0$} \uput{0.30}[90]( 2.5,5){$\infty$} \uput{0.30}[90]( 4.5,5){$\infty$}
+\uput{0.30}[90]( 1.5,5){$\infty$} \uput{0.30}[90]( 3.5,5){$\infty$} \uput{0.30}[90]( 5.5,5){$\infty$}
+% outer labels
+\uput{0.25}[180](0,5.5){$0$} \uput{0.25}[ 90](0.5,6){$s$}
+\uput{0.25}[180](0,4.5){$1$} \uput{0.25}[ 90](1.5,6){$a$}
+\uput{0.25}[180](0,3.5){$2$} \uput{0.25}[ 90](2.5,6){$b$}
+\uput{0.25}[180](0,2.5){$3$} \uput{0.25}[ 90](3.5,6){$c$}
+\uput{0.25}[180](0,1.5){$4$} \uput{0.25}[ 90](4.5,6){$d$}
+\uput{0.25}[180](0,0.5){$5$} \uput{0.25}[ 90](5.5,6){$e$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Für jeden Knoten $t \in V$ lässt sich in der letzten Zeile von $M$ die Länge eines kürzesten $s,t$-Pfades in $G$ ablesen. Beispielsweise erhält man:
+\begin{itemize}
+\item die Länge eines kürzesten $s,a$-Pfades ist gleich $-6$;
+\item die Länge eines kürzesten $s,d$-Pfades ist gleich $0$.
+\end{itemize}
+
+Aufgrund der Konstruktion besitzen auch die Einträge der übrigen Zeilen eine anschauliche Bedeutung; beispielsweise bedeutet der Eintrag 2 in der vorletzten Zeile:
+\begin{itemize}
+\item Die Länge eines kürzesten $s,d$-Pfades mit höchstens vier Kanten ist gleich 2.
+\end{itemize}
+
+Will man nicht nur die Längen kürzester Pfade berechnen, sondern auch entsprechende Pfade $P$ selbst, so ist es zweckmäßig, zusätzlich zum Wert $\opt{(i,v)}$ einen Knoten $w$ zur Verfügung zu haben, der auf einem entsprechenden Pfad der direkte Vorgänger von $v$ ist (für $v \neq s$ und falls $\opt{(i,v)} \neq \infty$).
+
+Zu jedem Eintrag $\opt{(i,v)}$, für den $v \neq s$ und $\opt{(i,v)} \neq \infty$ gilt, speichern wir deshalb in $M$ als zusätzliche Information einen Knoten:
+\begin{itemize}
+\item Falls $\opt{(i,v)}=\opt{(i-1,v)}$ gilt, so sei dies derselbe Knoten, der zuvor zusammen mit $\opt{(i-1,v)}$ gespeichert wurde.
+\item Andernfalls speichere man einen Knoten $w \in N^-(v)$, für den gilt:
+\[
+\opt{(i,v)} = \opt{(i-1,w)} + c(w,v).
+\]
+\end{itemize}
+
+Mithilfe dieser zusätzlichen Einträge lässt sich dann $P$ zurückverfolgen: Wir schauen uns dies in unserem Beispiel an. Die durch Zusatzeinträge ergänzte Matrix sieht in unserem Beispiel wie folgt aus:
+
+\begin{center}
+\psset{unit=0.5cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.5)(12,7)
+\footnotesize
+
+% rows
+\psline(0,0)(12,0) \psline(0,2)(12,2) \psline(0,4)(12,4) \psline(0,6)(12,6) 
+\psline(0,1)(12,1) \psline(0,3)(12,3) \psline(0,5)(12,5) 
+% columns
+\psline(0,0)(0,6) \psline(4,0)(4,6) \psline( 8,0)( 8,6) \psline(12,0)(12,6) 
+\psline(2,0)(2,6) \psline(6,0)(6,6) \psline(10,0)(10,6) 
+% row 0
+\uput{0.25}[90]( 0.5,0){$ 0$} \uput{0.20}[90]( 1.5,0){$-$}  
+\uput{0.20}[90]( 2.5,0){$-6$} \uput{0.25}[90]( 3.5,0){$b$} 
+\uput{0.20}[90]( 4.5,0){$-2$} \uput{0.25}[90]( 5.5,0){$e$} 
+\uput{0.25}[90]( 6.5,0){$ 3$} \uput{0.25}[90]( 7.5,0){$s$}  
+\uput{0.25}[90]( 8.5,0){$0$}  \uput{0.25}[90]( 9.5,0){$a$} 
+\uput{0.25}[90](10.5,0){$0$}  \uput{0.25}[90](11.5,0){$c$} 
+% row 1
+\uput{0.25}[90]( 0.5,1){$ 0$} \uput{0.20}[90]( 1.5,1){$-$}
+\uput{0.20}[90]( 2.5,1){$-6$} \uput{0.25}[90]( 3.5,1){$b$}
+\uput{0.20}[90]( 4.5,1){$-2$} \uput{0.25}[90]( 5.5,1){$e$}
+\uput{0.25}[90]( 6.5,1){$ 3$} \uput{0.25}[90]( 7.5,1){$s$}
+\uput{0.25}[90]( 8.5,1){$2$}  \uput{0.25}[90]( 9.5,1){$a$}
+\uput{0.25}[90](10.5,1){$0$}  \uput{0.25}[90](11.5,1){$c$}
+% row 2
+\uput{0.25}[90]( 0.5,2){$ 0$} \uput{0.20}[90]( 1.5,2){$-$}
+\uput{0.20}[90]( 2.5,2){$-4$} \uput{0.25}[90]( 3.5,2){$b$}
+\uput{0.20}[90]( 4.5,2){$-2$} \uput{0.25}[90]( 5.5,2){$e$}
+\uput{0.25}[90]( 6.5,2){$ 3$} \uput{0.25}[90]( 7.5,2){$s$}
+\uput{0.25}[90]( 8.5,2){$3$}  \uput{0.25}[90]( 9.5,2){$a$}
+\uput{0.25}[90](10.5,2){$0$}  \uput{0.25}[90](11.5,2){$c$}
+% row 3
+\uput{0.25}[90]( 0.5,3){$ 0$} \uput{0.20}[90]( 1.5,3){$-$} 
+\uput{0.20}[90]( 2.5,3){$-3$} \uput{0.25}[90]( 3.5,3){$s$}
+\uput{0.25}[90]( 4.5,3){$ 0$} \uput{0.25}[90]( 5.5,3){$e$}
+\uput{0.25}[90]( 6.5,3){$ 3$} \uput{0.25}[90]( 7.5,3){$s$}
+\uput{0.25}[90]( 8.5,3){$3$}  \uput{0.25}[90]( 9.5,3){$a$}
+\uput{0.25}[90](10.5,3){$0$}  \uput{0.25}[90](11.5,3){$c$}
+% row 4
+\uput{0.25}[90]( 0.5,4){$ 0$}      \uput{0.20}[90]( 1.5,4){$-$}
+\uput{0.20}[90]( 2.5,4){$-3$}      \uput{0.25}[90]( 3.5,4){$s$}
+\uput{0.30}[90]( 4.5,4){$\infty$}  \uput{0.20}[90]( 5.5,4){$-$}
+\uput{0.25}[90]( 6.5,4){$3$}       \uput{0.25}[90]( 7.5,4){$s$}
+\uput{0.25}[90]( 8.5,4){$4$}       \uput{0.25}[90]( 9.5,4){$s$}
+\uput{0.25}[90](10.5,4){$2$}       \uput{0.25}[90](11.5,4){$s$}
+% row 5
+\uput{0.20}[90]( 0.5,5){$0$}      \uput{0.20}[90]( 1.5,5){$-$}
+\uput{0.30}[90]( 2.5,5){$\infty$} \uput{0.20}[90]( 3.5,5){$-$}
+\uput{0.30}[90]( 4.5,5){$\infty$} \uput{0.20}[90]( 5.5,5){$-$}
+\uput{0.30}[90]( 6.5,5){$\infty$} \uput{0.20}[90]( 7.5,5){$-$}
+\uput{0.30}[90]( 8.5,5){$\infty$} \uput{0.20}[90]( 9.5,5){$-$}
+\uput{0.30}[90](10.5,5){$\infty$} \uput{0.20}[90](11.5,5){$-$}
+% outer labels
+\uput{0.25}[180](0,5.5){$0$} \uput{0.25}[ 90]( 1,6){$s$}
+\uput{0.25}[180](0,4.5){$1$} \uput{0.25}[ 90]( 3,6){$a$}
+\uput{0.25}[180](0,3.5){$2$} \uput{0.25}[ 90]( 5,6){$b$}
+\uput{0.25}[180](0,2.5){$3$} \uput{0.25}[ 90]( 7,6){$c$}
+\uput{0.25}[180](0,1.5){$4$} \uput{0.25}[ 90]( 9,6){$d$}
+\uput{0.25}[180](0,0.5){$5$} \uput{0.25}[ 90](11,6){$e$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Wir haben weiter oben bereits festgestellt: Die Länge eines kürzesten $s,d$-Pfades ist gleich $0$. Um zusätzlich einen kürzesten $s,d$-Pfad $P$ zu ermitteln, benötigen wir nur die letzte Zeile: Wir entnehmen der letzten Zeile zunächst, dass $a$ als Vorgänger von $d$ auf $P$ zu wählen ist; nun schauen wir in die Spalte, die zu $a$ gehört, und ermitteln $b$ als Vorgänger von $a$ auf dem zu konstruierenden Pfad $P$; entsprechend geht es weiter: Ein Blick in die Spalte von $b$ führt zu $e$ als Vorgänger von $b$; danach ermittelt man $c$ als Vorgänger von $e$, und abschließend erhält man $s$ als Vorgänger von $c$. Es ergibt sich:
+\[
+P = (s,c,e,b,a,d).
+\]
+
+Wir haben bislang vorausgesetzt, dass $G$ keine negativen Kreise enthält. Der Grund dafür war, dass negative Kreise -- sofern sie von $s$ aus erreichbar sind -- für unsere Fragestellung äußerst \enquote{schädlich} sind: vgl. das Beispiel vor Feststellung 1.
+
+\textit{Wie findet man nun heraus, ob von $s$ aus erreichbare, negative Kreise vorhanden sind?} Zum Glück ist das ganz einfach: Man hat nichts weiter zu tun, als den Algorithmus von Bellman und Ford wie gewohnt auf $G$ anzuwenden und ganz am Ende noch zusätzlich eine $n$-te Runde einzulegen, d.h., man berechnet durch Anwenden der Formel (\ref{eq:13:5}) zusätzlich Werte $M[n,v]$ für alle $v \in V$; dadurch erhält die Matrix $M$ eine zusätzliche Zeile. Es gilt die folgende Feststellung (Beweis: siehe unten):
+
+\begin{Definition}[Feststellung 2]
+$G$ enthält genau dann einen negativen Kreis, der von $s$ aus erreichbar ist, wenn $M[n,v] \neq M[n-1,v]$ für mindestens ein $v \in V$ gilt.
+\end{Definition}
+
+\textit{Anders gesagt}: Stimmt die letzte Zeile (d.h. die Zeile mit den Werten $M[n,v]$) \textbf{nicht} mit der vorletzten Zeile überein, so brechen wir das Verfahren ab mit dem Ergebnis, dass ein von $s$ aus erreichbarer negativer Kreis vorhanden ist.
+
+Stimmen die beiden genannten Zeilen dagegen überein, so gibt es keine von $s$ aus erreichbaren negativen Kreise in $G$. In diesem Fall können wir die Länge kürzester $s,t$-Pfade an der letzten (oder vorletzten) Zeile von $M$ ablesen; dabei bedeutet der Eintrag $\infty$, dass der entsprechende Knoten nicht von $s$ erreichbar ist.
+
+
+Wir fügen einen Beweis von Feststellung 2 an, wobei einige Details dem Leser überlassen bleiben. Zunächst beobachten wir, dass die folgende leichte Verallgemeinerung von Feststellung 1 ebenfalls gültig ist.
+
+\begin{Definition}[Feststellung 1']
+Der Graph $G$ besitze keine negativen Kreise, die von $s$ aus erreichbar sind, und $t$ sei ein von $s$ aus erreichbarer Knoten. Dann gibt es immer einen kürzesten $s,t$-Pfad, der einfach ist und folglich höchstens $n-1$ Kanten besitzt.
+\end{Definition}
+
+Man beweist Feststellung 1' auf die gleiche Art wie Feststellung 1. 
+
+\textbf{Beweis von Feststellung 2}. Gilt $M[n,v] \neq M[n-1,v]$ für mindestens ein $v \in V$, so erhält man mithilfe von Feststellung 1', dass $G$ einen negativen Kreis enthalten muss, der von $s$ aus erreichbar ist. Gilt dagegen $M[n,v] = M[n-1,v]$ für alle $v \in V$, so stelle man sich vor, dass mithilfe der Formel (\ref{eq:13:5}) weitere Zeilen der Matrix $M$ berechnet werden: Man erkennt, dass sich auch alle nachfolgenden Zeilen nicht mehr ändern, d.h., für alle $i \geq n$ und alle $v \in V$ gilt $M[i,v] = M[n-1,v]$. Folglich kann $G$ keinen negativen Kreis enthalten, der von $s$ aus erreichbar ist: Für die Knoten $v$ eines solchen Kreises würden die Werte $M[i,v]$ nicht für alle $i \geq n$ gleich bleiben. $\Box$
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Der Algorithmus von Bellman-Ford"                                           %
+%------------------------------------------------------------------------------%
+
+\section{Kürzeste Pfade \enquote{all-to-all}: Der Algorithmus von Floyd und Warshall}
+\index{Algorithmus!von Floyd und Warshall}
+\index{Floyd und Warshall!Algorithmus von}
+\label{section:13:4}
+
+
+Gegeben sei ein gerichteter Graph $G=(V,E)$. Die Knoten von $G$ seien mit $1,\ldots,n$ bezeichnet, es gelte also $V = \bigl\{ 1,\ldots,n \bigr\}$. Außerdem sei für jede gerichtete Kante $(i,j) \in E$ ein Gewicht $w_{ij}$ gegeben, wobei $w_{ij} < 0$ erlaubt ist. Mit $w$ sei die Abbildung bezeichnet, die jeder Kante von $G$ ihr Gewicht $w_{ij}$ zugeordnet. Unter den genannten Voraussetzungen sprechen wir auch von einem \textit{gewichteten Graphen}\index{gewichteter Graph}\index{Graph!gewichteter} $(G,w)$.
+
+Ist nichts anderes gesagt, so seien negative Kreise ausgeschlossen. Statt vom \enquote{Gewicht} einer Kante sprechen wir auch von ihrer \textit{Länge} oder ihren \textit{Kosten}. Unter dem \textit{Abstand} (oder der \textit{Distanz}) von $i$ nach $j$ verstehen wir die Länge eines kürzesten $i,j$-Pfades in $G$.
+
+In manchen Situationen möchte man nicht nur die Abstände von einem festen Knoten $s$ berechnen (\enquote{one-to-all}), sondern man interessiert sich für die \textit{Abstände zwischen sämtlichen Knotenpaaren} (\enquote{all-to-all}\index{all-to-all}).
+
+Eine Möglichkeit, das Problem \enquote{all-to-all} zu behandeln, besteht darin, den Algorithmus von Bellman und Ford wiederholt anzuwenden, wobei jeder der $n$ Knoten genau einmal die Rolle des Ausgangsknotens $s$ übernimmt. Da der Algorithmus von Bellman und Ford  die Komplexität $O(n^3)$ besitzt, gelangt man auf diese Art zu einem Algorithmus der Komplexität $O(n^4)$.
+
+Der häufig benutzte Algorithmus von Floyd und Warshall, den wir im Folgenden besprechen werden, löst ebenfalls das Problem \enquote{all-to-all}; er ist jedoch effizienter als die zuvor beschriebene Methode: Die Komplexität des Algorithmus von Floyd und Warshall ist $O(n^3)$.
+
+Für $i \neq j$ setzen wir zusätzlich $w_{ij} = \infty$, falls es in $G$ keine von $i$ nach $j$ gerichtete Kante gibt.
+
+Der Algorithmus von Floyd und Warshall ist sehr einfach zu beschreiben und auszuführen. Wir legen hier die Darstellung aus dem Buch von Jungnickel zugrunde (mit leichten Modifikationen):
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{Algorithmus von Floyd und Warshall} \\
+& \\
+ (1)& \textbf{for } $i=1$ \textbf{ to } $n$ \textbf{ do} \\
+ (2)& \qquad \textbf{for } $j=1$ \textbf{ to } $n$ \textbf{ do} \\
+ (3)& \qquad\qquad \textbf{if } $i \neq j$ \textbf{ then } $d(i,j) \leftarrow w_{ij}$ \textbf{ else } $d(i,j) \leftarrow 0$ \textbf{ fi} \\
+ (4)& \qquad \textbf{od} \\
+ (5)& \textbf{od} \\
+ (6)& \textbf{for } $k=1$ \textbf{ to } $n$ \textbf{ do} \\
+ (7)& \qquad \textbf{for } $i=1$ \textbf{ to } $n$ \textbf{ do} \\
+ (8)& \qquad\qquad \textbf{for } $j=1$ \textbf{ to } $n$ \textbf{ do} \\
+ (9)& \qquad\qquad\qquad \textbf{if } $i \neq k$ \textbf{ and } $j \neq k$ \textbf{ then } $d(i,j) \leftarrow \min\bigl\{ d(i,j), d(i,k) + d(k,j) \bigr\}$ \textbf{ fi} \\
+(10)& \qquad\qquad \textbf{od} \\
+(11)& \qquad \textbf{od} \\
+(12)& \textbf{od} \\
+\end{tabular}
+\end{center}
+
+Mit $D_0 = \left( d_{ij}^{(0)} \right)$ sei die $n \times n$ - Matrix bezeichnet, die durch Zeile (3) definiert wird. Außerdem: $D_k = \left( d_{ij}^{(k)} \right)$ sei die Matrix, die im $k$-ten Durchlauf der äußeren For-Schleife (Zeile (6)-(12)) generiert wird ($k=1,\ldots,n$).
+
+Für alle $k \in \bigl\{ 0,\ldots,n \bigr\}$ und alle $i,j \in \bigl\{ 1,\ldots,n \bigr\}$ bezeichnen wir mit
+\[
+\mathcal{P}_{ij}^{(k)}
+\]
+die Menge aller $i,j$-Pfade $P$ von $G$, für die gilt:
+\begin{equation}
+\tag{$\star$}
+\text{Es gibt in $P$ keine inneren Knoten $\ell$, für die $\ell > k$ gilt.}
+\end{equation}
+
+Etwas anders gesagt: $P \in \mathcal{P}_{ij}^{(k)}$ bedeutet, dass $P$ ein $i,j$-Pfad ist, bei dem Knoten $\ell$ mit $\ell > k$ als innere Knoten nicht vorkommen (siehe Skizze).
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.45)(12.5,2.15)
+\footnotesize
+
+\cnode*( 0,2.0){3pt}{V1} \uput{0.2}[270](0,2){$i$}
+\cnode*( 2,0.5){3pt}{V2}
+\cnode*( 4,1.0){3pt}{V3}
+\cnode*( 6,1.5){3pt}{V4}
+\cnode*( 8,0.5){3pt}{V5} 
+\cnode*(10,0.0){3pt}{V6} 
+\cnode*(12,2.0){3pt}{V7} \uput{0.2}[270](12,2){$j$}
+
+\ncline{->}{V1}{V2}
+\ncline{->}{V2}{V3}
+\ncline{->}{V3}{V4}
+\ncline{->}{V4}{V5}
+\ncline{->}{V5}{V6}
+\ncline{->}{V6}{V7}
+
+\uput{0.15}[270](6,0){$\underbrace{\hspace{10cm}}$}
+\uput{0.45}[270](6,0){$\text{keine Knoten $\ell$, für die $\ell > k$ gilt}$}
+
+\small
+\end{pspicture}
+\end{center}
+
+In der nachfolgenden Feststellung, die man unschwer durch vollständige Induktion beweist (als Übungsaufgabe empfohlen!), wird die Bedeutung der Einträge $d_{ij}^{(k)}$ der Matrizen $D_k$ festgehalten.
+
+\begin{Definition}[Feststellung]
+Für alle $k=0,1,\ldots,n$ sowie für alle $i,j \in \bigl\{ 1,\ldots,n \bigr\}$ gilt:
+\begin{itemize}
+\item Falls $\mathcal{P}_{ij}^{(k)} \neq \emptyset$, so gibt $d_{ij}^{(k)}$ die kleinstmögliche Länge eines Pfades $P \in \mathcal{P}_{ij}^{(k)}$ an.
+\item Falls $\mathcal{P}_{ij}^{(k)} = \emptyset$, so gilt $d_{ij}^{(k)} = \infty$.
+\end{itemize}
+\end{Definition}
+
+Da $D_n = \left( d_{ij}^{(n)} \right)$ die Matrix ist, die der Algorithmus von Floyd und Warshall am Ende abliefert, interessiert uns natürlich der Fall $k=n$ ganz besonders. Schaut man sich die Bedingung ($\star$) für den Fall $k=n$ an, so erkennt man, dass es sich bei
+\[
+\mathcal{P}_{ij}^{(n)}
+\]
+um die Menge \textit{sämtlicher} $i,j$-Pfade in $G$ handelt. Für den Fall $k=n$ bedeutet unsere Feststellung also:
+\begin{itemize}
+\item Falls es in $G$ einen $i,j$-Pfad gibt, so gibt $d_{ij}^{(n)}$ die Länge eines kürzesten $i,j$-Pfades in $G$ an.
+\item Falls es in $G$ keinen $i,j$-Pfad gibt, so gilt $d_{ij}^{(n)} = \infty$.
+\end{itemize}
+
+\textbf{Beispiel}. Wir betrachten den folgenden Graphen mit Kantengewichten $w_{ij}$ wie angegeben:
+
+\begin{center}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,-0.5)(6,2.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{N1} \uput{0.2}[ 90](0,2){$1$}
+\cnode*(0,0){3pt}{N2} \uput{0.2}[270](0,0){$2$}
+\cnode*(2,1){3pt}{N3} \uput{0.2}[270](2,1){$3$}
+\cnode*(4,2){3pt}{N4} \uput{0.2}[ 90](4,2){$4$}
+\cnode*(4,0){3pt}{N5} \uput{0.2}[270](4,0){$5$}
+\cnode*(6,1){3pt}{N6} \uput{0.2}[270](6,1){$6$}
+
+\ncarc[arcangle=330]{->}{N1}{N2} \uput{0.10}[180](0,1){$6$}
+\ncline{->}{N1}{N3}              \uput{0.05}[ 45](1,1.5){$1$}
+\ncline{->}{N1}{N4}              \uput{0.15}[ 90](2,2){$10$}
+\ncarc[arcangle=330]{->}{N2}{N1} \uput{0.10}[  0](0,1){$2$}
+\ncarc[arcangle=330]{->}{N2}{N3} \uput{0.05}[315](1,0.5){$4$}
+\ncline{->}{N2}{N5}              \uput{0.10}[270](2,0){$9$}
+\ncarc[arcangle=330]{->}{N3}{N2} \uput{0.05}[135](1,0.5){$6$}
+\ncarc[arcangle=330]{->}{N3}{N4} \uput{0.05}[315](3,1.5){$6$}
+\ncline{->}{N3}{N5}              \uput{0.05}[ 45](3,0.5){$3$}
+\ncarc[arcangle=330]{->}{N4}{N3} \uput{0.05}[135](3,1.5){$4$}
+\ncarc[arcangle=330]{->}{N4}{N5} \uput{0.10}[180](4,1){$4$}
+\ncline{->}{N4}{N6}              \uput{0.05}[ 45](5,1.5){$2$}
+\ncarc[arcangle=330]{->}{N5}{N4} \uput{0.10}[  0](4,1){$2$}
+\ncline{->}{N6}{N5}              \uput{0.05}[315](5,0.5){$1$}
+
+%\ncarc[arcangle=30]{->}{S}{A}  \uput{0.05}[135](2.0,3.7){$-3$}
+%\ncarc[arcangle=330]{->}{S}{C} \uput{0.05}[225](2.0,0.3){$3$}
+%\ncline{->}{S}{D} \uput{0.10}[ 90](1.0,2.5){$4$}
+%\ncline{->}{S}{E} \uput{0.10}[270](1.0,1.5){$2$}
+%\ncline{->}{A}{D} \uput{0.10}[ 90](3.0,3.5){$6$}
+%\ncline{->}{B}{A} \uput{0.10}[  0](4.0,3.0){$-4$}
+%\ncline{->}{B}{C} \uput{0.10}[  0](4.0,1.0){$8$}
+%\ncline{->}{C}{E} \uput{0.10}[270](3.0,0.5){$-3$}
+%\ncline{->}{D}{B} \uput{0.10}[ 90](3.0,2.5){$-1$}
+%\ncline{->}{E}{B} \uput{0.10}[270](3.0,1.5){$-2$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Man erhält die folgende Matrix $D_0$:
+\[
+D_0 =
+\begin{bmatrix}
+0 & 6 & 1 & 10 & \infty & \infty \\
+2 & 0 & 4 & \infty & 9 & \infty \\
+\infty & 6 & 0 & 6 & 3 & \infty \\
+\infty & \infty & 4 & 0 & 4 & 2 \\
+\infty & \infty & \infty & 2 & 0 & \infty \\
+\infty & \infty & \infty & \infty & 1 & 0
+\end{bmatrix}.
+\]
+
+Es gibt im Folgenden keine Veranlassung mehr, auf die Zeichnung zu schauen: Die gesamte Information der Zeichnung wurde in die Matrix $D_0$ übertragen. Die Matrix $D_k$ erhält man aus der Matrix $D_{k-1}$, indem man die folgenden Rekursionsformeln anwendet:
+
+Für $k = 1,\ldots,n$ gilt:
+\begin{align}
+\label{eq:13:6}
+d_{ij}^{(k)} &= d_{ij}^{(k-1)} \text{ falls } i=k \text{ oder } j=k \\
+\label{eq:13:7}
+d_{ij}^{(k)} &= \min\Bigl\{ d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)} \Bigr\} \text{ falls } i \neq k \text{ und } j \neq k.
+\end{align}
+
+Man mache sich klar, dass sich die Formeln (\ref{eq:13:6}) und (\ref{eq:13:7}) unmittelbar aus Zeile (9) des Algorithmus von Floyd und Warshall ergeben. 
+
+Aufgrund von (\ref{eq:13:6}) ändern sich beim Übergang von $D_{k-1}$ zu $D_k$ die $k$-te Zeile und die $k$-te Spalte nicht. Führt man den Algorithmus von Floyd und Warshall per Hand aus, so ist es beim Aufstellen der Matrix $D_k$ zweckmäßig, zunächst die $k$-te Zeile und die $k$-te Spalte von $D_{k-1}$ direkt in $D_k$ zu übernehmen. Gehen wir in unserem Beispiel von $D_0$ zu $D_1$ über, so schreiben wir also zunächst die 1. Zeile und die 1. Spalte von $D_0$ ab; man erhält eine Matrix, in der die meisten Einträge noch fehlen:
+\[
+\begin{bmatrix}
+0 & 6 & 1 & 10 & \infty & \infty \\
+2 & \cdot & \cdot & \cdot & \cdot & \cdot \\
+\infty & \cdot & \cdot & \cdot & \cdot & \cdot \\
+\infty & \cdot & \cdot & \cdot & \cdot & \cdot \\
+\infty & \cdot & \cdot & \cdot & \cdot & \cdot \\
+\infty & \cdot & \cdot & \cdot & \cdot & \cdot
+\end{bmatrix}.
+\]
+
+Danach trägt man dann gemäß (\ref{eq:13:7}) die übrigen Einträge ein; man erhält
+\[
+D_1 = 
+\begin{bmatrix}
+\color{gray}{0} & \color{gray}{6} & \color{gray}{1} & \color{gray}{10} & \color{gray}{\infty} & \color{gray}{\infty} \\
+\color{gray}{2} & 0 & 3 & 12 & 9 & \infty \\
+\color{gray}{\infty} & 6 & 0 & 6 & 3 & \infty \\
+\color{gray}{\infty} & \infty & 4 & 0 & 4 & 2 \\
+\color{gray}{\infty} & \infty & \infty & 2 & 0 & \infty \\
+\color{gray}{\infty} & \infty & \infty & \infty & 1 & 0
+\end{bmatrix}.
+\]
+
+In ähnlicher Weise erhält man $D_2$, indem man zunächst die 2. Zeile und die 2. Spalte von $D_1$ abschreibt:
+\[
+\begin{bmatrix}
+\cdot & 6 & \cdot & \cdot & \cdot & \cdot \\
+2 & 0 & 3 & 12 & 9 & \infty \\
+\cdot & 6 & \cdot & \cdot & \cdot & \cdot \\
+\cdot & \infty & \cdot & \cdot & \cdot & \cdot \\
+\cdot & \infty & \cdot & \cdot & \cdot & \cdot \\
+\cdot & \infty & \cdot & \cdot & \cdot & \cdot
+\end{bmatrix}.
+\]
+
+Anschließendes Auffüllen der Matrix gemäß (\ref{eq:13:7}) ergibt
+\[
+D_2 =
+\begin{bmatrix}
+0 & \color{gray}{6} & 1 & 10 & 15 & \infty \\
+\color{gray}{2} & \color{gray}{0} & \color{gray}{3} & \color{gray}{12} & \color{gray}{9} & \color{gray}{\infty} \\
+8 & \color{gray}{6} & 0 & 6 & 3 & \infty \\
+\infty & \color{gray}{\infty} & 4 & 0 & 4 & 2 \\
+\infty & \color{gray}{\infty} & \infty & 2 & 0 & \infty \\
+\infty & \color{gray}{\infty} & \infty & \infty & 1 & 0
+\end{bmatrix}.
+\]
+
+Fährt man entsprechend fort, so erhält man der Reihe nach die folgenden Matrizen (Prüfen Sie dies nach!):
+\[
+D_3 =
+\begin{bmatrix}
+0 & 6 & \color{gray}{1} & 7 & 4 & \infty \\
+2 & 0 & \color{gray}{3} & 9 & 6 & \infty \\
+\color{gray}{8} & \color{gray}{6} & \color{gray}{0} & \color{gray}{6} & \color{gray}{3} & \color{gray}{\infty} \\
+12 & 10 & \color{gray}{4} & 0 & 4 & 2 \\
+\infty & \infty & \color{gray}{\infty} & 2 & 0 & \infty\\
+\infty & \infty & \color{gray}{\infty} & \infty & 1 & 0
+\end{bmatrix}.
+\]
+
+\[
+D_4 =
+\begin{bmatrix}
+0 & 6 & 1 & \color{gray}{7} & 4 & 9 \\
+2 & 0 & 3 & \color{gray}{9} & 6 & 11 \\
+8 & 6 & 0 & \color{gray}{6} & 3 & 8 \\
+\color{gray}{12} & \color{gray}{10} & \color{gray}{4} & \color{gray}{0} & \color{gray}{4} & \color{gray}{2} \\
+14 & 12 & 6 & \color{gray}{2} & 0 & 4 \\
+\infty & \infty & \infty & \color{gray}{\infty} & 1 & 0
+\end{bmatrix}.
+\]
+
+\[
+D_5 =
+\begin{bmatrix}
+0 & 6 & 1 & 6 & \color{gray}{4} & 8 \\
+2 & 0 & 3 & 8 & \color{gray}{6} & 10 \\
+8 & 6 & 0 & 5 & \color{gray}{3} & 7 \\
+12 & 10 & 4 & 0 & \color{gray}{4} & 2 \\
+\color{gray}{14} & \color{gray}{12} & \color{gray}{6} & \color{gray}{2} & \color{gray}{0} & \color{gray}{4} \\
+15 & 13 & 7 & 3 & \color{gray}{1} & 0
+\end{bmatrix}.
+\]
+
+\[
+D_6 =
+\begin{bmatrix}
+0 & 6 & 1 & 6 & 4 & \color{gray}{8} \\
+2 & 0 & 3 & 8 & 6 & \color{gray}{10} \\
+8 & 6 & 0 & 5 & 3 & \color{gray}{7} \\
+12 & 10 & 4 & 0 & 3 & \color{gray}{2} \\
+14 & 12 & 6 & 2 & 0 & \color{gray}{4} \\
+\color{gray}{15} & \color{gray}{13} & \color{gray}{7} & \color{gray}{3} & \color{gray}{1} & \color{gray}{0}
+\end{bmatrix}.
+\]
+
+
+Die Matrix $D_6$ des Beispiels -- bzw. allgemein die vom Algorithmus von Floyd und Warshall gelieferte Matrix $D_n$ -- nennt man die \textit{Distanzmatrix}\index{Distanzmatrix}\index{Matrix!Distanz-} des gewichteten Graphen $(G,w)$. Es ist üblich, auch der Matrix $D_0$ einen Namen zu geben: Man nennt $D_0$ die \textit{Adjazenzmatrix}\index{Adjazenzmatrix}\index{Matrix!Adjazenz-} von $(G,w)$. Der Algorithmus von Floyd und Warshall wandelt also die Adjazenzmatrix $D_0$ in die Distanzmatrix $D_n$ um. Dies geschieht stufenweise: Den Matrizen $D_1, \ldots, D_{n-1}$ kommt die Rolle von Zwischenstufen zu. Man beachte, dass für diesen Umwandlungsprozess nur ein einziges $n \times n$ - Array zum Speichern der Matrizeneinträge benötigt wird (vgl. Zeile (9) des Algorithmus).
+
+Die Komplexität $O(n^3)$ des Algorithmus von Floyd und Warshall ergibt sich unmittelbar aus den Zeilen (6)-(12).
+
+Auf Seite \pageref{page:13:1} f. haben wir dargelegt, unter welchen Bedingungen man von einer algorithmischen Lösung mittels \textit{Dynamischer Programmierung} spricht. 
+
+\textbf{Aufgabe}: Überlegen Sie sich, dass der Algorithmus von Floyd und Warshall den auf Seite \pageref{page:13:1} f. genannten Anforderungen genügt. 
+
+Der Algorithmus von Floyd und Warshall ist also ein weiteres Beispiel für einen Algorithmus der Gattung \textit{Dynamische Programmierung}.
+
+\textbf{Weitere Aufgaben}:
+\begin{enumerate}[\bfseries 1.]
+\item Es sei $(G,w)$ ein gewichteter Graph, von dem nicht bekannt ist, ob er einen negativen Kreis\index{negativer Kreis} enthält. Wie kann der Algorithmus von Floyd und Warshall eingesetzt werden, um herauszufinden, ob ein negativer Kreis in $(G,w)$ vorhanden ist?
+
+\item Es ist möglich, den Algorithmus von Floyd und Warshall so zu modifizieren, dass nicht nur die Distanzen für alle Knotenpaare, sondern auch die dazugehörigen kürzesten Pfade geliefert werden. Wie kann das geschehen?
+\end{enumerate}
+

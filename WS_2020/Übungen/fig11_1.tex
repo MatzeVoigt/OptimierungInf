@@ -1,0 +1,47 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.6,-0.6)(6.6,4.6)
+
+\cnode*(2,4){3pt}{A} \uput{0.25}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.25}[225](2,2){$b$}
+\cnode*(2,0){3pt}{C} \uput{0.25}[270](2,0){$c$}
+\cnode*(6,4){3pt}{D} \uput{0.25}[ 90](6,4){$d$}
+\cnode*(6,2){3pt}{E} \uput{0.25}[  0](6,2){$e$}
+\cnode*(6,0){3pt}{F} \uput{0.25}[270](6,0){$f$}
+\cnode*(0,2){3pt}{S} \uput{0.25}[180](0,2){$s$}
+
+\ncline{->}{S}{A} \uput{0.10}[ 90](1.0, 3.0){$6$}
+\ncline{->}{S}{B} \uput{0.10}[ 90](1.0, 2.0){$5$}
+\ncline{->}{S}{C} \uput{0.10}[270](1.0, 1.0){$2$}
+\ncarc[arcangle=330]{->}{A}{B} \uput{0.35}[180](2.0, 3.0){$1$}
+\ncline{->}{A}{D} \uput{0.10}[ 90](4.0, 4.0){$2$}
+%\ncline{->}{A}{E} \uput{0.10}[ 90](3.0, 3.5){$3$}
+\ncarc[arcangle=345]{->}{A}{E} \uput{0.20}[45](3.0, 3.0){$3$}
+\ncarc[arcangle=330]{->}{B}{A} \uput{0.35}[  0](2.0, 3.0){$3$}
+\ncline{->}{B}{D} \uput{0.10}[ 90](3.0, 2.5){$4$}
+\ncline{->}{B}{E} \uput{0.10}[ 90](4.0, 2.0){$5$}
+\ncline{->}{B}{F} \uput{0.05}[ 90](3.0, 1.5){$3$}
+\ncline{->}{C}{B} \uput{0.10}[  0](2.0, 1.0){$2$}
+%\ncline{->}{C}{E} \uput{0.10}[ 90](3.0, 0.5){$1$}
+\ncarc[arcangle=15]{->}{C}{E} \uput{0.20}[315](3.0, 1.0){$1$}
+\ncline{->}{C}{F} \uput{0.10}[270](4.0, 0.0){$3$}
+\ncline{->}{D}{E} \uput{0.10}[  0](6.0, 3.0){$2$}
+\ncarc[arcangle=345]{->}{E}{A} \uput{0.10}[ 45](3.5, 3.5){$2$}
+\ncarc[arcangle=15]{->}{E}{C} \uput{0.10}[315](3.5, 0.5){$2$}
+\ncarc[arcangle=330]{->}{E}{F} \uput{0.35}[180](6.0, 1.0){$1$}
+\ncarc[arcangle=330]{->}{F}{E} \uput{0.35}[  0](6.0, 1.0){$3$}
+
+\end{pspicture}
+\end{document}

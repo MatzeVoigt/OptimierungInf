@@ -1,0 +1,39 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color,amsmath,amssymb}
+\DeclareMathOperator{\ssum}{Subset-Sum}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.2,-0.85)(12.5,2.15)
+\footnotesize
+
+\cnode*( 0,2.0){3pt}{V1} \uput{0.2}[270](0,2){$i$}
+\cnode*( 2,0.5){3pt}{V2}
+\cnode*( 4,1.0){3pt}{V3}
+\cnode*( 6,1.5){3pt}{V4}
+\cnode*( 8,0.5){3pt}{V5} 
+\cnode*(10,0.0){3pt}{V6} 
+\cnode*(12,2.0){3pt}{V7} \uput{0.2}[270](12,2){$j$}
+
+\ncline{->}{V1}{V2}
+\ncline{->}{V2}{V3}
+\ncline{->}{V3}{V4}
+\ncline{->}{V4}{V5}
+\ncline{->}{V5}{V6}
+\ncline{->}{V6}{V7}
+
+\uput{0.15}[270](6,0){$\underbrace{\hspace{10cm}}$}
+\uput{0.45}[270](6,0){$\text{keine Knoten $\ell$, für die $\ell > k$ gilt}$}
+
+\small
+\end{pspicture}
+\end{document}

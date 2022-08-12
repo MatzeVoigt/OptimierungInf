@@ -1,0 +1,33 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.7)(6.5,4.5)
+
+\cnode*(2,4){3pt}{A} \uput{0.25}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.25}[270](2,2){$b$}
+\cnode*(2,0){3pt}{C} \uput{0.25}[270](2,0){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.25}[270](4,0){$d$}
+\cnode*(4,2){3pt}{E} \uput{0.25}[270](4,2){$e$}
+\cnode*(0,2){3pt}{S} \uput{0.25}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.25}[  0](6,2){$t$}
+
+\ncline{->}{S}{A} \uput{0.05}[135](1.0, 3.0){$(3)$}
+\ncline{->}{S}{B} \uput{0.10}[270](1.0, 2.0){$(5)$}
+\ncline{->}{S}{C} \uput{0.05}[225](1.0, 1.0){$(6)$}
+\ncline{->}{A}{B} \uput{0.05}[  0](2.0, 3.0){$(4)$}
+\ncline{->}{A}{T} \uput{0.15}[ 90](4.0, 3.0){$(5)$}
+\ncline{->}{B}{D} \uput{0.05}[215](3.0, 1.0){$(6)$}
+\ncline{->}{B}{E} \uput{0.10}[270](3.0, 2.0){$(2)$}
+\ncline{->}{C}{D} \uput{0.10}[270](3.0, 0.0){$(4)$}
+\ncline{->}{D}{T} \uput{0.05}[315](5.0, 1.0){$(5)$}
+\ncline{->}{E}{T} \uput{0.10}[270](5.0, 2.0){$(3)$}
+
+\end{pspicture}
+\end{document}

@@ -1,0 +1,22 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\begin{document}
+ \psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-1.5,-0.5)(8,6.5)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,6.5)
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](0,0)(5,0)(6,2)(4,6)(0,4)
+\uput{0.25}[225](0,0){$(0,0)$}
+\uput{0.15}[270](5,0){$(5,0)$}
+\uput{0.15}[0](6,2){$(6,2)$}
+\uput{0.15}[90](4,6){$(4,6)$}
+\uput{0.15}[180](0,4){$(0,4)$}
+\uput{0.15}[270](6.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+\small
+\end{pspicture*}
+\end{document}

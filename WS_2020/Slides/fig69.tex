@@ -1,0 +1,41 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,-2.0)(8.5,5)
+	\footnotesize
+	
+	\cnode*(0,2){3pt}{S} \uput{0.15}[180](0,2){$s$}
+	\cnode*(2,4){3pt}{A} \uput{0.15}[ 90](2,4){$a$}
+	\cnode*(2,0){3pt}{B} \uput{0.15}[270](2,0){$b$}
+	\cnode*(6,4){3pt}{C} \uput{0.15}[ 90](6,4){$c$}
+	\cnode*(6,0){3pt}{D} \uput{0.15}[270](6,0){$d$}
+	\cnode*(8,2){3pt}{T} \uput{0.15}[  0](8,2){$t$}
+	
+	\ncline{->}{S}{A} \uput{0.05}[135](1,3){$3$}
+	\ncline[linestyle=dashed]{->}{B}{S} \uput{0.05}[225](1,1){$3$}
+	\ncarc[arcangle=30]{->}{A}{C} \uput{0.05}[270](4,4.5){$3$}
+	\ncarc[arcangle=30, linestyle=dashed]{->}{C}{A} \uput{0.05}[90](4,3.5){$2$}
+	\ncline{->}{A}{D} \uput{0.05}[ 45](4,2){$2$}
+	\ncline[linestyle=dashed]{->}{A}{B} \uput{0.05}[  0](2,2){$2$}
+	\ncarc[arcangle=30]{->}{B}{D} \uput{0.05}[270](4,0.5){$2$}
+	\ncarc[arcangle=30, linestyle=dashed]{->}{D}{B} \uput{0.05}[90](4,-0.5){$1$}
+	\ncline[linestyle=dashed]{->}{T}{C} \uput{0.05}[ 45](7,3){$2$}
+	\ncarc[arcangle=30]{->}{D}{T} \uput{0.05}[135](7,1){$3$}
+	\ncarc[arcangle=30, linestyle=dashed]{->}{T}{D} \uput{0.05}[315](7,1){$1$}
+		
+	\small
+	\uput{1}[270](4,0){Der dazugehörige Residualgraph $G_f$ mit }
+	\uput{1}[270](4,-0.4){Residualkapazitäten (Kanten aus $E^{\rm rev}$: gestrichelt).}	
+	\end{pspicture}
+\end{document}

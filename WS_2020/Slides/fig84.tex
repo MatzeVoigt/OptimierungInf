@@ -1,0 +1,59 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-1.1, -0.2)(7.1,7.5)
+	\footnotesize
+	
+	\psellipticwedge[fillcolor=lightgray, fillstyle=solid](3,7.25)(4, 3.75){180}{0}
+	
+	\cnode*(1,0){3pt}{V01} 
+	\cnode*(3,0){3pt}{V02}
+	\cnode*(2,1){3pt}{V03}
+	\cnode*(4,1){3pt}{V04}
+	\cnode*(3,2){3pt}{V05} 
+	\cnode*(4,2){3pt}{V06}
+	\cnode*(3,4){3pt}{V07} 
+	\cnode*(2,5){3pt}{V08}
+	\cnode*(4,5){3pt}{V09} 
+	\cnode*(5,5){3pt}{V10}
+	\cnode*(1,6){3pt}{V11} 
+	\cnode*(3,6){3pt}{V12}
+	\cnode*(4,6){3pt}{V13} 
+	\cnode*(5,6){3pt}{V14}
+	\cnode*(0,7){3pt}{V15} 
+	\cnode*(2,7){3pt}{V16}
+	
+	\ncline{V01}{V03}
+	\ncline{V02}{V03}
+	\ncline{V03}{V05}
+	\ncarc[arcangle=30,linestyle=dashed]{V03}{V08} \uput{0.15}[180](1.5,3){$f$}
+	\ncline{V04}{V05}
+	\ncline{V05}{V06}
+	\ncline{V05}{V07} \uput{0.15}[0](3,3){$e$}
+	\ncline{V07}{V08}
+	\ncline{V07}{V09}
+	\ncline{V08}{V11}
+	\ncline{V08}{V12}
+	\ncline{V09}{V10}
+	\ncline{V09}{V13}
+	\ncline{V09}{V14}
+	\ncline{V11}{V15}
+	\ncline{V11}{V16}
+	
+	\uput{0.15}[0](4,3){$T$}
+	\uput{0.15}[0](5.5,6.5){$B$}
+	
+	\small
+	\end{pspicture}
+\end{document}

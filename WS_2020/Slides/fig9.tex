@@ -1,0 +1,32 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.2)(5.0,2.2)
+\footnotesize
+
+\cnode*(2.0,1.0){3pt}{V}  \uput{0.20}[270](2.0,1.0){$v$}
+\cnode*(0.0,0.5){3pt}{N1}
+\cnode*(0.0,1.5){3pt}{N2} 
+\cnode*(4.0,0.0){3pt}{N3}
+\cnode*(4.0,1.0){3pt}{N4} 
+\cnode*(4.0,2.0){3pt}{N5}
+
+\ncline{->}{N1}{V} \uput{0.05}[ 90](1,1.25){$3$}
+\ncline{->}{N2}{V} \uput{0.05}[ 90](1,0.75){$2$}
+\ncline{->}{V}{N3} \uput{0.05}[ 90](3,0.50){$6$}
+\ncline{->}{V}{N4} \uput{0.05}[ 90](3,1.00){$2$}
+\ncline{->}{V}{N5} \uput{0.05}[ 90](3,1.50){$1$}
+
+\small
+\end{pspicture}
+\end{document}

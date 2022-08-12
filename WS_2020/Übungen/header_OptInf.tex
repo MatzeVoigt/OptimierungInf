@@ -1,0 +1,63 @@
+%\usepackage{a4kopka}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmic,algorithm}
+\usepackage{graphics,graphicx}
+\usepackage{pgfplots,tikz}
+\usepackage{enumerate}
+\usepackage[ngerman]{babel}
+% \usepackage[software]{mymacros}
+%\usepackage{matrix}
+\usepackage{hyperref}
+% \usepackage{caption}
+\usepackage{caption, subcaption}
+
+\floatname{algorithm}{Algorithmus}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+%\usepackage{enumitem} 
+%\textheight25cm
+\textheight23cm
+\topmargin-15mm
+\oddsidemargin-5mm    %  -10mm
+\textwidth17cm    %   18.8cm
+\footskip0pt
+\thispagestyle{empty}
+\parindent0mm
+\parskip0ex
+\parskip0ex
+
+\makeatletter
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+\makeatother
+
+% \newcommand{\cg}[1]{{\color{blue} #1}}
+% \newcommand{\cb}[1]{{\color{green} #1}}
+% \newcommand{\cred}[1]{{\color{red} #1}}
+% \newcommand{\cc}[1]{{\color{cyan} #1}}
+% \newcommand{\cm}[1]{{\color{magenta} #1}}
+
+\newcommand{\Aufgabe}[2][]{\par\bigskip{\sf\bfseries Aufgabe #2#1:}}
+%\hspace{3em}{\small(#2 point\ifthenelse{#2>1}{s}{})}}\par\smallskip}
+%\newcommand\aufgabe[2][~]{\par\bigskip{\sf\bfseries Aufgabe #1
+%    \hspace{3em} \ifthenelse{\equal{#2}{~}}{}{(#2)}}\par\smallskip}
+\usepackage{mymacros}
+
+\begin{document}
+{\sf Universit\"at Hamburg \hfill Wintersemester 2020/21 \\ Fachbereich Mathematik \\ Dr. Matthias Voigt}
+\begin{center}
+\ifthenelse{\equal{\nr}{no}}{\Large\sf\bfseries \kopf}{\Large\sf\bfseries Optimierung f\"ur Studierende der Informatik -- \nr.~\kopf}
+\end{center}
+
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\ri}{\mathrm{i}}
+\renewcommand{\H}{\mathsf{H}}
+\newcommand{\T}{\mathsf{T}}

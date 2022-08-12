@@ -1,0 +1,227 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 05:                                                                  %
+% "Wie schnell ist das Simplexverfahren?"                                      %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Wie schnell ist das Simplexverfahren?}\label{chapter:5}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Axiome der reellen Zahlen"                                              %
+%------------------------------------------------------------------------------%
+
+\section{Beispiele von Klee und Minty}
+\label{section:5:1}
+\index{Beispiele von Klee und Minty}\index{Klee und Minty!Beispiele von}
+
+Im Buch von Chvátal wird berichtet, dass empirische Untersuchungen Folgendes ergeben haben: In der Praxis auftretende LP-Probleme
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&&                              x_j &\ \geq &\   0 & \qquad (j=1,\ldots,n).
+\end{alignedat}
+\end{align*}
+
+benötigen häufig weniger als $\frac{3}{2}m$ Iterationen -- und nur sehr selten werden mehr als $3m$ Iterationen benötigt. Außerdem wird der folgende empirische Befund erwähnt (siehe Chvátal, Kapitel 4): Bei festem $m$ und wachsendem $n$ nimmt die Anzahl der Iterationen nur sehr langsam zu; es wurde ein Wachstum ungefähr von der Größenordnung $\log{n}$ beobachtet. \textit{Die Ergebnisse dieser empirischen Untersuchungen stehen im Einklang mit der Tatsache, \textbf{dass sich das Simplexverfahren seit mehr als 60 Jahren in der Praxis hervorragend bewährt hat}}.
+
+\textit{Auf der anderen Seite sind aber auch Beispiele bekannt, die eine außerordentlich hohe Anzahl von Iterationen erfordern}. Derartige Beispiele wurden erstmals im Jahre 1972 in einer Arbeit von Klee und Minty vorgestellt. Bevor wir uns dieses Beispiel anschauen, sei an eine Pivotierungsregel erinnert, die wir bereits häufig verwendet haben.
+\begin{equation}
+\label{eq:5:*}
+\tag{$\star$}
+\begin{array}{c}
+\textit{Stehen mehrere Kandidaten für die Wahl einer Eingangsvariable} \\
+\textit{zur Verfügung, so entscheide man sich für eine Variable, deren Koeffizient $\overline{c}_j$ } \\
+\textit{in der $z$-Zeile des aktuellen Tableaus \textit{möglichst groß} ist.}
+\end{array}
+\end{equation}
+
+Diese Regeln nennt man die \textit{Regel vom größten Koeffizienten}\index{Regel!vom größten Koeffizienten}\index{Koeffizient, Regel vom größten} (engl. \textit{largest-coefficient rule}\index{largest-coefficient rule}).
+
+Auch im Folgenden soll immer, wenn nichts anderes gesagt ist, die Regel vom größten Koeffizienten zugrunde liegen.
+
+Hier sind nun die \textbf{Beispiele von Klee und Minty}:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{10^{n-j}x_j} & & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & \\
+&& 2 \cdot \sum\limits_{j=1}^{i-1}{10^{i-j}x_j} &\ + &\ x_i &\ \leq &\ 100^{i-1} & \qquad (i=1,\ldots,n) \\
+&&                                              &    &\ x_j &\ \geq &\         0 & \qquad (j=1,\ldots,n).
+\end{alignedat}
+\end{align*}
+
+Klee und Minty haben in ihrer Arbeit nachgewiesen, dass für dieses Beispiel \textit{$2^n-1$ Iterationen} nötig sind, bis das Simplexverfahren terminiert (bei Anwendung der Regel vom größten Koeffizienten).
+
+\pagebreak
+
+Wir schauen uns den Fall $n=3$ näher an:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 100x_1 &\ + &\ 10x_2 &\ + &\ x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&    x_1 &\   &\       &\   &\     &\ \leq &\     1\ \\
+&&  20x_1 &\ + &\   x_2 &\   &\     &\ \leq &\   100\ \\
+&& 200x_1 &\ + &\ 20x_2 &\ + &\ x_3 &\ \leq &\ 10000\ \\
+&& & & & & \llap{$x_1,x_2,x_3$}     &\ \geq &\     0.
+\end{alignedat}
+\end{align*}
+
+Unter Benutzung der Regel (\ref{eq:5:*}) erhalten wir die folgenden Tableaus:
+
+Starttableau:
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\     1 &\ - &\    x_1 &\   &\       &\   &\      \\
+x_5 &\ = &\   100 &\ - &\  20x_1 &\ - &\   x_2 &\   &\      \\
+x_6 &\ = &\ 10000 &\ - &\ 200x_1 &\ - &\ 20x_2 &\ - &\ x_3 \ \\ \cline{1-9}
+  z &\ = &\       &\   &\ 100x_1 &\ + &\ 10x_2 &\ + &\ x_3 . 
+\end{alignedat}
+\end{align*}
+
+Nach der 1. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\     1 &\ - &\    x_4 &\   &\       &\   &\      \\
+x_5 &\ = &\    80 &\ + &\  20x_4 &\ - &\   x_2 &\   &\      \\
+x_6 &\ = &\  9800 &\ + &\ 200x_4 &\ - &\ 20x_2 &\ - &\ x_3\ \\ \cline{1-9}
+  z &\ = &\   100 &\ - &\ 100x_4 &\ + &\ 10x_2 &\ + &\ x_3.  
+\end{alignedat}
+\end{align*}
+
+Nach der 2. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\     1 &\ - &\    x_4 &\   &\       &\   &\      \\
+x_2 &\ = &\    80 &\ + &\  20x_4 &\ - &\   x_5 &\   &\      \\
+x_6 &\ = &\  8200 &\ - &\ 200x_4 &\ + &\ 20x_5 &\ - &\ x_3\ \\ \cline{1-9}
+  z &\ = &\   900 &\ + &\ 100x_4 &\ - &\ 10x_5 &\ + &\ x_3.  
+\end{alignedat}
+\end{align*}
+
+Nach der 3. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\     1 &\ - &\    x_1 &\   &\       &\   &\      \\
+x_2 &\ = &\   100 &\ - &\  20x_1 &\ - &\   x_5 &\   &\      \\
+x_6 &\ = &\  8000 &\ + &\ 200x_1 &\ + &\ 20x_5 &\ - &\ x_3\ \\ \cline{1-9}
+  z &\ = &\  1000 &\ - &\ 100x_1 &\ - &\ 10x_5 &\ + &\ x_3.  
+\end{alignedat}
+\end{align*}
+
+Nach der 4. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\     1 &\ - &\    x_1 &\   &\       &\   &\      \\
+x_2 &\ = &\   100 &\ - &\  20x_1 &\ - &\   x_5 &\   &\      \\
+x_3 &\ = &\  8000 &\ + &\ 200x_1 &\ + &\ 20x_5 &\ - &\ x_6\ \\ \cline{1-9}
+  z &\ = &\  9000 &\ + &\ 100x_1 &\ + &\ 10x_5 &\ - &\ x_6.  
+\end{alignedat}
+\end{align*}
+
+Nach der 5. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\     1 &\ - &\    x_4 &\   &\       &\   &\      \\
+x_2 &\ = &\    80 &\ + &\  20x_4 &\ - &\   x_5 &\   &\      \\
+x_3 &\ = &\  8200 &\ - &\ 200x_4 &\ + &\ 20x_5 &\ - &\ x_6\ \\ \cline{1-9}
+  z &\ = &\  9100 &\ - &\ 100x_4 &\ + &\ 10x_5 &\ - &\ x_6.  
+\end{alignedat}
+\end{align*}
+
+Nach der 6. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\     1 &\ - &\    x_4 &\   &\       &\   &\      \\
+x_5 &\ = &\    80 &\ + &\  20x_4 &\ - &\   x_2 &\   &\      \\
+x_3 &\ = &\  9800 &\ + &\ 200x_4 &\ - &\ 20x_2 &\ - &\ x_6\ \\ \cline{1-9}
+  z &\ = &\  9900 &\ + &\ 100x_4 &\ - &\ 10x_2 &\ - &\ x_6.  
+\end{alignedat}
+\end{align*}
+
+Nach der 7. Iteration ergibt sich:
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\     1 &\ - &\    x_1 &\   &\       &\   &\      \\
+x_5 &\ = &\   100 &\ - &\  20x_1 &\ - &\   x_2 &\   &\      \\
+x_3 &\ = &\ 10000 &\ - &\ 200x_1 &\ - &\ 20x_2 &\ - &\ x_6\ \\ \cline{1-9}
+  z &\ = &\ 10000 &\ - &\ 100x_1 &\ - &\ 10x_2 &\ - &\ x_6.  
+\end{alignedat}
+\end{align*}
+
+\textbf{Beobachtung}: Hätten wir in der 1. Iteration nicht $x_1$, sondern $x_3$ als Eingangsvariable gewählt, so wären wir schon nach einem Schritt fertig gewesen. \textit{Es stellt sich also unter anderem die Frage nach alternativen Pivotierungsregeln}.
+
+
+\section{Alternative Pivotierungsregeln}
+\index{alternative Pivotierungsregeln}\index{Pivotierungsregeln, alternative}\index{Regel!alternative Pivotierungs-}
+
+Besonders naheliegend ist die folgende Pivotierungsregel, die man die \textit{Regel vom größten Zuwachs}\index{Regel!vom größten Zuwachs}\index{Zuwachs, Regel vom größten} (engl. \textit{largest-increase rule}\index{largest-increase rule}) nennt. Nach dieser Regel wird der Kandidat für die Aufnahme in die Basis so gewählt, dass ein möglichst großer Zuwachs der Zielfunktion $z$ dabei herauskommt.
+
+Während die Regel vom größten Koeffizienten sehr einfach zu handhaben ist, ist die Regel vom größten Zuwachs deutlich rechenaufwendiger. Außerdem gilt (was auf den ersten Blick etwas überraschend sein mag): \textit{Auch für die Regel vom größten Zuwachs lassen sich Beispiele angeben, die in Bezug auf diese Regel eine ähnliche Rolle spielen, wie die Klee-Minty-Beispiele für die largest-coefficient rule}. Derartige Beispiele wurden 1973 von R. G. Jeroslow vorgestellt.
+
+Eine weitere Pivotierungsregel ist uns bereits in Kapitel \ref{chapter:3} begegnet: die \textit{Regel vom kleinsten Index}\index{Regel!vom kleinsten Index}\index{Index, Regel vom kleinsten} (\textit{Blandsche Regel}\index{Blandsche Regel}\index{Regel!Blandsche}, engl. \textit{smallest-subscript rule}\index{smallest-subscript rule} oder \textit{Bland's rule}\index{Bland's rule}).
+
+Weitere Pivotierungsregeln werden im Buch von Matou\v{s}ek und Gärtner diskutiert. Für alle dort aufgeführten Regeln (einschließlich der Blandschen Regel) gilt: Es existieren Beispiele, die (ähnlich wie die Klee-Minty-Beispiele) zu einer außerordentlich hohen Zahl von Iterationen führen. Vielfach ist versucht worden, eine Pivotierungsregel zu finden, für die dies nicht der Fall ist -- bislang ohne Erfolg. Bei der Frage, ob es eine Pivotierungsregel gibt, durch die das Simplexverfahren zu einem polynomiellen Algorithmus wird, handelt es sich um ein interessantes \textit{offenes Problem}.
+
+\textit{Diese Bemerkungen stehen im Übrigen keineswegs im Widerspruch zu der Tatsache, dass sich die Simplexmethode in der Praxis hervorragend bewährt hat: Die Beispiele zeigen ja nur, dass \textbf{im schlechtesten Fall} außerordentlich viele Iterationen nötig sind}.
+
+Keine der bekannten Pivotierungsregeln führt zu einem Algorithmus mit polynomieller Laufzeit. Es war lange Zeit offen, ob ein solcher Algorithmus zur Lösung von LP-Problemen überhaupt existiert -- bis \textit{L.~G.~Khachiyan} im Jahre 1979 einen polynomiellen Algorithmus zur Lösung von LP-Problemen vorstellte, der unter dem Namen \textit{Ellipsoid-Methode}\index{Ellipsoid-Methode}\index{Methode!Ellipsoid-} bzw. als \textit{Khachiyan-Algorithmus}\index{Khachiyan-Algorithmus}\index{Algorithmus!Khachiyan-} bekannt wurde. \textit{Das war damals eine Sensation, über die sogar die New York Times auf ihrer ersten Seite berichtete}.
+
+Ein weiterer Algorithmus mit polynomieller Laufzeit wurde ca. 5 Jahre später von \textit{N. Karmarkar} vorgestellt; der Algorithmus von Karmarkar stellt ein Beispiel einer ganzen Klasse von Algorithmen zur Lösung von LP-Problemen dar, die man \textit{Innere-Punkte-Algorithmen}\index{Innere-Punkte-Algorithmus}\index{Algorithmus!Innere-Punkte-} nennt. In Kapitel \ref{chapter:14} werden wir auf die Ellipsoid-Methode und auf Innere-Punkte-Methoden genauer eingehen und die Grundideen dieser Algorithmen vorstellen. Dabei werden wir uns an der Darstellung im folgenden Lehrbuch orientieren:
+\begin{itemize}
+\item Matou\v{s}ek/Gärtner: \textit{Understanding and Using Linear Programming}. Springer-Verlag.
+\end{itemize}
+
+Wir beenden Kapitel \ref{chapter:5} mit einem Auszug aus dem Buch von Matou\v{s}ek und Gärtner.
+
+\medskip
+
+One of the key pieces of knowledge about linear programming that one should remember forever is this:
+
+\begin{center}
+\begin{framebox}
+{\begin{minipage}{12cm}
+\begin{center}
+A linear program is efficiently solvable, both in theory and in practice.
+\end{center}
+\end{minipage}}
+\end{framebox}
+\end{center}
+
+\begin{itemize}
+\item \textit{In practice}, a number of software packages are available. They can handle inputs with several thousands of variables and constraints. Linear programs with a special structure, for example, with a small number of nonzero coefficients in each constraint, can often be managed even with a much larger number of variables and constraints.
+\item \textit{In theory}, algorithms have been developed that provably solve each linear program in time bounded by a certain polynomial function of the input size. The input size is measured as the total number of bits needed to write down all coefficients in the objective function and in all the constraints.\label{page:5:1}
+\end{itemize}
+
+These two statements summarize the results of long and strenuous research, and efficient methods for linear programming are not simple.
+
+%In order that the above piece of knowledge will also make sense forever, one should not forget what a linear program is, so we repeat it once again:
+%
+%\begin{center}
+%\begin{framebox}
+%{\begin{minipage}{12cm}
+%A linear program is the problem of maximizing a given linear function over the set of all vectors that satisfy a given system of linear equations and inequalities. Each linear program can easily be transformed to the form
+%\[
+%\text{maximize } c^Tx \text{ subject to } Ax \leq b.
+%\]
+%\end{minipage}}
+%\end{framebox}
+%\end{center}
+
+\bigskip
+
+Bevor wir nun in Kapitel \ref{chapter:7} mit dem zentralen Thema \textit{Dualität} fortfahren, wollen wir in Kapitel \ref{chapter:6} einen \textit{Eindruck von den vielfältigen Einsatz- und Anwendungsmöglichkeiten der Linearen Programmierung} gewinnen.
+
+Zu diesem Zweck schauen wir uns Beispiele aus verschiedenen Lehrbüchern an.

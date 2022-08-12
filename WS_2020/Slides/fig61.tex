@@ -1,0 +1,32 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.2,-0.2)(4.2,4.2)
+
+\cnode*(0,0){3pt}{V0} 
+\cnode*(1,1){3pt}{V1} 
+\cnode*(3,1){3pt}{V2} 
+\cnode*(4,0){3pt}{V3}
+\cnode*(2,2.75){3pt}{V4}
+\cnode*(2,4){3pt}{V5} 
+
+\ncline{-}{V0}{V1} \uput{0.10}[135](0.5, 0.5){$e_5$}
+\ncline{-}{V1}{V2} \uput{0.10}[270](2.0, 1.0){$e_4$}
+\ncline{-}{V1}{V4} \uput{0.10}[135](1.5, 1.8){$e_2$}
+\ncline{-}{V2}{V3} \uput{0.10}[ 45](3.5, 0.5){$e_6$}
+\ncline{-}{V2}{V4} \uput{0.10}[ 45](2.5, 1.8){$e_3$}
+\ncline{-}{V4}{V5} \uput{0.10}[  0](2.0, 3.375){$e_1$}
+
+\end{pspicture}
+\end{document}

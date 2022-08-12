@@ -1,0 +1,2116 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 09:                                                                  %
+% "Maximale Flüsse und minimale Schnitte in Netzwerken"                        %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Maximale Flüsse und minimale Schnitte in Netzwerken}\label{chapter:9}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Flüsse in Netzwerken"                                                       %
+%------------------------------------------------------------------------------%
+
+\section{Flüsse in Netzwerken}
+\label{section:9:1}
+
+Wir betrachten gerichtete Graphen, in denen jede Kante eine \enquote{Kapazität}\index{Kapazität}\index{Kante!Kapazität einer} besitzt. Je nach Anwendungszusammenhang können diese Kapazitäten eine unterschiedliche Bedeutung haben. In jedem Fall geht es jedoch um obere Schranken: Beispielsweise besitzen Stromleitungen eine Maximalbelastung, durch eine Wasserleitung kann nur eine bestimmte Menge Wasser fließen oder auf einer Bahnstrecke kann nur eine gewisse Menge eines bestimmten Guts transportiert werden.
+
+Zur Modellierung derartiger Situationen verwendet man sogenannte \textit{Flussnetzwerke}\index{Flussnetzwerk}\index{Netzwerk!Fluss-} (kurz: \textit{Netzwerke}\index{Netzwerk}). Von grundlegender Bedeutung sind in diesem Zusammenhang \textit{gerichtete Graphen}\index{gerichteter Graph}\index{Graph!gerichteter} (kurz: \textit{Digraphen}\index{Digraph}\index{Graph!Di-}). Wir geben im Folgenden genaue Definitionen der erwähnten Begriffe. 
+
+\begin{Definition}[Definition]
+Es sei $G=(V,E)$ ein \textit{schlingenloser Digraph}\index{schlingenloser Digraph}\index{Digraph!schlingenloser}, d.h., $V$ ist eine endliche Menge, deren Elemente \textit{Knoten}\index{Knoten} genannt werden, und $E$ ist eine Teilmenge von $V \times V$, die nur Paare $(a,b)$ aus $V \times V$ enthält, für die $a \neq b$ gilt. Die Elemente von $E$ heißen (gerichtete) \textit{Kanten}\index{Kante}\index{gerichtete Kante}\index{Kante!gerichtete}\footnotemark.
+
+Außerdem sei $c: E \rightarrow \N \cup \bigl\{ 0 \bigr\}$ eine Abbildung, die jeder Kante $e \in E$ eine nichtnegative ganze Zahl $c(e)$ zuordnet, welche wir die \textit{Kapazität}\index{Kapazität}\index{Kante!Kapazität einer} von $e$ nennen.
+
+Schließlich seien $s$ und $t$ zwei verschiedene Knoten von $G$, für die gilt: Zu $s$ führen keine Kanten hin und von $t$ führen keine Kanten weg.
+
+Darüber hinaus wollen wir voraussetzen, dass es in $G$ \textit{keine isolierten Knoten} gibt, d.h., für jeden Knoten $v$ soll es mindestens eine Kante geben, die zu $v$ hin oder von $v$ weg führt.
+
+Unter diesen Voraussetzungen nennen wir $N=(G,c,s,t)$ \textit{ein Flussnetzwerk\index{Flussnetzwerk}\index{Netzwerk!Fluss-} mit Quelle\index{Quelle} $s$ und Senke\index{Senke} $t$} (kurz: \textit{Netzwerk}\index{Netzwerk}).
+\end{Definition}
+
+\footnotetext{Statt \enquote{Knoten} sagt man im Deutschen auch \textit{Ecke}\index{Ecke}, die englische Bezeichnung lautet \textit{vertex}\index{vertex} oder \textit{node}\index{node}; Kante heißt auf Englisch \textit{edge}\index{edge}.}
+
+\textbf{Beispiel}.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4)
+\label{page:9:1}
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$(4)$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Die eingeklammerten Zahlen bezeichnen die Kapazitäten der Kanten.
+
+\pagebreak
+
+Ist $e = (v,w)$ eine Kante eines Netzwerks, so stellen wir uns $e$ immer als einen Pfeil von $v$ nach $w$ vor:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.25)(3.5,0.25)
+\footnotesize
+
+\cnode*(0,0){3pt}{V} \uput{0.20}[180](0,0){$v$}
+\cnode*(3,0){3pt}{W} \uput{0.20}[  0](3,0){$w$}
+
+\ncline{->}{V}{W} \uput{0.15}[ 90](1.5, 0.0){$e$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Wir wollen uns nun für ein gegebenes Netzwerk zusätzlich vorstellen, dass in jeder Kante $e=(v,w)$ ein \enquote{Fluss} von $v$ nach $w$ vorliegt: Beispielsweise kann man sich die Kanten als Wasserleitungen denken; oder man kann sich die Kanten $e=(v,w)$ als Straßen vorstellen, auf denen irgendeine Ware von $v$ nach $w$ transportiert wird. Durch $f(e) \in \R$ soll die Stärke des Flusses von $v$ nach $w$ modelliert werden.
+
+Wir werden im Folgenden nur dann von einem Fluss auf dem Netzwerk $N$ sprechen, wenn für alle Kanten $e \in E$ gilt:
+\[
+0 \leq f(e) \leq c(e).
+\]
+
+Mit anderen Worten: $f(e)$ soll immer nichtnegativ sein und $f(e)$ soll die Kapazität $c(e)$ niemals über\-schrei\-ten. Außerdem soll eine \textit{Erhaltungsregel}\index{Erhaltungsregel}\index{Regel!Erhaltungs-} für alle Knoten $v \neq s,t$ gelten: \textit{Es soll aus $v$ ebenso viel herausfließen, wie in $v$ hineinfließt}.
+
+Bevor wir nun all dies in einer Definition zusammenfassen, führen wir einige Schreibweisen ein. Gegeben sei ein Netzwerk $N=(G,c,s,t)$ mit $G=(V,E)$. Sind $X$ und $Y$ Teilmengen von $V$, so bezeichnen wir mit
+\[
+\bigl(X,Y\bigr)
+\]
+die Menge aller Kanten $(v,w) \in E$, für die $v \in X$ und $w \in Y$ gilt. Dasselbe in Mengenschreibweise:
+\[
+\bigl(X,Y\bigr) = \Bigl\{ (v,w) \in E : v \in X \text{ und } w \in Y \Bigr\}.
+\]
+
+Mit anderen Worten: \textit{$(X,Y)$ bezeichnet die Menge aller Kanten von $E$, die von $X$ nach $Y$ zeigen}.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,0.5)
+\footnotesize
+
+\cnode*(0,0){3pt}{V} \uput{0.20}[180](0,0){$v \in X$}
+\cnode*(3,0){3pt}{W} \uput{0.20}[  0](3,0){$w \in Y$}
+
+\ncline{->}{V}{W} 
+
+\small
+\end{pspicture}
+\end{center}
+
+Für eine Teilmenge $X$ von $V$ bezeichnen wir mit $\overline{X}$ das \textit{Komplement}\index{Komplement} von $X$ in $V$, d.h.,
+\[
+\overline{X} = V \setminus X.
+\]
+
+$\overline{X}$ ist also die Menge der Knoten aus $V$, die nicht in $X$ liegen, und $(X, \overline{X})$ ist die Menge der Kanten, die von $X$ nach $\overline{X}$ zeigen.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,0.0)(5.5,2.0)
+\footnotesize
+
+\pscircle(1,1){1}
+\pscircle(4,1){1}
+
+\cnode*(1.0,1.5){3pt}{X1}
+\cnode*(1.0,0.5){3pt}{X2}
+\cnode*(4.0,1.5){3pt}{X3} 
+\cnode*(4.0,0.5){3pt}{X4}
+
+\ncarc[arcangle=25]{->}{X1}{X3}
+\ncarc[arcangle=335]{->}{X2}{X4}
+
+\uput{0.20}[180](0,1){$X$}
+\uput{0.20}[  0](5,1){$\overline{X}$}
+\uput{0.45}[  0](2,1.1){$\vdots$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Es sei nun $f: E \rightarrow \R$ eine Funktion; $f$ ordnet also jeder Kante $e \in E$ eine reelle Zahl $f(e)$ zu. Dann definieren wir
+\[
+f(X,\overline{X}) := \sum\limits_{e \in (X,\overline{X})}{f(e)}.
+\]
+
+Um $f(X,\overline{X})$ zu berechnen, sind also alle Kanten $e \in E$ zu betrachten, die von $X$ nach $\overline{X}$ zeigen; für diese Kanten sind die Werte $f(e)$ aufzusummieren.
+
+Als Abkürzung schreiben wir auch
+\[
+f^+(X) := f(X,\overline{X})
+\]
+sowie
+\[
+f^-(X) := f(\overline{X},X).
+\]
+
+Gilt $X = \bigl\{ v \bigr\}$, d.h., $X$ enthält nur den Knoten $v$, so schreiben wir anstelle von $f^+\left(\bigl\{ v \bigr\}\right)$ auch einfach 
+\[
+f^+(v).
+\] 
+
+Folglich ist $f^+(v)$ die Summe der Werte $f(e)$ für alle Kanten $e$, die an $v$ stoßen und von $v$ weggerichtet sind.
+
+\textit{Analog}: Statt $f^-\left(\bigl\{ v \bigr\}\right)$ schreiben wir $f^-(v)$; der Wert von $f^-(v)$ ist die Summe der Werte $f(e)$ für alle Kanten $e$, die an $v$ stoßen und zu $v$ hingerichtet sind.
+
+\textbf{Beispiel}. Es sollen, wie in der folgenden Zeichnung dargestellt, fünf Kanten an $v$ stoßen.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,0.0)(5.5,2.0)
+\footnotesize
+
+\cnode*(2.0,1.0){3pt}{V}  \uput{0.20}[270](2.0,1.0){$v$}
+\cnode*(0.0,0.5){3pt}{N1}
+\cnode*(0.0,1.5){3pt}{N2} 
+\cnode*(4.0,0.0){3pt}{N3}
+\cnode*(4.0,1.0){3pt}{N4} 
+\cnode*(4.0,2.0){3pt}{N5}
+
+\ncline{->}{N1}{V} \uput{0.05}[ 90](1,1.25){$3$}
+\ncline{->}{N2}{V} \uput{0.05}[ 90](1,0.75){$2$}
+\ncline{->}{V}{N3} \uput{0.05}[ 90](3,0.50){$6$}
+\ncline{->}{V}{N4} \uput{0.05}[ 90](3,1.00){$2$}
+\ncline{->}{V}{N5} \uput{0.05}[ 90](3,1.50){$1$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Die Zahlen geben die Werte von $f$ an. Dann gilt
+\[
+f^-(v) = 3+2 = 5
+\]
+und
+\[
+f^+(v) = 1+2+6 = 9.
+\]
+
+Nach diesem kleinen Einschub, in dem wir die Schreibweisen $(X,Y)$, $(X,\overline{X})$, $f(X,\overline{X})$, $f^+\left(X\right)$, $f^-\left(X\right)$, $f^+(v)$ und $f^-(v)$ besprochen haben, kommen wir nun -- wie weiter oben schon angekündigt -- zur Definition des Begriffs eines Flusses auf einem Netzwerk.
+
+\begin{Definition}[Definition]
+Gegeben sei ein Netzwerk $N=(G,c,s,t)$ mit $G=(V,E)$. Eine Abbildung
+\[
+f: E \rightarrow \R
+\]
+
+heißt ein \textit{Fluss}\index{Fluss} auf $N$, wenn $f$ den beiden folgenden Bedingungen genügt:
+\begin{enumerate}[(F1)]
+\item $0 \leq f(e) \leq c(e)$ für alle $e \in E$;
+\item $f^-(v) = f^+(v)$ für alle Knoten $v \neq s,t$.
+\end{enumerate}
+\end{Definition}
+
+Die Bedingung (F2) bedeutet, dass für alle Knoten $v \neq s,t$ gilt\footnote{Knoten $v \in V$ mit $v\neq s,t$ nennt man auch \textit{innere Knoten}\index{innerer Knoten}\index{Knoten!innerer} des Netzwerks $N$.}: \textit{Aus $v$ fließt ebenso viel hinaus, wie hineinfließt}.
+
+\textbf{Beispiel}. Für das Netzwerk auf Seite \pageref{page:9:1} sei $f$ gegeben durch\label{page:9:2}:
+\[
+\begin{array}{c||c}
+(x,y) & f(x,y) \\ \hline\hline
+(s,a) & 4 \\
+(s,b) & 1 \\
+(s,d) & 2 \\
+(a,b) & 1 \\
+(a,c) & 2 \\
+(a,d) & 1 \\
+(c,e) & 1 \\
+(d,e) & 3 \\
+(b,t) & 2 \\
+(c,t) & 1 \\
+(e,t) & 4
+\end{array}
+\]
+
+Trägt man diese Werte in die zugehörige Zeichnung ein, so erkennt man sofort, dass (F1) und (F2) erfüllt sind, dass also ein Fluss vorliegt:
+
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+\label{page:9:3}
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$4(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$1(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$2(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$1(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$2(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$1(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$2(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$1(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$1(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$3(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$4(4)$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Gilt $e = (v,w)$ für eine Kante $e \in E$, so nennen wir $v$ den \textit{Anfangsknoten}\index{Anfangsknoten einer Kante}\index{Kante!Anfangsknoten einer} von $e$ und $w$ ist der \textit{Endknoten}\index{Endknoten einer Kante}\index{Kante!Endknoten einer} von $e$.
+
+Da an den inneren Knoten $v \neq s,t$ die Erhaltungsregel (F2) gilt, ist es plausibel, dass aus $s$ ebenso viel wegfließt, wie in $t$ ankommt: Dies ist der Inhalt der folgende Feststellung.
+
+\begin{Definition}[Feststellung 1]
+\[
+f^+(s) = f^-(t).
+\]
+\end{Definition}
+
+\textbf{Beweis}. Da es zu jeder Kante $e \in E$ genau einen Anfangsknoten gibt, haben wir
+\[
+\sum\limits_{e \in E}{f(e)} = \sum\limits_{v \in V}{f^+(v)};
+\]
+
+ganz entsprechend gilt auch
+\[
+\sum\limits_{e \in E}{f(e)} = \sum\limits_{v \in V}{f^-(v)}.
+\]
+
+Es folgt
+\begin{align*}
+0 
+&= \sum\limits_{v \in V}{f^+(v)} - \sum\limits_{v \in V}{f^-(v)}  \\[1mm]
+&= \sum\limits_{v \in V}{\Bigl( f^+(v) - f^-(v) \Bigr)} \\[1mm]
+&\stackrel{(F2)}{=} f^+(s) - f^-(s) + f^+(t) - f^-(t).
+\end{align*}
+
+Da zu $s$ keine Kanten hinführen und von $t$ keine Kanten wegführen, gilt $f^-(s) = f^+(t) = 0$. Also haben wir 
+\[
+0 = f^+(s) - f^-(t),
+\]
+woraus die Behauptung folgt. $\Box$
+
+\begin{Definition}[Definition]
+Den aufgrund von Feststellung 1 gemeinsamen Wert von $f^+(s)$ und $f^-(t)$ nennt man den \textit{Wert des Flusses $f$}\index{Wert eines Flusses}\index{Fluss!Wert des} (Bezeichnung: $w(f)$). Man definiert also
+\[
+w(f) := f^+(s) = f^-(t).
+\]
+\end{Definition}
+
+\textit{Der Wert $w(f)$ gibt also an, wie viel von der Quelle $s$ wegfließt bzw. (was dasselbe ist), wie viel an der Senke $t$ ankommt}.
+
+In unserem obigen Beispiel gilt
+\[
+f^+(s) = 1+4+2=7
+\]
+und
+\[
+f^-(t) = 2+1+4 = 7.
+\]
+Also gilt:
+\[
+w(f) = 7.
+\]
+
+Ein Fluss $f^*$ auf einem Netzwerk $N$ heißt \textit{maximal}\index{maximaler Fluss}\index{Fluss!maximaler}, falls $w(f^*) \geq w(f)$ für alle Flüsse $f$ auf $N$ gilt.
+
+\textit{Eines der wichtigsten Probleme, um die es im Zusammenhang mit Flussnetzwerken geht, ist die Konstruktion eines maximalen Flusses}\footnote{Man sagt auch \textit{Maximalfluss}\index{Maximalfluss}\index{Fluss!Maximal-}.}.
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Schnitte"                                                                   %
+%------------------------------------------------------------------------------%
+
+\section{Schnitte}
+\label{section:9:2}
+
+Eine wichtige Rolle bei der Konstruktion eines maximalen Flusses spielen \textit{obere Schranken}, die kein Fluss übertreffen kann. Ein einfaches Beispiel für eine solche obere Schranke erhält man, wenn man sich im Beispiel von Seite \pageref{page:9:1} die drei Kanten anschaut, die von $s$ ausgehen: Die Summe ihrer Kapazitäten ist $5+4+3=12$; folglich kann es keinen Fluss mit einem Wert $>12$ geben.
+
+Oder, anders ausgedrückt: Für alle Flüsse $f$ auf unserem Netzwerk gilt:
+\[
+w(f) \leq 12.
+\]
+
+Bei der Suche nach besonders guten oberen Schranken, die kein Fluss übertreffen kann, spielt der folgende Begriff eines Schnitts von $N=(G,c,s,t)$ eine besonders wichtige Rolle.
+
+\begin{Definition}[Definition]
+Gegeben sei eine Zerlegung der Knotenmenge $V$ von $N$ in zwei disjunkte Mengen $S$ und $T$ derart, dass $s\in S$ und $t \in T$ gilt. (Mit anderen Worten: Es gelte $s \in S$, $t \not\in S$ und $T = \overline{S}$.) Dann bezeichnen wir die Menge
+\[
+(S,T)
+\]
+als einen \textit{Schnitt}\index{Schnitt} von $N$.
+\end{Definition}
+
+Ein Schnitt $(S,T)$ ist also eine Menge von Kanten, nämlich die Menge aller Kanten $(u,v) \in E$, für die $u \in S$ und $v \in T$ gilt.
+
+Wir illustrieren den Begriff eines Schnitts anhand unseres Beispiels (siehe Seite \pageref{page:9:1}):
+
+\begin{enumerate}[\bfseries 1.]
+\item Es seien $S = \bigl\{ s,a,b,c \bigr\}$ und $T = \bigl\{ d,e,t \bigr\}$. Dann gilt 
+\[
+\bigl(S,T\bigr) = \Bigl\{ (s,d),\ (a,d),\ (c,e),\ (c,t),\ (b,t) \Bigr\}.
+\]
+Dasselbe als Zeichnung:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,0)(6.5,4)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$(4)$}
+
+\psarc[linewidth=2pt](8,-2){4.9}{110}{160}
+\uput{0}[0](0.0, 0.5){$S$}
+\uput{0}[0](6.0, 0.5){$T$}
+
+\small
+\end{pspicture}
+\end{center}
+
+\item Es seien $S = \bigl\{ s,c,d \bigr\}$ und $T = \bigl\{ a,b,e,t \bigr\}$. Dann gilt 
+\[
+\bigl(S,T\bigr) = \Bigl\{ (s,a),\ (s,b),\ (c,e),\ (c,t),\ (d,e) \Bigr\}.
+\]
+Dasselbe als Zeichnung:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-1.0)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.6, 0.0){$(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$(4)$}
+
+\psbcurve[linewidth=2pt](-0.5,2)(1,0.25)(4.1,-0.5)(4.1,2.5)(2,1.4)(0,2.5)(-0.5,2)
+\uput{0}[0](1.0, 0.5){$S$}
+\uput{0}[0](6.0, 0.5){$T$}
+
+\small
+\end{pspicture}
+\end{center}
+
+\item Es seien $S = \bigl\{ s \bigr\}$ und $T = \bigl\{ a,b,c,d,e,t \bigr\}$. Dann gilt 
+\[
+\bigl(S,T\bigr) = \Bigl\{ (s,a),\ (s,b),\ (s,d) \Bigr\}.
+\]
+Dasselbe als Zeichnung:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture*}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$(4)$}
+
+\psarc[linewidth=2pt](-4,2){5.5}{270}{90}
+\uput{0}[0](0.0, 0.5){$S$}
+\uput{0}[0](6.0, 0.5){$T$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+
+\end{enumerate}
+
+Der Schnitt $(S,T)$ aus dem letzten Beispiel ist derjenige, der zur Schranke
+\[
+w(f) \leq 12
+\]
+für alle Flüsse $f$ auf $N$ geführt hat.
+
+In ähnlicher Weise führen alle Schnitte von $N$ zu einer oberen Schranke von $w(f)$; dies soll im Folgenden präzisiert werden.
+
+Zu diesem Zweck definieren wir, was die Kapazität eines Schnitts ist.
+
+\begin{Definition}[Definition]
+Ist $(S,T)$ ein Schnitt von $N$, so wird die Zahl
+\[
+c(S,T) = \sum\limits_{e \in (S,T)}{c(e)}
+\]
+als \textit{Kapazität}\index{Kapazität}\index{Kante!Kapazität einer} von $(S,T)$ bezeichnet.
+\end{Definition}
+
+Die Kapazität eines Schnitts $(S,T)$ ist somit die Summe der Kapazitäten aller Kanten, die von $S$ ausgehen und nach $T$ führen.
+
+\textbf{Beispiele}. Es liege das Netzwerk von Seite \pageref{page:9:1} zugrunde und wir betrachten die obigen Beispiele für Schnitte $(S,T)$.
+\begin{enumerate}[\bfseries 1.]
+\item $S = \bigl\{ s,a,b,c \bigr\}$, $T = \bigl\{ d,e,t \bigr\}$: Dann gilt $c(S,T) = 3+7+3+4+3 = 20$.
+\item $S = \bigl\{ s,c,d \bigr\}$, $T = \bigl\{ a,b,e,t \bigr\}$: Dann gilt $c(S,T) = 4+5+3+4+5 = 21$.
+\item $S = \bigl\{ s \bigr\}$, $T = \bigl\{ a,b,c,d,e,t \bigr\}$: Dann gilt $c(S,T) = 4+5+3 = 12$.
+\end{enumerate}
+
+\begin{Definition}[Feststellung 2]
+Ist $f$ ein beliebiger Fluss auf $N = (G,c,s,t)$ und ist $(S,T)$ ein beliebiger Schnitt, so gilt
+\begin{equation}
+\label{eq:9:1}
+w(f) \leq c(S,T).
+\end{equation}
+\end{Definition}
+
+Diese Feststellung gibt die anschaulich einleuchtende Tatsache wieder, dass von $s$ nach $t$ niemals mehr fließen kann, als die Kapazität eines Schnitts zulässt.
+
+Zum Beweis von Feststellung 2 benötigen wir zunächst einen \textit{Hilfssatz, der auch noch an anderer Stelle nützlich sein wird}. Die Richtigkeit von Feststellung 2 wird sich -- wie wir unten sehen werden -- als unmittelbare Folgerung aus dem Hilfssatz ergeben.
+
+\begin{Satz}[Hilfssatz]\label{page:9:4}
+Ist $f$ ein Fluss auf $N = (G,c,s,t)$ mit $G=(V,E)$ und ist $S$ eine Teilmenge von $V$ mit $s \in S$ und $t \not\in S$, so gilt
+\begin{equation}
+\label{eq:9:2}
+w(f) = f^+(S) - f^-(S).
+\end{equation}
+\end{Satz}
+
+\textbf{Beweis des Hilfssatzes}. Mit $E(S)$ bezeichnen wir die Menge aller Kanten $(u,v)$ von $N$, für die sowohl $u \in S$ als auch $v \in S$ gilt. Man beachte, dass die folgenden Gleichungen gelten:
+\begin{align*}
+\sum\limits_{v \in S}{f^+(v)} &= f^+(S) + \sum\limits_{e \in E(S)}{f(e)} \\
+\sum\limits_{v \in S}{f^-(v)} &= f^-(S) + \sum\limits_{e \in E(S)}{f(e)}
+\end{align*}
+
+Es folgt
+\[
+\sum\limits_{v \in S}{f^+(v)} - \sum\limits_{v \in S}{f^-(v)} = f^+(S) - f^-(S),
+\]
+woraus sich für $w(f)$ die in (\ref{eq:9:2}) behauptete Identität wie folgt ergibt:
+\begin{align*}
+w(f) 
+&= f^+(s) \\
+&= f^+(s) - \underbrace{f^-(s)}_{=0} + \sum\limits_{\genfrac{}{}{0pt}{1}{v \in S}{v \neq s}}{\underbrace{\Bigl( f^+(v) - f^-(v) \Bigr)}_{=0}}\\
+&= \sum\limits_{v \in S}{\Bigl( f^+(v) - f^-(v) \Bigr)} \\
+&= \sum\limits_{v \in S}{f^+(v)} - \sum\limits_{v \in S}{f^-(v)} \\
+&= f^+(S) - f^-(S). \quad \Box
+\end{align*}
+
+Erfüllt $S$ die Voraussetzungen des Hilfssatzes, gilt also $S \subseteq V$, $s \in S$ und $t \not\in S$, so wollen wir $f^+(S) - f^-(S)$ als den \textit{Nettofluss}\index{Nettofluss}\index{Fluss!Netto-} von $S$ bezeichnen. Wir können den Hilfssatz also auch wie folgt aussprechen: Ist $f$ ein Fluss auf $N$ und $S$ eine Teilmenge der Knotenmenge von $N$, für die $s \in S$ und $t \not\in S$ gilt, \textit{so ist der Flusswert von $f$ gleich dem Nettofluss von $S$}.
+
+Der \textbf{Beweis von Feststellung 2} ist nun ganz kurz; aufgrund des Hilfssatzes ergibt sich die Behauptung (\ref{eq:9:1}) wie folgt:
+\[
+w(f) = f^+(S) - f^-(S) \leq f^+(S) = f(S,T) \leq c(S,T). \quad \Box
+\]
+
+\begin{Definition}[Definition]
+Ein Schnitt $(S,T)$ von $N$ heißt \textit{minimal}\index{minimaler Schnitt}\index{Schnitt!minimaler}, falls $c(S,T) \leq c(S',T')$ für alle Schnitte $(S',T')$ von $N$ gilt.
+\end{Definition}
+
+Ist $f_0$ ein maximaler Fluss und $(S_0,T_0)$ ein minimaler Schnitt von $N$, so gilt nach Feststellung 2:
+\begin{equation}
+\label{eq:9:3}
+w(f_0) \leq c(S_0,T_0).
+\end{equation}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Das Max-Flow Min-Cut Theorem und der Labelling-Algorithmus                  %
+%  von Ford und Fulkerson"                                                     %
+%------------------------------------------------------------------------------%
+
+\section{Das Max-Flow Min-Cut Theorem und der Labelling-Algorithmus von Ford und Fulkerson}
+\label{section:9:3}
+
+Der folgende Satz von Ford und Fulkerson aus dem Jahre 1956 besagt, dass in (\ref{eq:9:3}) sogar Gleichheit gilt.
+
+\begin{Satz}[Satz (Max-Flow Min-Cut Theorem)]
+\index{Max-Flow Min-Cut Theorem}
+In einem Netzwerk ist der Wert eines maximalen Flusses immer gleich der Kapazität eines minimalen Schnittes.
+\end{Satz}
+
+\textbf{Kurzfassung}: max-flow $=$ min-cut.
+
+Bevor wir den Satz beweisen\index{Beweis!des Max-Flow Min-Cut Theorems}, beschreiben wir eine \textit{Methode, mit der man einen gegebenen Fluss $f$ verbessern kann} -- vorausgesetzt natürlich, dass $f$ nicht bereits maximal ist.
+
+\textit{Diese Methode ist von zentraler Bedeutung}: Sie liefert nicht nur einen Beweis des Max-Flow Min-Cut Theorems, sondern ist auch die Grundlage für einen \textit{Algorithmus} zur Berechnung eines maximalen Flusses.
+
+Wir erläutern die Methode anhand unseres obigen Beispiels.
+
+\textbf{Beispiel}.\label{page:9:9} Für das Netzwerk von Seite \pageref{page:9:1} sei $f$ wie auf Seite \pageref{page:9:2} f. gegeben. Wir betrachten den (gerichteten) Pfad $(s,b,t)$, der die Quelle $s$ mit der Senke $t$ verbindet. Weder für die Kante $(s,b)$ noch für die Kante $(b,t)$ wird durch $f$ die Kapazität ausgeschöpft. Deshalb können wir in diesen beiden Kanten den Fluss soweit erhöhen, bis in einer der beiden Kanten die Kapazität erreicht ist. Dementsprechend definieren wir\footnote{Ist $(u,v)$ eine Kante, so müsste man streng genommen $f((u,v))$, $f_1((u,v))$, $c((u,v))$ etc. schreiben; der Einfachheit halber schreiben wir stattdessen immer $f(u,v)$, $f_1(u,v)$, $c(u,v)$ etc., was \enquote{erlaubt} und üblich ist, da Missverständnisse nicht möglich sind.}:
+\begin{align*}
+f_1(s,b) &= 2, \\
+f_1(b,t) &= 3, \\
+f_1(x,y) &= f(x,y) \text{ für alle anderen Kanten}.
+\end{align*}
+
+Da wir in beiden Kanten des Pfades $(s,b,t)$ den Fluss um den gleichen Betrag angehoben haben (nämlich um 1), ist $f_1$ wiederum ein Fluss\footnote{Man beachte: (F2) gilt nach wie vor.}:
+\[
+w(f_1) = w(f) + 1 = 7 + 1 = 8.
+\]
+
+Ersetzen wir in der Zeichnung von Seite \pageref{page:9:3} den alten Fluss $f$ durch den neuen Fluss $f_1$, so erhalten wir die folgende Darstellung:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$4(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$2(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$2(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$1(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$2(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$1(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$3(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$1(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$1(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$3(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$4(4)$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Wollen wir den Fluss weiter verbessern, so müssen wir etwas raffinierter vorgehen: 
+\begin{equation*}
+\text{Wir durchlaufen Kanten \textit{auch in entgegengesetzter Richtung}.}
+\end{equation*}
+
+\textit{Genauer}: Wir betrachten die Folge
+\begin{equation}
+\label{eq:9:4}
+(s,b,a,c,t)
+\end{equation}
+von Knoten. Längs dieser Folge bewegen wir uns in  unserem Netzwerk von $s$ nach $t$, wobei wir die Kante zwischen $a$ und $b$ rückwärts durchlaufen.
+
+Man beachte: Für die \enquote{Vorwärtskanten}\index{Vorwärtskanten}\index{Kante!Vorwärts-} ist dabei die Kapazität nicht ausgeschöpft, und für die rückwärts durchlaufene Kante $e=(a,b)$ gilt $f_1(e) > 0$. Wir definieren $f_2$ wie folgt:
+\begin{align*}
+f_2(s,b) &= f_1(s,b)+1 \\
+f_2(a,b) &= f_1(a,b)-1 \\
+f_2(a,c) &= f_1(a,c)+1 \\
+f_2(c,t) &= f_1(c,t)+1 \\
+\intertext{sowie}
+f_2(x,y) &= f_1(x,y)
+\end{align*}
+für die übrigen Kanten. Es ergibt sich die folgende Darstellung von $f_2$:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$4(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$3(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$2(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$0(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$3(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$1(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$3(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$1(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$2(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$3(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$4(4)$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Da wir für alle \enquote{Vorwärtskanten} den Fluss um denselben Betrag erhöht haben und gleichzeitig für alle \enquote{Rückwärtskanten}\index{Rückwärtskante}\index{Kante!Rückwärts-} den Fluss um genau diesen Betrag erniedrigt haben (ohne die Kapazitäten zu überschreiten bzw. $0$ zu unterschreiten), ist $f_2$ wiederum ein Fluss\footnote{Man beachte: (F2) gilt nach wie vor.}. Es gilt
+\[
+w(f_2) = w(f_1) + 1 = 8+1 = 9.
+\]
+
+In ähnlicher Weise können wir den Fluss $f_2$ verbessern: Diesmal benutzen wir die Knotenfolge
+\begin{equation}
+\label{eq:9:5}
+(s,d,e,c,t)
+\end{equation}
+und erhalten ganz entsprechend einen verbesserten Fluss $f_3$, für den $w(f_3)=10$ gilt:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(6,2){3pt}{T} \uput{0.20}[  0](6,2){$t$}
+\cnode*(2,2){3pt}{A} \uput{0.20}[270](2,2){$a$}
+\cnode*(4,4){3pt}{B} \uput{0.20}[ 90](4,4){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{D} \uput{0.20}[270](4,0){$d$}
+\cnode*(5,0){3pt}{E} \uput{0.275}[270](5,0){$e$}
+
+\ncline{->}{S}{A} \uput{0.05}[ 90](1.0, 2.0){$4(4)$}
+\ncline{->}{S}{B} \uput{0.15}[ 90](2.0, 3.0){$3(5)$}
+\ncline{->}{S}{D} \uput{0.15}[270](2.0, 1.0){$3(3)$}
+\ncline{->}{A}{B} \uput{0.15}[  0](3.0, 3.0){$0(6)$}
+\ncline{->}{A}{C} \uput{0.05}[ 90](3.0, 2.0){$3(5)$}
+\ncline{->}{A}{D} \uput{0.15}[  0](3.0, 1.0){$1(7)$}
+\ncline{->}{B}{T} \uput{0.15}[  0](5.0, 3.0){$3(3)$}
+\ncline{->}{C}{E} \uput{0.15}[  0](4.5, 1.0){$0(3)$}
+\ncline{->}{C}{T} \uput{0.05}[ 90](5.0, 2.0){$3(4)$}
+\ncline{->}{D}{E} \uput{0.05}[270](4.5, 0.0){$4(5)$}
+\ncline{->}{E}{T} \uput{0.15}[  0](5.5, 1.0){$4(4)$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Nun können wir keine Knotenfolge mehr finden, die wie die Folgen (\ref{eq:9:4}) und (\ref{eq:9:5}) geeignet wäre, den Fluss $f_3$ zu verbessern. Wir haben daher den \textit{Verdacht}, dass $f_3$ ein maximaler Fluss ist.
+
+\textbf{Frage}: Wie können wir diesen Verdacht in eine Gewissheit verwandeln?
+
+\textbf{Antwort}: Unser Verdacht wird Gewissheit, wenn wir einen \textit{Beleg}\footnote{Statt \textit{Beleg} sagt man auch \textit{Zertifikat}.} für die Optimalität von $f_3$ vorlegen.
+
+\textit{Hier ist der gewünschte Beleg}: Der Schnitt $(S,T)$ mit $S= \bigl\{ s,b \bigr\}$ und $T = \bigl\{ a,c,d,e,t \bigr\}$ ist ein Zertifikat für die Optimalität von $f_3$, da für diesen Schnitt $c(S,T)=10$ gilt. Da ebenfalls $w(f_3)=10$ gilt, wissen wir (vgl. (\ref{eq:9:1})): Einen besseren Fluss kann es nicht geben.
+
+Im vorangegangenen Beispiel gab es drei Flussvergrößerungen: Beim Übergang zu $f_1$ kam zunächst die Knotenfolge $(s,b,t)$ zum Einsatz, anschließend wurden die Knotenfolgen (\ref{eq:9:4}) und (\ref{eq:9:5}) verwendet. Derartige Knotenfolgen werden \textit{flussvergrößernde Pfade} genannt. Bevor wir diesen Begriff zusammen mit verwandten Begriffen definieren, seien \textit{zwei Bemerkungen} vorausgeschickt:
+\begin{enumerate}[\bfseries 1.]
+	\item Wenn eine Rückwärtskante in einem flussvergrößernden Pfad $P$ vorkommt, so handelt es sich bei $P$ nicht um einen Pfad im gerichteten Graphen $G=(V,E)$. (\enquote{Pfade im üblichen Sinne enthalten keine Rückwärtskanten.}) Es ist trotzdem üblich, von einem Pfad zu sprechen, denn: Die Knotenfolge von $P$ beschreibt einen Pfad \textit{im $G$ zugrundeliegenden ungerichteten Graphen}. Dasselbe kurz und knapp gesagt: \textit{$P$ ist ein Pfad, wenn man die Kantenrichtungen ignoriert}.
+\end{enumerate}
+
+Die zweite Bemerkung hat mit der Tatsache zu tun, dass in $G$ Paare von \textit{antiparallelen Kanten}\index{antiparallele Kante}\index{Kante!antiparallele} zugelassen sind: Es könnte, wie in der nachfolgenden Figur, neben der Kante $(a,b)$ auch die Kante $(b,a)$ in $G$ vorkommen.
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,0.0)(2.5,1.5)
+	\footnotesize
+	
+	\cnode*(0,1){3pt}{A} \uput{0.15}[180](0,1){$a$}
+	\cnode*(2,1){3pt}{B} \uput{0.15}[  0](2,1){$b$}
+	
+	\ncarc[arcangle=30]{->}{A}{B}
+	\ncarc[arcangle=30]{->}{B}{A}
+
+	\small
+	\uput{0.75}[270](1,1){\text{Ein Paar von antiparallelen Kanten.}}
+	
+	\end{pspicture}
+\end{center}
+
+\begin{enumerate}[\bfseries 1.]
+\addtocounter{enumi}{1}
+	\item Da in $G$ antiparallele Kanten vorkommen können, werden wir gelegentlich nicht nur die Knoten eines flussvergrößernden Pfades $P$ angeben, sondern zusätzlich auch die Kanten von $P$. Dies wird zum Beispiel weiter unten in (\ref{eq:9:6}) so gemacht und dient der Klarheit und Eindeutigkeit: Falls es zwei Möglichkeiten gibt, soll eindeutig feststehen, welche Kante zu $P$ gehört und welche nicht.
+\end{enumerate}
+
+\begin{Definition}[Definition]
+	Gegeben sei ein Netzwerk $N=(G,c,s,t)$ mit $G=(V,E)$ sowie ein Fluss $f$ auf $N$; $k\geq 1$ sei eine ganze Zahl. Wir betrachten die Folge
+	\begin{equation}
+	\label{eq:9:6}
+	P: s = v_1,e_1,\ldots,e_{k-1},v_k,
+	\end{equation}
+	die in $s$ beginnt aber nicht unbedingt in $t$ endet. Auf $P$ wechseln sich Knoten und Kanten ab. Genauer: Es gilt $v_i \in V$ ($i=1,\ldots,k$) und $e_i \in E$ ($i=1,\ldots,k-1$). Außerdem soll es in $P$ \textit{keine Knotenwiederholungen} geben.
+	
+	\begin{enumerate}[a)]
+		\item Eine solche Folge $P$ nennt man einen \textit{flussvergrößernden}\index{flussvergrößernder Pfad}\index{Pfad!flussvergrößernder} oder \textit{zunehmenden Pfad}\index{zunehmender Pfad}\index{Pfad!zunehmender}, falls $v_k=t$ gilt und falls für jedes $i \in \bigl\{ 1,\ldots,k-1 \bigr\}$ entweder
+		\begin{equation}
+		\label{eq:9:7}
+		e_i = (v_i,v_{i+1}) \quad\text{und}\quad f(v_i,v_{i+1}) < c(v_i, v_{i+1})
+		\end{equation}
+		oder
+		\begin{equation}
+		\label{eq:9:8}
+		e_i = (v_{i+1}, v_i) \quad\text{und}\quad 0 < f(v_{i+1}, v_i)
+		\end{equation} 
+		erfüllt ist.
+		
+		\item Wir werden auch den Fall betrachten, dass $P$ alle unter a) genannten Bedingungen erfüllt, nur $v_k=t$ gilt möglicherweise nicht. Dann sprechen wir von einem \textit{zunehmenden Pfad nach $v_k$}\index{zunehmender Pfad nach $v_k$}. \label{page:9:7}
+		
+		\item Gilt (\ref{eq:9:7}), so wird $e_i$ \textit{Vorwärtskante}\index{Vorwärtskante}\index{Kante!Vorwärts-} von $P$ genannt; gilt (\ref{eq:9:8}), so heißt $e_i$ \textit{Rückwärtskante}\index{Rückwärtskante}\index{Kante!Rückwärts-} von $P$.
+	\end{enumerate}
+\end{Definition}
+
+\textit{Weitere Sprechweisen}: Unter den Voraussetzungen der obigen Definition sagen wir auch \textit{$f$-vergrößernder Pfad} anstelle von flussvergrößernder Pfad. Die entsprechenden englischen Bezeichnungen sind übrigens \textit{augmenting path} bzw. \textit{$f$-augmenting path}. Wir betrachten das folgende Beispiel:
+
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(12.5,2.5)
+\footnotesize
+
+\cnode*( 0,0.5){3pt}{V1} \uput{0.20}[270]( 0,0.5){$s=v_1$}
+\cnode*( 2,1.0){3pt}{V2} \uput{0.20}[270]( 2,1.0){$v_2$}
+\cnode*( 4,0.0){3pt}{V3} \uput{0.20}[270]( 4,0.0){$v_3$}
+\cnode*( 6,1.5){3pt}{V4} \uput{0.20}[270]( 6,1.5){$v_4$}
+\cnode*( 8,1.0){3pt}{V5} \uput{0.20}[270]( 8,1.0){$v_5$}
+\cnode*(10,2.0){3pt}{V6} \uput{0.20}[270](10,2.0){$v_6$}
+\cnode*(12,1.5){3pt}{V7} \uput{0.20}[270](12,1.5){$v_7=t$}
+
+\ncline{->}{V1}{V2}
+\ncline{->}{V2}{V3}
+\ncline{->}{V4}{V3}
+\ncline{->}{V4}{V5}
+\ncline{->}{V6}{V5}
+\ncline{->}{V6}{V7}
+
+\small
+\end{pspicture}
+\end{center}
+
+Die Vorwärtskanten in diesem Beispiel sind $(v_1,v_2)$, $(v_2,v_3)$, $(v_4,v_5)$, $(v_6,v_7)$ und die Rückwärtskanten sind $(v_4,v_3)$ und $(v_6,v_5)$. Soll dies ein flussvergrößernder Pfad sein, so muss also gelten:
+\begin{align*}
+f(v_1,v_2) &< c(v_1,v_2) \\
+f(v_2,v_3) &< c(v_2,v_3) \\
+f(v_4,v_3) &> 0 \\
+f(v_4,v_5) &< c(v_4,v_5) \\
+f(v_6,v_5) &> 0 \\
+f(v_6,v_7) &< c(v_6,v_7).
+\end{align*}
+
+
+Gegeben sei, wie in obiger Definition, ein Netzwerk $N=(G,c,s,t)$ mit $G=(V,E)$ sowie ein Fluss $f$ auf $N$. Existiert ein flussvergrößernder Pfad $P$, so kann man $P$ dazu benutzen, um aus $f$ einen Fluss $f^+$ zu gewinnen, für den $w(f^+) > w(f)$ gilt; anhand des Beispiels auf den Seiten \pageref{page:9:9} ff. hatten wir dies bereits gesehen -- allgemein geht dies wie folgt (Bezeichnungen wie in (\ref{eq:9:6})): Zu jeder Kante von $P$ definieren wir eine Zahl $d_i$, indem wir \textit{für Vorwärtskanten}\index{Vorwärtskanten}\index{Kante!Vorwärts-} $(v_i, v_{i+1})$ festsetzen:
+\[
+d_i = c(v_i,v_{i+1}) - f(v_i,v_{i+1});
+\]
+
+\textit{für Rückwärtskanten}\index{Rückwärtskante}\index{Kante!Rückwärts-} sei dagegen
+\[
+d_i = f(v_{i+1},v_i).
+\]
+
+Dann gilt in jedem Fall $d_i > 0$. Wir setzen
+\[
+d := \min \Bigl\{ d_i : i = 1,\ldots,k-1 \Bigr\},
+\]
+d.h., $d$ ist der kleinste Wert unter den $d_i$. Es gilt $d > 0$.
+
+\textit{Wir definieren den neuen Fluss $f^+$ wie folgt}:
+\begin{itemize}
+\item Es gelte $f^+(v_i, v_{i+1}) = f(v_i, v_{i+1}) + d$, falls $(v_i, v_{i+1})$ eine Vorwärtskante von $P$ ist.
+\item Falls $(v_{i+1},v_i)$ eine Rückwärtskante von $P$ ist, so sei $f^+(v_{i+1},v_i) = f(v_{i+1},v_i)-d$.
+\item Für alle anderen Kanten $e$ lassen wir den Fluss durch $e$ unverändert, d.h. $f^+(e)=f(e)$.
+\end{itemize}
+
+Aufgrund der Konstruktion von $f^+$ gilt dann: $f^+$ ist ein Fluss auf $N$ mit
+\begin{equation}
+\label{eq:9:9}
+w(f^+) = w(f) + d.
+\end{equation}
+
+Wegen $d > 0$ haben wir also $w(f^+) > w(f)$.
+ 
+\textit{Man beachte}: Alle Kapazitäten sind ganze Zahlen, da wir ja $c(e) \in \N \cup \bigl\{ 0 \bigr\}$ für alle Kanten $e \in E$ voraussetzen.
+
+Sind auch alle $f(e)$ ganze Zahlen, so sprechen wir von einem \textit{ganzzahligen Fluss}\index{ganzzahliger Fluss}\index{Fluss!ganzzahliger}.
+
+Ist $f$ ein ganzzahliger Fluss, so folgt aus der Definition von $d$, dass auch $d$ eine ganze Zahl ist und dass somit $d \geq 1$ gilt. Wir halten fest:
+\begin{equation}
+\label{eq:9:10}
+\textit{Ist $f$ ganzzahlig, so auch $f^+$, und es gilt $w(f^+) \geq w(f)+1$.}
+\end{equation}
+
+Unsere Überlegungen legen das folgende \textit{Verfahren zur Bestimmung eines maximalen Flusses}\index{Verfahren!zur Bestimmung eines maximalen Flusses}\index{Maximalfluss!Verfahren zur Bestimmung} in einem Netzwerk nahe.
+
+\begin{Satz}[Ford-Fulkerson-Methode]
+\begin{enumerate}[\bfseries 1.]
+\item Man startet mit dem \textit{Nullfluss}\index{Nullfluss}\index{Fluss!Null-} $f_0$: Dies ist der (ganzzahlige) Fluss, für den $f_0(e) = 0$ für alle $e \in E$ gilt.
+\item Ist bereits ein ganzzahliger Fluss $f_n$ konstruiert, so suche man nach einem $f_n$-vergrößernden Pfad $P$\footnotemark.
+\begin{enumerate}[\bfseries {2}.1.]
+\item Existiert ein solches $P$, so benutze man $P$, um aus $f_n$ einen ganzzahligen Fluss $f_{n+1}$ mit $w(f_{n+1}) \geq w(f_n)+1$ zu gewinnen; man wiederhole dann 2. mit $f_{n+1}$ anstelle von $f_n$.
+\item Existiert kein solcher Pfad $P$, so ist man fertig, da -- wie wir gleich sehen werden -- in diesem Fall ein Schnitt $(S,T)$ mit $w(f_n) = c(S,T)$ existiert, was ja bedeutet, dass $w(f_n)$ maximal sein muss.
+\end{enumerate}
+\end{enumerate}
+\end{Satz}
+\footnotetext{Es ist nicht schwer, diese Suche systematisch zu betreiben; Details hierzu werden später besprochen.}
+
+Man nennt das beschriebene Verfahren zur Bestimmung eines maximalen Flusses die \textit{Ford-Fulkerson-Methode}\index{Ford-Fulkerson-Methode}\index{Methode!Ford-Fulkerson-} (oder das Ford-Fulkerson-Verfahren\index{Ford-Fulkerson-Verfahren}\index{Verfahren!Ford-Fulkerson-} oder den Ford-Fulkerson-Algorithmus\index{Ford-Fulkerson-Algorithmus}\index{Algorithmus!Ford-Fulkerson-}).
+
+Der \textbf{wichtigste Punkt}, der noch zu klären ist, betrifft die in \textbf{2.2.} gemachte Aussage, dass es im Fall, dass kein $f_n$-vergrößernder Pfad existiert, immer einen Schnitt $(S,T)$ mit
+\begin{equation}
+\label{eq:9:11}
+w(f_n) = c(S,T)
+\end{equation}
+geben muss.
+
+Wir werden sehen, dass man als Ergebnis des Ford-Fulkerson-Algorithmus nicht nur einen Maximalfluss $f_n$ erhält, sondern \textit{dass man im letzten Schritt des Verfahrens gleichzeitig auch einen Schnitt $(S,T)$, für den (\ref{eq:9:11}) gilt, ganz umsonst mitgeliefert bekommt}.
+
+Das kommt Ihnen ja sicherlich bekannt vor. Schauen Sie sich noch einmal Seite \pageref{page:7:4} an!
+
+Am Ende des Verfahrens erhält man also neben einem maximalen Fluss auch einen minimalen Schnitt \textit{und hat somit ein \textbf{Zertifikat für die Optimalität des gefundenen Flusses}\index{Zertifikat!für Optimalität eines Flusses}\index{Fluss!Zertifikat für Optimalität} in der Hand}. (Stellen Sie sich vor, dass jemand anderes bezweifelt, dass der von Ihnen gefundene Fluss $f^*$ tatsächlich maximal ist. Dann brauchen Sie nur den ebenfalls gefundenen minimalen Schnitt $(S^*,T^*)$ aus der Tasche zu holen und darauf hinzuweisen, dass
+\[
+w(f^*) = c(S^*,T^*)
+\]
+gilt: Ihr Gegenüber wird sofort verstummen.) Beim Ford-Fulkerson-Verfahren handelt es sich also (ebenso wie beim Simplexverfahren) um einen \textit{zertifizierenden Algorithmus}\index{zertifizierender Algorithmus}\index{Algorithmus!zertifizierender} (vgl. auch Seite \pageref{page:7:5}).
+
+Hier ist nun der noch fehlenden Baustein.
+
+\begin{Definition}[Feststellung 3]
+Ist $N = (G,c,s,t)$ ein Netzwerk mit $G=(V,E)$ und ist $f$ ein Fluss auf $N$, für den es keinen $f$-vergrößernden Pfad $P$ gibt, so existiert ein Schnitt $(S,T)$ mit $w(f) = c(S,T)$.
+\end{Definition}
+
+Bevor wir diese Feststellung beweisen, erläutern wir die \textit{Grundidee}: Stellen Sie sich vor, dass Sie in der $n$-ten Iteration des Ford-Fulkerson-Verfahrens den Fluss $f_n$ erhalten haben und dass $f_n$ maximal ist -- was Sie allerdings noch nicht wissen. Sie steigen also in die $(n+1)$-te Iteration ein und versuchen einen $f_n$-vergrößernden Pfad $P$ zu konstruieren, wobei Sie bei der Quelle $s$ starten und versuchen, die Senke $t$ mit einem solchen Pfad zu erreichen. Da $f_n$ bereits maximal ist, wird das nicht gelingen -- Sie werden immer nur Knoten $v \neq t$ erreichen.
+
+Die Menge aller Knoten $v$, die Sie auf diese Art erreichen können, nennen wir $S$; die Menge der übrigen Knoten nennen wir $T$.
+
+Es ist nicht schwer, sich zu überlegen, dass für den auf diese Art gefundenen Schnitt $(S,T)$ gilt: $w(f_n) = c(S,T)$; dass dies tatsächlich so ist, wird im Folgenden nachgewiesen.
+
+\textbf{Beweis von Feststellung 3}. Wir setzen voraus, dass $N=(G,c,s,t)$ ein Netzwerk mit $G=(V,E)$ ist und dass $f$ ein Fluss auf $N$ ist, für den es keinen $f$-vergrößernden Pfad gibt. 
+
+Wir definieren $S$ als die Menge derjenigen $v \in V$, für die es einen zunehmenden Pfad nach $v$ gibt. Dann gilt $s \in S$, da der einpunktige Pfad, der nur aus $s$ besteht, ein zunehmender Pfad nach $s$ ist. Außerdem gilt $t \not\in S$, da es andernfalls einen $f$-vergrößernden Pfad geben würde. (Man beachte: Die Begriffe \textit{zunehmender Pfad nach $t$} und \textit{f-vergrößernder Pfad} bedeuten dasselbe.) Wir setzen $T = \overline{S}$. Es handelt sich bei $(S,T)$ also um einen Schnitt.
+
+\textit{Wir zeigen nun, dass für diesen Schnitt $(S,T)$ gilt}:
+\begin{equation}
+\label{eq:9:12}
+w(f) = c(S,T).
+\end{equation}
+
+Zum Nachweis von (\ref{eq:9:12}) sei $(x,y)$ eine beliebige Kante aus $E$ mit $x \in S$ und $y \in T$. Wegen $x \in S$ existiert ein zunehmender Pfad nach $x$, den wir $P_x$ nennen wollen (siehe Zeichnung). Es folgt $f(x,y) = c(x,y)$, \textit{da man andernfalls $P_x$ zu einem zunehmenden Pfad nach $y$ verlängern könnte}, im Widerspruch zu $y \not\in S$.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,0.0)(5.5,2.5)
+\footnotesize
+
+\pscircle(1,1){1}
+\pscircle(4,1){1}
+
+\cnode*(1.4,1.4){3pt}{X}
+\cnode*(0.5,0.75){3pt}{S}
+\cnode*(3.6,1.4){3pt}{Y} 
+\cnode*(4.5,0.75){3pt}{T}
+
+\ncarc[arcangle=25]{->}{X}{Y}
+\psbcurve(0.5,0.75)(0.75,0.75)(1.25,0.5)(1.4,1.4)
+
+
+\uput{0.2}[180](0.5,0.75){$s$}
+\uput{0.2}[  0](4.5,0.75){$t$}
+\uput{0.2}[180](1.4,1.4){$x$}
+\uput{0.2}[  0](3.6,1.4){$y$}
+\uput{0.2}[ 90](1,2){$S$}
+\uput{0.2}[ 90](4,2){$T$}
+\uput{0.2}[270](1,0.65){$P_x$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Da $(x,y)$ eine beliebige Kante aus $E$ mit $x \in S$ und $y \in T$ ist, gilt also $f(x,y) = c(x,y)$ für alle derartigen Kanten, d.h., es gilt:
+\[
+f^+(S) = f(S,T) = c(S,T).
+\]
+
+Auf eine ganz ähnliche Art findet man, dass gilt (Übungsaufgabe!):
+\[
+f^-(S) = f(T,S) = 0.
+\]
+
+Aufgrund des Hilfssatzes (vgl. Seite \pageref{page:9:4}) wissen wir, dass
+\[
+w(f) = f^+(S) - f^-(S)
+\]
+gilt. Insgesamt ergibt sich demnach:
+\[
+w(f) = f^+(S) - f^-(S) = c(S,T). \quad \Box
+\]
+
+\textbf{Zu guter Letzt}: Ist $K = \sum\limits_{e \in E}{c(e)}$ die Summe aller in $N$ vorkommenden Kantenkapazitäten, so gilt aufgrund von Feststellung 2 natürlich $w(f) \leq K$. \textit{Dadurch ist sichergestellt, dass man beim Ford-Fulkerson-Verfahren nach endlich vielen Flussvergrößerungen fertig ist. (Man beachte vor allem (\ref{eq:9:10})!)}
+
+Das Verfahren terminiert also, man kommt nach endlich vielen Flussvergrößerungen zu \textbf{2.2.}, womit auch das \textit{Max-Flow Min-Cut Theorem}\index{Max-Flow Min-Cut Theorem} bewiesen ist\index{Beweis!des Max-Flow Min-Cut Theorems}.
+
+Das Ford-Fulkerson-Verfahren wird in der englischsprachigen Literatur auch
+\begin{center}
+\textit{labelling algorithm}\index{labelling algorithm}
+\end{center}
+
+genannt; wir werden in Kürze sehen, woher der Name kommt. (Auf Deutsch sagt man übrigens Labelling-Algorithmus\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-} oder Markierungsalgorithmus\index{Markierungsalgorithmus}\index{Algorithmus!Markierungs-}.)
+
+In diesem Abschnitt sind wir (zumindest teilweise) der Darstellung in den folgenden Büchern gefolgt:
+\begin{itemize}
+\item D. Jungnickel: \textit{Graphs, Networks and Algorithms}. Springer-Verlag. 2012. 4. Auflage.
+\item A. Beutelspacher, M.-A. Zschiegner: \textit{Diskrete Mathematik für Einsteiger}. Vieweg-Verlag. 2014. 5. Auflage.
+\end{itemize}
+
+\textit{Wir besprechen nun weitere Details des Labelling-Algorithmus\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-}, wobei wir verstärkt nach Jungnickel vorgehen}; unter anderem lernen wir auch den \textit{Algorithmus von Edmonds und Karp}\index{Algorithmus!von Edmonds und Karp}\index{Edmonds und Karp!Algorithmus von} kennen.
+
+Eine Bezeichnung, die im Jungnickel häufig auftaucht: Ist $e$ eine Kante eines Digraphen, so bezeichnet $e^-$ den Anfangsknoten\index{Anfangsknoten einer Kante}\index{Kante!Anfangsknoten einer} und $e^+$ den Endknoten\index{Endknoten einer Kante}\index{Kante!Endknoten einer} von $e$.
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,0.5)
+\footnotesize
+
+\cnode*(0,0){3pt}{V} \uput{0.20}[180](0,0){$e^-$}
+\cnode*(3,0){3pt}{W} \uput{0.20}[  0](3,0){$e^+$}
+
+\ncline{->}{V}{W} \uput{0.15}[ 90](1.5, 0.0){$e$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Hier zunächst einmal der \textit{Labelling-Algorithmus in Grobform}\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-}, wie er im Jungnickel beschrieben wird\footnote{Zur Erinnerung: Im Englischen heißt flussvergrößernder Pfad \textit{augmenting path}\index{augmenting path}. Um einen flussvergrößernden Pfad $P$ zu beschreiben, genügt es, die Kanten von $P$ anzugeben. In (3) wird deshalb $P=(e_1,\ldots,e_r)$ geschrieben.}:
+
+\begin{center}
+\begin{tabular}{rl}
+(1)& $f(e) \leftarrow 0$ for all edges $e$; \\
+(2)& \textbf{while} there exists an augmenting path with respect to $f$ \textbf{do} \\
+(3)& \qquad let $P = (e_1,\ldots,e_r)$ be an augmenting path from $s$ to $t$; \\
+(4)& \qquad $d \leftarrow \min \bigl( \bigl\{ c(e_i)-f(e_i) : e_i$ is a forward edge in $P \bigr\}$ \\
+   & \qquad\qquad\qquad\quad $\cup\ \bigl\{ f(e_i) : e_i$ is a backward edge in $P \bigr\} \bigr)$; \\
+(5)& \qquad $f(e_i) \leftarrow f(e_i) + d$ for each forward edge $e_i$; \\
+(6)& \qquad $f(e_i) \leftarrow f(e_i) - d$ for each backward edge $e_i$; \\
+(7)& \textbf{od}
+\end{tabular}
+\end{center}
+\label{page:9:5}
+
+Die Markierungen (labels) sind in dieser Grobform noch nicht vorhanden. Sie kommen erst ins Spiel, wenn es um die \textit{Details} geht. Insbesondere ist ja noch festzulegen, auf welche Art die Suche nach einem \enquote{augmenting path} erfolgen soll. Außerdem bietet es sich an, die Suche nach einem solchen Pfad und die Berechnung von $d$ geeignet zu kombinieren. Und schließlich wollen wir ja gar nicht nur einen maximalen Fluss, sondern auch einen minimalen Schnitt bestimmen. All dies führt zur Verwendung von \enquote{labels}. (Es sind übrigens die Knoten, die markiert werden; es geht also nicht um Kanten-, sondern um \textit{Knotenmarkierungen}\index{Knotenmarkierungen}.)
+
+Hier nun die Details des Labelling-Algorithmus\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-} (aus Jungnickel: \textit{Graphs, Networks and Algorithms}, Springer-Verlag (2012, 4. Auflage)):
+
+
+\begin{center}
+\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-}
+\begin{longtable}{rl}
+\multicolumn{2}{l}{\textbf{Labelling algorithm of Ford and Fulkerson}.} \\
+\multicolumn{2}{l}{Let $N = (G, c, s, t)$ be a flow network.} \\
+& \\
+\multicolumn{2}{l}{\textbf{Procedure} FORDFULK$(N, f, S, T)$} \\
+ (1)& \textbf{for} $e \in E$ \textbf{do} $f(e) \leftarrow 0$ \textbf{od} \\
+ (2)& label $s$ with $(-,\infty)$; \\
+ (3)& \textbf{for} $v \in V$ \textbf{do} $u(v) \leftarrow$ false; $d(v) \leftarrow \infty$ \textbf{od} \\
+ (4)& \textbf{repeat} \\
+ (5)& \qquad choose a vertex $v$ which is labelled and satisfies $u(v) =$ false; \\
+ (6)& \qquad \textbf{for} $e \in \bigl\{ e \in E : e^- = v \bigr\}$ \textbf{do} \\
+ (7)& \qquad\qquad \textbf{if} $w=e^+$ is not labelled \textbf{and} $f(e) < c(e)$ \textbf{then} \\
+ (8)& \qquad\qquad $d(w) \leftarrow \min \bigl\{ c(e)-f(e), d(v) \bigr\}$; label $w$ with $(v,+, d(w))$ \textbf{fi} \\
+ (9)& \qquad \textbf{od} \\
+(10)& \qquad \textbf{for} $e \in \bigl\{ e \in E : e^+ = v \bigr\}$ \textbf{do} \\
+(11)& \qquad\qquad \textbf{if} $w=e^-$ is not labelled \textbf{and} $f(e)>0$ \textbf{then} \\
+(12)& \qquad\qquad $d(w) \leftarrow \min \bigl\{ f(e), d(v) \bigr\}$; label $w$ with $(v,-, d(w))$ \textbf{fi}\\
+(13)& \qquad \textbf{od} \\
+(14)& \qquad $u(v) \leftarrow$ true; \\
+(15)& \qquad \textbf{if} $t$ is labelled \\
+(16)& \qquad \textbf{then} let $d$ be the last component of the label of $t$; \\
+(17)& \qquad\qquad $w \leftarrow t$; \\
+(18)& \qquad\qquad \textbf{while} $w \neq s$ \textbf{do} \\
+(19)& \qquad\qquad\qquad find the first component $v$ of the label of $w$; \\
+(20)& \qquad\qquad\qquad \textbf{if} the second component of the label of $w$ is $+$ \\
+(21)& \qquad\qquad\qquad \textbf{then} set $f(e) \leftarrow f(e) + d$ for $e=vw$ \\
+(22)& \qquad\qquad\qquad \textbf{else} set $f(e) \leftarrow f(e) - d$ for $e=wv$ \\
+(23)& \qquad\qquad\qquad \textbf{fi} \\
+(24)& \qquad\qquad\qquad $w \leftarrow v$ \\
+(25)& \qquad\qquad \textbf{od} \\
+(26)& \qquad\qquad delete all labels except for the label of $s$; \\
+(27)& \qquad\qquad \textbf{for} $v \in V$ \textbf{do} $d(v) \leftarrow \infty$; $u(v) \leftarrow$ false \textbf{od} \\
+(28)& \qquad \textbf{fi} \\
+(29)& \textbf{until} $u(v) =$ true for all vertices $v$ which are labelled; \\
+(30)& let $S$ be the set of vertices which are labelled and put $T \leftarrow V \setminus S$
+\end{longtable}
+\end{center}
+
+Eine Anmerkung zu den Bezeichnungen: Die Wahl des Buchstabens $u$ leitet sich von \enquote{untersucht} (engl. \textit{scanned}) her; $u(v)=\text{true}$ bedeutet dementsprechend, dass der Knoten $v$ in der jeweiligen Iteration bereits \textit{untersucht} wurde. Entsprechend bedeutet $u(v)=\text{false}$, dass $v$ in der jeweiligen Iteration noch nicht untersucht wurde. Statt \enquote{untersucht} sagt man auch \textit{inspiziert}.
+\index{untersuchter Knoten}\index{Knoten!untersuchter}
+\index{inspizierter Knoten}\index{Knoten!inspizierter}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Der Algorithmus von Edmonds und Karp"                                       %
+%------------------------------------------------------------------------------%
+
+\section{Der Algorithmus von Edmonds und Karp}
+\label{section:9:4}
+
+Einen \enquote{Schönheitsfehler} hat der vorgestellte Algorithmus allerdings noch. Das wird deutlich, wenn wir uns das folgende Beispiel anschauen:
+
+\begin{center}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(8.5,4.5)
+
+\cnode*(0,2){3pt}{S}  \uput{0.2}[180](0,2){$s$}
+\cnode*(4,4){3pt}{A}  \uput{0.2}[ 90](4,4){$a$}
+\cnode*(4,0){3pt}{B}  \uput{0.2}[270](4,0){$b$}
+\cnode*(8,2){3pt}{T}  \uput{0.2}[  0](8,2){$t$}
+\cnode*(2,3){3pt}{V1} \uput{0.2}[ 90](2,3){$v_1$}
+\cnode*(2,1){3pt}{V2} \uput{0.2}[270](2,1){$v_2$}
+\cnode*(6,3){3pt}{V3} \uput{0.2}[ 90](6,3){$v_3$}
+\cnode*(6,1){3pt}{V4} \uput{0.2}[270](6,1){$v_4$}
+
+\ncline{->}{S}{V1} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{S}{V2} \nbput[nrot=:U]{$(100000)$}
+\ncline{->}{A}{B}  \naput{$(1)$}
+\ncline{->}{A}{V3} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{B}{V4} \nbput[nrot=:U]{$(100000)$}
+\ncline{->}{V1}{A} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{V2}{B} \nbput[nrot=:U]{$(100000)$}
+\ncline{->}{V3}{T} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{V4}{T} \nbput[nrot=:U]{$(100000)$}
+
+\end{pspicture}
+\end{center}
+
+Die geklammerten Zahlen an den Kanten sind die Kapazitäten. Man sieht sofort, dass der optimale Flusswert gleich 200000 ist.
+
+Wendet man das Ford-Fulkerson-Verfahren an, so könnte es einem bei ungeschickter Wahl der flussvergrößernden Pfade passieren, dass in jeder Iteration der Fluss nur um den Wert 1 wächst. (Wie nämlich?) Man wäre also erst nach 200000 Iterationen fertig -- und das, obwohl das Netzwerk nur 8 Knoten hat!
+
+Dieses Defizit des Labelling-Algorithmus\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-} gilt es zu beseitigen. Der folgende Satz von Edmonds und Karp zeigt, wie das geschehen kann\footnote{Der Beweis des Satzes von Edmonds und Karp ist nicht schwierig. Am Ende dieses Abschnitts wird ein Beweis vorgestellt (auf der Basis des Buchs von Jungnickel).}.
+
+\begin{Satz}[Satz (Edmonds und Karp, 1972)]
+\index{Satz!von Edmonds und Karp}\index{Edmonds und Karp!Satz von}
+Wählt man im Labelling-Algorithmus den flussvergrößernden Pfad $P$ immer so, dass $P$ möglichst wenige Kanten enthält, so terminiert der Algorithmus nach höchstens
+\[
+\left\lfloor \frac{(n-1)m}{2} \right\rfloor
+\]
+Flussvergrößerungen (für $n = |V|$ und $m = |E|$).
+\end{Satz}
+
+Im Satz von Edmonds und Karp wird also eine obere Schranke für die Zahl der Flussvergrößerungen angegeben, die \textit{unabhängig von der Größe der Kapazitäten} ist. Stattdessen ist die angegebene Schranke nur von der Knotenzahl $n=|V|$ und der Kantenzahl $m=|E|$ abhängig.
+
+\textit{Allerdings muss sichergestellt sein, dass auch immer ein möglichst kurzer flussvergrößernder Pfad ausgewählt wird}, wobei \enquote{möglichst kurz} natürlich bedeuten soll, dass $P$ unter allen flussvergrößernden Pfaden möglichst wenige Kanten besitzt.
+
+\textit{Dies ist nicht schwer zu erreichen}, man erledigt dies, indem man in Zeile (5) des Algorithmus wie bei einer \textit{Breitensuche}\index{Breitensuche} (engl. \textit{breadth first search}\index{breadth first search}; kurz: \textit{BFS}\index{BFS}) vorgeht.
+
+Hierzu ist (5) nur durch die modifizierte Zeile (5') zu ersetzen:
+
+\begin{center}
+\begin{tabular}{rl}
+(5')& among all vertices with $u(v) =$ false, let $v$ be \\
+    & the vertex which was labelled first.
+\end{tabular}
+\end{center}
+\label{page:9:6}
+
+Der Unterschied zwischen (5) und (5') liegt auf der Hand:
+\begin{itemize}
+\item In (5) wird ein Knoten $v$, der markiert ist, aber noch nicht inspiziert wurde, \textit{beliebig} ausgewählt.
+\item Dagegen wird in (5') unter allen Knoten, die markiert sind, aber noch nicht inspiziert wurden, derjenige Knoten $v$ ausgewählt, \textit{der zuerst markiert wurde}.
+\end{itemize}
+
+Den derart modifizierten Labelling-Algorithmus (\enquote{Ersetzung von (5) durch (5')}) nennt man den \textit{Algorithmus von Edmonds und Karp}\index{Algorithmus!von Edmonds und Karp}\index{Edmonds und Karp!Algorithmus von}. Das Neue am Algorithmus von Edmonds und Karp ist, dass in (5') nach dem folgenden Motto vorgegangen wird:
+
+\begin{center}
+first labelled -- first scanned
+\index{first labelled -- first scanned}
+\end{center}
+
+Umsetzen lässt sich (5') dadurch, dass man die markierten, aber noch nicht inspizierten Knoten mithilfe einer \textit{Warteschlange}\index{Warteschlange} (engl. \textit{queue}\index{queue}) verwaltet.
+
+%Stichwort zu (5'): \textit{first labelled -- first scanned}. Den derart modifizierten Labelling-Algorithmus\index{Labelling-Algorithmus}\index{Algorithmus!Labelling-} nennt man den \textit{Algorithmus von Edmonds und Karp}.
+
+Das nachfolgende, etwas umfangreichere Beispiel illustriert die Arbeitsweise des Algorithmus von Edmonds und Karp.
+
+\textbf{Beispiel} (aus Jungnickel). Es geht um das folgende Netzwerk $N$, bei dem die Kapazitäten in Klammern angegeben sind:
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(8.5,4.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$}
+
+\ncline[linewidth=0.80pt]{->}{S}{A} \uput{0.05}[135](1,3){$(38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$(1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$(2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$(8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$(10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$(13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$(26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$(8)$}
+\ncline[linewidth=0.80pt]{->}{C}{F} \uput{0.05}[315](3,1){$(24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$(1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$(2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$(1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$(7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$(7)$}
+\ncline[linewidth=0.80pt]{->}{F}{T} \uput{0.05}[315](5,1){$(27)$}
+
+\small
+\end{pspicture}
+
+\caption{}
+\label{abb:9:1}
+\end{figure}
+
+\bigskip
+
+Im Folgenden wird der Algorithmus von Edmonds und Karp verwendet, um für $N$ einen maximalen Fluss und einen minimalen Schnitt zu bestimmten. Die Zahlen ohne Klammern geben den Fluss durch die einzelnen Kanten an, wobei es natürlich mit dem Nullfluss (siehe Abbildung \ref{abb:9:2}) losgeht. Die Knoten werden in Abbildung \ref{abb:9:2} in der Reihenfolge $s$, $a$, $b$, $f$, $c$, $d$, $t$ markiert; $e$ wird nicht markiert, da bereits zuvor in Zeile (15) des Labelling-Algorithmus festgestellt wurde, dass die Senke $t$ mit einem Label versehen worden ist. Der gefundene flussvergrößernde Pfad wird immer fett gezeichnet. Im Anschluss an Abbildung \ref{abb:9:2} wird detailliert beschrieben, wie Abbildung \ref{abb:9:2} aus \ref{abb:9:1} entsteht und vor allem, wie die angegebene Reihenfolge $s,a,b,f,c,d,t$ zustande kommt. Danach wird in den Abbildungen \ref{abb:9:3} - \ref{abb:9:11} der weitere Verlauf angegeben.
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,2)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,38)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(s,+,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(a,+,10)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,13)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} 
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(s,+,2)$}
+
+\ncline[linewidth=0.80pt]{->}{S}{A} \uput{0.05}[135](1,3){$0 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$0 (1)$}
+\ncline[linewidth=2.00pt]{->}{S}{F} \uput{0.05}[225](1,1){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$0 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$0 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$0 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{C}{F} \uput{0.05}[315](3,1){$0 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$0 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$0 (7)$}
+\ncline[linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$0 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_0) = 0$.}
+\label{abb:9:2}
+\end{figure}
+
+%\bigskip
+
+%---------------------------------------------------------------------
+
+\pagebreak
+Wir beschreiben im Folgenden, wie die zuvor angegebene Reihenfolge der Knotenmarkierungen in Abbildung \ref{abb:9:2} zustande kommt. Diese Reihenfolge ist nur zum Teil durch den Algorithmus von Edmonds und Karp vorgegeben; um eine vollständig festgelegte Reihenfolge zu erhalten, fügen wir die folgende \textbf{Regel} hinzu:
+
+\begin{center}
+\begin{tabular}{rl}
+($\star$)& Ist im Algorithmus von Edmonds und Karp die Reihenfolge der zu markierenden Knoten \\
+         & nicht festgelegt, so soll die \textit{alphabetische Reihenfolge} den Ausschlag geben.
+\end{tabular}
+\end{center}
+\label{page:9:8}
+
+Wie wir wissen, geht es mit dem Nullfluss los (siehe Zeile (1) des Labelling-Algorithmus sowie Abbildung \ref{abb:9:2}); anschließend erhält $s$ in Zeile (2) die Markierung $(-,\infty)$. Die Warteschlange, die die markierten, aber noch nicht inspizierten Knoten enthält, wollen wir mit $Q$ bezeichnen. Anfangs enthält $Q$ also nur den Knoten $s$, d.h., nach abgeschlossener Initialisierung (Zeile (1)-(3)) bietet sich für $Q$ das folgende Bild: 
+\[
+Q:\ s.
+\]
+
+Beim ersten Durchlauf der in Zeile (4) beginnenden repeat-Schleife wird in (5') als Knoten $v$ die Quelle $s$ gewählt; kurz: $v=s$. Danach erhalten die Knoten $a$, $b$ und $f$ ihre jeweiligen Markierungen (siehe Zeile (6)-(9) bzw. Abbildung \ref{abb:9:2}). Wegen ($\star$) erfolgt dies in der alphabetischen Reihenfolge: Zuerst wird $a$ markiert, dann $b$ und danach $f$. Die Ausführung der anschließenden Zeilen (10)-(13) entfällt, da es keine Kanten gibt, die in $s$ hineinführen. Damit sieht unsere Warteschlange $Q$ nun wie folgt aus:
+\[
+Q:\ s\ a\ b\ f.
+\]
+
+Da die Inspizierung von $s$ in Zeile (13) zum Abschluss gekommen ist, wird in Zeile (14) $u(s) = \text{true}$ gesetzt. Für die Warteschlange bedeutet dies, dass $s$ aus $Q$ gelöscht wird; wir stellen den Vorgang wie folgt dar:
+\[
+Q:\ \xout{s}\ a\ b\ f.
+\]
+
+In Zeile (15) wird gefragt, ob $t$ bereits markiert ist; da dies zu verneinen ist, entfällt die Ausführung der Zeilen (16)-(28). In Zeile (29) wird geklärt, ob die repeat-Schleife noch ein weiteres Mal zu durchlaufen ist: Da es markierte, aber nicht inspizierte Knoten gibt ($Q$ ist nicht leer!), steigen wir bei (4) wieder ein.
+
+\textit{Nun wirkt sich zum ersten Mal die Tatsache aus, dass (5) durch (5') ersetzt wurde}: In $Q$ steht $a$ an erster Stelle, d.h., in (5') setzen wir $v=a$.
+
+Anschließend wird (6)-(9) ausgeführt, was dazu führt, dass $c$ und $d$ ihre jeweiligen Markierungen bekommen (in dieser Reihenfolge); $b$ ist nicht zu berücksichtigen, da der Knoten $b$ bereits markiert ist. Bei der anschließenden Ausführung von (10)-(13) passiert nichts Erwähnenswertes: $(s,a)$ ist die einzige Kante, die in $a$ hineinführt -- und $s$ ist bereits markiert! Nach Ausführung von (14) gilt $u(a) = \text{true}$; für unsere Warteschlange bedeutet dies, dass sich $Q$ aktuell im folgenden Zustand befindet:
+\[
+Q:\ \xout{s}\ \xout{a}\ b\ f\ c\ d.
+\]
+
+Nun wird wie zuvor fortgefahren: In (15) wird festgestellt, dass $t$ noch nicht markiert ist, weshalb es bei (29) weitergeht. Wegen $Q \neq \emptyset$ wird die repeat-Schleife ein weiteres Mal durchlaufen, diesmal für $v=b$. Dies führt zu keinen weiteren Markierungen, da $a$, $c$, $d$ und $s$ bereits markiert sind; es wird $u(b) = \text{true}$ gesetzt und man erhält
+\[
+Q:\ \xout{s}\ \xout{a}\ \xout{b}\ f\ c\ d.
+\]
+
+Im nächsten Durchlauf der repeat-Schleife gilt $v=f$; zusätzlich markiert wird nur der Knoten $t$. Es wird $u(f) = \text{true}$ gesetzt, was zu
+\[
+Q:\ \xout{s}\ \xout{a}\ \xout{b}\ \xout{f}\ c\ d\ t
+\]
+führt. Bei der Abfrage in (15), ob $t$ markiert ist, lautet die Antwort diesmal ja. Folglich werden diesmal die Zeilen (16)-(28) ausgeführt, was zu folgendem Resultat führt: Man erhält den flussvergrößernden Pfad $s,f,t$ (siehe Abbildung \ref{abb:9:2}) und der Fluss wird in den Kanten dieses Pfades um 2 erhöht (siehe Abbildung \ref{abb:9:3}). Die bisherigen Markierungen werden bis auf die Markierung von $s$ gelöscht und es wird $u(v)$ für alle Knoten $v$ auf false gesetzt. Für $Q$ bedeutet dies, dass $Q$ wie am Anfang nur noch $s$ enthält:
+\[
+Q:\ s.
+\]
+
+Da anschließend in (29) festgestellt wird, dass es markierte, aber nicht inspizierte Knoten gibt (Es gilt $Q \neq \emptyset$!), geht es in den nächsten Durchlauf der repeat-Schleife, wobei $v=s$ gilt. Hier nun der weitere Verlauf:
+
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(c,+,1)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,38)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(s,+,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(a,+,10)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,13)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(c,+,8)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,10)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$0 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=2.00pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$0 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$0 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$0 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{C}{F} \uput{0.05}[315](3,1){$0 (24)$}
+\ncline[linewidth=2.00pt]{->}{C}{T} \uput{0.05}[270](6,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$0 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$0 (7)$}
+\ncline[linewidth=0.80pt]{->}{F}{T} \uput{0.05}[315](5,1){$2 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_1) = 2$.}
+\label{abb:9:3}
+\end{figure}
+
+%\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(d,+,7)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,37)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(s,+,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(a,+,9)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,13)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(c,+,8)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,9)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$1 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$1 (10)$}
+\ncline[linewidth=2.00pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$0 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$0 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{C}{F} \uput{0.05}[315](3,1){$0 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=2.00pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$0 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$0 (7)$}
+\ncline[linewidth=0.80pt]{->}{F}{T} \uput{0.05}[315](5,1){$2 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_2) = 3$.}
+\label{abb:9:4}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(e,+,7)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,30)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(s,+,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(a,+,9)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,6)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(c,+,8)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,9)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$8 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=2.00pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$1 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$7 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$0 (26)$}
+\ncline[linewidth=2.00pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{C}{F} \uput{0.05}[315](3,1){$0 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=2.00pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$0 (7)$}
+\ncline[linewidth=0.80pt]{->}{F}{T} \uput{0.05}[315](5,1){$2 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_3) = 10$.}
+\label{abb:9:5}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,2)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,23)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(s,+,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(a,+,2)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,6)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(c,+,1)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,2)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$15 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=2.00pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$8 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$7 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$0 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$7 (8)$}
+\ncline[linewidth=2.00pt]{->}{C}{F} \uput{0.05}[315](3,1){$0 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$2 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_4) = 17$.}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,1)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,21)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(s,+,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(b,+,1)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,6)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(d,+,1)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,1)$}
+
+\ncline[linewidth=0.80pt]{->}{S}{A} \uput{0.05}[135](1,3){$17 (38)$}
+\ncline[linewidth=2.00pt]{->}{S}{B} \uput{0.05}[270](1,2){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$10 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$7 (13)$}
+\ncline[linewidth=2.00pt]{->}{B}{C} \uput{0.05}[270](3,2){$0 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$7 (8)$}
+\ncline[linewidth=2.00pt]{->}{C}{F} \uput{0.05}[315](3,1){$2 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$4 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_5) = 19$.}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,8)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,21)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(a,+,8)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(b,+,8)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,6)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(d,+,1)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,8)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$17 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=2.00pt]{->}{A}{B} \uput{0.05}[  0](2,3){$0 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$10 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$7 (13)$}
+\ncline[linewidth=2.00pt]{->}{B}{C} \uput{0.05}[270](3,2){$1 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$7 (8)$}
+\ncline[linewidth=2.00pt]{->}{C}{F} \uput{0.05}[315](3,1){$3 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$5 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_6) = 20$.}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,2)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,13)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(d,+,2)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(b,+,2)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,6)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(d,+,1)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,2)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$25 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$8 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$10 (10)$}
+\ncline[linewidth=2.00pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$7 (13)$}
+\ncline[linewidth=2.00pt]{->}{B}{C} \uput{0.05}[270](3,2){$9 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$7 (8)$}
+\ncline[linewidth=2.00pt]{->}{C}{F} \uput{0.05}[315](3,1){$11 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=2.00pt]{->}{D}{B} \uput{0.05}[315](4,3){$0 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$13 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_7) = 28$.}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,1)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,11)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(c,-,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(e,-,1)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,4)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(d,+,1)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,1)$}
+
+\ncline[linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$27 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$8 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$10 (10)$}
+\ncline[linewidth=2.00pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$9 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$11 (26)$}
+\ncline[linewidth=2.00pt]{->}{C}{F} \uput{0.05}[315](3,1){$13 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$2 (2)$}
+\ncline[linewidth=2.00pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=2.00pt]{<-}{E}{C} \uput{0.05}[ 90](5,2.37){$7 (8)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$15 (27)$}
+
+\small
+\end{pspicture}
+
+\caption{$w(f_8) = 30$.}
+\label{abb:9:10}
+\end{figure}
+
+\bigskip
+
+%---------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture*}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[255](0,2){$(-,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} 
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,10)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} 
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} 
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,3)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} 
+
+\ncline[linewidth=0.80pt]{->}{S}{A} \uput{0.05}[135](1,3){$28 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1.25,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3.1){$8 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](2.7,3.3){$10 (10)$}
+\ncline[linewidth=0.80pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$10 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$11 (26)$}
+\ncline[linewidth=0.80pt]{->}{C}{E} \uput{0.05}[ 90](5,2.37){$6 (8)$}
+\ncline[linewidth=0.80pt]{->}{C}{F} \uput{0.05}[315](3,1){$14 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linewidth=0.80pt]{->}{F}{T} \uput{0.05}[315](5,1){$16 (27)$}
+
+\psbcurve[linewidth=2.0pt](-1,0)(4,3.5)(10,2.5)
+\uput{0}[270](0,4){$S$}
+\uput{0}[ 90](8,0){$T$}
+
+\small
+\end{pspicture*}
+
+\caption{$w(f_9) = 31 = c(S,T)$.}
+\label{abb:9:11}
+\end{figure}
+
+\textbf{Zur Übung}:
+\begin{enumerate}[a)]
+\item Denken Sie sich in Abbildung \ref{abb:9:3} die Markierungen weg. Machen Sie sich Schritt für Schritt den Markierungsprozess klar, wobei Sie die Regel ($\star$) beachten. Geben Sie auch immer den jeweils aktuellen Zustand von $Q$ an.
+\item Wie kommt in Abbildung \ref{abb:9:3} der flussvergrößernde Pfad $s,a,c,t$ zustande? Wie kommt der in Abbildung \ref{abb:9:4} angegebene Fluss zustande?
+\item Führen Sie die Überlegungen aus a) und b) ebenso für Abbildung \ref{abb:9:10} (anstelle von \ref{abb:9:3}) durch!
+\item Führen Sie Entsprechendes auch für Abbildung \ref{abb:9:11} durch!
+\end{enumerate}
+
+\textbf{Zur Erinnerung}: Auf Seite \pageref{page:9:7} haben wir definiert, was unter einem \textit{zunehmenden Pfad zu einem Knoten $w$} zu verstehen ist; statt \enquote{zunehmender Pfad zu einem Knoten $w$} haben wir auch kurz \enquote{zunehmender Pfad nach $w$} gesagt.
+
+Vor allem durch das vorangegangene, etwas umfangreichere Beispiel sollte klar geworden sein, dass es beim Algorithmus von Edmonds und Karp ganz wesentlich um \textit{Erreichbarkeit}\index{Erreichbarkeit durch einen zunehmenden Pfad} von Knoten durch zunehmende Pfade geht. 
+
+Wir führen die folgenden \textbf{Sprechweisen} ein: Anstatt zu sagen \enquote{es gibt einen zunehmenden Pfad nach $w$} benutzen wir zukünftig auch Sprechweisen wie \enquote{$w$ ist durch einen zunehmenden Pfad erreichbar} oder \enquote{$w$ wurde durch einen zunehmenden Pfad erreicht}.
+
+Der Zusammenhang zwischen zunehmenden Pfaden und Knotenmarkierungen soll kurz angesprochen werden. Hierzu betrachten wir die Markierung
+\[
+(c,+,9)
+\]
+des Knotens $f$ in Abbildung \ref{abb:9:5}. Dass der Knoten $f$ markiert wurde bedeutet, dass $f$ im Laufe des Markierungsprozesses durch einen zunehmenden Pfad erreicht wurde; wir wollen diesen zunehmenden Pfad $P_f$ nennen.
+
+Der \textit{erste Eintrag} in der Markierung $(c,+,9)$ zeigt an, dass $c$ der Vorgänger von $f$ auf $P_f$ ist.
+
+Der \textit{zweite Eintrag} bedeutet, dass $f$ auf einer Vorwärtskante erreicht wurde; mit anderen Worten: Die Vorwärtskante $(c,f)$ ist die letzte Kante auf $P_f$. (Wäre $f$ auf einer Rückwärtskante erreicht worden, so wäre der zweite Eintrag ein Minuszeichen gewesen.)
+
+Der \textit{dritte Eintrag} gibt die Größe des \textit{Flaschenhalses}\index{Flaschenhals} (engl. \textit{bottleneck}\index{bottleneck}) von $P_f$ an. Um zu erkennen, was damit gemeint ist, bestimmen wir den gesamten Pfad $P_f$: Der Knoten $c$ ist mit $(a,+,9)$ markiert, d.h.,  $a$ ist der Vorgänger von $c$ auf $P_f$; der Knoten $a$ ist mit $(s,+,30)$ markiert, d.h., $s$ ist der Vorgänger von $a$ auf $P_f$. Somit lautet der Pfad $P_f$ wie folgt:
+\[
+P_f:\ s,\ a,\ c,\ f.
+\]
+
+Der Pfad $P_f$ durchläuft seine drei Kanten $e_1=(s,a)$, $e_2=(a,c)$ und $e_3=(c,f)$ in Vorwärtsrichtung, weshalb für alle drei Kanten die Differenz zwischen der Kapazität und dem aktuellen Fluss betrachtet wird: Im Fall von $e_1$ beträgt diese Differenz $38-8=30$, im Fall von $e_2$ erhält man $10-1=9$, und für $e_3$ ergibt sich $24-0=24$. Der kleinste Wert ist also $9$ -- und genau dies liest man an der Markierung $(c,+,9)$ in der dritten Stelle ab. Woher der Ausdruck \enquote{Größe des Flaschenhalses} kommt und weshalb man $e_2$ als \enquote{Flaschenhalskante}\index{Flaschenhalskante}\index{Kante!Flaschenhals-} bezeichnet, sollte aufgrund der vorangegangenen Ausführungen klar sein.
+
+
+
+\subsubsection{Die Komplexität des Algorithmus von Edmonds und Karp}
+
+\index{Komplexität des Algorithmus von Edmonds und Karp}
+
+Die Komplexität des Algorithmus von Edmonds und Karp ist $O(nm^2)$ für $n=|V|$ und $m=|E|$. Wir skizzieren, weshalb dies so ist: Das Auffinden eines zunehmenden Pfades (bzw. im letzten Schritt die vergebliche Suche nach einem solchen) ist in $O(m)$ Schritten durchführbar, da jede Kante höchstens zweimal untersucht wird; und beim anschließenden Ändern des Flusses ist jede Kante höchstens einmal involviert. Da es nach dem Satz von Edmonds und Karp nur $O(nm)$ Flussvergrößerungen gibt, folgt insgesamt die Komplexitätsschranke $O(nm^2)$.
+
+Wie bisher bezeichne $G=(V,E)$ den gerichteten Graphen des Netzwerks $N$. Wir schließen diesen Abschnitt mit einer Bemerkung zur \textit{Darstellung von $G$}. Es bietet sich als Standardlösung an, $G$ durch \textit{Adjazenzlisten}\index{Adjazenzliste} darzustellen. Dabei ist es zweckmäßig, zu jedem Knoten $v$ \textit{zwei} Adjazenzlisten zur Verfügung zu haben:
+\begin{itemize}
+\item Die erste Liste enthält sämtliche Knoten $y$, für die $(v,y) \in E$ gilt.
+\item Die zweite Liste enthält sämtliche Knoten $x$, für die $(x,v) \in E$ gilt.
+\end{itemize}
+
+Beide Listen kommen zum Einsatz, wenn im Labelling-Algorithmus die repeat-Schleife durchlaufen wird: Die erste Liste wird durchlaufen, wenn die Zeilen (6)-(9) abgearbeitet werden; die zweite Liste wird anschließend verwendet, wenn es um die Zeilen (10)-(13) geht. (Sind die Knoten mit Buchstaben bezeichnet und sind beide Listen alphabetisch geordnet, so entspricht dies gerade der Regel ($\star$) auf Seite \pageref{page:9:8}.)
+
+Es gibt zahlreiche andere Algorithmen zum Auffinden eines Maximalflusses in einem Netzwerk -- wir haben hier nur die ersten Anfänge behandelt. Wer mehr wissen möchte, kann beispielsweise zu den Büchern von Cormen et al oder Jungnickel greifen. Stellvertretend für die vielen anderen Lehrbücher, in denen Weiterführendes behandelt wird, sei außerdem genannt:
+\begin{itemize}
+\item Jon Kleinberg, Éva Tardos: \textit{Algorithm Design}. Pearson-Verlag. 2006.
+\end{itemize}
+
+
+\subsubsection{Beweis des Satzes von Edmonds und Karp}
+\index{Beweis!des Satzes von Edmonds und Karp}
+
+Wir beginnen mit der Einführung einiger Schreibweisen und schicken dem Beweis des Satzes von Edmonds und Karp zwei Hilfssätze voraus.
+
+Mit $f_0$ sei der Fluss mit Wert 0 bezeichnet, der im Algorithmus von Edmonds und Karp unter (1) definiert wird; mit $f_1,\ldots,f_r$ bezeichnen wir die Folge der anschließend konstruierten Flüsse.
+
+Für jedes $v \in V$ sei mit
+\[
+x_v(k)
+\]
+die minimale Länge eines zunehmenden Pfades nach $v$ bezüglich des Flusses $f_k$ bezeichnet.
+
+\begin{Satz}[Lemma 1]
+Es gilt $x_v(k+1) \geq x_v(k)$ für alle $v \in V$ und $k$ mit $0 \leq k < r$.
+\end{Satz}
+
+\textbf{Beweis}. Für $v=s$ gilt die Behauptung klarerweise. Angenommen, für ein Paar $(v,k)$ mit $v \neq s$ gelte $x_v(k) > x_v(k+1)$. Dabei soll zu festem $k$ der Knoten $v$ so gewählt sein, dass der Wert $x_v(k+1)$ im folgenden Sinne \textit{minimal} ist: Für alle Knoten $w \in V$, die die Ungleichung $x_w(k) > x_w(k+1)$ ebenfalls erfüllen, soll $x_w(k+1) \geq x_v(k+1)$ gelten.
+
+Wir betrachten nun einen möglichst kurzen zunehmenden Pfad $P$ nach $v$ bezüglich des Flusses $f_{k+1}$. Es sei $e$ die letzte Kante von $P$. Dann kann $e$ entweder eine Vorwärts- oder eine Rückwärtskante von $P$ sein.
+
+Wir behandeln zunächst den Fall, dass $e$ eine Vorwärtskante von $P$ ist. Dann gilt also $e=(u,v)$ für einen bestimmten Knoten $u$. Man beachte, dass hieraus $f_{k+1}(e) < c(e)$ folgt. Außerdem gilt
+\[
+x_v(k+1) = x_u(k+1) + 1,
+\]
+da das Teilstück von $P$, das in $u$ endet, ein zunehmender Pfad nach $u$ bzgl. $f_{k+1}$ mit minimaler Länge ist. Aufgrund der Minimalwahl von $v$ gilt also 
+\[
+x_u(k+1) \geq x_u(k).
+\]
+
+Es folgt
+\begin{equation}
+\label{eq:9:13}
+x_v(k+1) \geq x_u(k) + 1.
+\end{equation}
+
+Außerdem muss $f_k(e) = c(e)$ gelten, da andernfalls $x_v(k) \leq x_u(k)+1$ folgen würde, woraus sich mit (\ref{eq:9:13}) ein Widerspruch zur Annahme $x_v(k) > x_v(k+1)$ ergibt.
+
+Aus $f_k(e) = c(e)$ und $f_{k+1}(e) < c(e)$ ergibt sich, dass $e$ beim Übergang von $f_k$ zu $f_{k+1}$ eine \textit{Rückwärtskante} gewesen sein muss. Aus der Tatsache, dass für diesen Übergang ein kürzester flussvergrößernder Pfad gewählt wurde, ergibt sich somit $x_u(k) = x_v(k)+1$. Hieraus folgt zusammen mit (\ref{eq:9:13}), dass $x_v(k+1) \geq x_v(k)+2$ gilt, im Widerspruch zur Annahme $x_v(k) > x_v(k+1)$.
+
+Somit haben wir den Fall, dass $e$ eine Vorwärtskante von $P$ ist, erledigt. Den verbliebenen Fall, dass $e$ eine Rückwärtskante von $P$ ist, behandelt man auf die gleiche Art. $\Box$
+
+Analog zum Begriff \textit{zunehmender Pfad nach $v$} definiert man, was unter einem \textit{zunehmenden Pfad von $v$ nach $t$} zu verstehen ist. (Wie nämlich?) Daran anknüpfend sei mit
+\[
+y_v(k)
+\]
+die minimale Länge eines zunehmenden Pfades von $v$ nach $t$ bezüglich $f_k$ bezeichnet. Analog zu Lemma 1 lässt sich Folgendes zeigen:
+
+\begin{Satz}[Lemma 2]
+	Es gilt $y_v(k+1) \geq y_v(k)$ für alle $v \in V$ und $k$ mit $0 \leq k < r$.
+\end{Satz}
+
+Bevor wir den Satz von Edmonds und Karp mithilfe von Lemma 1 und 2 beweisen, sei an den Begriff der \textit{Flaschenhalskante}\index{Flaschenhalskante}\index{Kante!Flaschenhals-} oder, wie man auch sagt, \textit{kritischen Kante}\index{kritische Kante}\index{Kante!kritische} erinnert.
+
+\begin{SKBox}
+Wenn ein Fluss durch Augmentierung  längs eines flussvergrößernden Pfads $P$ verbessert wird, so enthält $P$ immer mindestens eine \textit{kritische Kante} $e$, d.h., der Fluss durch $e$ wird entweder auf $c(e)$ angehoben oder auf 0 abgesenkt.
+\end{SKBox}
+
+Nun zum \textbf{Beweis des Satzes von Edmonds und Karp}: Mit
+\[
+f_0, \ldots, f_r
+\]
+seien wie zuvor die im Laufe des Algorithmus von Edmonds und Karp produzierten Flüsse bezeichnet. Mit
+\[
+P_0, \ldots, P_{r-1}
+\]
+bezeichnen wir die dazugehörigen flussvergrößernden Pfade, d.h., $P_k$ ist der flussvergrößernde Pfad, der beim Übergang von $f_k$ zu $f_{k+1}$ benutzt wird ($k=0,\ldots,r-1$).
+
+Für ein $k \in \bigl\{ 0,\ldots,r-1 \bigr\}$ sei $e=(u,v)$ eine kritische Kante von $P_k$. Man beachte: Aufgrund der Regel, dass immer kürzeste flussvergrößernde Pfade gewählt werden, besitzt $P_k$ genau
+\[
+x_v(k) + y_v(k) = x_u(k) + y_u(k)
+\]
+Kanten.
+
+Wir setzen nun voraus, dass $e$ ein weiteres Mal in einem augmentierenden Pfad vorkommt, sagen wir in $P_h$ für $h > k$. Dabei sei $h$ so klein wie möglich gewählt, d.h., wir betrachten \textit{das nächste Mal}, dass $e$ in einem flussvergrößernden Pfad auftritt. Es folgt (Wieso nämlich?):
+\begin{equation*}
+\textit{War $e$ in $P_k$ eine Vorwärtskante, so ist $e$ in $P_h$ eine Rückwärtskante; und umgekehrt.}
+\end{equation*}
+
+Wir betrachten den Fall, dass $e$ in $P_k$ eine Vorwärtskante war: In diesem Fall gilt
+\[
+x_v(k) = x_u(k)+1 \quad\text{und}\quad x_u(h) = x_v(h)+1.
+\]
+
+Aufgrund von Lemma 1 und 2 gilt $x_v(h) \geq x_v(k)$ und $y_u(h) \geq y_u(k)$. Es folgt
+\[
+x_u(h) + y_u(h) = x_v(h) + 1 + y_u(h) \geq x_v(k) + 1 + y_u(k) = x_u(k) + y_u(k) + 2.
+\]
+
+Dies bedeutet: \textit{$P_h$ besitzt mindestens zwei Kanten mehr als $P_k$}.
+
+Dasselbe gilt auch im Fall, dass $e$ in $P_k$ eine Rückwärtskante war: Um dies zu erkennen, braucht man nur ebenso wie zuvor zu argumentieren -- allerdings mit vertauschten Rollen für $u$ und $v$.
+
+\textbf{Fazit}. Da kein flussvergrößernder Pfad mehr als $|V|-1 = n-1$ Kanten enthalten kann, gilt für jede Kante $e$:
+\begin{equation*}
+\textit{$e$ kann höchstens $\frac{n-1}{2}$ mal als kritische Kante in einem der Pfade $P_k$ auftreten.}
+\end{equation*}
+
+Somit kann es höchstens $m \cdot \frac{n-1}{2}$ Flussvergrößerungen geben. $\Box$
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Der Begriff des Residualgraphen"                                            %
+%------------------------------------------------------------------------------%
+
+\section{Der Begriff des Residualgraphen}
+\label{section:9:5}
+
+In diesem Abschnitt wird der Begriff des \textit{Residualgraphen}\index{Residualgraph}\index{Graph!Residual-} vorgestellt -- ein Begriff, der besonders nützlich ist, wenn es um etwas komplexere Netzwerk-Fluss-Algorithmen geht. Statt \enquote{Residualgraph} sagt man auch \textit{Restgraph}.\index{Restgraph}\index{Graph!Rest-}
+
+Mit $G=(V,E)$ bezeichnen wir wie bislang einen schlingenlosen Digraphen; zur Definition des Begriffs \enquote{schlingenloser Digraph} siehe Seite \pageref{section:9:1}. Man beachte: Aufgrund dieser Definition sind in $G$ nicht nur Schlingen ausgeschlossen, sondern auch parallele Kanten; antiparallele Kanten\index{antiparallele Kante}\index{Kante!antiparallele} (wie in der nachfolgenden Zeichnung) sind hingegen zugelassen.
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,0.0)(2.5,1.5)
+	\footnotesize
+	
+	\cnode*(0,1){3pt}{A} \uput{0.15}[180](0,1){$a$}
+	\cnode*(2,1){3pt}{B} \uput{0.15}[  0](2,1){$b$}
+	
+	\ncarc[arcangle=30]{->}{A}{B}
+	\ncarc[arcangle=30]{->}{B}{A}
+	
+	\small
+	\uput{0.75}[270](1,1){\text{Ein Paar von antiparallelen Kanten.}}
+	
+	\end{pspicture}
+\end{center}
+
+Bevor wir uns dem Begriff des Residualgraphen widmen, definieren wir zunächst einen zu $G$ gehörigen Graphen $G^+$, der aus $G$ dadurch entsteht, dass man zu jeder Kante $e$ von $G$ eine neue Kante hinzunimmt, die man \textit{Rückwärtskante} von $e$\index{Rückwärtskante von $e$}\index{Kante!Rückwärts-} nennt und mit $e^{\text{rev}}$ bezeichnet.
+
+Hier ist die genaue Definition:
+
+\begin{Definition}[Definition]
+	Gegeben sei ein schlingenloser Digraph $G=(V,E)$ mit $m$ Kanten. Zu $G$ definieren wir $G^+$ wie folgt:
+	\begin{enumerate}[(i)]
+		\item Die Knotenmenge von $G^+$ sei gleich $V$, d.h., $G$ und $G^+$ besitzen dieselbe Knotenmenge.
+		
+		\item $G^+$ enthält sämtliche Kanten von $G$.
+		
+		\item \textit{Darüber hinaus gebe es in $G^+$ noch $m$ weitere Kanten}: Zu jeder Kante $e=(x,y)$ von $G$ enthalte $G^+$ eine neue Kante, die wir mit $e^{\text{rev}}$ bezeichnen. Dabei gelte:
+		\begin{itemize}
+			\item Ist die Kante $(y,x)$ nicht in $G$ vorhanden, so sei $e^{\text{rev}} = (y,x)$.
+			
+			\item Ist die Kante $(y,x)$ bereits in $G$ vorhanden, so sei $e^{\text{rev}}$ eine zusätzliche Kante, die ebenfalls von $y$ nach $x$ führt. 
+		\end{itemize}
+	\end{enumerate}		
+\end{Definition}
+
+Insbesondere gilt also: $G$ hat $m$ Kanten $\Rightarrow$ $G^+$ hat $2m$ Kanten.
+
+\textbf{Beispiel}. Es sei $G=(V,E)$ der links abgebildete Graph. Der dazugehörige Graph $G^+$ ist rechts dargestellt, wobei die neuen Kanten gestrichelt gezeichnet sind.
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(0,-0.5)(12,4)
+	\footnotesize
+	
+	\cnode*(0,2){3pt}{X1}
+	\cnode*(2,4){3pt}{X2}
+	\cnode*(4,2){3pt}{X3}
+	\cnode*(2,0){3pt}{X4}	
+	\ncline{->}{X1}{X2}
+	\ncarc[arcangle=30]{->}{X1}{X4}
+	\ncline{->}{X2}{X3}
+	\ncarc[arcangle=30]{->}{X4}{X1}
+	\uput{0.5}[270](2,0){$G$}
+	
+	\cnode*(8,2){3pt}{Y1}
+	\cnode*(10,4){3pt}{Y2}
+	\cnode*(12,2){3pt}{Y3}
+	\cnode*(10,0){3pt}{Y4}	
+	\ncarc[arcangle=20]{->}{Y1}{Y2}
+    \ncarc[arcangle=20]{->}{Y1}{Y4}
+    \ncarc[arcangle=320, linestyle=dashed]{->}{Y1}{Y4}
+	\ncarc[arcangle=20, linestyle=dashed]{->}{Y2}{Y1}
+    \ncarc[arcangle=20]{->}{Y2}{Y3}
+	\ncarc[arcangle=20, linestyle=dashed]{->}{Y3}{Y2}
+    \ncarc[arcangle=20]{->}{Y4}{Y1}
+	\ncarc[arcangle=320, linestyle=dashed]{->}{Y4}{Y1}
+	\uput{0.5}[270](10,0){$G^+$}
+		
+	\end{pspicture}
+\end{center}
+
+Man beachte: In $G$ gibt es keine parallelen Kanten; in $G^+$ kann es jedoch wie im vorangegangenen Beispiel \textit{parallele Kanten} geben. Solche Kanten treten allerdings nur auf, wenn es in $G$ antiparallele Kanten gibt. Anders gesagt:
+\begin{equation*}
+\textit{Sind in $G$ keine antiparallelen Kanten vorhanden, so gibt es in $G^+$ keine parallelen Kanten.}
+\end{equation*}
+
+\textit{Ein Wort zur Terminologie}: Graphen, in denen parallele Kanten vorkommen (oder vorkommen dürfen), werden auch als \textit{Multigraphen}\index{Multigraph}\index{Graph!Multi-} bezeichnet. In anderen Fällen kann es durchaus wichtig sein, dass man sprachlich genau zwischen \enquote{Graphen} und \enquote{Multigraphen} unterscheidet. Im vorliegenden Kontext ist dies jedoch nicht unbedingt nötig: Auch in Fällen, in denen parallele Kanten zugelassen sind, werden wir von \textit{Graphen} sprechen.
+
+Mit $E^{\text{rev}}$ bezeichnen wir die Menge der neu hinzugefügten Kanten. Es gilt also
+\[
+E^{\text{rev}} = \Bigl\{ e^{\text{rev}} : e \in E \Bigr\}.
+\]
+
+Die Kantenmenge von $G$ setzt sich also aus zwei disjunkten Mengen zusammen: $E$ (ursprüngliche Kanten) und $E^{\text{rev}}$ (neue Kanten).
+
+Es folgt die Definition des Residualgraphen $G_f$ sowie des dazugehörigen Begriffs der Residualkapazität.
+
+\begin{Definition}[Definition]
+	Gegeben sei ein Netzwerk $N=(G,c,s,t)$ mit $G=(V,E)$ sowie ein Fluss $f$ auf $N$. Der \textit{Residualgraph}\index{Residualgraph}\index{Graph!Residual-} $G_f$ wird wie folgt definiert:
+	\begin{enumerate}[(i)]
+		\item $G_f$ ist ein Teilgraph von $G^+$; die Knotenmenge von $G_f$ ist $V$.
+		
+		\item Für jede Kante $e \in E$ gilt
+		\begin{itemize}
+			\item Ist $f(e) < c(e)$ erfüllt, so wird $e$ in $G_f$ aufgenommen und außerdem $c_f(e) := c(e)-f(e)$ gesetzt.
+			
+			\item Ist $f(e) > 0$ erfüllt, so wird $e^{\text{rev}}$ in $G_f$ aufgenommen und $c_f(e^{\text{rev}}) := f(e)$ gesetzt.
+		\end{itemize}
+	\end{enumerate}
+
+	Weitere Kanten werden nicht in $G_f$ aufgenommen. Die in (ii) auftretenden Größen $c_f(e)$ und $c_f(e^{\text{rev}})$ nennt man die \textit{Residualkapazität}\index{Residualkapazität}\index{Kapazität!Residual-} von $e$ bzw. $e^{\text{rev}}$.
+\end{Definition}
+
+\textit{Man beachte}: Liegt der Fall $0 < f(e) < c(e)$ vor, so wird sowohl $e$ als auch $e^\text{rev}$ in $G_f$ aufgenommen. Diese Tatsache wird in der folgenden Darstellung illustriert.
+
+\pagebreak
+
+Eine Kante $e=(x,y)$ in $G$ mit $f(e)=3$ und $c(e)=8$:
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,0.0)(2.5,1.5)
+	\footnotesize
+	
+	\cnode*(0,1){3pt}{X} \uput{0.15}[180](0,1){$x$}
+	\cnode*(2,1){3pt}{Y} \uput{0.15}[  0](2,1){$y$}
+	\ncarc[arcangle=30]{->}{X}{Y}
+	\uput{0.1}[ 90](1,1.25){$3(8)$}
+	\uput{0.1}[270](1,1.25){$e$}
+
+    \small	
+	\end{pspicture}
+\end{center}
+
+Die dazugehörigen Kanten in $G_f$ besitzen die Residualkapazitäten 5 und 3:
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,0.0)(2.5,1.5)
+	\footnotesize
+	
+	\cnode*(0,1){3pt}{X} \uput{0.15}[180](0,1){$x$}
+	\cnode*(2,1){3pt}{Y} \uput{0.15}[  0](2,1){$y$}
+	\ncarc[arcangle=45]{->}{X}{Y}
+	\uput{0.1}[ 90](1,1.4){$5$}
+	\uput{0.1}[270](1,1.4){$e$}
+	\ncarc[arcangle=45]{->}{Y}{X}
+	\uput{0.1}[270](1,0.6){$3$}
+	\uput{0.1}[ 90](1,0.6){$e^\text{rev}$}
+	\small	
+	\end{pspicture}
+\end{center}
+
+Die Interpretation der Residualkapazitäten liegt auf der Hand:
+\begin{itemize}
+	\item Für $e \in E$ gibt $c_f(e)$ an, um wie viel der Fluss in $e$ gegebenenfalls noch erhöht werden kann.
+	\item Für $e \in E$ gibt $c_f(e^\text{rev})$ an, um wie viel der Fluss in $e$ gegebenenfalls erniedrigt werden kann.
+\end{itemize}
+
+\textbf{Beispiel}.
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,-1)(8.5,4.5)
+	\footnotesize
+	
+	\cnode*(0,2){3pt}{S} \uput{0.15}[180](0,2){$s$}
+	\cnode*(2,4){3pt}{A} \uput{0.15}[ 90](2,4){$a$}
+	\cnode*(2,0){3pt}{B} \uput{0.15}[270](2,0){$b$}
+	\cnode*(6,4){3pt}{C} \uput{0.15}[ 90](6,4){$c$}
+	\cnode*(6,0){3pt}{D} \uput{0.15}[270](6,0){$d$}
+	\cnode*(8,2){3pt}{T} \uput{0.15}[  0](8,2){$t$}
+	
+	\ncline{->}{S}{A} \uput{0.05}[135](1,3){$0(3)$}
+	\ncline{->}{S}{B} \uput{0.05}[225](1,1){$3(3)$}
+	\ncline{->}{A}{C} \uput{0.05}[ 90](4,4){$2(5)$}
+	\ncline{->}{A}{D} \uput{0.05}[ 45](4,2){$0(2)$}
+	\ncline{->}{B}{A} \uput{0.05}[  0](2,2){$2(2)$}
+	\ncline{->}{B}{D} \uput{0.05}[270](4,0){$1(3)$}
+	\ncline{->}{C}{T} \uput{0.05}[ 45](7,3){$2(2)$}
+	\ncline{->}{D}{T} \uput{0.05}[315](7,1){$1(4)$}
+	
+	\small		
+	\uput{0.75}[270](4,0){Ein Netzwerk $N=(G,c,s,t)$ mit Fluss $f$.}
+	\end{pspicture}
+\end{center}
+
+% ---------------------------------------------------------
+
+\begin{center}
+	\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-0.5,-1.5)(8.5,5)
+	\footnotesize
+	
+	\cnode*(0,2){3pt}{S} \uput{0.15}[180](0,2){$s$}
+	\cnode*(2,4){3pt}{A} \uput{0.15}[ 90](2,4){$a$}
+	\cnode*(2,0){3pt}{B} \uput{0.15}[270](2,0){$b$}
+	\cnode*(6,4){3pt}{C} \uput{0.15}[ 90](6,4){$c$}
+	\cnode*(6,0){3pt}{D} \uput{0.15}[270](6,0){$d$}
+	\cnode*(8,2){3pt}{T} \uput{0.15}[  0](8,2){$t$}
+	
+	\ncline{->}{S}{A} \uput{0.05}[135](1,3){$3$}
+	\ncline[linestyle=dashed]{->}{B}{S} \uput{0.05}[225](1,1){$3$}
+	\ncarc[arcangle=30]{->}{A}{C} \uput{0.05}[270](4,4.5){$3$}
+	\ncarc[arcangle=30, linestyle=dashed]{->}{C}{A} \uput{0.05}[90](4,3.5){$2$}
+	\ncline{->}{A}{D} \uput{0.05}[ 45](4,2){$2$}
+	\ncline[linestyle=dashed]{->}{A}{B} \uput{0.05}[  0](2,2){$2$}
+	\ncarc[arcangle=30]{->}{B}{D} \uput{0.05}[270](4,0.5){$2$}
+	\ncarc[arcangle=30, linestyle=dashed]{->}{D}{B} \uput{0.05}[90](4,-0.5){$1$}
+	\ncline[linestyle=dashed]{->}{T}{C} \uput{0.05}[ 45](7,3){$2$}
+	\ncarc[arcangle=30]{->}{D}{T} \uput{0.05}[135](7,1){$3$}
+	\ncarc[arcangle=30, linestyle=dashed]{->}{T}{D} \uput{0.05}[315](7,1){$1$}
+		
+	\small
+	\uput{1}[270](4,0){Der dazugehörige Residualgraph $G_f$ mit Residualkapazitäten (Kanten aus $E^\text{rev}$: gestrichelt).}	
+	\end{pspicture}
+\end{center}
+
+In unserem Beispiel entspricht jedem $f$-vergrößernden Pfad in $G$ auf naheliegende Weise ein $s,t$-Pfad in $G_f$: Beispielsweise ist
+\[
+P: s,a,b,d,t
+\]
+ein $f$-vergrößernder Pfad in $G$. Diesem Pfad entspricht in $G_f$ ein $s,t$-Pfad mit derselben Knotenfolge. Der einzige Unterschied:
+\begin{equation*}
+\textit{Die Rückwärtskante $e=(b,a)$ wurde durch $e^\text{rev}$ ersetzt.}
+\end{equation*}
+
+Es sei nun ein beliebiges Netzwerk $N=(G,c,s,t)$ und ein Fluss $f$ auf $N$ gegeben. Wie im Beispiel gilt dann: Jedem $f$-vergrößernden Pfad $P$ in $G$ entspricht in $G_f$ ein $s,t$-Pfad mit derselben Knotenfolge, der aus $P$ dadurch entsteht, dass man jede Rückwärtskante $e$ von $P$ durch $e^\text{rev}$ ersetzt.
+
+Umgekehrt: Ist in $G_f$ ein $s,t$-Pfad ohne Knotenwiederholungen gegeben, so entspricht diesem Pfad auf analoge Weise ein $f$-vergrößernder Pfad in $G$.
+
+Aufgrund der beschriebenen, einfach zu durchschauenden Beziehung zwischen $f$-vergrößernden Pfaden in $G$ und $s,t$-Pfaden in $G_f$ ergibt sich eine \textbf{alternative Möglichkeit}, zum Begriff \textit{$f$-vergrößernder Pfad} zu gelangen:
+\begin{equation*}
+\begin{array}{c}
+\text{Man wählt einen etwas anderen Aufbau und \textit{definiert} einen $f$-vergrößernden Pfad} \\ \text{als einen $s,t$-Pfad ohne Knotenwiederholungen im Residualgraphen $G_f$.}
+\end{array}
+\end{equation*}
+
+Wegen der zuvor beschriebenen Entsprechung ist diese Möglichkeit, den Begriff \enquote{$f$-vergrößernder Pfad} zu definieren, \textit{äquivalent} zu unserer Definition in Abschnitt \ref{section:9:3}.
+
+Die angesprochene Möglichkeit (oder ähnliche Möglichkeiten) einen $f$-vergrößernden Pfad zu definieren, werden Sie häufig in der Literatur antreffen -- besonders, wenn es um etwas komplexere Themen geht, wie beispielsweise
+\begin{itemize}
+	\item kostenoptimale Flüsse (minimum cost flows)\index{kostenoptimaler Fluss}\index{Fluss!kostenoptimaler},
+	\item Push-Relabel-Algorithmus von Goldberg und Tarjan\index{Push-Relabel-Algorithmus}\index{Algorithmus!Push-Relabel-}.
+\end{itemize}
+
+Literatur zu den beiden genannten Themen:
+\begin{itemize}
+\item B. Korte, J. Vygen:
+
+\textit{Combinatorial Optimization. Theory and Algorithms}. Springer. 2012. 5. Auflage.
+
+\item A. Schrijver:
+
+\textit{Combinatorial Optimization. Polyhedra and Efficiency. Volume A: Paths, Flows, Matchings}. Springer. 2003.
+\end{itemize}

@@ -1,0 +1,25 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(0,0)(12.5,2)
+\footnotesize
+ 
+\psline{|-|}(1,1.5)( 5,1.5) \uput{0.05}[90](3,1.5){Intervall 1 mit $v_1=1$}
+\psline{|-|}(4,1.0)( 8,1.0) \uput{0.05}[90](6,1.0){Intervall 2 mit $v_2=3$}
+\psline{|-|}(7,0.5)(11,0.5) \uput{0.05}[90](9,0.5){Intervall 3 mit $v_3=1$}
+
+
+\small
+\end{pspicture}
+\end{document}

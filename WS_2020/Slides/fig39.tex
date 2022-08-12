@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.25cm,yunit=1.25cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(11.5,2.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{X1l} \uput{0.2}[180](0,2){$x_1$}
+\cnode*(0,1){3pt}{X2l} \uput{0.2}[180](0,1){$x_2$}
+\cnode*(0,0){3pt}{X3l} \uput{0.2}[180](0,0){$x_3$}
+\cnode*(2,1.5){3pt}{Y1l} \uput{0.2}[  0](2,1.5){$y_1$}
+\cnode*(2,0.5){3pt}{Y2l} \uput{0.2}[  0](2,0.5){$y_2$}
+\ncline{-}{X1l}{Y1l}
+\ncline{-}{X1l}{Y2l}
+\ncline{-}{X2l}{Y1l}
+\ncline{-}{X3l}{Y1l}
+\ncline{-}{X3l}{Y2l}
+
+
+\cnode*(5,1){3pt}{S} \uput{0.2}[180](5,1){$s$}
+\cnode*(11,1){3pt}{T} \uput{0.2}[  0](11,1){$t$}
+\cnode*(7,2){3pt}{X1r} \uput{0.2}[ 90](7,2){$x_1$}
+\cnode*(7,1){3pt}{X2r} \uput{0.2}[270](7,1){$x_2$}
+\cnode*(7,0){3pt}{X3r} \uput{0.2}[270](7,0){$x_3$}
+\cnode*(9,1.5){3pt}{Y1r} \uput{0.2}[ 90](9,1.5){$y_1$}
+\cnode*(9,0.5){3pt}{Y2r} \uput{0.2}[270](9,0.5){$y_2$}
+
+\scriptsize
+\ncline{->}{X1r}{Y1r} \uput{0.1}[ 90](8,1.75){$(1)$}
+\ncline{->}{X1r}{Y2r} \uput{0.25}[270](7.5,1.75){$(1)$}
+\ncline{->}{X2r}{Y1r} \uput{0.25}[270](7.5,1.25){$(1)$}
+\ncline{->}{X3r}{Y1r} \uput{0.1}[270](8,0.75){$(1)$}
+\ncline{->}{X3r}{Y2r} \uput{0.1}[270](8,0.25){$(1)$}
+\ncline{->}{S}{X1r} \uput{0.10}[ 90](6,1.5){$(1)$}
+\ncline{->}{S}{X2r} \uput{0.05}[270](6,1.0){$(1)$}
+\ncline{->}{S}{X3r} \uput{0.10}[270](6,0.5){$(1)$}
+\ncline{->}{Y1r}{T} \uput{0.1}[ 90](10,1.25){$(1)$}
+\ncline{->}{Y2r}{T} \uput{0.1}[270](10,0.75){$(1)$}
+
+\psline[linewidth=2pt]{->}(3,1)(4,1)
+
+\small
+\end{pspicture}
+\end{document}

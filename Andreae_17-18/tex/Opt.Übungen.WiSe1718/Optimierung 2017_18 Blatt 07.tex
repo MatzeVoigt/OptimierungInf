@@ -1,0 +1,108 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{mathtools}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 07},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 7}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 4./5. Dezember 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Lösen Sie das folgende LP-Problem mit dem revidierten Simplexverfahren:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & x_1 &\  &\  &\ - &\ 2x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -x_1 &\ - &\ 2x_2 &\ + &\ 3x_3 &\ \leq &\ 2\ \\
+&& 2x_1 &\ + &\  x_2 &\   &\      &\ \leq &\ 5\ \\
+&&  x_1 &\ - &\  x_2 &\ - &\ 3x_3 &\ \leq &\ 4\ \\
+&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 11./12. Dezember 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item Lösen Sie das folgende LP-Problem mit dem revidierten Simplexverfahren:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 2x_1 &\ + &\ 3x_2 &\ + &\ 2x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  x_1 &\ + &\ x_2 &\   &\      &\ \leq &\  8\ \\
+&&      &\   &\ x_2 &\ + &\ 2x_3 &\ \leq &\ 12\ \\
+&&      &\   &\ x_2 &\ + &\  x_3 &\ \leq &\  7\ \\
+&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+% Aufgabe H2
+\item Lösen Sie das folgende LP-Problem mit dem revidierten Simplexverfahren:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 6x_1 &\ - &\ 9x_2 &\ + &\ x_3 &\ - &\ 11x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 2x_1 &\ - &\ 3x_2 &\ - &\ x_3 &\ - &\ 7x_4 &\ \leq &\  1\ \\
+&& 2x_1 &\ + &\  x_2 &\ + &\ x_3 &\ + &\ 3x_4 &\ \leq &\  3\ \\
+&&&&&&&& \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

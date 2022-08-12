@@ -1,0 +1,36 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(8.5,4.5)
+
+\cnode*(0,2){3pt}{S}  \uput{0.2}[180](0,2){$s$}
+\cnode*(4,4){3pt}{A}  \uput{0.2}[ 90](4,4){$a$}
+\cnode*(4,0){3pt}{B}  \uput{0.2}[270](4,0){$b$}
+\cnode*(8,2){3pt}{T}  \uput{0.2}[  0](8,2){$t$}
+\cnode*(2,3){3pt}{V1} \uput{0.2}[ 90](2,3){$v_1$}
+\cnode*(2,1){3pt}{V2} \uput{0.2}[270](2,1){$v_2$}
+\cnode*(6,3){3pt}{V3} \uput{0.2}[ 90](6,3){$v_3$}
+\cnode*(6,1){3pt}{V4} \uput{0.2}[270](6,1){$v_4$}
+
+\ncline{->}{S}{V1} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{S}{V2} \nbput[nrot=:U]{$(100000)$}
+\ncline{->}{A}{B}  \naput{$(1)$}
+\ncline{->}{A}{V3} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{B}{V4} \nbput[nrot=:U]{$(100000)$}
+\ncline{->}{V1}{A} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{V2}{B} \nbput[nrot=:U]{$(100000)$}
+\ncline{->}{V3}{T} \naput[nrot=:U]{$(100000)$}
+\ncline{->}{V4}{T} \nbput[nrot=:U]{$(100000)$}
+
+\end{pspicture}
+\end{document}

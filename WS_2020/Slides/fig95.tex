@@ -1,0 +1,33 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color,amsmath,amssymb}
+\DeclareMathOperator{\ssum}{Subset-Sum}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-1.0)(4.5,4.5)
+\footnotesize
+
+\psrotate(2,2){  0}{\cnode*(2,4){3pt}{V1}}
+\psrotate(2,2){ 72}{\cnode*(2,4){3pt}{V2}}
+\psrotate(2,2){144}{\cnode*(2,4){3pt}{V3}}
+\psrotate(2,2){216}{\cnode*(2,4){3pt}{V4}}
+\psrotate(2,2){288}{\cnode*(2,4){3pt}{V5}}
+\ncline{->}{V1}{V5} \naput{$-2$}
+\ncline{->}{V5}{V4} \naput{$-2$}
+\ncline{->}{V4}{V3} \naput{$2$}
+\ncline{->}{V3}{V2} \naput{$-4$}
+\ncline{->}{V2}{V1} \naput{$3$}
+
+
+\small
+\end{pspicture}
+\end{document}

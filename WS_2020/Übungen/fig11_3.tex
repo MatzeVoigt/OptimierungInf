@@ -1,0 +1,53 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.75)(10.5,2.75)
+
+\cnode*( 0,0){3pt}{A} \uput{0.25}[270]( 0,0){$a$}
+\cnode*( 2,0){3pt}{B} \uput{0.25}[270]( 2,0){$b$}
+\cnode*( 4,0){3pt}{C} \uput{0.25}[270]( 4,0){$c$}
+\cnode*( 6,0){3pt}{D} \uput{0.25}[270]( 6,0){$d$}
+\cnode*( 8,0){3pt}{E} \uput{0.25}[270]( 8,0){$e$}
+\cnode*(10,0){3pt}{F} \uput{0.25}[270](10,0){$f$}
+\cnode*(10,2){3pt}{G} \uput{0.25}[ 90](10,2){$g$}
+\cnode*( 8,2){3pt}{H} \uput{0.25}[ 90]( 8,2){$h$}
+\cnode*( 6,2){3pt}{I} \uput{0.25}[ 90]( 6,2){$i$}
+\cnode*( 4,2){3pt}{J} \uput{0.25}[ 90]( 4,2){$j$}
+\cnode*( 2,2){3pt}{K} \uput{0.25}[ 90]( 2,2){$k$}
+\cnode*( 0,2){3pt}{L} \uput{0.25}[ 90]( 0,2){$\ell$}
+
+\ncline{-}{A}{B} \uput{0.10}[270]( 1.0, 0.0){$2$}
+\ncline{-}{A}{L} \uput{0.10}[180]( 0.0, 1.0){$3$}
+\ncline{-}{B}{C} \uput{0.10}[270]( 3.0, 0.0){$3$}
+\ncline{-}{B}{K} \uput{0.10}[180]( 2.0, 1.0){$1$}
+\ncline{-}{B}{L} \uput{0.05}[225]( 1.0, 1.0){$2$}
+\ncline{-}{C}{D} \uput{0.10}[270]( 5.0, 0.0){$5$}
+\ncline{-}{C}{I} \uput{0.05}[315]( 5.0, 1.0){$7$}
+\ncline{-}{C}{J} \uput{0.10}[180]( 4.0, 1.0){$4$}
+\ncline{-}{C}{K} \uput{0.05}[225]( 3.0, 1.0){$2$}
+\ncline{-}{D}{E} \uput{0.10}[270]( 7.0, 0.0){$8$}
+\ncline{-}{D}{H} \uput{0.05}[315]( 7.0, 1.0){$4$}
+\ncline{-}{D}{I} \uput{0.05}[  0]( 6.0, 1.0){$1$}
+\ncline{-}{E}{F} \uput{0.10}[270]( 9.0, 0.0){$1$}
+\ncline{-}{E}{G} \uput{0.05}[315]( 9.0, 1.0){$2$}
+\ncline{-}{E}{H} \uput{0.10}[  0]( 8.0, 1.0){$4$}
+\ncline{-}{F}{G} \uput{0.10}[  0](10.0, 1.0){$3$}
+\ncline{-}{G}{H} \uput{0.10}[ 90]( 9.0, 2.0){$2$}
+\ncline{-}{H}{I} \uput{0.10}[ 90]( 7.0, 2.0){$4$}
+\ncline{-}{I}{J} \uput{0.10}[ 90]( 5.0, 2.0){$3$}
+\ncline{-}{J}{K} \uput{0.10}[ 90]( 3.0, 2.0){$2$}
+\ncline{-}{K}{L} \uput{0.10}[ 90]( 1.0, 2.0){$6$}
+
+\end{pspicture}
+\end{document}

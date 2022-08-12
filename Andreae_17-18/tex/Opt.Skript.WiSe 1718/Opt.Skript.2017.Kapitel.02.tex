@@ -1,0 +1,593 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 02:                                                                  %
+% "Wie das Simplexverfahren funktioniert"                                      %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Wie das Simplexverfahren funktioniert}\label{chapter:2}
+\index{Simplexverfahren}\index{Verfahren!Simplex-}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Axiome der reellen Zahlen"                                              %
+%------------------------------------------------------------------------------%
+
+
+Wir besprechen anhand des folgenden Beispiels, wie das Simplexverfahren verwendet wird, um LP-Probleme zu lösen, die \textit{in Standardform}\index{Standardform} vorliegen:
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:1}
+& \text{maximiere } & 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\  5\ \\
+&& 4x_1 &\ + &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 11\ \\
+&& 3x_1 &\ + &\ 4x_2 &\ + &\ 2x_3 &\ \leq &\  8\ \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\  0.
+\end{alignedat}
+\end{align}
+
+Wir führen sogenannte \textit{Schlupfvariablen}\index{Schlupfvariable}\index{Variable!Schlupf-} (engl. \textit{slack variables}\index{slack variable}\index{Variable!slack}) ein. Worum es dabei geht, erklären wir anhand der ersten Nebenbedingung:
+\begin{equation}
+\label{eq:2:2}
+2x_1 + 3x_2 + x_3 \leq 5.
+\end{equation}
+
+Ist $x_1,x_2,x_3$ eine zulässige Lösung des LP-Problems (\ref{eq:2:1}), so erfüllen die Zahlen $x_1, x_2, x_3$ insbesondere die Ungleichung (\ref{eq:2:2}), wobei es möglich ist, dass $2x_1+3x_2+x_3 < 5$ gilt, aber es könnte auch $2x_1+3x_2+x_3 = 5$ gelten. Die Differenz der rechten und der linken Seite von (\ref{eq:2:2}) bezeichnet man als \textit{Schlupf} (engl. \textit{slack}). Der Schlupf gibt also an, um wie viel die rechte Seite die linke Seite übertrifft. Die Differenz zwischen der rechten und der linken Seite von (\ref{eq:2:2}) wollen wir $x_4$ nennen; wir \textit{definieren} also:
+\[
+x_4 = 5 - 2x_1 - 3x_2 - x_3.
+\]
+
+Mit dieser neuen Bezeichnung können wir die Ungleichung (\ref{eq:2:2}) kurz und knapp wie folgt ausdrücken:
+\[
+x_4 \geq 0.
+\]
+
+In ähnlicher Weise definieren wir:
+\begin{align*}
+\begin{alignedat}{5}
+x_5 &\ = &\ 11 &\ - &\ 4x_1 &\ - &\  x_2 &\ - &\ 2x_3\ \\
+x_6 &\ = &\  8 &\ - &\ 3x_1 &\ - &\ 4x_2 &\ - &\ 2x_3.
+\end{alignedat}
+\end{align*}
+
+Die neuen Variablen $x_4, x_5, x_6$ werden \textit{Schlupfvariablen} (bzw. \textit{slack variables}) genannt.
+
+Darüber hinaus ist es üblich, noch eine weitere Variable einzuführen, die man mit $z$ bezeichnet und die den Wert der Zielfunktion angibt; in unserem Beispiel:
+\[
+z = 5x_1 + 4x_2 + 3x_3.
+\]
+
+Unsere Überlegungen lassen sich wie folgt zusammenfassen: Zu jeder Wahl der Zahlen $x_1,x_2,x_3$ definieren wir die Zahlen $x_4,x_5,x_6$ und $z$, indem wir festlegen:
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:3}
+x_4 &\ = &\  5 &\ - &\ 2x_1 &\ - &\ 3x_2 &\ - &\  x_3\ \\
+x_5 &\ = &\ 11 &\ - &\ 4x_1 &\ - &\  x_2 &\ - &\ 2x_3\ \\
+x_6 &\ = &\  8 &\ - &\ 3x_1 &\ - &\ 4x_2 &\ - &\ 2x_3\ \\
+z   &\ = &     &    &\ 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3.
+\end{alignedat}
+\end{align}
+
+\textit{Unter Verwendung der Bezeichnungen $x_4,x_5,x_6$ und $z$ aus (\ref{eq:2:3}) können wir unser LP-Problem (\ref{eq:2:1}) auch wie folgt formulieren}:
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:2:4}
+& \text{maximiere $z$} & & & \\
+& \rlap{unter den Nebenbedingungen} & & &\\
+&& x_1,x_2,x_3,x_4,x_5,x_6 &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+
+Wir betonen noch einmal: Bei (\ref{eq:2:4}) handelt es sich nur um eine \textit{Umformulierung} von (\ref{eq:2:1}), wobei die Bezeichnungen $x_4$, $x_5$, $x_6$ und $z$ aus (\ref{eq:2:3}) verwendet werden. Es gilt:
+\begin{enumerate}[(i)]
+\item Jede zulässige Lösung $x_1,x_2,x_3$ von (\ref{eq:2:1}) kann auf eindeutige Art zu einer zulässigen Lösung von (\ref{eq:2:4}) erweitert werden, indem man $x_1$, $x_2$ und $x_3$ in (\ref{eq:2:3}) einsetzt.
+\item Ist umgekehrt $x_1,x_2,x_3,x_4,x_5,x_6$ eine zulässige Lösung von (\ref{eq:2:4}), wobei $x_4$, $x_5$ und $x_6$ die in (\ref{eq:2:3}) angegebene Bedeutung haben, so kann man auf eine sehr einfache Art eine zulässige Lösung $x_1,x_2,x_3$ von (\ref{eq:2:1}) erhalten: Man braucht die Schlupfvariablen $x_4,x_5,x_6$ nur wegzulassen.
+\end{enumerate}
+
+\textit{Aufgrund von (i) und (ii) entsprechen sich die zulässigen Lösungen von (\ref{eq:2:1}) und (\ref{eq:2:4}) also umkehrbar eindeutig, wobei auch jeder optimalen Lösung von (\ref{eq:2:1}) eine optimale Lösung von (\ref{eq:2:4}) entspricht; und umgekehrt}. Man beachte, dass die Zielfunktion in beiden Fällen dieselbe ist.
+
+Wir führen nun vor, wie man mithilfe des Simplexverfahrens eine optimale Lösung von (\ref{eq:2:1}) bzw. (\ref{eq:2:4}) findet. Die \textbf{Grundidee} ist einfach: Man versucht zulässige Lösungen schrittweise zu verbessern, wobei man anstrebt, nach endlich vielen Schritten bei einer optimalen Lösung anzukommen.
+
+\textit{Mit anderen Worten}: Wenn wir eine zulässige Lösung $x_1,\ldots,x_6$ von (\ref{eq:2:4}) haben, so versuchen wir eine zulässige Lösung $x_1',\ldots,x_6'$ von (\ref{eq:2:4}) zu finden, für die gilt:
+\[
+5 x_1' + 4x_2' + 3 x_3' > 5x_1 + 4x_2 + 3x_3.
+\]
+
+Damit dieser Prozess in Gang kommt, braucht man natürlich eine zulässige \textbf{Startlösung}\index{Startlösung}\index{Lösung!Start-}. \textit{In unserem Beispiel ist es leicht, eine solche zu finden}: Wir wählen $x_1=x_2=x_3=0$.
+
+Mithilfe von (\ref{eq:2:3}) erhält man dann dazugehörige Werte für $x_4$, $x_5$ und $x_6$:
+\[
+x_4 = 5, \qquad x_5 = 11, \qquad x_6 = 8.
+\]
+
+\textit{Unsere Startlösung lautet also}:
+\begin{equation}
+\label{eq:2:5}
+x_1=0, \qquad x_2=0, \qquad x_3=0, \qquad x_4 = 5, \qquad x_5 = 11, \qquad x_6 = 8.
+\end{equation}
+
+Hierbei handelt es sich in der Tat um eine zulässige Lösung von (\ref{eq:2:4}), da $x_1, \ldots, x_6$ so gewählt wurden, dass (\ref{eq:2:3}) gilt, und da außerdem die Bedingungen $x_1,\ldots, x_6 \geq 0$ erfüllt sind.
+
+Den zu dieser Lösung dazugehörigen \textit{Zielfunktionswert} $z$ erhalten wir ebenso, wie wir $x_4,x_5,x_6$ erhalten haben: Wir setzen in (\ref{eq:2:3}) für $x_1,x_2,x_3$ den Wert $0$ sein. Man erhält
+\[
+z=0.
+\]
+
+\textit{Dies gilt es nun zu verbessern, indem wir eine zulässige Lösung mit einem höheren Zielfunktionswert $z$ finden}. \textbf{Das ist nicht schwer}: Lassen wir beispielsweise die Werte für $x_2$ und $x_3$ unverändert bei $x_2=x_3=0$ und vergrößern $x_1$, so erhalten wir
+\[
+z = 5x_1 > 0.
+\]
+Beispielsweise könnten wir $x_2=x_3=0$ und $x_1=1$ wählen und erhielten die zulässige Lösung
+\[
+x_1=1, \qquad x_2=0, \qquad x_3=0, \qquad x_4=3, \qquad x_5=7, \qquad x_6=5 \quad \text{mit} \quad z=5.
+\]
+
+Wählen wir $x_1=2$ und nach wie vor $x_2=x_3=0$, so erhalten wir einen noch besseren Zielfunktionswert: $z=10$. Außerdem gilt $x_4=1$, $x_5=3$, $x_6=2$.
+
+Versuchen wir dasselbe mit $x_1=3$ und $x_2=x_3=0$, so erhalten wir $z=15$, was ein noch besserer Zielfunktionswert wäre. Aber gleichzeitig erhalten wir auch $x_4 = -1$. \textit{Das bedeutet, dass wir den Bereich der zulässigen Lösungen verlassen haben}: Es muss ja immer $x_4 \geq 0$, $x_5 \geq 0$ und $x_6 \geq 0$ gelten. \textit{Wir haben $x_1$ also zu stark erhöht}.
+
+\textit{Frage}: Um wie viel können wir $x_1$ maximal erhöhen (unter Beibehaltung von $x_2=x_3=0$), ohne dass einer der Werte $x_4, x_5, x_6$ negativ wird?
+
+\textit{Die Antwort auf diese Frage lässt sich leicht an den ersten drei Zeilen von (\ref{eq:2:3}) ablesen}: Da $x_2=x_3=0$ gelten soll, haben wir
+\begin{align*}
+\begin{alignedat}{3}
+x_4 &\ = &\  5 &\ - &\ 2x_1\ \\
+x_5 &\ = &\ 11 &\ - &\ 4x_1\ \\
+x_6 &\ = &\  8 &\ - &\ 3x_1.
+\end{alignedat}
+\end{align*}
+
+Die Bedingung $x_4 \geq 0$ ist also gleichbedeutend mit $5 - 2x_1 \geq 0$, d.h., als Bedingung für $x_1$ erhalten wir $x_1 \leq \frac{5}{2}$. Entsprechend erhält man aus $x_5 \geq 0$ die Bedingung $x_1 \leq \frac{11}{4}$ und $x_6 \geq 0$ führt zu $x_1 \leq \frac{8}{3}$. Die erste Bedingung schränkt $x_1$ am stärksten ein; wir wählen also $x_1 = \frac{5}{2}$ und erhalten somit die zulässige Lösung
+\begin{equation}
+\label{eq:2:6}
+x_1=\frac{5}{2}, \qquad x_2=0, \qquad x_3=0, \qquad x_4=0, \qquad  x_5=1, \qquad x_6=\frac{1}{2}.
+\end{equation}
+
+Als verbesserten Zielfunktionswert erhalten wir $z = \frac{25}{2}$.
+
+\textit{Wir fassen das bisher Erreichte zusammen}: \textit{Unsere Startlösung lautete}
+\[
+x_1=0, \qquad x_2=0, \qquad x_3=0, \qquad x_4=5, \qquad x_5=11, \qquad x_6=8 \quad \text{mit} \quad z=0,
+\]
+
+\textit{und in der 1. Iteration haben wir die verbesserte zulässige Lösung (\ref{eq:2:6}) mit $z = \frac{25}{2}$} erhalten.
+
+Dies gilt es nun weiter zu verbessern. Die entscheidende Rolle in der 1. Iteration spielte das Gleichungssystem (\ref{eq:2:3}): \textit{Dort wurden die vier Variablen $x_4,x_5,x_6$ und $z$ durch die drei übrigen Variablen (nämlich durch $x_1,x_2,x_3$) dargestellt und diese drei Variablen besaßen alle den Wert Null in unserer Startlösung}.
+
+Diesen Zustand wollen wir nun (bezogen auf die verbesserte Lösung (\ref{eq:2:6})) wiederherstellen. In (\ref{eq:2:6}) sind $x_2, x_3$ und $x_4$ diejenigen Variablen, die den Wert Null annehmen. Diese Variablen sollen nun die Rolle spielen, die zuvor von $x_1$, $x_2$ und $x_3$ gespielt wurde. Hierzu formen wir (\ref{eq:2:3}) so um, dass auf der linken Seite nun $x_1$, $x_5$, $x_6$ und $z$ stehen, während rechts nur noch die Variablen $x_2$, $x_3$ und $x_4$ auftauchen.
+
+Anders gesagt: \textit{$x_1$ und $x_4$ sollen ihre Rollen tauschen; $x_1$ soll von rechts nach links wandern; $x_4$ umgekehrt von links nach rechts}.
+
+Hierzu formen wir zunächst diejenige Zeile von (\ref{eq:2:3}) um, in der $x_4$ auf der linken Seite steht. In (\ref{eq:2:3}) ist das die erste Zeile; wir erhalten
+\begin{equation}
+\label{eq:2:7}
+x_1 = \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4.
+\end{equation}
+
+Einsetzen von (\ref{eq:2:7}) in die übrigen Zeilen von (\ref{eq:2:3}) ergibt:
+\begin{align*}
+x_5 &= 11 - 4 \cdot \left( \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4 \right) - x_2 - 2x_3 \\
+    &= 1 + 5x_2 + 2x_4 \\
+x_6 &= 8 - 3 \cdot \left( \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4 \right) -4x_2 - 2x_3 \\
+    &= \frac{1}{2} + \frac{1}{2}x_2 - \frac{1}{2}x_3 + \frac{3}{2}x_4 \\
+z   &= 5 \cdot \left( \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4 \right) + 4x_2 + 3x_3 \\
+    &= \frac{25}{2} - \frac{7}{2}x_2 + \frac{1}{2}x_3 - \frac{5}{2}x_4.
+\end{align*}
+
+Also lautet unser neues, durch Umformung von (\ref{eq:2:3}) entstandenes Gleichungssystem:
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:8}
+x_1 &\ = &\  \frac{5}{2} &\ - &\ \frac{3}{2}x_2 &\ - &\ \frac{1}{2}x_3 &\ - &\ \frac{1}{2}x_4\ \\
+x_5 &\ = &\            1 &\ + &\           5x_2 &    &                 &\ + &\           2x_4\ \\
+x_6 &\ = &\  \frac{1}{2} &\ + &\ \frac{1}{2}x_2 &\ - &\ \frac{1}{2}x_3 &\ + &\ \frac{3}{2}x_4\ \\
+z   &\ = &\ \frac{25}{2} &\ - &\ \frac{7}{2}x_2 &\ + &\ \frac{1}{2}x_3 &\ - &\ \frac{5}{2}x_4.
+\end{alignedat}
+\end{align}
+
+Analog zur 1. Iteration\index{Iteration} versuchen wir nun, den aktuellen Wert von $z$ zu vergrößern, indem wir den Wert einer der drei Variablen auf der rechten Seite von (\ref{eq:2:8}) anheben, während wir gleichzeitig die beiden anderen Variablen der rechten Seite bei Null lassen. \textit{Wir haben drei Möglichkeiten zur Auswahl}:
+\begin{enumerate}[(i)]
+\item $x_2$ wird angehoben, $x_3=x_4=0$;
+\item $x_3$ wird angehoben, $x_2=x_4=0$;
+\item $x_4$ wird angehoben, $x_2=x_3=0$.
+\end{enumerate}
+
+Die \enquote{Möglichkeiten} (i) und (iii) scheiden sofort aus: Sie führen zu einer Verkleinerung von $z$ -- sehr entgegen unserer Absichten.
+
+\text{Es bleibt nur eine Wahl}: Wir setzen $x_2=x_4=0$ und versuchen durch Anheben von $x_3$ zu einem möglichst großen Zuwachs von $z$ zu gelangen, wobei wir allerdings darauf achten müssen, dass weiterhin $x_1 \geq 0$, $x_5 \geq 0$ und $x_6 \geq 0$ gilt.
+
+\textit{Wie stark können wir $x_3$ anheben}? Die Antwort können wir direkt an unserem Gleichungssystem (\ref{eq:2:8}) ablesen: Wegen $x_2=x_4=0$ ist die Bedingung $x_1 \geq 0$ äquivalent zu $\frac{5}{2} - \frac{1}{2}x_3 \geq 0$, woraus man $x_3 \leq 5$ erhält. Aus $x_6 \geq 0$ erhält man auf ähnliche Art $x_3 \leq 1$, während die Bedingung $x_5 \geq 0$ die Wahl von $x_3$ nicht beschränkt. \textbf{Also}: \textit{$x_3=1$ ist das Beste, was wir erreichen können, und unsere neue Lösung ist dementsprechend}:
+\begin{equation}
+\label{eq:2:9}
+x_1=2, \qquad x_2=0, \qquad x_3=1, \qquad x_4=0, \qquad x_5=1, \qquad x_6=0.
+\end{equation}
+
+Wir wissen bereits: \textit{Damit das Verfahren weitergeht, brauchen wir nicht nur eine verbesserte Lösung, sondern auch eine neue Darstellung unseres Gleichungssystems (\ref{eq:2:8}), die zu (\ref{eq:2:9}) passt}. In (\ref{eq:2:9}) gibt es drei Variablen, die den Wert Null annehmen: $x_2=x_4=x_6=0$. Diese drei Variablen sollen nun auf der rechten Seite stehen, die übrigen Variablen ($x_1,x_3,x_5$ sowie $z$) sollen links auftauchen: \textit{Ähnlich wie in der ersten Iteration ist also ein \textbf{Austausch}\index{Austausch} vorzunehmen; diesmal haben $x_3$ und $x_6$ die Seiten zu wechseln}. Dementsprechend stellen wir die dritte Gleichung von (\ref{eq:2:8}) um und erhalten
+\[
+x_3 = 1 + x_2 + 3x_4 - 2x_6.
+\]
+
+Setzt man dies für $x_3$ in die übrigen Gleichungen von (\ref{eq:2:8}) ein, so erhält man
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:10}
+x_3 &\ = &\  1 &\ + &\  x_2 &\ + &\ 3x_4 &\ - &\ 2x_6\ \\
+x_1 &\ = &\  2 &\ - &\ 2x_2 &\ - &\ 2x_4 &\ + &\  x_6\ \\
+x_5 &\ = &\  1 &\ + &\ 5x_2 &\ + &\ 2x_4 &    &        \\
+z   &\ = &\ 13 &\ - &\ 3x_2 &\ - &\  x_4 &\ - &\  x_6.
+\end{alignedat}
+\end{align}
+
+Einsetzen von $x_2=x_4=x_6=0$ in die letzten Zeile von (\ref{eq:2:10}) ergibt $z=13$.
+
+\textit{Während sich in der ersten Iteration eine Steigerung des Zielfunktionswerts von $z=0$ zu $z=12.5$ ergeben hat, hat die zweite Iteration nur zu einem bescheidenen Zuwachs geführt: $z=13$}.
+
+Nun sollen Sie sich aber auch daran gewöhnen, dass das Lesen von englischen Lehrbüchern in der Regel sehr einfach ist. Darum gibt es den Rest auf Englisch (Originaltext von Va\v{s}ek Chvátal).
+
+\medskip
+
+Now it's time for the third iteration. First of all, from the right-hand side of (\ref{eq:2:10}) we have to choose a variable whose increase brings about an increase of the objective function. However, there is no such variable: indeed, if we increase any of the right-hand side variables $x_2$, $x_4$, $x_6$, we will make the value of $z$ \textit{decrease}. Thus, it seems that we have come to a standstill. In fact, the very presence of this standstill indicates that we are done; we have solved our problem; the solution described by the last table is optimal. Why? The answer lies hidden in the last row of (\ref{eq:2:10}):
+\begin{equation}
+\label{eq:2:11}
+z = 13 - 3x_2 - x_4 - x_6.
+\end{equation}
+
+Our last solution (\ref{eq:2:9}) yields $z=13$; proving that this solution is optimal amounts to proving that every feasible solution satisfies the inequality $z \leq 13$. Since every feasible solution $x_1,\ldots,x_6$ satisfies, among other relations, the inequalities $x_2 \geq 0$, $x_4 \geq 0$, and $x_6 \geq 0$, the desired inequality $z \leq 13$ follows directly from (\ref{eq:2:11}).
+
+\medskip
+
+Auf Deutsch (etwas frei übersetzt):
+
+\textit{Bei der dritten Iteration stecken wir fest}. Was nun zunächst wie eine Schwierigkeit aussieht, entpuppt sich als Erfolg: \textit{Die Lösung (\ref{eq:2:9}) ist optimal, der Zielfunktionswert $z=13$ ist bestmöglich. Weshalb ist das so?} \textbf{Die Antwort findet sich in der letzten Zeile von (\ref{eq:2:10})}:
+\begin{equation}
+\tag{\ref*{eq:2:11}}
+z = 13 - 3x_2 - x_4 - x_6.
+\end{equation}
+
+Unsere letzte Lösung (\ref{eq:2:9}) hat zu $z=13$ geführt. \textit{Wir wollen uns davon überzeugen, dass für jede zulässige Lösung $z \leq 13$ gilt}. Aufgrund von (\ref{eq:2:11}) ist dies aber klar: Ist $x_1,x_2,x_3,x_4,x_5,x_6$ eine beliebige zulässige Lösung, so gilt insbesondere $x_2 \geq 0$, $x_4 \geq 0$ und $x_6 \geq 0$, woraus sich (aufgrund von (\ref{eq:2:11})) $z \leq 13$ ergibt.
+
+\bigskip
+
+Nachdem wir das Simplexverfahren anhand eines Beispiels studiert haben, schauen wir uns nun den allgemeinen Fall an. Gegeben sei ein LP-Problem in Standardform.
+
+\begin{SKBox}
+\textbf{LP-Problem in Standardform}.
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:2:12}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i \qquad (i=1,\ldots, m)\ \\
+&& x_j &\ \geq &\ 0 \qquad (j=1,\ldots,n).
+\end{alignedat}
+\end{align}
+\end{SKBox}
+
+Wollen wir das LP-Problem (\ref{eq:2:12}) mit dem Simplexverfahren lösen, so führen wir zunächst \textit{Schlupfvariablen}\index{Schlupfvariable}\index{Variable!Schlupf-} $x_{n+1}, \ldots, x_{n+m}$ sowie eine Variable $z$ ein, die den Wert der \textit{Zielfunktion} angibt. \textit{Mit anderen Worten: Wir definieren}
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:2:13}
+x_{n+i} &\ = &\ b_i &\ - &\ \sum\limits_{j=1}^{n}{a_{ij}x_j} & \qquad (i = 1,\ldots, m) \\
+      z &\ = &\     &    &\ \sum\limits_{j=1}^{n}{c_jx_j}. &
+\end{alignedat}
+\end{align}
+
+Unter Verwendung der Bezeichnungen aus (\ref{eq:2:13}) kann man das LP-Problem (\ref{eq:2:12}) auch wie folgt schreiben:
+\begin{align}
+\label{eq:2:12'}
+\tag{\ref*{eq:2:12}'}
+\begin{alignedat}{3}
+& \text{maximiere $z$} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& x_1,\ldots,x_{n+m} &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+
+Die folgende häufig verwendete Möglichkeit, das LP-Problem (\ref{eq:2:12}) zu formulieren, ergibt sich direkt aus der Definition der Schlupfvariablen:
+
+\begin{SKBox}
+\begin{align}
+\label{eq:2:12''}
+\tag{\ref*{eq:2:12}''}
+\begin{alignedat}{4}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ + &\ x_{n+i} &\ = &\ b_i & \qquad (i=1,\ldots,m)\ \\
+&& & & x_j &\ \geq &\ 0 & \qquad (j=1,\ldots,n+m).
+\end{alignedat}
+\end{align}
+\end{SKBox}
+
+Im Verlauf des Simplexverfahrens ersetzt man in jeder Iteration eine zulässige Lösung $x_1, \ldots, x_{n+m}$ von (\ref{eq:2:12''}) durch eine zulässige Lösung $\overline{x}_1, \ldots, \overline{x}_{n+m}$; dabei strebt man an, dass die neue Lösung besser als die alte ist, d.h., man möchte erhalten, dass
+\[
+\sum\limits_{j=1}^{n}{c_j\overline{x}_j} > \sum\limits_{j=1}^{n}{c_jx_j}
+\]
+
+gilt. In unserem obigen Beispiel wurde dies in jeder Iteration erreicht; \textit{wir werden jedoch (später) noch sehen, dass es auch nötig sein kann, Iterationen zuzulassen, in denen $\sum\limits_{j=1}^{n}{c_j\overline{x}_j} = \sum\limits_{j=1}^{n}{c_jx_j}$ gilt}.
+
+In unserem obigen Beispiel haben wir gesehen, dass in jeder Iteration nicht nur eine zulässige Lösung $x_1, \ldots, x_{n+m}$ ermittelt wird, sondern dass in jeder Iteration auch ein lineares Gleichungssystem mit $m+1$ Gleichungen vorkommt. In unserem Beispiel waren dies die Gleichungssysteme (\ref{eq:2:3}), (\ref{eq:2:8}) und (\ref{eq:2:10}). Die Variablen dieser Gleichungssysteme waren $x_1,\ldots,x_6$ und $z$, \textit{und diese Gleichungssysteme hatten eine besondere Form}: Links traten immer drei der Variablen $x_1,\ldots,x_6$ auf sowie (in der letzten Zeile) $z$, während rechts immer nur die drei übrigen der Variablen $x_1, \ldots, x_6$ vorkamen.
+
+Außerdem sind (wie man sich unschwer überlegt) die drei Gleichungssysteme (\ref{eq:2:3}), (\ref{eq:2:8}) und (\ref{eq:2:10}) äquivalent in dem Sinne, dass sie \textit{dieselbe Lösungsmenge} besitzen. Anders gesagt: Für jede Wahl der Zahlen $x_1, \ldots, x_6$ und $z$ sind die folgenden drei Aussagen äquivalent:
+\begin{itemize}
+\item $x_1,\ldots,x_6$ und $z$ bilden eine Lösung von (\ref{eq:2:3});
+\item $x_1,\ldots,x_6$ und $z$ bilden eine Lösung von (\ref{eq:2:8});
+\item $x_1,\ldots,x_6$ und $z$ bilden eine Lösung von (\ref{eq:2:10}).
+\end{itemize}
+
+Für Gleichungssysteme wie (\ref{eq:2:3}), (\ref{eq:2:8}) und (\ref{eq:2:10}) gibt es \textbf{unterschiedliche Bezeichnungen}:
+\begin{itemize}
+\item Chvátal benutzt beispielsweise die Bezeichnung \textit{dictionary};
+\item im Buch von Cormen et al wird die Bezeichnung \textit{Schlupfform}\index{Schlupfform} benutzt;
+\item im Buch von Matou\v{s}ek und Gärtner werden derartige Gleichungssysteme \textit{Tableaus} genannt.
+\end{itemize}
+
+Wir schließen uns der Sprechweise von Matou\v{s}ek und Gärtner an und verwenden ebenfalls den Begriff \textit{Tableau} als unsere Bezeichnung für Gleichungssysteme wie (\ref{eq:2:3}), (\ref{eq:2:8}) und (\ref{eq:2:10}). Wenn wir von einem Tableau sprechen, so ist damit also kein \enquote{Zahlenschema} oder \enquote{Koeffizientenschema} gemeint, sondern ein lineares Gleichungssystem einer bestimmten Art. Diejenigen Variablen $x_j$, die in einem Tableau auf der linken Seite stehen, nennt man \textit{Basisvariablen}, die übrigen Variablen $x_j$, also diejenigen, die auf der rechten Seite stehen, nennt man \textit{Nichtbasisvariablen}. Die Menge der Basisvariablen nennt man eine \textit{Basis}\index{Basis}; wir bezeichnen die Menge der zu den Basisvariablen $x_j$ gehörenden Indizes $j$ mit $B$; die Menge der Indizes $j$, die bei den Nichtbasisvariablen vorkommen, bezeichnen wir mit $N$.
+
+Im Verlauf des Simplexalgorithmus ändern sich $B$ und $N$; wir erläutern dies anhand unseres Beispiels.
+
+Für das Tableau (\ref{eq:2:3}) gilt $B = \bigl\{ 4,5,6 \bigr\}$ und $N = \bigl\{ 1,2,3 \bigr\}$. Beim Übergang von (\ref{eq:2:3}) zum Tableau (\ref{eq:2:8}) verlässt $x_4$ die Basis und $x_1$ wird neu in die Basis aufgenommen; für das Tableau (\ref{eq:2:8}) gilt also $B = \bigl\{ 1,5,6 \bigr\}$ und $N = \bigl\{ 2,3,4 \bigr\}$.
+
+Einen Übergang von einem Tableau zum nächsten (wie von (\ref{eq:2:3}) zu (\ref{eq:2:8})) nennt man \textit{Pivotschritt}\index{Pivotschritt}, \textit{Basisaustauschschritt}\index{Basisaustauschschritt} oder \textit{Basistausch}\index{Basistausch}; diejenige Variable, die neu in die Basis aufgenommen wird, heißt \textit{Eingangsvariable}\index{Eingangsvariable}\index{Variable!Eingangs-}; die Variable, die die Basis verlässt, heißt \textit{Ausgangsvariable}\index{Ausgangsvariable}\index{Variable!Ausgangs-}. Diejenige Zeile, in der vor dem Basistausch links die Ausgangsvariable steht, heißt \textit{Pivotzeile}\index{Pivotzeile}. Diejenige Spalte, in der vor dem Basistausch die Eingangsvariable steht, heißt \textit{Pivotspalte}\index{Pivotspalte}.
+
+Beim Übergang von (\ref{eq:2:8}) zu (\ref{eq:2:10}) ist $x_3$ die Eingangsvariable und $x_6$ ist die Ausgangsvariable. Die Zeile von (\ref{eq:2:8}), in der $x_6$ steht, ist die Pivotzeile dieses Basistauschs; die Spalte von (\ref{eq:2:8}), in der $x_3$ steht, ist die Pivotspalte.
+
+Wir kehren zurück zum allgemeinen Fall (\ref{eq:2:12}). Unter einem zu (\ref{eq:2:12}) gehörigen \textit{Tableau}\index{Tableau} (engl. Bezeichnung im Buch von Chvátal: \textit{dictionary}\index{dictionary}) \label{page:2:1} verstehen wir ein System von $m+1$ linearen Gleichungen mit den Variablen $x_1,\ldots,x_{n+m}$ und $z$ sowie mit den folgenden Eigenschaften:
+\begin{enumerate}[(i)]
+\item Jede Lösung dieses Gleichungssystems ist eine Lösung von (\ref{eq:2:13}); und umgekehrt.
+\item Die Gleichungen sind nach $m$ der Variablen $x_1,\ldots,x_{n+m}$ (genannt \textit{Basisvariablen}\index{Basisvariable}\index{Variable!Basis-}) und nach $z$ aufgelöst; die übrigen $n$ Variablen heißen \textit{Nichtbasisvariablen}\index{Nichtbasisvariable}\index{Basisvariable!Nicht-}\index{Variable!Nichtbasis-}. Jede der Basisvariablen $x_j$ sowie $z$ ist im Gleichungssystem als Summe aus einer Konstanten und einer Linearkombination der Nichtbasisvariablen dargestellt.
+\end{enumerate}
+
+Etwas vereinfacht kann man (ii) auch so aussprechen: \textit{Jede Basisvariable $x_j$ sowie $z$ wird durch die Nichtbasisvariablen ausgedrückt}.
+
+Die Eigenschaften (i) und (ii) definieren, was man unter einem \textit{Tableau} (engl. \textit{dictionary}) versteht. Die Tableaus (\ref{eq:2:3}), (\ref{eq:2:8}) und (\ref{eq:2:10}) besaßen darüber hinaus noch die folgende Eigenschaft:
+\begin{enumerate}[(i)]
+\addtocounter{enumi}{2}
+\item  Werden auf der rechten Seite alle Variablen gleich Null gesetzt, so erhält man eine zulässige Lösung. (Mit anderen Worten: Setzt man alle Nichtbasisvariablen gleich Null, so wird keine der Basisvariablen negativ.)
+\end{enumerate}
+
+Tableaus mit dieser zusätzlichen Eigenschaft werden \textit{zulässige Tableaus} (engl. \textit{feasible dictionaries}) genannt.
+\index{zulässiges Tableau}\index{Tableau!zulässiges}\index{feasible dictionary}\index{dictionary!feasible}
+
+\textit{Jedes zulässige Tableau beschreibt also eine zulässige Lösung von (\ref{eq:2:12}), die man erhält, wenn man alle Nichtbasisvariablen gleich Null setzt}. Aber nicht jede zulässige Lösung entsteht auf diese Art aus einem zulässigen Tableau; beispielsweise ist
+\[
+x_1=1,\quad x_2=0,\quad x_3=1,\quad x_4=2,\quad x_5=5,\quad x_6=3
+\]
+eine zulässige Lösung von (\ref{eq:2:1}), die jedoch nicht von einem zulässigen Tableau auf die beschriebene Weise abstammt.
+
+Zulässige Lösungen, die durch ein Tableau beschrieben werden (d.h., die aus einem Tableau dadurch entstehen, dass man alle Nichtbasisvariablen auf Null setzt), heißen \textit{zulässige Basislösungen} (engl. \textit{basic feasible solutions}).
+\index{zulässige Basislösung}\index{Basislösung, zulässige}\index{Lösung!zulässige Basis-}
+\index{basic feasible solution}\index{solution!basic feasible}
+
+\textit{Eine auffallende Eigenschaft des Simplexalgorithmus ist, dass er nur mit zulässigen Basislösungen arbeitet und alle anderen zulässigen Lösungen ignoriert}.
+
+Nun ist es Zeit für ein weiteres \textbf{Beispiel}, das aus Chvátal: \textit{Linear Programming} entnommen wurde.
+
+\medskip
+\textbf{Second Example}
+
+We shall complete our preview of the simplex method by applying it to another LP problem:
+
+\footnotesize
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximize } & 5x_1 &\ + &\ 5x_2 &\ + &\ 3x_3 & & \\
+& \rlap{subject to} & & & & & & & \\
+&&  x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\ 3\ \\
+&& -x_1 &\   &\      &\ + &\ 3x_3 &\ \leq &\ 2\ \\
+&& 2x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 4\ \\
+&& 2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ \leq &\ 2\ \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\small
+In this case, the initial feasible dictionary reads
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:c1}
+x_4 &\ = &\ 3 &\ - &\  x_1 &\ - &\ 3x_2 &\ - &\  x_3\ \\
+x_5 &\ = &\ 2 &\ + &\  x_1 &\   &\      &\ - &\ 3x_3\ \\
+x_6 &\ = &\ 4 &\ - &\ 2x_1 &\ + &\  x_2 &\ - &\ 2x_3\ \\
+x_7 &\ = &\ 2 &\ - &\ 2x_1 &\ - &\ 3x_2 &\ + &\  x_3\ \\ \cline{1-9}
+  z &\ = &\   &\   &\ 5x_1 &\ + &\ 5x_2 &\ + &\ 3x_3.
+\end{alignedat}
+\end{align}
+
+(Even though the order of the equations in a dictionary is quite irrelevant, we shall make a habit of writing the formula for $z$ last and separating it from the rest of the table by a solid line. Of course, that does \textit{not} mean that the last equation is the sum of the previous ones.) This feasible dictionary describes the feasible solution
+\[
+x_1 = 0,\quad
+x_2 = 0,\quad
+x_3 = 0,\quad
+x_4 = 3,\quad
+x_5 = 2,\quad
+x_6 = 4,\quad
+x_7 = 2.
+\]
+
+However, there is no need to write this solution down, as we just did: the solution is implicit in the dictionary.
+
+In the first iteration, we shall attempt to increase the value of $z$ by making one of the right-hand side variables positive. At this moment, any of the three variables $x_1$, $x_2$, $x_3$ would do. In small examples, it is common practice to choose the variable that, in the formula for $z$, has the largest coefficient: the increase in that variable will make $z$ increase at the fastest rate (but not necessarily to the highest level). In our case, this rule leaves us a choice between $x_1$ and $x_2$; choosing arbitrarily, we decide to make $x_1$ positive. As the value of $x_1$ increases, so does the value of $x_5$. However, the values of $x_4$, $x_6$, and $x_7$ decrease, and none of them is allowed to become negative. Of the three constraints $x_4 \geq 0$, $x_6 \geq 0$, $x_7 \geq 0$ that impose upper bounds on the increment of $x_1$ the last constraint $x_7 \geq 0$ is the most stringent: it implies $x_1 \leq 1$. In the improved feasible solution, we shall have $x_1=1$ and $x_7 = 0$. Without writing the new solution down, we shall now construct the new dictionary. All we need to know is that $x_1$ just made its way from the right-hand side to the left, whereas $x_7$ went in the opposite direction. From the fourth equation in (\ref{eq:2:c1}), we have
+\begin{equation}
+\label{eq:2:c2}
+x_1 = 1 - \frac{3}{2}x_2 + \frac{1}{2}x_3 - \frac{1}{2}x_7.
+\end{equation}
+
+
+Substituting from (\ref{eq:2:c2}) into the remaining equations of (\ref{eq:2:c1}), we arrive at the desired dictionary
+
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:c3}
+x_1 &\ = &\ 1 &\ - &\ \frac{3}{2}x_2 &\ + &\  \frac{1}{2}x_3 &\ - &\ \frac{1}{2}x_7\ \\[1mm]
+x_4 &\ = &\ 2 &\ - &\ \frac{3}{2}x_2 &\ - &\  \frac{3}{2}x_3 &\ + &\ \frac{1}{2}x_7\ \\[1mm]
+x_5 &\ = &\ 3 &\ - &\ \frac{3}{2}x_2 &\ - &\  \frac{5}{2}x_3 &\ - &\ \frac{1}{2}x_7\ \\[1mm]
+x_6 &\ = &\ 2 &\ + &\           4x_2 &\ - &\            3x_3 &\ + &\            x_7\ \\[1mm] \cline{1-9}
+  z &\ = &\ 5 &\ - &\ \frac{5}{2}x_2 &\ + &\ \frac{11}{2}x_3 &\ - &\ \frac{5}{2}x_7.
+\end{alignedat}
+\end{align}
+
+The construction of (\ref{eq:2:c3}) completes the first iteration of the simplex method.
+
+In our example, the variable to enter the basis during the second iteration is quite unequivocally $x_3$. This is the only nonbasic variable in (\ref{eq:2:c3}) whose coefficient in the last row is positive. Of the four basic variables, $x_6$ imposes the most stringent upper bound on the increase of $x_3$, and, therefore, has to leave the basis. Pivoting, we arrive at our third dictionary,
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:c4}
+x_3 &\ = &\ \frac{ 2}{3} &\ + &\ \frac{ 4}{3}x_2 &\ + &\ \frac{1}{3}x_7 &\ - &\ \frac{ 1}{3}x_6\ \\[1mm]
+x_1 &\ = &\ \frac{ 4}{3} &\ - &\ \frac{ 5}{6}x_2 &\ - &\ \frac{1}{3}x_7 &\ - &\ \frac{ 1}{6}x_6\ \\[1mm]
+x_4 &\ = &\            1 &\ - &\ \frac{ 7}{2}x_2 &\   &\                &\ + &\ \frac{ 1}{2}x_6\ \\[1mm]
+x_5 &\ = &\ \frac{ 4}{3} &\ - &\ \frac{29}{6}x_2 &\ - &\ \frac{4}{3}x_7 &\ + &\ \frac{ 5}{6}x_6\ \\[1mm] \cline{1-9}
+  z &\ = &\ \frac{26}{3} &\ + &\ \frac{29}{6}x_2 &\ - &\ \frac{2}{3}x_7 &\ - &\ \frac{11}{6}x_6.
+\end{alignedat}
+\end{align}
+
+In the third iteration, the entering variable is $x_2$ and the leaving variable is $x_5$. Pivoting yields the dictionary
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:2:c5}
+x_2 &\ = &\ \frac{ 8}{29} &\ - &\ \frac{ 8}{29}x_7 &\ + &\ \frac{5}{29}x_6 &\ - &\ \frac{ 6}{29}x_5\ \\[1mm]
+x_3 &\ = &\ \frac{30}{29} &\ - &\ \frac{ 1}{29}x_7 &\ - &\ \frac{3}{29}x_6 &\ - &\ \frac{ 8}{29}x_5\ \\[1mm]
+x_1 &\ = &\ \frac{32}{29} &\ - &\ \frac{ 3}{29}x_7 &\ - &\ \frac{9}{29}x_6 &\ + &\ \frac{ 5}{29}x_5\ \\[1mm]
+x_4 &\ = &\ \frac{ 1}{29} &\ + &\ \frac{28}{29}x_7 &\ - &\ \frac{3}{29}x_6 &\ + &\ \frac{21}{29}x_5\ \\[1mm] \cline{1-9}
+  z &\ = &\            10 &\ - &\             2x_7 &\ - &\             x_6 &\ - &\              x_5.
+\end{alignedat}
+\end{align}
+
+At this point, no nonbasic variable can enter the basis without making the value of $z$ decrease. Hence, the last dictionary describes an optimal solution of our example. That solution is
+\[
+x_1 = \frac{32}{29}, \quad
+x_2 = \frac{8}{29}, \quad
+x_3 = \frac{30}{29}
+\]
+and it yields $z = 10$.
+
+
+
+
+
+
+
+
+
+
+Das \textit{Ergebnis einer Iteration}\index{Ergebnis einer Iteration}\index{Iteration!Ergebnis einer} ist immer ein \textit{neues Tableau}. \textit{Am Ende jeder Iteration wird dieses Ergebnis -- das neue Tableau also -- übersichtlich hingeschrieben}, wobei einige \textit{Konventionen}\index{Konventionen beim Simplexverfahren}\index{Simplexverfahren!Konventionen beim} zu beachten sind, die wir im zweiten Beispiel kennengelernt haben\footnote{Diese Konventionen dienen der Übersichtlichkeit.}:
+
+\begin{enumerate}
+\item Die $z$-Zeile\index{$z$-Zeile} wird \textbf{unten} notiert und durch einen Strich abgetrennt.
+\item Im neuen Tableau wird die Zeile mit der Eingangsvariablen immer \textbf{oben} hingeschrieben.
+\item Die Variable, die neu auf der rechten Seite auftaucht -- die Ausgangsvariable -- schließt immer \textbf{rechts} an.
+\item Außerdem ist es für die Übersichtlichkeit wichtig, dass im Tableau gleiche Variablen immer \textbf{genau untereinander} geschrieben werden.
+\end{enumerate}
+
+Wir schreiben das erste Beispiel noch einmal übersichtlich auf. Dieses Beispiel kann als \textit{Muster für das Lösen von Übungsaufgaben}\index{Muster für das Lösen von Übungsaufgaben}\index{Übungsaufgaben, Muster für das Lösen von} dienen.
+
+\textbf{Aufgabe}: Lösen Sie das folgende LP-Problem mit dem Simplexverfahren:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\  5\ \\
+&& 4x_1 &\ + &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 11\ \\
+&& 3x_1 &\ + &\ 4x_2 &\ + &\ 2x_3 &\ \leq &\  8\ \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\  0.
+\end{alignedat}
+\end{align*}
+
+\textbf{Lösung}.
+
+\underline{Starttableau}:
+\begin{align*}
+\begin{alignedat}{5}
+x_4 &\ = &\  5 &\ - &\ 2x_1 &\ - &\ 3x_2 &\ - &\  x_3\ \\
+x_5 &\ = &\ 11 &\ - &\ 4x_1 &\ - &\  x_2 &\ - &\ 2x_3\ \\
+x_6 &\ = &\  8 &\ - &\ 3x_1 &\ - &\ 4x_2 &\ - &\ 2x_3\ \\ \cline{1-9}
+  z &\ = &     &    &\ 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3. 
+\end{alignedat}
+\end{align*}
+
+\underline{1. Iteration}:
+
+Eingangsvariable: $x_1$ \\
+Ausgangsvariable: $x_4$
+
+Es folgt
+\begin{align*}
+x_1 &= \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4\ \\[2mm]
+x_5 &= 11 - 4 \cdot \left( \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4 \right) - x_2 - 2x_3 \\[2mm]
+    &= 1 + 5x_2 + 2x_4 \\[2mm]
+x_6 &= 8 - 3 \cdot \left( \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4 \right) -4x_2 - 2x_3 \\[2mm]
+    &= \frac{1}{2} + \frac{1}{2}x_2 - \frac{1}{2}x_3 + \frac{3}{2}x_4 \\[2mm]
+z   &= 5 \cdot \left( \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2}x_3 - \frac{1}{2}x_4 \right) + 4x_2 + 3x_3 \\[2mm]
+    &= \frac{25}{2} - \frac{7}{2}x_2 + \frac{1}{2}x_3 - \frac{5}{2}x_4.
+\end{align*}
+
+\underline{Ergebnis der 1. Iteration}:
+
+\begin{align*}
+\begin{alignedat}{5}
+x_1 &\ = &\  \frac{5}{2} &\ - &\ \frac{3}{2}x_2 &\ - &\ \frac{1}{2}x_3 &\ - &\ \frac{1}{2}x_4\ \\[2mm]
+x_5 &\ = &\            1 &\ + &\           5x_2 &    &                 &\ + &\           2x_4\ \\[2mm]
+x_6 &\ = &\  \frac{1}{2} &\ + &\ \frac{1}{2}x_2 &\ - &\ \frac{1}{2}x_3 &\ + &\ \frac{3}{2}x_4\ \\[2mm] \cline{1-9}
+z   &\ = &\ \frac{25}{2} &\ - &\ \frac{7}{2}x_2 &\ + &\ \frac{1}{2}x_3 &\ - &\ \frac{5}{2}x_4.
+\end{alignedat}
+\end{align*}
+
+\underline{2. Iteration}:
+
+Eingangsvariable: $x_3$ \\
+Ausgangsvariable: $x_6$
+
+Es folgt
+\begin{align*}
+x_3 &= 1 + x_2 + 3x_4 - 2x_6 \\[2mm]
+x_1 &= \frac{5}{2} - \frac{3}{2}x_2 - \frac{1}{2} \Bigl( 1+x_2+3x_4-2x_6 \Bigr) - \frac{1}{2}x_4 \\[2mm]
+    &= 2 - 2x_2 - 2x_4 + x_6\ \\[2mm]
+z   &= \frac{25}{2} - \frac{7}{2}x_2 + \frac{1}{2} \Bigl( 1+x_2+3x_4-2x_6 \Bigr) - \frac{5}{2}x_4 \\[2mm]
+    &= 13 - 3x_2 -  x_4 - x_6.
+\end{align*}
+
+\underline{Ergebnis der 2. Iteration}:
+
+\begin{align*}
+\begin{alignedat}{5}
+x_3 &\ = &\  1 &\ + &\  x_2 &\ + &\ 3x_4 &\ - &\ 2x_6\ \\
+x_1 &\ = &\  2 &\ - &\ 2x_2 &\ - &\ 2x_4 &\ + &\  x_6\ \\
+x_5 &\ = &\  1 &\ + &\ 5x_2 &\ + &\ 2x_4 &    &        \\ \cline{1-9}
+z   &\ = &\ 13 &\ - &\ 3x_2 &\ - &\  x_4 &\ - &\  x_6.
+\end{alignedat}
+\end{align*}
+
+Dieses Tableau liefert die optimale Lösung $x_1=2$, $x_2=0$, $x_3=1$ mit $z=13$.
+
+Anstelle von \enquote{Ergebnis der $k$-ten Iteration} kann man jedes Mal auch kurz und knapp \enquote{Neues Tableau} schreiben.
+
+\textbf{Hinweis}: Das \textit{Ergebnis einer Iteration}\index{Ergebnis einer Iteration}\index{Iteration!Ergebnis einer} ist natürlich auch immer eine \textbf{neue zulässige Basislösung}\index{zulässige Basislösung}\index{Basislösung, zulässige}. Die neue zulässige Basislösung braucht am Ende einer Iteration aber nicht unbedingt hingeschrieben zu werden, da sie implizit im neuen Tableau enthalten und sehr leicht ablesbar ist.
+
+Der Deutlichkeit halber geben wir für das erste Beispiel die Folge der zulässigen Basislösungen noch einmal explizit an.
+
+\underline{Startlösung (\enquote{zulässige Basislösung am Anfang})}:
+\[
+x_1=0, \qquad x_2=0, \qquad x_3=0, \qquad x_4=5, \qquad x_5=11, \qquad x_6=8 \quad \text{mit} \quad z=0.
+\]
+
+\underline{Zulässige Basislösung nach der 1. Iteration}:
+\[
+x_1=\frac{5}{2}, \qquad x_2=0, \qquad x_3=0, \qquad x_4=0, \qquad x_5=1, \qquad x_6=\frac{1}{2} \quad \text{mit} \quad z=12.5.
+\]
+
+\underline{Zulässige Basislösung nach der 2. Iteration}:
+\[
+x_1=2, \qquad x_2=0, \qquad x_3=1, \qquad x_4=0, \qquad x_5=1, \qquad x_6=0 \quad \text{mit} \quad z=13.
+\]
+
+Abschließend noch eine \textbf{Sprechweise}: Im LP-Problem (\ref{eq:2:12}) hatten wir es ursprünglich mit den Variablen $x_1,\ldots,x_n$ zu tun. Anschließend kamen sofort weitere Variablen $x_{n+1}, \ldots, x_{n+m}$ hinzu, die wir \textit{Schlupfvariablen} genannt haben. Um uns besser ausdrücken zu können, fehlt noch ein Name für die \enquote{ursprünglichen Variablen} $x_1,\ldots,x_n$: Es ist üblich, diese Variablen als \textit{Problemvariablen}\index{Problemvariable}\index{Variable!Problem-} oder \textit{Entscheidungsvariablen}\index{Entscheidungsvariable}\index{Variable!Entscheidungs-} (engl. \textit{decision variables}\index{decision variable}\index{Variable!decision}) zu bezeichnen.

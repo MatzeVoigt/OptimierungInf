@@ -1,0 +1,85 @@
+\def\nr{2. Aufgabenblatt}
+\def\kopf{\\\hfill\normalsize\mdseries}
+\documentclass[11pt,a4paper,fleqn]{scrartcl}
+\usepackage{eurosym}
+\input{header_OptInf}
+
+\subsection*{Präsenzaufgaben am 16./17.11.2020}
+
+\Aufgabe[ (Simplexverfahren)]{P1}
+Schauen Sie sich die \textbf{Übersicht zum Simplexverfahren} an und beantworten Sie die folgenden Fragen:
+\begin{enumerate}[i)]
+% Aufgabe P-1 (i)
+\item Wie kommt das Starttableau zustande?
+% Aufgabe P-1 (ii)
+\item Weshalb wurde in der 1. Iteration $x_1$ als Eingangsvariable gewählt? Wie kommt die Wahl von $x_4$ als Ausgangsvariable zustande?
+% Aufgabe P-1 (iii)
+\item Als Ergebnis der 1. Iteration erhält man ein neues Tableau. Wie kommt die 1. Zeile in diesem Tableau zustande? Wie ergeben sich die übrigen Zeilen (einschließlich der $z$-Zeile)?
+% Aufgabe P-1 (iv)
+\item Woran erkennt man, dass das Tableau am Ende der 2. Iteration optimal ist? Wie ergibt sich am Schluss die optimale Lösung?
+% Aufgabe P-1 (v)
+\item Können Sie anhand der $z$-Zeile im letzten Tableau begründen, weshalb die gefundene Lösung tatsächlich optimal ist?
+\end{enumerate}
+
+\Aufgabe[ (Simplexverfahren am Beispiel)]{P2}
+Wir betrachten das folgende LP-Problem, das mit dem Simplexverfahren gelöst werden soll; dabei ist genau wie in der \textbf{Übersicht zum Simplexverfahren} vorzugehen. Insbesondere ist am Ende jeder Iteration das neue Tableau noch einmal übersichtlich hinzuschreiben.
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 4x_1 &\ + &\ x_2 &\ - &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -2x_1 &\ - &\ 2x_2 &\ + &\ 3x_3 &\ \leq &\ 2, \\
+&&  2x_1 &\ + &\  x_2 &\   &\      &\ \leq &\ 5, \\
+&&   x_1 &\ - &\  x_2 &\ - &\ 5x_3 &\ \leq &\ 4, \\
+&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\subsection*{Hausaufgaben bis zum 25.11.2020 (12:00 Uhr)}
+\emph{Bitte reichen Sie Ihre Hausaufgaben in festen Zweier- oder Dreiergruppen bei Moodle ein. Bitte laden Sie ausschließlich \textbf{PDF-Dokumente} hoch, andernfalls können Ihre Hausaufgaben nicht korrigiert werden.}
+
+\Aufgabe[ (Simplexverfahren, 6 Punkte)]{H1}
+Lösen Sie die folgenden LP-Probleme mit dem Simplexverfahren:
+\begin{enumerate}[a)]
+% Aufgabe H-1a
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & -2x_1 &\ + &\ 3x_2 &\ + &\ \frac{1}{2}x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& -2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ \leq &\ 4, \\
+&&   x_1 &    &       &\ + &\ 2x_3 &\ \leq &\ 10, \\
+&&  -x_1 &\ + &\  x_2 &    &       &\ \leq &\ 2, \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+% Aufgabe H-1b
+\item \begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 3x_1 &\ + &\ x_2 &\ - &\ 10x_3 &\ - &\ 9x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& x_1 &\ - &\ x_2 &\ - &\ x_3 &\ + &\ x_4 &\ \leq &\ 2,\ \\
+&& x_1 &\ + &\ x_2 &\ + &\ 3x_3 &\ + &\  x_4 &\ \leq &\ 1,\ \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+\Aufgabe[ (Simplexverfahren und unbeschränkte Probleme, 4 Punkte)]{H2}
+\begin{enumerate}[a)]
+	% Aufgabe H-2a
+	\item Lösen Sie die folgende Aufgabe mit dem Simplexverfahren:
+	\begin{align*}
+	\begin{alignedat}{5}
+	& \text{maximiere } & -x_1 &\ + &\ 3x_2 &\ + &\ x_3 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+	&& -x_1 &\ + &\ 2x_2 &\ + &\ 2x_3 &\ \leq &\ 4,\ \\
+	&&  x_1 &\ - &\ 2x_2 &\ + &\ 3x_3 &\ \leq &\ 4,\ \\
+	&&  x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ \leq &\ 4,\ \\
+	&&&&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.\
+	\end{alignedat}
+	\end{align*}
+	
+	% Aufgabe P-1b
+	\item Falls das Verfahren mit dem Ergebnis \textbf{unbeschränkt} terminiert, so gebe man zulässige Lösungen an, für die der Zielfunktionswert $z$ die folgenden Werte annimmt: $z=10$, $z=100$ sowie $z=1000$.
+\end{enumerate}
+\end{document}

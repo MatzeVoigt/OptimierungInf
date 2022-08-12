@@ -1,0 +1,27 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+	\begin{pspicture}(-1.5,0.0)(3.5,1.5)
+	\footnotesize
+	
+	\cnode*(0,1){3pt}{A} \uput{0.15}[180](0,1){$a$}
+	\cnode*(2,1){3pt}{B} \uput{0.15}[  0](2,1){$b$}
+	
+	\ncarc[arcangle=30]{->}{A}{B}
+	\ncarc[arcangle=30]{->}{B}{A}
+
+	\small
+	\uput{0.75}[270](1,1){\footnotesize{Ein Paar von antiparallelen Kanten.}}
+	
+	\end{pspicture}
+\end{document}

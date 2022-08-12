@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.5,-1)(5.5,4.5)
+\footnotesize
+
+\uput{0.75}[270](2,0){Das $G$ entsprechende Netzwerk $N=(G',c,s,t)$.}
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(4,2){3pt}{T} \uput{0.2}[  0](4,2){$t$}
+\cnode*(1,4){3pt}{X1} \uput{0.2}[ 90](1,4){$x_1$}
+\cnode*(1,3){3pt}{X2} \uput{0.2}[270](1,3){$x_2$}
+\cnode*(1,2){3pt}{X3} \uput{0.2}[270](1,2){$x_3$}
+\cnode*(1,1){3pt}{X4} \uput{0.2}[270](1,1){$x_4$}
+\cnode*(1,0){3pt}{X5} \uput{0.2}[270](1,0){$x_5$}
+\cnode*(3,4){3pt}{Y1} \uput{0.2}[ 90](3,4){$y_1$}
+\cnode*(3,3){3pt}{Y2} \uput{0.2}[270](3,3){$y_2$}
+\cnode*(3,2){3pt}{Y3} \uput{0.2}[270](3,2){$y_3$}
+\cnode*(3,1){3pt}{Y4} \uput{0.2}[270](3,1){$y_4$}
+\cnode*(3,0){3pt}{Y5} \uput{0.2}[270](3,0){$y_5$}
+\ncline{->}{X1}{Y3}
+\ncline{->}{X2}{Y1}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{->}{X2}{Y2}
+\ncline{->}{X3}{Y2}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{->}{X3}{Y3}
+\ncline{->}{X4}{Y2}
+\ncline{->}{X4}{Y3}
+\ncline{->}{X5}{Y3}
+\ncline{->}{X5}{Y4}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{->}{X5}{Y5}
+\ncline{->}{S}{X1}
+\ncline{->}{S}{X2}
+\ncline{->}{S}{X3}
+\ncline{->}{S}{X4}
+\ncline{->}{S}{X5}
+\ncline{->}{Y1}{T}
+\ncline{->}{Y2}{T}
+\ncline{->}{Y3}{T}
+\ncline{->}{Y4}{T}
+\ncline{->}{Y5}{T}
+
+\small
+\end{pspicture}
+\end{document}

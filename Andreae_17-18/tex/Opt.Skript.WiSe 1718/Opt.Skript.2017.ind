@@ -1,0 +1,913 @@
+\begin{theindex}
+
+  \item $\gamma$-Approximationsalgorithmus, \hyperpage{164}
+  \item $i$-te Ressource, \hyperpage{79}
+    \subitem Schattenpreis der, \hyperpage{81}
+  \item $u,v$-Pfad, L\"ange eines, \hyperpage{176}
+  \item $z$-Zeile, \hyperpage{25}
+  \item \"Olraffinerie, \hyperpage{9}
+  \item \"Uberf\"uhrung in Standardform, \hyperpage{10}
+  \item \"Ubungsaufgaben, Muster f\"ur das L\"osen von, \hyperpage{25}
+  \item \"okonomische Bedeutung dualer Variablen, \hyperpage{79}
+  \item \"uberlappen, \hyperpage{170}
+  \item \"uberlappende Intervalle, \hyperpage{170}
+  \item 0,1-Problem, \hyperpage{65}
+  \item 2-Approximationsalgorithmus, \hyperpage{164}
+  \item 2-Approximationsalgorithmus f\"ur das Knoten\"uberdeckungsproblem, 
+		\hyperpage{166}
+  \item 2-dimensionales Verschnittproblem, \hyperpage{67}
+
+  \indexspace
+
+  \item Abbildung
+    \subitem affine, \hyperpage{223}, \hyperpage{228}
+    \subitem lineare, \hyperpage{223}
+  \item Abstandssumme, \hyperpage{221}
+  \item Additionstheoreme, \hyperpage{225}
+  \item Adjazenzliste, \hyperpage{129}
+  \item Adjazenzmatrix, \hyperpage{216}
+  \item affine Abbildung, \hyperpage{223}, \hyperpage{228}
+  \item Algorithmische Geometrie, \hyperpage{49}
+  \item Algorithmus
+    \subitem $\gamma$-Approximations-, \hyperpage{164}
+    \subitem 2-Approximations-, \hyperpage{164}
+    \subitem Ford-Fulkerson-, \hyperpage{118}
+    \subitem Greedy-, \hyperpage{169}
+    \subitem Innere-Punkte-, \hyperpage{58}
+    \subitem Intervall-Scheduling-, \hyperpage{171}
+    \subitem Khachiyan-, \hyperpage{58}
+    \subitem Labelling-, \hyperpage{120--122}
+    \subitem Markierungs-, \hyperpage{120}
+    \subitem Mergesort-, \hyperpage{199}
+    \subitem Netzwerk-Fluss-, \hyperpage{143}
+    \subitem polynomieller, \hyperpage{218}
+    \subitem pseudo-polynomieller, \hyperpage{207}
+    \subitem Push-Relabel-, \hyperpage{134}
+    \subitem Reverse-Delete-, \hyperpage{185}
+    \subitem Simplex-, \hyperpage{15}, \hyperpage{135}, \hyperpage{138}
+    \subitem Subset-Sum-, \hyperpage{205, 206}
+    \subitem von Bellman und Ford, \hyperpage{207}, \hyperpage{210}
+    \subitem von Dijkstra, \hyperpage{177, 178}
+    \subitem von Edmonds und Karp, \hyperpage{120}, \hyperpage{122}
+    \subitem von Floyd und Warshall, \hyperpage{213}
+    \subitem von Kruskal, \hyperpage{185}, \hyperpage{189}
+    \subitem von Prim, \hyperpage{185}
+    \subitem von Strassen, \hyperpage{199}
+    \subitem zertifizierender, \hyperpage{75}, \hyperpage{119}
+  \item Algorithmus von Kruskal, \hyperpage{191}
+  \item all-to-all, \hyperpage{213}
+  \item allgemeiner Fall eines LP-Problems, \hyperpage{83}
+  \item allgemeines Di\"atproblem, \hyperpage{59}
+  \item alternative Pivotierungsregeln, \hyperpage{57}
+  \item alternierender Baum, \hyperpage{161}
+  \item alternierender Pfad, \hyperpage{148}, \hyperpage{151}
+  \item Anfangsknoten einer Kante, \hyperpage{110}, \hyperpage{120}
+  \item Anfrage, \hyperpage{170}
+    \subitem kompatible, \hyperpage{170}
+  \item antiparallele Kante, \hyperpage{116}, \hyperpage{131}
+  \item Array-Implementierung der Union-Find-Datenstruktur, 
+		\hyperpage{193}
+  \item aufspannender Baum, \hyperpage{184}
+  \item augmentierender Pfad, \hyperpage{147}, \hyperpage{163}
+  \item augmenting path, \hyperpage{120}
+  \item Ausgangsspalte, \hyperpage{100}
+  \item Ausgangsvariable, \hyperpage{23}
+    \subitem Wahl der, \hyperpage{29}
+  \item Austausch, \hyperpage{20}
+  \item Austauschargument, \hyperpage{169, 170}, \hyperpage{173}, 
+		\hyperpage{175, 176}, \hyperpage{185}
+
+  \indexspace
+
+  \item Barriere-Funktion, \hyperpage{238}
+    \subitem logarithmische, \hyperpage{237}
+  \item basic feasible solution, \hyperpage{23}
+  \item Basis, \hyperpage{22}, \hyperpage{96}
+  \item Basisaustauschschritt, \hyperpage{23}
+  \item Basisl\"osung, zul\"assige, \hyperpage{23}, \hyperpage{27}
+  \item Basismatrix, \hyperpage{96}
+  \item Basistausch, \hyperpage{23}
+  \item Basisvariable, \hyperpage{23}
+    \subitem Nicht-, \hyperpage{23}
+  \item Baum, \hyperpage{184}
+    \subitem alternierender, \hyperpage{161}
+    \subitem aufspannender, \hyperpage{184}
+    \subitem minimaler aufspannender, \hyperpage{183, 184}
+  \item Bedingung
+    \subitem Pfad-, \hyperpage{188, 189}
+    \subitem Reihenfolge-, \hyperpage{188, 189}
+    \subitem Schnitt-, \hyperpage{188, 189}
+  \item Beispiel
+    \subitem \enquote{Forstunternehmerin}, \hyperpage{81}
+    \subitem \enquote{Gewinn eines Kosmetikherstellers}, \hyperpage{79}
+  \item Beispiele von Klee und Minty, \hyperpage{55}, \hyperpage{220}
+  \item Bellman und Ford, Algorithmus von, \hyperpage{207}, 
+		\hyperpage{210}
+  \item Bereich
+    \subitem zul\"assiger, \hyperpage{14}
+  \item Bereich, zul\"assiger, \hyperpage{9}
+  \item beschr\"ankt, \hyperpage{233}
+  \item beschr\"anktes Polyeder, \hyperpage{238}
+  \item Beschreibung des revidierten Simplexverfahrens, \hyperpage{97}
+  \item Beweis
+    \subitem des Dualit\"atssatzes, \hyperpage{72, 73}
+    \subitem des Fundamentalsatzes der Linearen Programmierung, 
+		\hyperpage{39}
+    \subitem des Heiratssatzes, \hyperpage{162}
+    \subitem des Max-Flow Min-Cut Theorems, \hyperpage{114}, 
+		\hyperpage{120}
+    \subitem des Satzes vom komplement\"aren Schlupf, \hyperpage{76}
+    \subitem des Satzes von Edmonds und Karp, \hyperpage{129}
+    \subitem des Satzes von K\"onig, \hyperpage{150, 151}
+  \item BFS, \hyperpage{122}
+  \item bin\"ares Problem, \hyperpage{65}
+  \item bipartit, \hyperpage{140, 141}
+  \item bipartite Graphen, \hyperpage{141}
+    \subitem Matching in, \hyperpage{140}
+    \subitem Matching-Problem f\"ur, \hyperpage{143}
+  \item Bitl\"ange, \hyperpage{219, 220}
+  \item Bl\"utenalgorithmus von Edmonds, \hyperpage{163}
+  \item Bland's rule, \hyperpage{33}, \hyperpage{57}
+  \item Blandsche Regel, \hyperpage{33}, \hyperpage{57}
+  \item bottleneck, \hyperpage{128}
+  \item breadth first search, \hyperpage{122}
+  \item Breitensuche, \hyperpage{122}
+  \item Brennpunkt, \hyperpage{221}
+
+  \indexspace
+
+  \item Cayley, Satz von, \hyperpage{184}
+  \item complementary slackness conditions, \hyperpage{77}
+  \item Complementary Slackness Theorem, \hyperpage{76}
+  \item constraint, \hyperpage{9}
+  \item covering number, \hyperpage{150}
+  \item cycling, \hyperpage{31}
+
+  \indexspace
+
+  \item Dantzig, G. B., \hyperpage{15}
+  \item Datenstruktur, Union-Find-, \hyperpage{191}
+  \item Deadline, \hyperpage{173}
+  \item decision variable, \hyperpage{27}
+  \item degenerate, \hyperpage{30}
+  \item degeneriert, \hyperpage{30}
+  \item degenerierter Iterationsschritt, \hyperpage{31, 32}
+  \item Determinante, \hyperpage{105}, \hyperpage{227}
+  \item Di\"atproblem, \hyperpage{5, 6}, \hyperpage{59}
+    \subitem allgemeines, \hyperpage{59}
+  \item dictionary, \hyperpage{23}
+    \subitem feasible, \hyperpage{23}
+  \item Digraph, \hyperpage{107}
+    \subitem schlingenloser, \hyperpage{107}
+  \item Dijkstra, Algorithmus von, \hyperpage{177, 178}
+  \item Distanzmatrix, \hyperpage{216}
+  \item Divide and Conquer, \hyperpage{199}
+  \item Drehung, \hyperpage{225}
+  \item duale Nebenbedingung, \hyperpage{70}
+  \item duale Variable, \hyperpage{70}, \hyperpage{84}
+    \subitem \"okonomische Bedeutung, \hyperpage{79}
+    \subitem freie, \hyperpage{84}
+    \subitem restringierte, \hyperpage{84}
+  \item duale zul\"assige L\"osung, \hyperpage{71}
+  \item Duales, \hyperpage{70}, \hyperpage{86}
+  \item duales Problem, \hyperpage{69}, \hyperpage{86}
+    \subitem optimale L\"osung, \hyperpage{72}
+    \subitem zum Maximalflussproblem, \hyperpage{136}, \hyperpage{138}
+  \item Dualisierungsrezept, \hyperpage{86}, \hyperpage{137}
+  \item Dualit\"at, \hyperpage{68}
+    \subitem eines allgemeinen LP-Problems, \hyperpage{83}
+    \subitem schwache, \hyperpage{71}
+  \item Dualit\"atssatz, \hyperpage{72}, \hyperpage{74}, 
+		\hyperpage{231}
+    \subitem Beweis des, \hyperpage{72, 73}
+    \subitem f\"ur allgemeine LP-Probleme, \hyperpage{88}
+    \subitem Folgerung aus dem, \hyperpage{75}
+  \item Durchmesser, \hyperpage{221}
+  \item dynamic programming, \hyperpage{199}
+  \item Dynamisches Programmieren, \hyperpage{199}
+
+  \indexspace
+
+  \item Earliest Deadline First, \hyperpage{175}
+  \item Ebene
+    \subitem Halb-, \hyperpage{11}, \hyperpage{41}
+    \subitem Hyper- des $\mathbb{R}^n$, \hyperpage{41}
+    \subitem im $\mathbb{R}^3$, \hyperpage{41}
+  \item Ecke, \hyperpage{107}
+    \subitem eines Polyeders, \hyperpage{43}
+    \subitem eines Prismas, \hyperpage{43}
+    \subitem optimale, \hyperpage{44}
+  \item edge, \hyperpage{107}
+  \item Edmonds und Karp
+    \subitem Algorithmus von, \hyperpage{120}, \hyperpage{122}
+    \subitem Satz von, \hyperpage{122}
+  \item einfacher Pfad, \hyperpage{209}
+  \item Eingabel\"ange, \hyperpage{218}, \hyperpage{220}
+  \item Eingangsspalte, \hyperpage{98--100}
+  \item Eingangsvariable, \hyperpage{23}
+    \subitem Wahl der, \hyperpage{29}
+  \item Einheitsvektor, \hyperpage{224}
+  \item einschlie\IeC {\ss }endes Oder, \hyperpage{76}
+  \item Ellipse, \hyperpage{221}
+    \subitem Halbachsen einer, \hyperpage{222}
+    \subitem Mittelpunkt einer, \hyperpage{221}
+    \subitem Mittelpunktsgleichung einer, \hyperpage{222}
+  \item Ellipsoid, \hyperpage{229}
+    \subitem Halb-, \hyperpage{233}
+    \subitem Mittelpunkt eines, \hyperpage{231}
+    \subitem Volumen eines, \hyperpage{234}
+  \item Ellipsoid-Methode, \hyperpage{58}, \hyperpage{218}, 
+		\hyperpage{232}
+    \subitem Update-Formeln, \hyperpage{234}
+  \item Endknoten einer Kante, \hyperpage{110}, \hyperpage{120}
+  \item endlich erzeugter konvexer Kegel, \hyperpage{54}
+  \item Energieflussproblem, \hyperpage{62}
+  \item englische Terminologie, \hyperpage{9}
+  \item entartet, \hyperpage{30}
+  \item entarteter Iterationsschritt, \hyperpage{31, 32}
+  \item Entartung, \hyperpage{30}
+  \item Entscheidungsvariable, \hyperpage{27}
+  \item Epigraph, \hyperpage{47}
+  \item Ergebnis einer Iteration, \hyperpage{25}, \hyperpage{27}
+  \item Erhaltungsregel, \hyperpage{108}
+  \item Erreichbarkeit durch einen zunehmenden Pfad, \hyperpage{128}
+  \item exchange argument, \hyperpage{169}, \hyperpage{175}
+
+  \indexspace
+
+  \item feasible dictionary, \hyperpage{23}
+  \item feasible solution, \hyperpage{9}
+  \item Fibonacci-Zahlen, \hyperpage{202}
+  \item finishing time, \hyperpage{170}
+  \item first labelled -- first scanned, \hyperpage{123}
+  \item Fl\"ache eines Kreises, \hyperpage{235}
+  \item Fl\"achen eines Polyeders, \hyperpage{42}
+  \item Flaschenhals, \hyperpage{128}
+  \item Flaschenhalskante, \hyperpage{129, 130}
+  \item Floyd und Warshall
+    \subitem Algorithmus von, \hyperpage{213}
+  \item Fluss, \hyperpage{109}
+    \subitem ganzzahliger, \hyperpage{118}
+    \subitem kostenoptimaler, \hyperpage{63}, \hyperpage{134}
+    \subitem Maximal-, \hyperpage{111}
+    \subitem maximaler, \hyperpage{111}
+    \subitem maximaler St\"arke, \hyperpage{63}
+    \subitem Netto-, \hyperpage{113}
+    \subitem Null-, \hyperpage{118}
+    \subitem Wert des, \hyperpage{110}
+    \subitem Zertifikat f\"ur Optimalit\"at, \hyperpage{119}
+  \item Flussnetzwerk, \hyperpage{107}
+  \item flussvergr\"o\IeC {\ss }ernder Pfad, \hyperpage{117}
+  \item Folgerung aus dem Dualit\"atssatz, \hyperpage{75}
+  \item Ford-Fulkerson-Algorithmus, \hyperpage{118}
+  \item Ford-Fulkerson-Methode, \hyperpage{118}
+  \item Ford-Fulkerson-Verfahren, \hyperpage{118}
+  \item Forstunternehmerin, \hyperpage{81}
+  \item freie duale Variable, \hyperpage{84}
+  \item freie Variable, \hyperpage{9}, \hyperpage{83, 84}
+  \item function, objective, \hyperpage{9}
+  \item Fundamentalsatz der Linearen Programmierung, \hyperpage{39}
+    \subitem Beweis, \hyperpage{39}
+  \item Funktion
+    \subitem Barriere-, \hyperpage{238}
+    \subitem Hilfsziel-, \hyperpage{237}
+    \subitem konvexe, \hyperpage{46}
+    \subitem lineare, \hyperpage{7}
+    \subitem logarithmische Barriere-, \hyperpage{237}
+    \subitem nichtlineare Ziel-, \hyperpage{237}
+    \subitem Ziel-, \hyperpage{8}
+
+  \indexspace
+
+  \item G. B. Dantzig, \hyperpage{15}
+  \item ganzzahliger Fluss, \hyperpage{118}
+  \item ganzzahliger Maximalfluss, \hyperpage{144}
+  \item Ganzzahliges Lineares Programmierungsproblem, \hyperpage{65}
+  \item Geometrie, \hyperpage{41}
+    \subitem Algorithmische, \hyperpage{49}
+  \item Geometrische Interpretation des Simplexverfahrens, 
+		\hyperpage{43}
+  \item Gerade
+    \subitem Halb-, \hyperpage{44}
+    \subitem im $\R^2$, \hyperpage{11}
+    \subitem Parameterform einer, \hyperpage{44}
+  \item Gerade im $\mathbb{R}^2$, \hyperpage{41}
+  \item gerichtete Kante, \hyperpage{107}
+  \item gerichteter Graph, \hyperpage{107}
+  \item Gewichtete Knoten\"uberdeckung, \hyperpage{166}
+  \item gewichteter Graph, \hyperpage{213}
+  \item gewichtetes Intervall-Scheduling-Problem, \hyperpage{199}
+  \item Gleichung, \hyperpage{83, 84}
+    \subitem lineare, \hyperpage{7}
+  \item grafische Methode, \hyperpage{11}
+  \item Graph
+    \subitem bipartiter, \hyperpage{141}
+    \subitem Di-, \hyperpage{107}
+    \subitem gerichteter, \hyperpage{107}
+    \subitem gewichteter, \hyperpage{213}
+    \subitem Multi-, \hyperpage{132}
+    \subitem Residual-, \hyperpage{131, 132}
+    \subitem Rest-, \hyperpage{131}
+    \subitem ungerichteter, \hyperpage{140}
+  \item Graphen, Matching in, \hyperpage{161}
+  \item Greedy-Algorithmus, \hyperpage{169}
+
+  \indexspace
+
+  \item H\"ohenlinie, \hyperpage{238, 239}
+  \item H\"ulle
+    \subitem konische, \hyperpage{52}
+    \subitem konvexe, \hyperpage{48}
+  \item Halbachse
+    \subitem kurze, \hyperpage{222}
+    \subitem lange, \hyperpage{222}
+  \item Halbachsen einer Ellipse, \hyperpage{222}
+  \item Halbebene, \hyperpage{11}, \hyperpage{41}
+  \item Halbellipsoid, \hyperpage{233}
+  \item Halbgerade, \hyperpage{44}
+  \item Halbraum, \hyperpage{41}
+  \item Halbraum des $\mathbb{R}^n$, \hyperpage{41}
+  \item Heiratssatz, \hyperpage{161--163}
+    \subitem Beweis des, \hyperpage{162}
+  \item Hilfsproblem, \hyperpage{35}
+  \item Hilfszielfunktion, \hyperpage{237}
+  \item Hinzunahme von zus\"atzlichen Nebenbedingungen, \hyperpage{60}
+  \item Hyperebene im $\mathbb{R}^n$, \hyperpage{41}
+
+  \indexspace
+
+  \item Identit\"at, \hyperpage{224}
+  \item idle time, \hyperpage{175}
+  \item ILP-Problem, \hyperpage{65}
+  \item Index, Regel vom kleinsten, \hyperpage{57}
+  \item Initialisierung, \hyperpage{28}, \hyperpage{35}
+  \item Innere-Punkte-Algorithmus, \hyperpage{58}
+  \item Innere-Punkte-Methode, \hyperpage{218}, \hyperpage{236}
+  \item innerer Knoten, \hyperpage{109}
+  \item Inneres von $P$, \hyperpage{238}
+  \item inspizierter Knoten, \hyperpage{121}
+  \item Intervall-Scheduling-Algorithmus, \hyperpage{171}
+  \item Intervall-Scheduling-Problem, \hyperpage{170}
+    \subitem gewichtetes, \hyperpage{199}
+  \item Intervalle, \"uberlappende, \hyperpage{170}
+  \item inverse Matrix, \hyperpage{94}
+  \item Inversion, \hyperpage{176}
+  \item invertierbar, \hyperpage{96}, \hyperpage{105}
+  \item isolierter Knoten, \hyperpage{143}
+  \item Iteration, \hyperpage{20}, \hyperpage{28, 29}
+    \subitem Ergebnis einer, \hyperpage{25}, \hyperpage{27}
+  \item Iteration der revidierten Simplexmethode, \hyperpage{100}
+  \item Iterationsschritt
+    \subitem degenerierter, \hyperpage{31, 32}
+    \subitem entarteter, \hyperpage{31, 32}
+
+  \indexspace
+
+  \item Job, \hyperpage{142}, \hyperpage{161}, \hyperpage{174}
+
+  \indexspace
+
+  \item K\"onig, Satz von, \hyperpage{150}
+    \subitem  Beweis, \hyperpage{150, 151}
+  \item k\"urzeste Pfade, \hyperpage{176}
+  \item Kante, \hyperpage{107}
+    \subitem Anfangsknoten einer, \hyperpage{110}, \hyperpage{120}
+    \subitem antiparallele, \hyperpage{116}, \hyperpage{131}
+    \subitem eines Polyeders, \hyperpage{43}
+    \subitem Endknoten einer, \hyperpage{110}, \hyperpage{120}
+    \subitem Flaschenhals-, \hyperpage{129, 130}
+    \subitem gerichtete, \hyperpage{107}
+    \subitem Kapazit\"at einer, \hyperpage{107}, \hyperpage{112}
+    \subitem kritische, \hyperpage{130}
+    \subitem L\"ange einer, \hyperpage{176}
+    \subitem R\"uckw\"arts-, \hyperpage{115}, \hyperpage{117}, 
+		\hyperpage{131}
+    \subitem Vorw\"arts-, \hyperpage{115}, \hyperpage{117}
+  \item Kapazit\"at, \hyperpage{107}, \hyperpage{112}
+    \subitem Residual-, \hyperpage{132}
+  \item Kapazit\"atsschranke, \hyperpage{63}
+  \item Kegel
+    \subitem konvexer, \hyperpage{53}
+  \item Khachiyan-Algorithmus, \hyperpage{58}
+  \item Klasse, \hyperpage{192}
+  \item Klee und Minty
+    \subitem Beispiele von, \hyperpage{55}, \hyperpage{220}
+  \item Knapsack-Problem, \hyperpage{64}, \hyperpage{204}
+  \item Knoten, \hyperpage{107}
+    \subitem innerer, \hyperpage{109}
+    \subitem inspizierter, \hyperpage{121}
+    \subitem isolierter, \hyperpage{143}
+    \subitem untersuchter, \hyperpage{121}
+  \item Knoten\"uberdeckung, \hyperpage{149}
+    \subitem gewichtete, \hyperpage{166}
+    \subitem minimale, \hyperpage{149, 150}
+  \item Knoten\"uberdeckungsproblem, \hyperpage{165}
+  \item Knoten\"uberdeckungszahl, \hyperpage{150}, \hyperpage{165}
+  \item Knotenbedingungen, \hyperpage{63}
+  \item Knotenmarkierungen, \hyperpage{121}
+  \item Kodierungsl\"ange, \hyperpage{220}
+  \item Koeffizient, Regel vom gr\"o\IeC {\ss }ten, \hyperpage{55}
+  \item Kommunikationsnetzwerk, \hyperpage{183}
+  \item kompatibel, \hyperpage{170}
+  \item kompatible Anfrage, \hyperpage{170}
+  \item Komplement, \hyperpage{108}
+  \item komplement\"are Schlupfbedingung, \hyperpage{77}
+  \item Komplexit\"at des Algorithmus von Edmonds und Karp, 
+		\hyperpage{129}
+  \item Komponente, \hyperpage{188}, \hyperpage{191}
+  \item konische H\"ulle, \hyperpage{52}
+  \item konische Linearkombination, \hyperpage{54}
+  \item Konventionen beim Simplexverfahren, \hyperpage{25}
+  \item konvex, \hyperpage{45}
+  \item konvexe Funktion, \hyperpage{46}
+  \item konvexe H\"ulle, \hyperpage{48}
+  \item konvexe Mengen, \hyperpage{44}, \hyperpage{46}
+  \item konvexer Kegel, \hyperpage{53}
+    \subitem endlich erzeugter, \hyperpage{54}
+  \item Konvexit\"at, \hyperpage{44}
+  \item Konvexkombination, \hyperpage{50}
+  \item Kopfzeile, \hyperpage{101}
+  \item kostenminimaler Pfad, \hyperpage{208}
+    \subitem Problem des, \hyperpage{208}
+  \item kostenoptimaler Fluss, \hyperpage{63}, \hyperpage{134}
+  \item Kreis, \hyperpage{221}
+    \subitem Fl\"ache eines, \hyperpage{235}
+  \item Kreise, negative, \hyperpage{208}
+    \subitem Problem der, \hyperpage{208}
+  \item Kreisen des Simplexverfahrens, \hyperpage{31, 32}
+  \item kritische Kante, \hyperpage{130}
+  \item Kruskal
+    \subitem Algorithmus von, \hyperpage{191}
+  \item Kruskal, Algorithmus von, \hyperpage{185}
+  \item Kruskals Algorithmus, \hyperpage{189}
+  \item Kugel
+    \subitem Volumen einer, \hyperpage{235}
+  \item kurze Halbachse, \hyperpage{222}
+
+  \indexspace
+
+  \item L\"ange einer Kante, \hyperpage{176}
+  \item L\"ange eines $u,v$-Pfades, \hyperpage{176}
+  \item L\"osung
+    \subitem duale zul\"assige, \hyperpage{71}
+    \subitem N\"aherungs-, \hyperpage{164}
+    \subitem optimale, \hyperpage{8}
+    \subitem optimale duale, \hyperpage{72}
+    \subitem primale zul\"assige, \hyperpage{71}
+    \subitem Start-, \hyperpage{18}
+    \subitem zul\"assige, \hyperpage{8}
+    \subitem zul\"assige Basis-, \hyperpage{23}
+  \item L\"ucken, \hyperpage{175}
+  \item labelling algorithm, \hyperpage{120}
+  \item Labelling-Algorithmus, \hyperpage{120--122}
+  \item lange Halbachse, \hyperpage{222}
+  \item largest-coefficient rule, \hyperpage{55}
+  \item largest-increase rule, \hyperpage{57}
+  \item late, \hyperpage{174}
+  \item lateness, \hyperpage{174}
+  \item lineare Abbildung, \hyperpage{223}
+    \subitem Nacheinanderausf\"uhrung, \hyperpage{226}
+    \subitem Rechenregeln f\"ur, \hyperpage{223}
+  \item lineare Funktion, \hyperpage{7}
+  \item lineare Gleichung, \hyperpage{7}
+  \item lineare Nebenbedingung, \hyperpage{7}
+  \item Lineare Programmierung, Fundamentalsatz der, \hyperpage{39}
+  \item lineare Ungleichung, \hyperpage{7}
+  \item lineares Optimierungsproblem, \hyperpage{7}
+  \item lineares Programm, \hyperpage{9}
+  \item lineares Programmierungsproblem, \hyperpage{6, 7}
+  \item Linearkombination, \hyperpage{49}
+    \subitem konische, \hyperpage{54}
+  \item Linearkombination von Nebenbedingungen, \hyperpage{68}, 
+		\hyperpage{84}
+  \item logarithmische Barriere-Funktion, \hyperpage{237}
+  \item LP-Problem, \hyperpage{6}
+    \subitem allgemeiner Fall, \hyperpage{83}
+    \subitem Maximalflussproblem als, \hyperpage{135, 136}
+  \item LP-Relaxation, \hyperpage{65}, \hyperpage{167, 168}
+
+  \indexspace
+
+  \item Markierungsalgorithmus, \hyperpage{120}
+  \item Matching, \hyperpage{140}
+    \subitem in bipartiten Graphen, \hyperpage{140}
+    \subitem in Graphen, \hyperpage{161}
+    \subitem maximales, \hyperpage{151}
+    \subitem nicht erweiterbares, \hyperpage{165}
+    \subitem perfektes, \hyperpage{142}
+  \item Matching-Problem, \hyperpage{141}
+    \subitem f\"ur bipartite Graphen, \hyperpage{143}
+  \item Matchingzahl, \hyperpage{141}
+  \item Matrix
+    \subitem Adjazenz-, \hyperpage{216}
+    \subitem Basis-, \hyperpage{96}
+    \subitem Distanz-, \hyperpage{216}
+    \subitem inverse, \hyperpage{94}
+    \subitem nichtsingul\"are, \hyperpage{94}, \hyperpage{96}, 
+		\hyperpage{105}, \hyperpage{230}
+    \subitem positiv definite, \hyperpage{230}
+    \subitem regul\"are, \hyperpage{227}
+    \subitem singul\"are, \hyperpage{105}
+  \item Matrixdarstellung eines Tableaus, \hyperpage{96}
+  \item Matrixform eines Tableaus, \hyperpage{95}
+  \item Matrixschreibweise, \hyperpage{8}, \hyperpage{70}
+  \item Matrizen, \hyperpage{93}
+    \subitem schwach besetzte, \hyperpage{104}
+  \item Max-Flow Min-Cut Theorem, \hyperpage{114}, \hyperpage{120}
+  \item maximal matching, \hyperpage{165}
+  \item maximaler Fluss, \hyperpage{111}
+  \item maximales Matching, \hyperpage{151}
+  \item Maximalfluss, \hyperpage{111}
+    \subitem ganzzahliger, \hyperpage{144}
+    \subitem Verfahren zur Bestimmung, \hyperpage{118}
+  \item Maximalflussproblem als LP-Problem, \hyperpage{135, 136}
+  \item maximum matching, \hyperpage{165}
+  \item Memoisation, \hyperpage{202}
+  \item Menge, konvexe, \hyperpage{44}, \hyperpage{46}
+  \item Mergesort-Algorithmus, \hyperpage{199}
+  \item Methode
+    \subitem Ellipsoid-, \hyperpage{58}, \hyperpage{218}, 
+		\hyperpage{232}
+    \subitem Ford-Fulkerson-, \hyperpage{118}
+    \subitem grafische, \hyperpage{11}
+    \subitem Innere-Punkte-, \hyperpage{218}, \hyperpage{236}
+    \subitem Simplex-, \hyperpage{15}
+    \subitem Zentraler-Pfad-, \hyperpage{237}
+  \item minimale Knoten\"uberdeckung, \hyperpage{149, 150}
+  \item minimaler aufspannender Baum, \hyperpage{183, 184}
+  \item minimaler Schnitt, \hyperpage{114}, \hyperpage{135}, 
+		\hyperpage{138, 139}
+  \item minimum spanning tree, \hyperpage{184}
+  \item Minimum-Spanning-Tree-Problem, \hyperpage{186}
+  \item Mittelpunkt einer Ellipse, \hyperpage{221}
+  \item Mittelpunkt eines Ellipsoids, \hyperpage{231}
+  \item Mittelpunktsgleichung einer Ellipse, \hyperpage{222}
+  \item MST, \hyperpage{184}
+  \item Multigraph, \hyperpage{132}
+  \item Muster f\"ur das L\"osen von \"Ubungsaufgaben, \hyperpage{25}
+
+  \indexspace
+
+  \item N\"aherungsl\"osung, \hyperpage{164}
+  \item Nacheinanderausf\"uhrung von linearen Abbildungen, 
+		\hyperpage{226}
+  \item Nebenbedingungen, \hyperpage{7}
+    \subitem duale, \hyperpage{70}
+    \subitem Hinzunahme von zus\"atzlichen, \hyperpage{60}
+    \subitem lineare, \hyperpage{7}
+    \subitem Linearkombination von, \hyperpage{68}, \hyperpage{84}
+    \subitem primale, \hyperpage{70}
+  \item negativer Kreis, \hyperpage{208}, \hyperpage{217}
+  \item Nettofluss, \hyperpage{113}
+  \item Netzwerk, \hyperpage{107}
+    \subitem Fluss-, \hyperpage{107}
+    \subitem Kommunikations-, \hyperpage{183}
+  \item Netzwerk-Fluss-Algorithmus, \hyperpage{143}
+  \item nicht erweiterbares Matching, \hyperpage{165}
+  \item Nichtbasisvariable, \hyperpage{23}
+  \item nichtlineare Zielfunktion, \hyperpage{237}
+  \item Nichtnegativit\"atsbedingungen, \hyperpage{8}, \hyperpage{219}
+  \item nichtsingul\"are Matrix, \hyperpage{94}, \hyperpage{96}, 
+		\hyperpage{105}, \hyperpage{230}
+  \item node, \hyperpage{107}
+  \item node cover, \hyperpage{149}
+  \item node covering number, \hyperpage{150}
+  \item Nullfluss, \hyperpage{118}
+
+  \indexspace
+
+  \item obere Schranke, \hyperpage{68}
+  \item objective function, \hyperpage{9}
+  \item Oder, einschlie\IeC {\ss }endes, \hyperpage{76}
+  \item Operation $\operatorname  {Find}$, \hyperpage{195}
+  \item Operation $\opmakeunionfind{(S)}$, \hyperpage{194}
+  \item Operation $\opunion$, \hyperpage{194, 195}
+  \item Operation Find($u$), \hyperpage{191}
+  \item Operation MakeUnionFind($S$), \hyperpage{192}
+  \item Operation Union($A$,$B$), \hyperpage{191}
+  \item optimale Ecke, \hyperpage{44}
+  \item optimale L\"osung, \hyperpage{8}
+    \subitem des dualen Problems, \hyperpage{72}
+  \item optimaler Zielfunktionswert, \hyperpage{8}
+  \item Optimalit\"at
+    \subitem Test auf, \hyperpage{77}
+    \subitem Zertifikat f\"ur, \hyperpage{75}
+  \item Optimierungsproblem, lineares, \hyperpage{7}
+
+  \indexspace
+
+  \item Parallelverschiebung, \hyperpage{225}, \hyperpage{228}
+  \item Parameterform einer Geraden, \hyperpage{44}
+  \item Partition, \hyperpage{191}
+  \item path compression, \hyperpage{196}
+  \item perfekt, \hyperpage{142}
+  \item perfektes Matching, \hyperpage{142}
+  \item Pfad
+    \subitem alternierender, \hyperpage{148}, \hyperpage{151}
+    \subitem augmentierender, \hyperpage{147}, \hyperpage{163}
+    \subitem einfacher, \hyperpage{209}
+    \subitem flussvergr\"o\IeC {\ss }ernder, \hyperpage{117}
+    \subitem k\"urzester, \hyperpage{176}
+    \subitem kostenminimaler, \hyperpage{208}
+    \subitem zentraler, \hyperpage{240}
+    \subitem zunehmender, \hyperpage{117}
+  \item Pfadbedingung, \hyperpage{188, 189}
+  \item Pfadverk\"urzung, \hyperpage{196}
+  \item Pivotierungsregeln, alternative, \hyperpage{57}
+  \item Pivotschritt, \hyperpage{23}
+  \item Pivotspalte, \hyperpage{23}
+  \item Pivotzeile, \hyperpage{23}
+  \item Polarkoordinaten, \hyperpage{225}
+  \item Politik, \hyperpage{60}
+  \item Polyeder, \hyperpage{41}, \hyperpage{232}
+    \subitem beschr\"anktes, \hyperpage{238}
+    \subitem Ecke eines, \hyperpage{43}
+    \subitem Fl\"achen eines, \hyperpage{42}
+    \subitem Kanten eines, \hyperpage{43}
+    \subitem Seitenfl\"aches eines, \hyperpage{42}
+  \item polynomielle Reduktion, \hyperpage{232}
+  \item polynomieller Algorithmus, \hyperpage{218}
+  \item polynomieller Algorithmus f\"ur Lineare Programmierung, 
+		\hyperpage{220}
+  \item positiv definite Matrix, \hyperpage{230}
+  \item Prim, Algorithmus von, \hyperpage{185}
+  \item primale Nebenbedingung, \hyperpage{70}
+  \item primale Variable, \hyperpage{70}
+  \item primale zul\"assige L\"osung, \hyperpage{71}
+  \item primales Problem, \hyperpage{69}, \hyperpage{86}
+  \item Prisma, \hyperpage{42}
+    \subitem Ecke eines, \hyperpage{43}
+  \item Problem
+    \subitem 0,1-, \hyperpage{65}
+    \subitem allgemeines Di\"at-, \hyperpage{59}
+    \subitem bin\"ares, \hyperpage{65}
+    \subitem der k\"urzesten Wege, \hyperpage{204}
+    \subitem der negativen Kreise, \hyperpage{208}
+    \subitem des kostenminimalen Pfades, \hyperpage{208}
+    \subitem des Matchings f\"ur bipartite Graphen, \hyperpage{143}
+    \subitem Di\"at-, \hyperpage{5, 6}, \hyperpage{59}
+    \subitem duales, \hyperpage{69}, \hyperpage{86}
+    \subitem Energiefluss-, \hyperpage{62}
+    \subitem Ganzzahliges Lineares Programmierungs-, \hyperpage{65}
+    \subitem gewichtetes Intervall-Scheduling-, \hyperpage{199}
+    \subitem Hilfs-, \hyperpage{35}
+    \subitem ILP-, \hyperpage{65}
+    \subitem Intervall-Scheduling-, \hyperpage{170}
+    \subitem Knoten\"uberdeckungs-, \hyperpage{165}
+    \subitem lineares Optimierungs-, \hyperpage{7}
+    \subitem lineares Programmierungs-, \hyperpage{6, 7}
+    \subitem LP-, \hyperpage{6}
+    \subitem Matching-, \hyperpage{141}
+    \subitem Minimum-Spanning-Tree-, \hyperpage{186}
+    \subitem primales, \hyperpage{69}, \hyperpage{86}
+    \subitem Rucksack-, \hyperpage{64, 65}, \hyperpage{204}, 
+		\hyperpage{207}
+    \subitem schwach besetztes, \hyperpage{104}
+    \subitem Subset-Sum-, \hyperpage{204}
+    \subitem Teilsummen-, \hyperpage{204}
+    \subitem Verschnitt-, \hyperpage{65}, \hyperpage{67}
+  \item Problemvariable, \hyperpage{27}
+  \item Programm, lineares, \hyperpage{9}
+  \item Programmieren, Dynamisches, \hyperpage{199}
+  \item Programmierung, Fundamentalsatz der Linearen, \hyperpage{39}
+  \item Programmierungsproblem, lineares, \hyperpage{6, 7}
+  \item pseudo-polynomieller Algorithmus, \hyperpage{207}
+  \item Push-Relabel-Algorithmus, \hyperpage{134}
+
+  \indexspace
+
+  \item Quelle, \hyperpage{63}, \hyperpage{107}
+  \item queue, \hyperpage{123}
+
+  \indexspace
+
+  \item R\"uckw\"artskante, \hyperpage{115}, \hyperpage{117}
+  \item R\"uckw\"artskante von $e$, \hyperpage{131}
+  \item Radius, \hyperpage{221}
+  \item Rand, \hyperpage{238}
+  \item Rechenregeln f\"ur lineare Abbildungen, \hyperpage{223}
+  \item Reduktion, \hyperpage{232}
+    \subitem polynomielle, \hyperpage{232}
+  \item Regel
+    \subitem alternative Pivotierungs-, \hyperpage{57}
+    \subitem Blandsche, \hyperpage{33}, \hyperpage{57}
+    \subitem Erhaltungs-, \hyperpage{108}
+    \subitem vom gr\"o\IeC {\ss }ten Koeffizienten, \hyperpage{55}
+    \subitem vom gr\"o\IeC {\ss }ten Zuwachs, \hyperpage{57}
+    \subitem vom kleinsten Index, \hyperpage{57}
+    \subitem zum Update beim revidierten Simplexverfahren, 
+		\hyperpage{100}
+  \item regul\"are Matrix, \hyperpage{227}
+  \item Reihenfolgebedingung, \hyperpage{188, 189}
+  \item Relaxation
+    \subitem LP-, \hyperpage{167, 168}
+  \item Relaxieren und Runden, \hyperpage{167}
+  \item Residualgraph, \hyperpage{131, 132}
+  \item Residualkapazit\"at, \hyperpage{132}
+  \item Ressource, \hyperpage{79}, \hyperpage{170}
+    \subitem Schattenpreise der $i$-ten, \hyperpage{81}
+  \item Restgraph, \hyperpage{131}
+  \item restringierte duale Variable, \hyperpage{84}
+  \item restringierte Variable, \hyperpage{84}
+  \item Reverse-Delete-Algorithmus, \hyperpage{185}
+  \item revidierte Simplexmethode, \hyperpage{93}
+    \subitem Iteration der, \hyperpage{100}
+  \item revidiertes Simplexverfahren
+    \subitem Beschreibung des, \hyperpage{97}
+    \subitem Regel zum Update beim, \hyperpage{100}
+    \subitem Update beim, \hyperpage{100}
+  \item Richtungsvektor, \hyperpage{44}
+  \item Rucksackproblem, \hyperpage{64, 65}, \hyperpage{204}, 
+		\hyperpage{207}
+  \item Rundungsfehler, \hyperpage{105}
+
+  \indexspace
+
+  \item Satz
+    \subitem Dualit\"ats-, \hyperpage{72}, \hyperpage{74}, 
+		\hyperpage{231}
+    \subitem Dualit\"ats- f\"ur allgemeine LP-Probleme, \hyperpage{88}
+    \subitem Fundamental- der Linearen Programmierung, \hyperpage{39}
+    \subitem Heirats-, \hyperpage{161--163}
+    \subitem vom komplement\"aren Schlupf, \hyperpage{76}
+    \subitem vom komplement\"aren Schlupf (zweite Fassung), 
+		\hyperpage{78}
+    \subitem von Cayley, \hyperpage{184}
+    \subitem von Dinur und Safra, \hyperpage{166}
+    \subitem von Edmonds und Karp, \hyperpage{122}
+    \subitem von Hall, \hyperpage{162}
+    \subitem von K\"onig, \hyperpage{150}
+  \item Schattenpreis, \hyperpage{83}
+    \subitem der $i$-ten Ressource, \hyperpage{81}
+  \item schlingenloser Digraph, \hyperpage{107}
+  \item Schlupf, \hyperpage{237}
+  \item Schlupf, komplement\"are -bedingung, \hyperpage{77}
+  \item Schlupf, Satz vom komplement\"aren, \hyperpage{76}
+    \subitem zweite Fassung, \hyperpage{78}
+  \item Schlupfform, \hyperpage{22}
+  \item Schlupfvariable, \hyperpage{17}, \hyperpage{21}
+  \item Schnitt, \hyperpage{111}
+    \subitem minimaler, \hyperpage{114}, \hyperpage{135}, 
+		\hyperpage{138, 139}
+  \item Schnittbedingung, \hyperpage{188, 189}
+  \item Schranke
+    \subitem Kapazit\"ats-, \hyperpage{63}
+    \subitem obere, \hyperpage{68}
+  \item schwach besetzte Matrix, \hyperpage{104}
+  \item schwach besetztes Problem, \hyperpage{104}
+  \item schwache Dualit\"at, \hyperpage{71}
+  \item Seitenfl\"achen eines Polyeders, \hyperpage{42}
+  \item Senke, \hyperpage{63}, \hyperpage{107}
+  \item Simplexalgorithmus, \hyperpage{15}, \hyperpage{135}, 
+		\hyperpage{138}
+  \item Simplexmethode, \hyperpage{15}
+    \subitem Iteration der revidierten, \hyperpage{100}
+    \subitem revidierte, \hyperpage{93}
+  \item Simplexverfahren, \hyperpage{15}, \hyperpage{17}
+    \subitem Beschreibung des revidierten, \hyperpage{97}
+    \subitem geometrische Interpretation, \hyperpage{43}
+    \subitem Konventionen beim, \hyperpage{25}
+    \subitem Kreisen des, \hyperpage{31, 32}
+    \subitem Regel zum Update beim revidierten, \hyperpage{100}
+    \subitem Standard-, \hyperpage{97}
+    \subitem Update beim revidierten, \hyperpage{100}
+    \subitem Zweiphasen-, \hyperpage{39}
+  \item singul\"are Matrix, \hyperpage{105}
+  \item slack variable, \hyperpage{17}
+  \item smallest-subscript rule, \hyperpage{57}
+  \item solution
+    \subitem basic feasible, \hyperpage{23}
+    \subitem feasible, \hyperpage{9}
+  \item Spalte
+    \subitem Ausgangs-, \hyperpage{100}
+    \subitem Eingangs-, \hyperpage{98--100}
+  \item St\"utzvektor, \hyperpage{44}
+  \item Standardform, \hyperpage{7}, \hyperpage{17}
+    \subitem \"Uberf\"uhrung in, \hyperpage{10}
+  \item Standardsimplexverfahren, \hyperpage{97}
+  \item starting time, \hyperpage{170}
+  \item Startl\"osung, \hyperpage{18}
+  \item Starttableau, \hyperpage{38}
+  \item Strassen, Algorithmus von, \hyperpage{199}
+  \item Streckung, \hyperpage{224}
+  \item Subset-Sum-Algorithmus, \hyperpage{205, 206}
+  \item Subset-Sum-Problem, \hyperpage{204}
+
+  \indexspace
+
+  \item Tableau, \hyperpage{23}
+    \subitem Matrixdarstellung eines, \hyperpage{96}
+    \subitem Matrixform eines, \hyperpage{95}
+    \subitem Start-, \hyperpage{38}
+    \subitem unzul\"assiges, \hyperpage{36}
+    \subitem zul\"assiges, \hyperpage{23}
+  \item Teilsummenproblem, \hyperpage{204}
+  \item Terminierung, \hyperpage{28}, \hyperpage{31}
+  \item Terminologie, englische, \hyperpage{9}
+  \item Test auf Optimalit\"at, \hyperpage{77}
+  \item tight, \hyperpage{77}
+  \item Translation, \hyperpage{225}, \hyperpage{228}
+  \item trial and error, \hyperpage{6}
+
+  \indexspace
+
+  \item unbeschr\"ankt, \hyperpage{8}, \hyperpage{29}
+  \item ungepaart, \hyperpage{147}
+  \item ungerichteter Graph, \hyperpage{140}
+  \item Ungleichung, \hyperpage{84}
+    \subitem lineare, \hyperpage{7}
+  \item Union-Find-Datenstruktur, \hyperpage{191}
+    \subitem Array-Implementierung, \hyperpage{193}
+    \subitem zeigerbasierte Implementierung, \hyperpage{195}
+  \item unl\"osbar, \hyperpage{8}
+  \item untersuchter Knoten, \hyperpage{121}
+  \item unzul\"assiges Tableau, \hyperpage{36}
+  \item Update beim revidierten Simplexverfahren, \hyperpage{100}
+  \item Update-Formeln f\"ur die Ellipsoid-Methode, \hyperpage{234}
+
+  \indexspace
+
+  \item Variable
+    \subitem Ausgangs-, \hyperpage{23}
+    \subitem Basis-, \hyperpage{23}
+    \subitem decision, \hyperpage{27}
+    \subitem duale, \hyperpage{70}, \hyperpage{84}
+    \subitem Eingangs-, \hyperpage{23}
+    \subitem Entscheidungs-, \hyperpage{27}
+    \subitem freie, \hyperpage{9}, \hyperpage{83, 84}
+    \subitem freie duale, \hyperpage{84}
+    \subitem Nichtbasis-, \hyperpage{23}
+    \subitem primale, \hyperpage{70}
+    \subitem Problem-, \hyperpage{27}
+    \subitem restringierte, \hyperpage{84}
+    \subitem restringierte duale, \hyperpage{84}
+    \subitem Schlupf-, \hyperpage{17}, \hyperpage{21}
+    \subitem slack, \hyperpage{17}
+    \subitem Wahl der Ausgangs-, \hyperpage{29}
+    \subitem Wahl der Eingangs-, \hyperpage{29}
+  \item Variante des Lemma von Farkas, \hyperpage{91}
+  \item Vektor
+    \subitem Einheits-, \hyperpage{224}
+    \subitem Richtungs-, \hyperpage{44}
+    \subitem St\"utz-, \hyperpage{44}
+  \item Verbindungsstrecke, \hyperpage{45}
+  \item Verfahren
+    \subitem Ford-Fulkerson-, \hyperpage{118}
+    \subitem Simplex-, \hyperpage{15}, \hyperpage{17}
+    \subitem Standard-Simplex-, \hyperpage{97}
+    \subitem zur Bestimmung eines maximalen Flusses, \hyperpage{118}
+    \subitem Zweiphasen-Simplex-, \hyperpage{39}
+  \item verifizieren, \hyperpage{150}
+  \item Verschnittproblem, \hyperpage{65}, \hyperpage{67}
+    \subitem 2-dimensionales, \hyperpage{67}
+  \item versp\"atet, \hyperpage{174}
+  \item Versp\"atung, \hyperpage{174}
+  \item vertex, \hyperpage{43}, \hyperpage{107}
+  \item vertex cover, \hyperpage{149}
+  \item Volumen einer Kugel, \hyperpage{235}
+  \item Volumen eines Ellipsoids, \hyperpage{234}
+  \item Vorw\"artskante, \hyperpage{117}
+  \item Vorw\"artskanten, \hyperpage{115}, \hyperpage{117}
+
+  \indexspace
+
+  \item Wahl der Ausgangsvariable, \hyperpage{29}
+  \item Wahl der Eingangsvariable, \hyperpage{29}
+  \item Wahlkampf, \hyperpage{60}
+  \item Warteschlange, \hyperpage{123}
+  \item Wert eines Flusses, \hyperpage{110}
+
+  \indexspace
+
+  \item Zahl
+    \subitem Knoten\"uberdeckungs-, \hyperpage{150}, \hyperpage{165}
+    \subitem Matching-, \hyperpage{141}
+  \item Zahlen
+    \subitem Fibonacci-, \hyperpage{202}
+  \item zeigerbasierte Implementierung der Union-Find-Datenstruktur, 
+		\hyperpage{195}
+  \item zentraler Pfad, \hyperpage{240}
+  \item Zentraler-Pfad-Methode, \hyperpage{237}
+  \item Zerlegung, \hyperpage{192}
+  \item Zertifikat, \hyperpage{150}
+    \subitem f\"ur Optimalit\"at, \hyperpage{75}
+    \subitem f\"ur Optimalit\"at eines Flusses, \hyperpage{119}
+  \item zertifizierender Algorithmus, \hyperpage{75}, \hyperpage{119}
+  \item Zielfunktion, \hyperpage{8}
+    \subitem Hilfs-, \hyperpage{237}
+    \subitem nichtlineare, \hyperpage{237}
+  \item Zielfunktionswert, optimaler, \hyperpage{8}
+  \item zul\"assige Basisl\"osung, \hyperpage{23}, \hyperpage{27}
+  \item zul\"assige L\"osung, \hyperpage{8}
+    \subitem duale, \hyperpage{71}
+    \subitem primale, \hyperpage{71}
+  \item zul\"assiger Bereich, \hyperpage{9}, \hyperpage{14}
+  \item zul\"assiges Tableau, \hyperpage{23}
+  \item zunehmender Pfad, \hyperpage{117}
+  \item zunehmender Pfad nach $v_k$, \hyperpage{117}
+  \item zusammenh\"angend, \hyperpage{183}
+  \item Zusammenhangskomponente, \hyperpage{191}
+  \item Zuwachs, Regel vom gr\"o\IeC {\ss }ten, \hyperpage{57}
+  \item Zweiphasen-Simplexverfahren, \hyperpage{39}
+
+\end{theindex}

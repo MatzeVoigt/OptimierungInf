@@ -1,0 +1,722 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 01:                                                                  %
+% "Einführung"                                                                 %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Einführung}\label{chapter:1}
+
+
+Wir gehen zunächst hauptsächlich nach folgendem Lehrbuch vor: 
+\begin{itemize}
+\item V. Chvátal: \textit{Linear Programming}. W. H. Freeman and Company. New York (2002, 16. Auflage).
+\end{itemize}
+
+Später wird weitere Literatur hinzugezogen werden, beispielsweise:
+\begin{itemize}
+\item Th. Cormen, Ch. Leiserson, R. Rivest, C. Stein: \textit{Algorithmen - Eine Einführung}. Oldenburg Verlag. (2010, 3. Auflage).
+\item J. Matou\v{s}ek, B. Gärtner: \textit{Understanding and Using Linear Programming}. Springer-Verlag. Berlin, Heidelberg, New York (2007).
+\item J. Kleinberg, É. Tardos: \textit{Algorithm Design}. Pearson. Boston (2006).
+\item D. Jungnickel: \textit{Graphs, Networks and Algorithms}. Springer-Verlag (2013, 4. Auflage).
+\end{itemize}
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ein Diätproblem"                                                            %
+%------------------------------------------------------------------------------%
+
+
+\section{Ein Diätproblem}
+\index{Diätproblem}\index{Problem!Diät-}
+
+Paul möchte sich möglichst preiswert ernähren, allerdings so, dass er pro Tag mindestens 2000kcal, 55g Proteine und 800mg Kalzium erhält. Er wählt sechs Lebensmittel aus, die günstig zu erstehen sind:
+
+\begin{enumerate}[1.]
+\item	\textit{Haferflocken}: Eine 28g Packung liefert 110kcal, 4g Protein, 2mg Kalzium und kostet 25 Cent.
+\item	\textit{Huhn}: 100g liefern 205kcal, 32g Protein und 12mg Kalzium; Preis: 130 Cent.
+\item	\textit{Eier}: Eine Doppelpackung liefert 160kcal, 13g Protein und 54mg Kalzium; bezahlen muss man 85 Cent pro Doppelpack.
+\item	\textit{Milch}: Eine kleine Packung liefert 160kcal, 8g Protein und 285mg Kalzium; Preis: 70 Cent.
+\item	\textit{Kirschkuchen}: Ein Stück (170g) liefert 420kcal, 4g Protein und 22mg Kalzium; Preis: 95 Cent.
+\item \textit{Bohnen}: Eine Packung (260g) liefert 260kcal, 14g Protein und 80mg Kalzium; Preis: 98 Cent.
+\end{enumerate}
+
+Dasselbe in der Übersicht (Angaben pro Portion des jeweiligen Lebensmittels; 1 Portion Haferflocken $\mathrel{\widehat=}$ 28g, 1 Portion Huhn $\mathrel{\widehat=}$ 100g, 1 Portion Eier $\mathrel{\widehat=}$ 1 Doppelpackung, etc.):
+
+\begin{center}
+\begin{tabular}{l||c|c|c|c}
+ & Energie (kcal) & Protein (g) & Kalzium (mg) & Preis (Cent) \\ \hline\hline
+Haferflocken & 110 & 4 & 2 & 25 \\
+Huhn & 205 & 32 & 12 & 130 \\
+Eier & 160 & 13 & 54 & 85 \\
+Milch & 160 & 8 & 285 & 70 \\
+Kirschkuchen & 420 & 4 & 22 & 95 \\
+Bohnen & 260 & 14 & 80 & 98
+\end{tabular}
+\end{center}
+
+
+Paul denkt über seine Mahlzeiten nach: Beispielsweise würden 10 Portionen Bohnen alles Erforderliche an Energie, Protein und Kalzium liefern -- zu einem Preis von nur (?) 980 Cent pro Tag. Mehr als 2 Portionen Bohnen pro Tag ist aber zu viel; er legt Obergrenzen fest:
+
+\begin{itemize}
+\item Haferflocken: höchstens 4 Portionen pro Tag;
+\item Huhn: höchstens 3 Portionen pro Tag;
+\item Eier: höchstens 2 Portionen pro Tag;
+\item Milch: höchstens 8 Portionen pro Tag;
+\item Kirschkuchen: höchstens 2 Portionen pro Tag;
+\item Bohnen: höchstens 2 Portionen pro Tag.
+\end{itemize}
+
+Ein Blick auf die Daten lässt erkennen: 8 Portionen Milch und 2 Portionen Kirschkuchen pro Tag liefern alles Nötige für nur 750 Cent. Man könnte auch etwas weniger Kuchen nehmen oder etwas weniger Milch -- oder eine andere Kombination ausprobieren: \textit{trial and error}\index{trial and error} nennt man das. Hilft das weiter?
+
+\textit{Um systematisch vorzugehen, führen wir für jedes Lebensmittel eine Variable ein}: $x_1$ bezeichnet die Anzahl der Portionen von Haferflocken pro Tag, $x_2$ die Anzahl der Huhn-Portionen pro Tag, $x_3$ die Anzahl der Ei-Portionen etc. Beispielsweise bedeutet
+\[
+x_6 = 1.5,
+\]
+dass Paul $1.5$ Portionen Bohnen pro Tag zu sich nimmt.
+
+
+Wir formulieren das vorgestellte Problem -- man spricht von einem \textit{Diätproblem}\index{Diätproblem}\index{Problem!Diät-} -- auf die folgende Art:
+\begin{align*}
+\begin{alignedat}{8}
+& \text{minimiere } & 25x_1 &\ + &\ 130x_2 &\ + &\ 85x_3 &\ + &\ 70x_4 &\ + &\ 95x_5 &\ + &\ 98x_6 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & & & & & \\
+&& 110x_1 &\ + &\ 205x_2 &\ + &\ 160x_3 &\ + &\ 160x_4 &\ + &\ 420x_5 &\ + &\ 260x_6 &\ \geq &\  2000\ \\
+&&   4x_1 &\ + &\ 32x_2 &\ + &\ 13x_3 &\ + &\ 8x_4 &\ + &\ 4x_5 &\ + &\ 14x_6 &\ \geq &\  55\ \\
+&&   2x_1 &\ + &\ 12x_2 &\ + &\ 54x_3 &\ + &\ 285x_4 &\ + &\ 22x_5 &\ + &\ 80x_6 &\ \geq &\  800\ \\
+&& & & & & & & & & & & \llap{$0\ \leq\ x_1$} &\ \leq &\ 4\ \\
+&& & & & & & & & & & & \llap{$0\ \leq\ x_2$} &\ \leq &\ 3\ \\
+&& & & & & & & & & & & \llap{$0\ \leq\ x_3$} &\ \leq &\ 2\ \\
+&& & & & & & & & & & & \llap{$0\ \leq\ x_4$} &\ \leq &\ 8\ \\
+&& & & & & & & & & & & \llap{$0\ \leq\ x_5$} &\ \leq &\ 2\ \\
+&& & & & & & & & & & & \llap{$0\ \leq\ x_6$} &\ \leq &\ 2. 
+\end{alignedat}
+\end{align*}
+
+Probleme dieser Art werden \textit{lineare Programmierungsprobleme}\footnote{Kurz: \textit{LP-Probleme}.} genannt. Hier sind zwei weitere \textbf{Beispiele}:
+\index{lineares Programmierungsproblem}\index{Programmierungsproblem, lineares}\index{Problem!lineares Programmierungs-}
+\index{LP-Problem}\index{Problem!LP-}
+
+
+\begin{align}
+\begin{alignedat}{5}
+\label{eq:1:1}
+& \text{maximiere } & 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen\footnotemark} & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\  5 \\
+&& 4x_1 &\ + &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 11 \\
+&& 3x_1 &\ + &\ 4x_2 &\ + &\ 2x_3 &\ \leq &\  8 \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\  0
+\end{alignedat}
+\end{align}
+\footnotetext{Die Schreibweise $x_1,x_2,x_3 \geq 0$ ist eine Abkürzung für $x_1 \geq 0$, $x_2 \geq 0$, $x_3 \geq 0$.}
+
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:1:2}
+& \text{minimiere } & 3x_1 &\ - &\ x_2 & & & & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & &  \\
+&& -x_1 &\ + &\ 6x_2 &\ - &\  x_3 &\ + &\  x_4 &\ \geq &\ -3 \\
+&&      &\   &\ 7x_2 &\   &\      &\ + &\ 2x_4 &\ =    &\  5 \\
+&&  x_1 &\ + &\  x_2 &\ + &\  x_3 &\   &\      &\ =    &\  1 \\
+&&      &\   &\      &\   &\  x_3 &\ + &\  x_4 &\ \leq &\  2 \\
+&& & & & & & & \llap{$x_2, x_3$} &\ \geq &\  0
+\end{alignedat}
+\end{align}
+
+\begin{Definition}[Definition]
+Eine Funktion $f: \R^n \rightarrow \R$ wird \textit{lineare Funktion}\index{lineare Funktion}\index{Funktion!lineare} genannt, falls
+\begin{equation}
+\label{eq:1:3}
+f \bigl( x_1,\ldots,x_n \bigr) = c_1x_1 + \ldots + c_nx_n
+\end{equation}
+
+für reelle Zahlen $c_1, \ldots, c_n$ gilt. 
+\end{Definition}
+
+Mit dem Summenzeichen geschrieben lautet die Gleichung (\ref{eq:1:3}):
+\begin{equation}
+\label{eq:1:3'}
+\tag{\ref*{eq:1:3}'}
+f\bigl(x_1,\ldots,x_n\bigr) = \sum\limits_{j=1}^{n}{c_jx_j}.
+\end{equation}
+
+Ist $b$ eine reelle Zahl, so nennt man 
+\begin{equation}
+\label{eq:1:4}
+c_1x_1 + \ldots + c_nx_n = b
+\end{equation}
+
+bekanntlich eine \textit{lineare Gleichung}\index{lineare Gleichung}\index{Gleichung!lineare}. Neben linearen Gleichungen betrachten wir \textit{lineare Ungleichungen}\index{lineare Ungleichung}\index{Ungleichung!lineare}:
+\begin{align}
+\label{eq:1:5}
+c_1x_1 + \ldots + c_nx_n &\leq b \\
+\label{eq:1:6}
+c_1x_1 + \ldots + c_nx_n &\geq b.
+\end{align}
+
+Gleichungen bzw. Ungleichungen der Arten (\ref{eq:1:4}), (\ref{eq:1:5}) und (\ref{eq:1:6}) werden von uns \textit{lineare Nebenbedingungen}\index{Nebenbedingungen}\index{lineare Nebenbedingung}\index{Nebenbedingungen!lineare} oder einfach nur \textit{Nebenbedingungen}\footnote{Strikte Ungleichungen ($<$ bzw. $>$ statt $\leq$ bzw. $\geq$) kommen nicht vor und fallen nicht unter den Begriff \enquote{Nebenbedingung}.} genannt.
+
+Unter einem \textit{linearen Programmierungsproblem}\footnote{Statt \enquote{lineares Programmierungsproblem}
+\index{lineares Programmierungsproblem}\index{Programmierungsproblem, lineares}\index{Problem!lineares Programmierungs-}
+sagt man auch \textit{lineares Optimierungsproblem}\index{lineares Optimierungsproblem}\index{Optimierungsproblem, lineares}\index{Problem!lineares Optimierungs-} oder (wie bereits erwähnt) \textit{LP-Problem}.} verstehen wir das Problem, eine lineare Funktion unter einer endlichen Anzahl von linearen Nebenbedingungen zu minimieren oder zu maximieren.
+
+Wir beschränken uns bis auf Weiteres auf lineare Programmierungsprobleme vom folgenden Typ:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & c_1x_1 &\ + &\ \ldots &\ + &\ c_nx_n & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& a_{11}x_1 &\ + &\ \ldots &\ + &\ a_{1n}x_n &\ \leq &\ b_1\ \\
+&& & & & \ \ \vdots & & &  \\
+&& a_{m1}x_1 &\ + &\ \ldots &\ + &\ a_{mn}x_n &\ \leq &\ b_m\ \\
+&& & & & & \llap{$x_1, \ldots, x_n$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+\begin{SKBox}
+Dasselbe in knapper Form mit dem Summenzeichen geschrieben:
+\begin{equation}
+\begin{alignedat}{3}
+\label{eq:1:7}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\leq &\ b_j \quad (i=1,\ldots,m)\ \\
+&& x_j &\geq &\ 0 \quad (j=1,\ldots,n).
+\end{alignedat}
+\end{equation}
+\end{SKBox}
+
+Wir nennen (\ref{eq:1:7}) ein LP-Problem in \textit{Standardform}\index{Standardform}. (Warnung: Die Bezeichnung \enquote{Standardform} wird in der Literatur nicht einheitlich verwendet; andere Autoren sagen stattdessen beispielsweise \enquote{Normalform} und benutzen den Begriff \enquote{Standardform} überhaupt nicht oder in anderer Bedeutung. Wir folgen hier der Bezeichnung von V. Chvátal: \textit{Linear Programming}.)
+
+In der Standardform (\ref{eq:1:7}) gibt es also $m+n$ Nebenbedingungen, von denen die letzten $n$ recht speziell sind: Man nennt sie \textit{Nichtnegativitätsbedingungen}\index{Nichtnegativitätsbedingungen}.
+
+Die lineare Funktion eines LP-Problems, die zu minimieren bzw. zu maximieren ist, wird die \textit{Zielfunktion}\index{Zielfunktion}\index{Funktion!Ziel-} des Problems genannt. In (\ref{eq:1:1}) ist also
+\[
+5x_1 + 4x_2 + 3x_3
+\]
+die Zielfunktion, während in (\ref{eq:1:2}) die Zielfunktion $3x_1-x_2$ lautet.
+
+Eine Belegung der Variablen $x_1, \ldots, x_n$, die die Nebenbedingungen eines LP-Problems erfüllt, nennt man eine \textit{zulässige Lösung}\index{zulässige Lösung}\index{Lösung!zulässige}. Zulässige Lösungen des LP-Problems (\ref{eq:1:1}) sind beispielsweise:
+\begin{itemize}
+\item $x_1 = 1$, $x_2 = 0$, $x_3 = 2$;
+\item $x_1 = 1$, $x_2 = \frac{1}{2}$, $x_3 = 1$;
+\item $x_1 = x_2 = x_3 = 0$.
+\end{itemize}
+
+Keine zulässigen Lösungen von (\ref{eq:1:1}) sind dagegen beispielsweise:
+\begin{itemize}
+\item $x_1 = 1$, $x_2 = 0$, $x_3 = 3$;
+\item $x_1 = 1$, $x_2 = 2$, $x_3 = -2$.
+\end{itemize}
+
+Eine zulässige Lösung, für die die Zielfunktion maximal bzw. minimal ist (je nach Art des LP-Problems), nennt man eine \textit{optimale Lösung}\index{optimale Lösung}\index{Lösung!optimale}. Den zu einer optimalen Lösung $x_1,\ldots,x_n$ gehörigen Zielfunktionswert nennt man den \textit{optimalen Zielfunktionswert}\index{optimaler Zielfunktionswert}\index{Zielfunktionswert, optimaler}.
+
+Es gibt LP-Probleme, die keine zulässige Lösung besitzen; solche LP-Probleme nennt man \textit{unlösbar}\index{unlösbar}. Hier ein \textbf{Beispiel}:
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & 3x_1 &\ - &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&   x_1 &\ + &\  x_2 &\ \leq &\   2\ \\
+&& -2x_1 &\ - &\ 2x_2 &\ \leq &\ -10\ \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+Es gibt auch LP-Probleme, die zwar zulässige Lösungen besitzen, aber keine ihrer zulässigen Lösungen ist optimal. Hier ein \textbf{Beispiel}:
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & x_1 &\ - &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& -2x_1 &\ + &\  x_2 &\ \leq &\ -1\ \\
+&&  -x_1 &\ - &\ 2x_2 &\ \leq &\ -2\ \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+In diesem Beispiel gibt es zu jeder Zahl $M$ eine zulässige Lösung $x_1,x_2$ mit $x_1-x_2 > M$. Derartige Probleme nennt man \textit{unbeschränkt}\index{unbeschränkt}.
+
+\begin{SKBox}
+In Matrixschreibweise\index{Matrixschreibweise} lässt sich (\ref{eq:1:7}) besonders kompakt darstellen:
+\begin{align}
+\tag{\ref*{eq:1:7}'}
+\begin{alignedat}{3}
+\label{eq:1:7'}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\ \leq &\ b\ \\
+&&  x &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+\end{SKBox}
+
+Hierin ist
+\[
+c^T = (c_1, \ldots, c_n), \qquad 
+x= \begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix}, \qquad 
+A = \begin{pmatrix} a_{11} & \ldots & a_{1n} \\ \vdots & \ddots & \vdots \\ a_{m1} & \ldots & a_{mn} \end{pmatrix}, \qquad
+b = \begin{pmatrix} b_1 \\ \vdots \\ b_m \end{pmatrix}
+\]
+und $0$ bezeichnet den Nullvektor der Länge $n$; die beiden Ungleichungen sind komponentenweise zu verstehen.
+
+Illustration von (\ref{eq:1:7'}) anhand von Beispiel (\ref{eq:1:1}):
+\[
+c^T = (5,4,3), \quad 
+x= \begin{pmatrix} x_1 \\ x_2 \\ x_3 \end{pmatrix} \quad 
+A = \begin{pmatrix} 2 & 3 & 1 \\ 4 & 1 & 2 \\ 3 & 4 & 2 \end{pmatrix}, \quad
+b = \begin{pmatrix} 5 \\ 11 \\ 8 \end{pmatrix}, \quad
+0 = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}.
+\]
+
+Das LP-Problem (\ref{eq:1:1}) lässt sich mit diesen Bezeichnungen schreiben als:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\ \leq &\ b\ \\
+&&  x &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\textbf{Einige Sprechweisen}: 
+\begin{itemize}
+\item Häufig wird auch einfach \enquote{lineares Programm}\index{lineares Programm}\index{Programm, lineares} anstelle von \enquote{lineares Programmierungsproblem} (\enquote{LP-Problem}) gesagt.
+\item Die Menge aller zulässigen Lösungen eines LP-Problems nennt man auch den \textit{zulässigen Bereich}\index{zulässiger Bereich}\index{Bereich, zulässiger}.
+\item Kommt eine Variable bei den Nichtnegativitätsbedingungen nicht vor, so spricht man von einer \textit{freien Variablen}\index{freie Variable}\index{Variable!freie}. Beispielsweise sind in (\ref{eq:1:2}) $x_1$ und $x_4$ freie Variablen.
+\end{itemize}
+
+\textit{Natürlich sollen Sie auch die englische Terminologie\index{englische Terminologie}\index{Terminologie, englische} kennen}. Hier sind die drei wichtigsten Vokabeln dieses Abschnitts:
+
+\begin{center}
+\begin{tabular}{ccc}
+constraint\index{constraint} & -- & Nebenbedingung \\
+objective function\index{objective function}\index{function, objective} & -- & Zielfunktion \\
+feasible solution\index{feasible solution}\index{solution!feasible} & -- & zulässige Lösung
+\end{tabular}
+\end{center}
+
+Einfache Dinge wie 
+
+\begin{center}
+\begin{tabular}{ccc}
+linear function & -- & lineare Funktion
+\end{tabular}
+\end{center}
+
+brauchen nicht erklärt zu werden, ebenso wenig wie die Bedeutungen von
+
+\begin{center}
+\begin{tabular}{c}
+linear constraints \\
+nonnegativity constraints \\
+standard form \\
+optimal solution \\
+optimal value \\
+infeasible problem \\
+unbounded problem \\
+feasible region \\
+free variable.
+\end{tabular}
+\end{center}
+
+
+Ein weiteres \textbf{Beispiel}: \textbf{Ölraffinerie}\footnote{Dieses Beispiel ist u.a. im Skript zur Vorlesung \textit{Algorithmen und Datenstrukturen} (Prof. Dr. Petra Mutzel, Universität Dortmund, WS 08/09) zu finden. Dort wird erwähnt, dass derartige Probleme in der Ölindustrie mithilfe von Linearer Programmierung gelöst werden -- natürlich in ganz anderen Dimensionen. Im Skript von Grötschel (siehe Literaturverzeichnis) dient das Beispiel als Einstiegsbeispiel in die Lineare Optimierung; es wird dort noch wesentlich ausführlicher besprochen.}.\index{Ölraffinerie} Angeliefertes Rohöl wird in Ölraffinerien durch Anwendung von chemischen und physikalischen Verfahren in gewisse gewünschte Komponenten zerlegt. Die Ausbeute an verschiedenen Komponenten hängt vom eingesetzten Verfahren (Crackprozess) ab. Wir nehmen an, dass eine Raffinerie aus Rohöl drei Komponenten herstellen will:
+\begin{itemize}
+\item schweres Öl: $S$;
+\item mittelschweres Öl: $M$;
+\item leichtes Öl: $L$.
+\end{itemize}
+
+Es stehen zwei Crackverfahren zur Verfügung, die die folgenden Einheiten an Ausbeute liefern, aber auch Kosten verursachen (alles bezogen auf eine Einheit Rohöl):
+\begin{itemize}
+\item Crackprozess 1: $2S$, $2M$, $1L$; Kosten: 3 Euro;
+\item Crackprozess 2: $1S$, $2M$, $4L$; Kosten: 5 Euro.
+\end{itemize}
+
+Aufgrund von Lieferbedingungen muss die Raffinerie die folgende Mindestproduktion erreichen:
+\[
+3S,\quad 5M\quad \text{und} \quad 4L.
+\]
+
+\textbf{Aufgabe}: Die Mengen sollen so kostengünstig wie möglich hergestellt werden.
+
+Das hieraus resultierende LP-Problem erhalten wir nach Einführung von Variablen $x_1$ und $x_2$, die das \textit{Produktionsniveau} der beiden Prozesse beschreiben: $x_1 = 2.5$ bedeutet beispielsweise, dass der Crackprozess 1 mit 2.5 Einheiten Rohöl beschickt wird. Man erhält das folgende LP-Problem:
+\begin{align*}
+\begin{alignedat}{4}
+& \text{minimiere } & 3x_1 &\ + &\ 5x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& 2x_1 &\ + &\  x_2 &\ \geq &\ 3\ \\
+&& 2x_1 &\ + &\ 2x_2 &\ \geq &\ 5\ \\
+&&  x_1 &\ + &\ 4x_2 &\ \geq &\ 4\ \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0. 
+\end{alignedat}
+\end{align*}
+
+\textbf{Zur Übung}: Überführen Sie dieses Problem in Standardform.
+
+\textit{Man kann -- nebenbei gesagt -- jedes LP-Problem durch sehr einfache, kleine \enquote{Tricks} in Standardform überführen}\index{Überführung in Standardform}\index{Standardform!Überführung in}:
+\begin{itemize}
+\item Haben wir es beispielsweise mit einem Minimierungsproblem zu tun, lautet das Ziel etwa
+\[
+\text{minimiere } 3x_1-4x_2+5x_3,
+\]
+so kann man dies ersetzen durch die äquivalente Formulierung
+\[
+\text{maximiere } -3x_1+4x_2-5x_3.
+\]
+
+\item Eine Nebenbedingung der Form
+\[
+a_1x_1 + \ldots + a_nx_n \geq b
+\]
+kann gleichwertig ersetzt werden durch
+\[
+-a_1x_1 - \ldots - a_nx_n \leq -b.
+\]
+
+\item Eine Nebenbedingung der Form
+\[
+a_1x_1 + \ldots + a_nx_n = b
+\]
+kann gleichwertig ersetzt werden durch die folgenden beiden Nebenbedingungen
+\begin{align*}
+\begin{alignedat}{4}
+ a_1x_1 &\ + &\ \ldots &\ + &\ a_nx_n &\ \leq &\  b\ \\
+-a_1x_1 &\ - &\ \ldots &\ - &\ a_nx_n &\ \leq &\ -b.
+\end{alignedat}
+\end{align*}
+\end{itemize}
+
+Und was kann man machen, wenn man es mit einer \textit{freien Variablen} zu tun hat? \textbf{Antwort}: Man kann anstelle von $x_1$ zwei neue Variablen einführen, etwa $x_1'$ und $x_1''$, für die man $x_1' \geq 0$ und $x_1'' \geq 0$ fordert; anschließend ersetzt man überall $x_1$ durch $x_1' - x_1''$. Der Trick besteht also in diesem Fall darin, $x_1$ als Differenz zweier nichtnegativer Variablen darzustellen. Das funktioniert, da man (klarerweise) jede reelle Zahl als Differenz zweier nichtnegativer Zahlen schreiben kann.
+
+
+
+
+\section{Bemerkungen zur Grafischen Methode}
+\index{grafische Methode}\index{Methode!grafische}
+
+Hat man es mit nur zwei Variablen $x_1$ und $x_2$ zu tun, so kann man LP-Probleme in Standardform mit der sogenannten \textit{Grafischen Methode} lösen. Da es in der Praxis allerdings nicht nur um zwei, sondern meist um viele Tausend Variablen geht, wollen wir nur kurz anhand von Beispielen darauf eingehen.
+
+Gegeben: $a_1, a_2, b \in \R$. Sind $a_1$ und $a_2$ nicht beide Null, so wird durch die Gleichung
+\begin{equation}
+\label{eq:1:8}
+a_1x_1 + a_2x_2 = b
+\end{equation}
+
+bekanntlich eine \textit{Gerade} im $\R^2$\index{Gerade!im $\R^2$} dargestellt. Die Menge aller Paare $(x_1,x_2) \in \R^2$, für die
+\[
+a_1x_1 + a_2x_2 \leq b
+\]
+gilt, bilden eine \textit{Halbebene}\index{Halbebene}\index{Ebene!Halb-}, die durch die Gerade (\ref{eq:1:8}) begrenzt wird.
+
+Beispielsweise wird durch die Gleichung 
+\[
+2x_1+x_2=4
+\]
+die Gerade durch die Punkte $(0,4)$ und $(2,0)$ beschrieben; die Menge aller Punkte $(x_1, x_2)$, für die 
+\[
+2x_1+x_2 \leq 4
+\]
+gilt, bilden die durch Schraffur gekennzeichnete Halbebene:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-4.5,-1.5)(4.5,5.5)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-4.5,-1.5)(4.5,5.5)
+\psline[linewidth=1.0pt](-0.75,5.5)(2.75,-1.5)
+\pscircle*(0,4){0.075}
+\pscircle*(2,0){0.075}
+\pspolygon[fillstyle=hlines,linewidth=0pt,hatchwidth=0.1pt](-1,6)(3,-2)(-6,-2)(-6,6)
+\uput{0.25}[0](0,4){$(0,4)$}
+\uput{0.10}[45](2,0){$(2,0)$}
+
+\uput{0.15}[270](4.25, 0){$x_1$}
+\uput{0.15}[  0](0, 5.25){$x_2$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+Hat man es nun mit zwei oder mehr Ungleichungen zu tun, so besteht die Menge aller Punkte $(x_1,x_2)$, die alle diese Ungleichungen erfüllen, aus dem \textit{Durchschnitt der entsprechenden Halbebenen}.
+
+Betrachten wir beispielsweise das LP-Problem
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:1:9}
+& \text{maximiere } & x_1 &\ + &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& -x_1 &\ + &\ 2x_2 &\ \leq &\  8\ \\
+&& 2x_1 &\ - &\  x_2 &\ \leq &\ 10\ \\
+&& 2x_1 &\ + &\  x_2 &\ \leq &\ 14\ \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0, 
+\end{alignedat}
+\end{align}
+
+so haben wir es bei den Nebenbedingungen mit 5 Ungleichungen zu tun. Die Menge aller $(x_1,x_2)$, die all diese Ungleichungen erfüllen, besteht also aus dem Durchschnitt von fünf Halbebenen:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-1.5,-0.5)(8,6.5)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,6.5)
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](0,0)(5,0)(6,2)(4,6)(0,4)
+\uput{0.25}[225](0,0){$(0,0)$}
+\uput{0.15}[270](5,0){$(5,0)$}
+\uput{0.15}[0](6,2){$(6,2)$}
+\uput{0.15}[90](4,6){$(4,6)$}
+\uput{0.15}[180](0,4){$(0,4)$}
+\uput{0.15}[270](6.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+\small
+\end{pspicture*}
+\end{center}
+
+Wir haben somit den zulässigen Bereich, d.h. die Menge der zulässigen Lösungen von (\ref{eq:1:9}), grafisch dargestellt. Es soll noch einmal genauer beschrieben werden, wie diese grafische Darstellung zustande kommt. Zu diesem Zweck betrachten wir zunächst einmal nur die erste Nebenbedingung; diese lautet
+\begin{equation}
+\label{eq:1:10}
+-x_1 + 2x_2 \leq 8.
+\end{equation}
+
+Wir formen die Ungleichung (\ref{eq:1:10}) äquivalent um, so dass auf der linken Seite nur noch die Variable $x_2$ steht; man erhält
+\begin{equation}
+\label{eq:1:11}
+x_2 \leq \frac{1}{2} x_1 + 4.
+\end{equation}
+
+Durch (\ref{eq:1:10}) bzw. (\ref{eq:1:11}) wird eine \textit{Halbebene} beschrieben; anhand von (\ref{eq:1:11}) erkennt man, dass diese Halbebene durch die \textit{Gerade}
+\begin{equation}
+\label{eq:1:12}
+x_2 = \frac{1}{2}x_1 + 4
+\end{equation}
+berandet wird und dass die Punkte der Halbebene \textit{unterhalb bzw. auf} der Geraden (\ref{eq:1:12}) liegen. Wir setzen das Gesagte um, indem wir die Gerade (\ref{eq:1:12}) darstellen und die Halbebene durch Schraffur andeuten:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-4.5,-0.5)(4.5,6.5)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-4.5,-0.5)(4.5,6.5)
+\psline[linewidth=1.0pt](-6,1)(6,7)
+\pscircle*(0,4){0.075}
+\pspolygon[fillstyle=hlines,linewidth=0pt,hatchwidth=0.1pt](-6,1)(6,7)(6,-1)(-6,-1)
+\uput{0.15}[135](0,4){$(0,4)$}
+\uput{0.0}[180](-2,3.5){$x_2=\frac{1}{2}x_1+4$}
+
+\uput{0.15}[270](4.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+Im nächsten Schritt betrachten wir nun die zweite Nebenbedingung:
+\begin{equation}
+\label{eq:1:13}
+2x_1 - x_2 \leq 10.
+\end{equation}
+
+Wir formen auch diese Ungleichung äquivalent um, so dass nur $x_2$ auf der linken Seite steht; man erhält
+\begin{equation}
+\label{eq:1:14}
+x_2 \geq 2x_1 - 10.
+\end{equation}
+
+\pagebreak
+Diesmal gelangen wir zur folgenden Zeichnung:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-0.5,-0.5)(8.5,6.5)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,6.5)
+\psline[linewidth=1.0pt](3,-4)(9,8)
+\pscircle*(5,0){0.075}
+\pspolygon[fillstyle=hlines,linewidth=0pt,hatchwidth=0.1pt](3,-4)(9,8)(-1,8)(-1,-4)
+\uput{0.1}[310](5,0){$(5,0)$}
+\uput{0.0}[0](6,1){$x_2=2x_1-10$}
+
+\uput{0.15}[270](6.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+
+\small
+\end{pspicture*}
+\end{center}
+
+\textbf{Man beachte}: Aufgrund der Ungleichung (\ref{eq:1:14}) liegt die von der Geraden $x_2=2x_1-10$ berandete Halbebene diesmal \textit{oberhalb bzw. auf} dieser Geraden.
+
+In ähnlicher Weise führen auch die übrigen Nebenbedingungen $2x_1+x_2 \leq 14$, $x_1 \geq 0$ und $x_2 \geq 0$ zu Geraden und dazugehörigen Halbebenen.
+
+Fasst man alles in einer einzigen Zeichnung zusammen, \textit{wobei man auch einige \textit{Schnittpunkte} von Geraden zu berechnen hat}, so gelangt man zur obigen Zeichnung, die den zulässigen Bereich von (\ref{eq:1:9}) darstellt.
+
+ \textit{Nun betrachten wir zusätzlich die Zielfunktion}. Genauer: Wir betrachten diejenigen Punkte $(x_1,x_2)$, für die die Zielfunktion den Wert 0 annimmt, für die also gilt:
+\[
+x_1+x_2 = 0.
+\]
+
+Diese Punkte bilden eine Gerade $g$, die mit dem zulässigen Bereich von (\ref{eq:1:9}) zumindest einen Punkt gemeinsam hat. Wir sagen, dass die Gerade $g$ den zulässigen Bereich \textit{trifft} oder \textit{schneidet}. Wir nehmen die Gerade $g$ in unsere Zeichnung auf:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-1.5,-1.5)(8,6.5)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,6.5)
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](0,0)(5,0)(6,2)(4,6)(0,4)
+\uput{0.25}[225](0,0){$(0,0)$}
+\uput{0.15}[270](5,0){$(5,0)$}
+\uput{0.15}[0](6,2){$(6,2)$}
+\uput{0.15}[90](4,6){$(4,6)$}
+\uput{0.15}[180](0,4){$(0,4)$}
+\psline[linewidth=1pt](-2,2)(2,-2)
+\uput{0.15}[0](1.25,-1){$x_1+x_2=0$}
+\uput{0.5}[180](1.25,-1){$g$}
+\uput{0.15}[270](6.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+\small
+\end{pspicture*}
+\end{center}
+
+Betrachten wir für $d \in \R$ die Gleichung
+\[
+x_1 + x_2 = d,
+\]
+so wird hierdurch eine zu $g$ parallele Gerade beschrieben. Wählen wir beispielsweise $d=3$, so schneidet diese Gerade den zulässigen Bereich; auch wenn wir $d$ etwas größer wählen, sagen wir $d=4$ oder $d=6.5$, so trifft die dazugehörige Gerade immer noch den zulässigen Bereich. Nach diesen Beobachtungen sollte das weitere Vorgehen klar sein: Man verschiebt die Gerade $g$ parallel und achtet darauf, dass die entstehende Gerade $x_1+x_2=d$ die Menge der zulässigen Lösungen immer noch schneidet, und bemüht sich außerdem, $d$ möglichst groß werden zu lassen.
+
+In unserem Beispiel ergibt sich, dass $d=10$ der größtmögliche Wert ist und dass der Maximalwert $d=10$ im Eckpunkt $(4,6)$ angenommen wird; siehe nachfolgende Zeichnung:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-1.5,-0.5)(8,7)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(6.5,6.5)
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](0,0)(5,0)(6,2)(4,6)(0,4)
+\uput{0.25}[225](0,0){$(0,0)$}
+\uput{0.15}[270](5,0){$(5,0)$}
+\uput{0.15}[0](6,2){$(6,2)$}
+\uput{0.15}[60](4,6){$(4,6)$}
+\uput{0.15}[180](0,4){$(0,4)$}
+\psline[linewidth=1pt](-2,12)(10,0)
+\uput{0.25}[0](5,5){$x_1+x_2=10$}
+\uput{0.15}[270](6.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+\small
+\end{pspicture*}
+\end{center}
+
+Wir fügen noch eine Bemerkung zur Richtung an, in der die Gerade $g$ verschoben wird. \textit{Diese Richtung kann man leicht an der Zielfunktion ablesen}: In unserem Beispiel lautet die Zielfunktion $c_1x_1 + c_2x_2$ (mit $c_1=c_2=1$) und die Verschiebung der Geraden $g$ erfolgte senkrecht zu $g$ in Richtung des Vektors $(1,1)$. Allgemein gilt Folgendes, wobei wir voraussetzen, dass $c_1,c_2$ nicht beide gleich Null sind.
+
+\begin{Definition}[Feststellung]
+Liegt ein Maximierungsproblem vor und lautet die Zielfunktion $c_1x_1 + c_2x_2$, so wird bei Ausführung der grafischen Methode eine Gerade der Form $c_1x_1+c_2x_2=d$, die den zulässigen Bereich\index{zulässiger Bereich}\index{Bereich!zulässiger} trifft, in Richtung des Vektors $c^T = (c_1, c_2)$ parallel verschoben.
+\end{Definition}
+
+Im Zusammenhang mit dieser Feststellung sei darauf hingewiesen, \textit{dass der Vektor $c^T = (c_1,c_2)$ senkrecht auf der Ursprungsgeraden steht, die durch $c_1x_1+c_2x_2=0$ gegeben ist}.
+
+Wir illustrieren das Gesagte anhand des folgenden Beispiels:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:1:15}
+& \text{maximiere } & 4x_1 &\ + &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& -x_1 &\ + &\ 2x_2 &\ \leq &\  8\ \\
+&& 2x_1 &\ - &\  x_2 &\ \leq &\ 10\ \\
+&& 2x_1 &\ + &\  x_2 &\ \leq &\ 14\ \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0, 
+\end{alignedat}
+\end{align}
+
+Der zulässige Bereich ist in diesem Beispiel derselbe wie in (\ref{eq:1:9}), nur die Zielfunktion hat sich geändert. 
+
+\pagebreak
+Für Beispiel (\ref{eq:1:15}) gelangt man zur folgenden Zeichnung:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture*}(-4,-0.75)(9,6.75)
+\footnotesize
+
+\psaxes[tickstyle=top,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(7.5,6.5)
+\pspolygon[fillstyle=hlines,linewidth=1pt,hatchwidth=0.1pt](0,0)(5,0)(6,2)(4,6)(0,4)
+\uput{0.25}[225](0,0){$(0,0)$}
+\uput{0.15}[270](5,0){$(5,0)$}
+\uput{0.15}[0](6,2){$(6,2)$}
+\uput{0.05}[50](4,6){$(4,6)$}
+\uput{0.05}[180](0,4){$(0,4)$}
+\psline[linewidth=1pt](-2,8)(1,-4)
+\psline[linewidth=1pt](1,8)(4,-4)
+\psline[linewidth=1pt](3,10)(6,-2)
+\psline[linewidth=1pt](4,10)(7,-2)
+\psline[linewidth=1pt]{->}(0,0)(4,1)
+\uput{0.25}[180](-0.5,2){$g: 4x_1+x_2=0$}
+\uput{0.25}[0](5.5,4){$4x_1+x_2=26$}
+\uput{0.15}[90](4,1){$c=(4,1)$}
+\uput{0.15}[270](7.25, 0){$x_1$}
+\uput{0.15}[  0](0, 6.25){$x_2$}
+\small
+\end{pspicture*}
+\end{center}
+
+\textit{Ergebnis}: Die Gerade $4x_1+x_2=0$ wird in Richtung des Vektors $c=(4,1)$ verschoben und das Maximum wird im Punkt $(x_1,x_2) = (6,2)$ angenommen (mit Zielfunktionswert $z=26$).
+
+\text{Frage}: Wie lautet das Ergebnis, wenn in (\ref{eq:1:15}) anstelle von $4x_1+x_2$ die Zielfunktion $2x_1+x_2$ betrachtet wird?
+
+\textbf{Weitere Beispiele:}
+\begin{enumerate}[\bfseries 1.]
+\item Was ergibt die grafische Methode im folgenden Beispiel?
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & x_1 &\ + &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& -x_1 &\ + &\  x_2 &\ \leq &\ 3 \\
+&&  x_1 &\ - &\ 2x_2 &\ \leq &\ 2 \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0 
+\end{alignedat}
+\end{align*}
+
+\item Was ergibt sich in 1., wenn man anstelle der Zielfunktion $x_1+x_2$ die folgende Zielfunktion wählt?
+\[
+-2x_1+x_2
+\]
+
+\item Was ergibt sich im folgenden Beispiel?
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & 3x_1 &\ - &\ x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&&  x_1 &\ + &\  x_2 &\ \leq &\  2 \\
+&& -x_1 &\ + &\  x_2 &\ \leq &\ -3 \\
+&& & & \llap{$x_1, x_2$} &\ \geq &\ 0 
+\end{alignedat}
+\end{align*}
+
+\end{enumerate}
+
+Im nächsten Abschnitt werden wir nun die Methode kennenlernen, die in der Praxis die wichtigste Methode zum Lösen von LP-Problemen ist: das \textit{Simplexverfahren} (auch \textit{Simplexalgorithmus} oder \textit{Simplexmethode} genannt).
+\index{Simplexverfahren}\index{Verfahren!Simplex-}
+\index{Simplexmethode}\index{Methode!Simplex-}
+\index{Simplexalgorithmus}\index{Algorithmus!Simplex-}
+
+Das Simplexverfahren wurde von G. B. Dantzig\index{G. B. Dantzig}\index{Dantzig, G. B.} im Jahre 1947 entwickelt.
+\bigskip
+
+\begin{figure}[H]
+\centering
+
+\includegraphics[width=300pt, height=455pt]{Dantzig}
+          
+\caption*{\textbf{George B. Dantzig} \\ 
+Geb. 1914 in Portland, Oregon \\ 
+Gest. 2005 in Stanford, Kalifornien}
+\end{figure}

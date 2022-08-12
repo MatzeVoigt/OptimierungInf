@@ -1,0 +1,169 @@
+\def\nr{6. Aufgabenblatt}
+\def\kopf{\\\hfill\normalsize\mdseries}
+\documentclass[11pt,a4paper,fleqn]{scrartcl}
+\usepackage{eurosym}
+\input{header_OptInf}
+
+\subsection*{Präsenzaufgaben am 14./15.12.2020}
+
+\Aufgabe[ (duales Problem)]{P1}
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Gegeben sei das folgende LP-Problem, das wir (P) nennen wollen:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & x_1 &\ + &\ x_2 &\ + &\ x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  2x_1 &\ - &\ 4x_2 &\ + &\  x_3 &\ =    &\ -1,\ \\
+&&   x_1 &\ + &\ 5x_2 &\ + &\  x_3 &\ =    &\ 16,\ \\
+&&   x_1 &\   &\      &\ + &\  x_3 &\ \geq &\  5,\ \\
+&&  2x_1 &\ + &\ 4x_2 &\ - &\  x_3 &\ \leq &\  8,\ \\
+&&   x_1 &\ - &\ 3x_2 &\ + &\  x_3 &\ \leq &\  0,\ \\
+&& -4x_1 &\ + &\ 3x_2 &\   &\      &\ \leq &\  4,\ \\
+&&  4x_1 &\ - &\ 3x_2 &\ + &\ 5x_3 &\ \leq &\ 10,\ \\
+&&   x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ \leq &\  9,\ \\
+&&&&&& \llap{$x_2$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+
+Konstruieren Sie das zu (P) duale Problem (D), indem Sie das \textit{Dualisierungsrezept} verwenden.
+
+% Aufgabe P-1b
+\item Nun sei mit (P) das folgende Problem bezeichnet:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & x_1 &\ - &\ x_2 & & & & & & \\ 
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ - &\  x_3 &\ + &\  x_4 &\ \leq &\ 0,\ \\
+&& 3x_1 &\ + &\  x_2 &\ + &\ 4x_3 &\ - &\ 2x_4 &\ \geq &\ 3,\ \\
+&& -x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ + &\  x_4 &\ =    &\ 1,\ \\
+&&&&&&&& \llap{$x_2,x_3$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+
+Bilden Sie das zu (P) duale Problem, indem Sie das \textit{Dualisierungsrezept} verwenden (diesmal allerdings {\glqq}von rechts nach links{\grqq}).
+\end{enumerate}
+
+\Aufgabe[ (duales Problem in Matrixschreibweise)]{P2}
+In Matrixnotation lautet ein LP-Problem in Standardform bekanntlich so:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\ \leq &\ b, \\
+&& x &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Das Duale hierzu lautet in Matrixnotation:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{minimiere } & b^Ty & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& A^Ty &\ \geq &\ c, \\
+&& y &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Geben Sie das Duale der folgenden beiden Probleme in Matrixnotation an:
+\begin{enumerate}[a)]
+% Aufgabe P-2a
+\item \begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax & \leq &\ b.
+\end{alignedat}
+\end{align*}
+
+% Aufgabe P-2b
+\item \begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax & = &\ b, \\
+&& x & \geq &\ 0.
+\end{alignedat}
+\end{align*}
+\end{enumerate}
+
+\subsection*{Hausaufgaben bis zum 06.01.2021 (12:00 Uhr)}
+\emph{Bitte reichen Sie Ihre Hausaufgaben in festen Zweier- oder Dreiergruppen bei Moodle ein. Bitte laden Sie ausschließlich \textbf{PDF-Dokumente} hoch, andernfalls können Ihre Hausaufgaben nicht korrigiert werden.}
+
+\Aufgabe[ (duales Problem, 4 Punkte)]{H1}
+\begin{enumerate}[a)]
+% Aufgabe H-1a
+\item Gegeben sei das folgende LP-Problem, das wir (P) nennen wollen:
+\begin{align*}
+\begin{alignedat}{8}
+& \text{maximiere } &  2x_1 &\ + &\ 2x_2 &\ - &\ x_3 & & &\ + &\ x_5 &\ - & 2x_6 & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & & & \\
+&& 3x_1 &\ - &\  x_2 &\ + &\ 2x_3 &\ + &\  3x_4 &\ - &\  x_5 &\ + &\ 2x_6 &\ \leq &\ -11,\ \\
+&& -2x_1 &\ - &\  2x_2 &\ + &\ 2x_3 &\ + &\  2x_4 &\ - &\ x_5 &    &       &\ \geq &\   4,\ \\
+&& 7x_1 &\ + &\  x_2 &\ + &\ 4x_3 &\ - &\ 2x_4 &\ + &\  x_5 &    &       &\ =    &\   2,\ \\
+&& 2x_1 &\ + &\  2x_2 &\ - &\ x_3 &\ - &\ 3x_4 &\ + &\  3x_5 &    &       &\ \geq    &\   2,\ \\
+&& &&&&&&&&&& \llap{$x_1,x_2,x_6$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+
+Bilden Sie das zu (P) duale Problem (D), indem Sie das \textit{Dualisierungsrezept} verwenden.
+
+% Aufgabe H-1b
+\item Nun sei mit (P) das folgende Problem bezeichnet:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & 6x_1 &\ - &\ 2x_2 &\ + &\ x_3 &\ + &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&   x_1 &\ - &\  x_2 &\ + &\  x_3 &\ + &\ 2x_4 &\ \geq &\   3,\ \\
+&&   x_1 &\ + &\ 4x_2 &\ + &\ 2x_3 &    &       &\ \leq &\   3,\ \\
+&&  2x_1 &\   &\      &\ + &\  x_3 &    &       &\ \geq &\   2,\ \\
+&&   x_1 &\ - &\ 3x_2 &\ + &\ 3x_3 &    &       &\ =    &\   4,\ \\
+&&  3x_1 &\ + &\  x_2 &\ - &\  x_3 &\ + &\  x_4 &\ =    &\   1,\ \\
+&& -4x_1 &\ + &\  x_2 &\   &\      &    &       &\ \leq &\   1,\ \\
+&&   x_1 &\ + &\ 2x_2 &\ + &\ 2x_3 &\ + &\ 7x_4 &\ \geq &\  -8,\ \\
+&& &&&&&& \llap{$x_1,x_4$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+
+Bilden Sie wieder das zu (P) duale Problem (D), indem Sie das \textit{Dualisierungsrezept} verwenden (diesmal {\glqq}von rechts nach links{\grqq}).
+\end{enumerate}
+
+% \Aufgabe[ (Kantinenleiterproblem, 2 Punkte)]{H2}
+% Wir greifen das \textit{Kantinenleiterproblem} aus Aufgabe 2a) von Blatt 1 auf. Lösen Sie dieses Problem mithilfe des folgenden Tools:
+% 
+% \begin{center}
+% \url{http://www.zweigmedia.com/RealWorld/simplex.html}.
+% \end{center}
+
+\Aufgabe[ (konvexe Minimierungsprobleme, 6 Punkte)]{H2}
+Eine sehr wichtige Klasse von Minimierungsproblemen sind konvexe Minimierungsprobleme. Das Problem
+\begin{equation*}
+  \text{minimiere }f(x) \text{ unter der Nebenbedingung } x\in \mathcal{K}
+\end{equation*}
+heißt \emph{konvexes Minimierungsproblem}, falls sowohl die Funktion $f : \R^n \to \R$, als auch die Menge $\cK \subseteq \R^n$ gleichzeitig konvex sind. Dabei heißt
+\begin{itemize}
+ \item die Funktion $f :\R^n \to \R$ \emph{konvex}, falls
+ \begin{equation*}
+  f(\lambda x_1 + (1-\lambda)x_2) \le \lambda f(x_1) + (1-\lambda) f(x_2) \quad \text{für alle } x_1,x_2 \in \R^n \text{ und } \lambda \in [0,1] \text{ gilt};
+ \end{equation*}
+ \item die Menge $\cK \subseteq \R^n$ \emph{konvex}, falls
+ \begin{equation*}
+  x_1,x_2 \in \cK \quad \Rightarrow \quad \lambda x_1 + (1-\lambda) x_2 \in \cK \quad \text{für alle } \lambda \in [0,1] \text{ gilt}.
+ \end{equation*}
+\end{itemize}
+ Konvexe Minimierungsprobleme haben hervorragende Eigenschaften. Beispielsweise ist jedes lokale Minimum gleichzeitig ein globales Minimum und unter einer schwachen Zusatzannahme kann man sogar Eindeutigkeit der globalen Lösung zeigen. Zudem gibt es viele numerische Algorithmen, die die Konvexität des Problems ausnutzen können.
+ 
+ Das Ziel dieser Aufgabe besteht darin zu zeigen, daß lineare Minimierungsprobleme (also solche Probleme mit einer linearen Zielfunktion und endlich vielen linearen Gleichungs- und Ungleichungsnebenbedingungen) konvex sind. Gehen Sie dabei wie folgt vor:
+ \begin{enumerate}[a)]
+  \item Überlegen Sie sich zunächst, was die Konvexität graphisch bedeutet: Zeichnen Sie dazu \emph{jeweils} eine konvexe und eine nichtkonvexe Funktion $f:\R \to \R$ und Menge $\cK \subset \R^2$. 
+  \item Es sei $c \in \R^n$. Zeigen Sie, daß die Funktion $f:\R^n \to \R$ mit $f(x) = c^T x$ konvex ist.
+  \item Es seien nun $a \in \R^n$ und $b \in \R$. Zeigen Sie, daß die Mengen
+  \begin{align*}
+   \cK_+ := \left\{ x \in \R^n\; : \; a^T x \ge b \right\}, \quad \cK_- := \left\{ x \in \R^n\; : \; a^T x \le b \right\}, \quad \cK_0 := \left\{ x \in \R^n\; : \; a^T x = b \right\}
+  \end{align*}
+  konvex sind. (Es genügt, dies für eine der Mengen ausführlich zu tun, da die Beweise für die anderen beiden Mengen analog sind.)
+  \item Es seien $\cK_1 \subseteq \R^n$ und $\cK_2 \subseteq \R^n$ zwei konvexe Mengen. Zeigen Sie, daß dann auch der Durchschnitt $\cK_1 \cap \cK_2$ konvex ist.
+  \item Folgern Sie nun mit Hilfe von b)--d), daß ein lineares Minimierungsproblem konvex ist.
+ \end{enumerate}
+
+\end{document}

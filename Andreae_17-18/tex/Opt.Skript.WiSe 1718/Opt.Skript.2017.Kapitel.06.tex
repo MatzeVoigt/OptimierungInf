@@ -1,0 +1,465 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 06:                                                                  %
+% "Einige Anwendungsbeispiele"                                                 %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Einige Anwendungsbeispiele}\label{chapter:6}
+
+
+
+
+In diesem Abschnitt werden Beispiele aus unterschiedlichen Lehrbüchern zusammengestellt und (teilweise) kommentiert. \textit{Auf diese Art sollen Sie Einblicke in die vielfältigen Anwendungsmöglichkeiten der Linearen Programmierung erhalten}.
+
+In der \textit{1. Vorlesung} haben wir als einführendes Beispiel ein \textit{Diätproblem} betrachtet, das Ihnen möglicher\-weise etwas speziell vorkam.
+
+\textit{Das Problem ist jedoch weit weniger speziell, als es auf den ersten Blick erscheint}: Viele Probleme aus der Praxis, die gar nichts mit gesunder oder preiswerter Ernährung zu tun haben, entpuppen sich bei genauerem Hinsehen ebenfalls als \enquote{Diätprobleme}. Um dies zu erkennen, betrachten wir das folgende Beispiel, das wir \textit{das (allgemeine) Diätproblem} nennen\footnote{Dieses Beispiel stammt aus D. Luenberger, Yinyu Ye: \textit{Linear and Nonlinear Programming}. Springer (2008, 3. Auflage). \textit{Ziel des Abschnitts \ref{chapter:6} ist ebenfalls, Sie auf interessante Lehrbücher aufmerksam zu machen}.}.
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Das allgemeine Diätproblem"                                                 %
+%------------------------------------------------------------------------------%
+
+\section{Das allgemeine Diätproblem}
+\label{section:6:1}
+\index{Diätproblem}\index{Problem!Diät-}
+\index{allgemeines Diätproblem}\index{Diätproblem!allgemeines}\index{Problem!allgemeines Diät-}
+
+% begin
+
+\textbf{Example 1} (The diet problem). How can we determine the most economical diet
+that satisfies the basic minimum nutritional requirements for good health? Such a
+problem might, for example, be faced by the dietician of a large army. We assume
+that there are available at the market $n$ different foods and that the $j$th food sells
+at a price $c_j$ per unit. In addition there are $m$ basic nutritional ingredients and, to
+achieve a balanced diet, each individual must receive at least $b_i$
+units of the $i$th
+nutrient per day. Finally, we assume that each unit of food $j$ contains $a_{ij}$ units of
+the $i$th nutrient.
+
+If we denote by $x_j$
+the number of units of food $j$ in the diet, the problem then
+is to select the $x_j$'s to minimize the total cost
+\[
+c_1x_1 + \ldots + c_nx_n 
+\]
+
+subject to the nutritional constraints
+\begin{align*}
+\begin{alignedat}{4}
+a_{11}x_1 &\ + &\ \ldots &\ + &\ a_{1n}x_n &\ \geq &\ b_1 \\
+ & & & \ \ \vdots & & & \\
+a_{m1}x_1 &\ + &\ \ldots &\ + &\ a_{mn}x_n &\ \geq &\ b_m 
+\end{alignedat}
+\end{align*}
+
+and the nonnegativity constraints
+\[
+x_1 \geq 0, \ldots, x_n \geq 0
+\]
+on the food quantities.
+
+%end
+
+
+\bigskip
+
+
+Ein Unterschied zwischen dem allgemeinen Diätproblem und Pauls Problem aus der 1. Vorlesung fällt auf: In Pauls Problem gab es obere Schranken für jedes Lebensmittel; im Einzelnen lauten diese:
+\begin{align*}
+x_1 &\leq 4 \\
+x_2 &\leq 3 \\
+x_3 &\leq 2 \\
+x_4 &\leq 8 \\
+x_5 &\leq 2 \\
+x_6 &\leq 2.
+\end{align*}
+
+Im allgemeinen Diätproblem kommen dagegen keine oberen Schranken vor; deshalb wollen wir zwischen den folgenden Problemen unterscheiden:
+\begin{itemize}
+\item dem allgemeinen \textit{Diätproblem} (d.h. ohne obere Schranken)
+\item dem allgemeinen \textit{Diätproblem mit oberen Schranken}.
+\end{itemize}
+
+Um zu erläutern, welcher Zusammenhang zwischen diesen beiden Varianten des Diätproblems besteht, betrachten wir noch einmal das Beispiel von Paul und seinen Lebensmitteln.
+
+Wir stellen uns vor, dass Paul sein Problem \textit{zunächst ohne obere Schranken} formuliert und auch gelöst hat (per Hand oder mithilfe eines der gängigen Softwarepakete). Möglicherweise wäre er dann mit dem Ergebnis nicht zufrieden gewesen, da der Speiseplan zu einseitig ausgefallen wäre. Um dies zu ändern, würde Paul dann \textit{nachträglich} die zusätzlichen Nebenbedingungen hinzunehmen.
+
+\textit{Die nachträgliche Hinzunahme von zusätzlichen Nebenbedingungen ist nichts Seltenes}\index{Nebenbedingungen!Hinzunahme von zusätzlichen}\index{Hinzunahme von zusätzlichen Nebenbedingungen} -- im Gegenteil: \textit{Es handelt sich um einen typischen Vorgang, der in der Praxis häufig vorkommt}. Das liegt daran, dass bei der Lösung eines LP-Problems natürlich nur diejenigen Nebenbedingungen Berücksichtigung finden, die explizit formuliert wurden. Das kann dazu führen, dass ein Anwender mit dem Ergebnis unzufrieden ist, da er noch zusätzliche Nebenbedingungen im Hinterkopf hatte. Dann kommt es darauf an, geeignete zusätzliche Nebenbedingungen explizit zu formulieren und einen weiteren Durchlauf zu starten.
+
+Das nächste Beispiel, das wir uns anschauen, übernehmen wir aus dem bekannten Lehrbuch
+\begin{itemize}
+\item Th. Cormen, Ch. Leiserson, R. Rivest, C. Stein: \textit{Algorithmen -- Eine Einführung}. Oldenbourg-Verlag (2010, 3. Auflage).
+\end{itemize}
+
+
+\subsection{Ein Beispiel aus der Politik}
+\index{Wahlkampf}\index{Politik}
+
+%---------------------------------------- begin
+
+Nehmen Sie an, Sie wären ein Politiker, der eine Wahl gewinnen möchte. Ihr Wahlkreis besteht aus drei Typen von Gebieten -- urbanen, suburbanen und ländlichen. Diese Gebiete haben 100 000, 200 000 beziehungsweise 50 000 registrierte Wahlberechtigte. Wenngleich nicht alle registrierte Wähler wirklich zur Wahlurne gehen, ist es Ihr Ziel, dass wenigstens die Hälfte der registrierten Wähler eines jeden Gebietstypen Ihnen ihre Stimme gibt, damit Sie effektiv regieren können. Sie sind ehrlich und würden niemals politische Ideen unterstützen, an die Sie nicht glauben. Sie erkennen jedoch, dass bestimmte Themen in bestimmten Gebieten besonders dazu geeignet sind, Stimmen zu gewinnen. Ihre Hauptthemen sind der Bau neuer Straßen, Sicherheitspolitik, Beihilfen für die Landwirtschaft und eine Mineralölsteuer für die Verbesserung des öffentlichen Nahverkehrs. Aufgrund der Untersuchungen Ihrer Wahlkampfberater können Sie für jedes Ihrer Wahlkampfthemen einschätzen, wie viele Stimmen Sie in jeder Bevölkerungsschicht verlieren oder gewinnen, wenn Sie jeweils 1 000 Dollar an Werbemitteln für ein Thema einsetzen. Diese Informationen sind in der Tabelle in Abbildung 29.1 enthalten.
+
+\begin{figure}[H]
+\begin{center}
+\begin{tabular}{l|ccc}
+Wahlkampfthema & urban & suburban & ländlich \\ \hline
+Straßenbau & -2 & 5 & 3 \\
+Sicherheit & 8 & 2 & -5 \\
+Landwirtschaftsbeihilfe & 0 & 0 & 10 \\
+Mineralölsteuer & 10 & 0 & -2
+\end{tabular}
+\end{center}
+\caption*{\textbf{Abbildung 29.1}: Die Auswirkungen von Wahlkampftaktiken auf die Wähler. Jeder Eintrag gibt die Anzahl der Wähler in Tausenden aus den urbanen, suburbanen und ländlichen Gebieten an, die durch den Einsatz von 1 000 Dollar Werbemitteln für ein bestimmtes Thema gewonnen werden können. Negative Einträge geben Stimmen an, die verloren gehen würden.}
+\end{figure}
+
+Jeder Eintrag dieser Tabelle gibt die Anzahl der Stimmberechtigten (in Tausenden) aus urbanen, suburbanen beziehungsweise ländlichen Gebieten an, die durch die Aufwendung von 1000 Dollar an Werbemitteln für ein bestimmtes Wahlkampfthema gewonnen werden können. Negative Einträge bedeuten, dass Stimmen verloren gehen würden. Ihre Aufgabe ist es, den minimalen Geldbetrag zu bestimmen, den Sie aufwenden müssen, um 50 000 Stimmen in den urbanen Gebieten, 100 000 Stimmen in den suburbanen Gebieten und 25 000 Stimmen in den ländlichen Gebieten zu gewinnen.
+
+Durch Ausprobieren (engl. \textit{trial and error}) können Sie eine Strategie finden, mit der Sie die erforderlichen Stimmen bekommen, aber eine solche Strategie muss nicht die kostengünstigste sein. Sie könnten zum Beispiel in die Werbekampagnen für den Straßenbau 20 000 Dollar, für die Sicherheitspolitik 0 Dollar, für Landwirtschaftsbeihilfen 4 000 Dollar und für die Mineralölsteuer 9 000 Dollar stecken. In diesem Fall bekommen Sie $20(-2) + 0(8) + 4(0) + 9(10) = 50$ Tausend Stimmen in den urbanen Gebieten, $20(5) + 0(2) + 4(0) + 9(0) = 100$ Tausend Stimmen in den suburbanen Gebieten und $20(3) + 0(- 5) + 4(10) + 9(-2) = 82$ Tausend Stimmen in den ländlichen Gebieten. Sie würden in den urbanen und suburbanen Gebieten genau die gewünschte Anzahl von Stimmen und in den ländlichen Gebieten mehr Stimmen als notwendig bekommen. (Tatsächlich haben Sie in den ländlichen Gebieten sogar mehr Stimmen bekommen, als es Wähler gibt!) Um diese Stimmen zu bekommen, müssten Sie $20+0+4+9 = 33$ Tausend Dollar für Werbung bezahlen.
+
+Natürlich würden Sie sich fragen, ob Ihre Strategie die bestmögliche ist, d.h., ob Sie Ihre Ziele mit weniger Werbeaufwand hätten erreichen können. Weiteres Ausprobieren könnte Ihnen helfen, diese Frage zu beantworten. Aber hätten Sie nicht lieber eine systematische Methode, um derartige Fragen zu beantworten? Um eine solche Methode zu entwickeln, werden wir die Frage mathematisch formulieren. Wir führen vier Variablen ein:
+\begin{itemize}
+\item $x_1$ ist die Anzahl der Dollar in Tausenden, die für die Kampagne für den Straßenbau
+ausgegeben werden,
+\item $x_2$ ist die Anzahl der Dollar in Tausenden, die für die Kampagne für die Sicherheitspolitik
+ausgegeben werden,
+\item $x_3$ ist die Anzahl der Dollar in Tausenden, die für die Kampagne für Landwirtschaftsbeihilfen
+ausgegeben werden,
+\item $x_4$ ist die Anzahl der Dollar in Tausenden, die für die Werbung für die Mineralölsteuer
+ausgegeben werden.
+\end{itemize}
+
+Die Forderung, mindestens 50 000 Stimmen in den urbanen Gebieten zu gewinnen, können wir durch die Ungleichung
+\begin{equation}
+-2x_1 + 8x_2 + 0x_3 + 10x_4 \geq 50
+\tag{29.1}
+\end{equation}
+ausdrücken. Entsprechend schreiben wir die Forderung, mindestens 100 000 Stimmen in den suburbanen und mindestens 25 000 Stimmen in den ländlichen Gebieten zu gewinnen, in der Form
+\begin{equation}
+5x_1 + 2x_2 + 0x_3 + 0x_4 \geq 100
+\tag{29.2}
+\end{equation}
+und
+\begin{equation}
+3x_1 - 5x_2 + 10x_3 - 2x_4 \geq 25.
+\tag{29.3}
+\end{equation}
+
+Jede Belegung der Variablen $x_1$, $x_2$, $x_3$, $x_4$, die die Ungleichungen (29.1)-(29.3) erfüllt, führt zu einer Strategie, mit der Sie in jeder der Bevölkerungsgruppen die notwendige Stimmenanzahl bekommen. Um die Kosten so gering wie möglich zu halten, wollen Sie den Werbeaufwand, d.h. den Ausdruck
+\begin{equation}
+x_1 + x_2 + x_3 + x_4
+\tag{29.4}
+\end{equation}
+
+minimieren. Zwar ist Negativwerbung etwas, was in politischen Kampagnen häufig vorkommt, jedoch gibt es keine Werbung mit negativen Kosten. Folglich fordern wir, dass
+\begin{equation}
+x_1 \geq 0, \quad x_2 \geq 0,\quad x_3 \geq 0 \quad \text{und} \quad x_4 \geq 0
+\tag{29.5}
+\end{equation}
+
+gilt. Kombinieren wir die Ungleichungen (29.1)-(29.3) und (29.5) mit der zu minimierenden Zielfunktion (29.4), so erhalten wir ein so genanntes \enquote{lineares Programm}. Wir schreiben dieses Problem in der Form
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & x_1 &\ + &\ x_2 &\ + &\ x_3 &\ + &\ x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& -2x_1 &\ + &\ 8x_2 &\ + &\  0x_3 &\ + & 10x_4 &\ \geq &\  50 \\
+&&  5x_1 &\ + &\ 2x_2 &\ + &\  0x_3 &\ + &  0x_4 &\ \geq &\ 100 \\
+&&  3x_1 &\ - &\ 5x_2 &\ + &\ 10x_3 &\ - &  2x_4 &\ \geq &\  25 \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\geq& 0.
+\end{alignedat}
+\end{align*}
+
+Die Lösung dieses linearen Programms liefert Ihnen eine optimale Strategie.
+
+
+%---------------------------------------- end
+
+\medskip
+
+Man sieht: Auch dieses Beispiel ist ein \enquote{Diätproblem}, obwohl von gesunder oder preiswerter Ernährung nicht die Rede ist.
+
+Wir schauen uns einige weitere Auszüge aus dem Buch von Cormen et al an:
+
+\subsection{Weitere Beispiele}
+
+%---------------------------------------- begin
+
+Die Lineare Programmierung hat eine Vielzahl von Anwendungen. Jedes Lehrbuch über Operations Research enthält eine Fülle von Beispielen zur Linearen Programmierung. Lineare Programmierung ist ein Standardverfahren geworden, das den Studierenden in den meisten Wirtschaftsstudiengängen vermittelt wird. Das einführende Beispiel zu einer Wahlkampfstrategie ist ein typisches Beispiel. Zwei weitere Beispiele Linearer Programmierung sind die folgenden:
+\begin{itemize}
+\item Eine Fluggesellschaft möchte ihre Crews zusammenstellen. Von der zuständigen Luftfahrtbehörde werden viele Nebenbedingungen auferlegt, wie zum Beispiel die Beschränkung der Stundenzahl, die jedes Mitglied ohne Unterbrechung arbeiten darf, oder die Forderung, dass eine bestimmte Crew innerhalb eines Monats nur auf einem bestimmten Flugzeugtyp arbeiten darf. Die Fluggesellschaft will die Crews für alle Flüge so planen, dass so wenige Besatzungsmitglieder wie möglich gebraucht werden.
+\item Eine Ölgesellschaft muss entscheiden, wo nach Öl gebohrt werden soll. Einer Bohrung an einem bestimmten Ort sind bestimmte Kosten und, auf der Basis geologischer Gutachten, ein erwarteter Gewinn in Form einer bestimmten Anzahl Barrel Öl zugeordnet. Die Gesellschaft hat ein begrenztes Budget für neue Bohrungen und möchte die zu erwartende Ölmenge unter Vorgabe dieses Budgets maximieren.
+\end{itemize}
+
+%---------------------------------------- end
+
+\medskip
+
+Hier noch ein weiterer Absatz aus dem Buch von Cormen et al, \textit{in dem besonders treffend die Rolle der Linearen Programmierung beschrieben wird}.
+
+\medskip
+
+%---------------------------------------- begin
+
+Die eigentliche Stärke der Linearen Programmierung liegt in ihrer Fähigkeit, neue Probleme zu lösen. Erinnern Sie sich an das Problem des Politikers zu Beginn dieses Kapitels. Das Problem, eine ausreichend große Anzahl von Stimmen zu bekommen und dabei nicht zu viel Geld auszugeben, wird durch keinen der Algorithmen, die wir in diesem Buch untersucht haben, gelöst; wir können es aber mit Linearer Programmierung lösen. Bücher enthalten eine Fülle solcher realitätsnaher Probleme, die durch Lineare Programmierung gelöst werden können. Die Lineare Programmierung ist auch dann besonders nützlich, wenn Varianten von Problemen zu lösen sind, für die wir noch nicht wissen, ob sie einen effizienten Algorithmus besitzen.
+
+%---------------------------------------- end
+
+
+%------------------------------------------------------------ begin
+
+\section{Energieflussproblem}
+\label{section:6:2}
+\index{Energieflussproblem}\index{Problem!Energiefluss-}
+
+Das nachfolgende Beispiel übernehmen wir aus
+\begin{itemize}
+\item K. Neumann, M. Morlock: \textit{Operations Research}. Hanser-Verlag (2004, 2. Auflage).
+\end{itemize}
+
+Bei einem Problem der Versorgung mit elektrischer Energie soll von einer Quelle\index{Quelle} $V_0$ (Kraftwerk) über ein Leitungsnetz mit den Verteilerknoten (Umspannwerken) $V_1, \ldots, V_7$ die Senke\index{Senke} $V_8$ (Fabrik) bedient werden. Weder in den Verteilerknoten noch in den Leitungen gehe Elektrizität verloren, d.h., der gesamte in $V_0$ eingespeiste Strom wird in $V_8$ abgenommen. Berücksichtigt man für die Leitungen Maximalbelastungen, so besteht eine Optimierungsaufgabe darin, die größtmögliche Strommenge zu bestimmen, die $V_8$ erreichen kann.
+
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=0.8\textwidth]{energiefluss}
+
+\end{figure}
+
+Ein anderes Optimierungsproblem ergibt sich, wenn elektrischer Strom einer vorgegebenen Stärke kostenoptimal durch ein Netz (von der Quelle zur Senke) geschickt werden soll und die Kosten aus Spannungsverlusten resultieren, die jeweils proportional zu den Stromstärken in den Leitungen sind.
+
+Bezeichnen wir mit $x_{ij}$ den von $V_i$ nach $V_j$ fließenden Strom\footnote{Genauer: Unter der Voraussetzung, dass die Kante von $v_i$ nach $v_j$ vorhanden ist, bezeichnen wir mir $x_{ij}$ den über diese Kante von $v_i$ nach $v_j$ fließenden Strom.}, so erhalten wir neben einer Zielfunktion in der bekannten linearen Form für jeden Verteilerknoten die Bedingung, dass die hineinfließende gleich der herausfließenden Menge ist. Beispielsweise gilt für $V_3$
+\[
+x_{13} + x_{23} - x_{34} - x_{35} - x_{36} = 0.
+\]
+
+Eine entsprechende Beziehung gilt für die Quelle und die Senke. Die aus der Quelle herausfließende Menge $w$ ist gerade gleich der in die Senke hineinfließenden Menge, da in den Verteilerknoten nichts \enquote{verlorengeht}. Für das obige Beispiel erhalten wir damit
+\[
+x_{01} + x_{02} = w = x_{48} + x_{68} + x_{78}.
+\]
+
+Neben diesen sogenannten Knotenbedingungen\index{Knotenbedingungen} sind noch die Maximalbelastungen der Leitungen als (obere) Kapazitätsschranken\index{Kapazitätsschranke}\index{Schranke!Kapazitäts-} zu beachten, d.h., für die Stärke $x_{ij}$ des von $V_i$ nach $V_j$ fließenden Stroms gilt
+\[
+0 \leq x_{ij} \leq \kappa_{ij},
+\] 
+wobei als untere Kapazitätsschranke 0 verwendet wird.
+
+Den oben skizzierten Zielfunktionen und Nebenbedingungen ist zu entnehmen, dass wir es sowohl bei der Bestimmung eines \textit{Flusses maximaler Stärke}\index{Fluss!maximaler Stärke} (Maximierung von $w$) als auch bei der Berechnung eines \textit{kostenoptimalen Flusses}\index{kostenoptimaler Fluss}\index{Fluss!kostenoptimaler} vorgegebener Stärke mit sehr speziell strukturierten linearen Problemen zu tun haben, für die auch spezielle Verfahren entwickelt worden sind\footnote{Flüsse maximaler Stärke werden im Rahmen der Vorlesung noch genauer behandelt werden.}.
+
+Eingesetzt werden derartige Modelle und Verfahren seit Anfang der 60er Jahre in einem breiten Spektrum von Anwendungen. Bereits zu dieser Zeit wurde z.B. vom Automobilhersteller Chrysler in den USA ein Planungsinstrument für die kostengünstigste Belieferung der Händler von den Produktionsstätten aus entwickelt (vgl. SHAPIRO (1984), Kapitel 5). Von 10 Werken aus sollen etwa 5000 Händler in den USA und in Kanada über ein gegebenes Vertriebsnetz beliefert werden. In Erweiterung der in Abb. 0.2.3 dargestellten Situation haben wir es mit einer Vielzahl von Quellen und Senken zu tun, was sich jedoch ohne Schwierigkeiten auf den Fall einer Senke und einer Quelle zurückführen lässt. Ferner kann im Rahmen dieses Modells auch berücksichtigt werden, dass die Produktionskosten pro Fahrzeug in den einzelnen Werken unterschiedlich sein können und Beschränkungen hinsichtlich des Produktionsausstoßes bestehen.
+
+
+%------------------------------------------------------------ end
+
+%\bigskip
+
+%Neben den beiden im Beispiel angesprochenen Problemen (\textit{Fluss maximaler Stärke} und \textit{kostenoptimaler Fluss}) gibt es eine Reihe von weiteren Netzwerkproblemen, die sich auf natürliche Art als LP-Probleme formulieren lassen. Hier noch ein weiteres Beispiel: das \textit{Problem der multiplen Warenflüsse} (aus Cormen et al, Seite 876f).
+%
+%\bigskip
+
+%------------------------------------------------------------ begin
+
+%\subsubsection{Multiple Warenflüsse}
+%\index{multiple Warenflüsse}\index{Warenflüsse!multiple}\index{Problem!der multiplen Warenflüsse}
+%
+%Als abschließendes Beispiel betrachten wir ein weiteres Flussproblem. Nehmen Sie an, die Firma Lucky Puck aus Abschnitt 26.1 würde beschließen, ihre Produktpalette zu erweitern und nicht nur Hockeypucks, sondern auch Hockeyschläger und Hockeyhelme herzustellen. Jedes Teil wird in einer eigenen Fabrik hergestellt, hat sein eigenes Warenlager und muss jeden Tag von der Fabrik zum Warenlager transportiert werden. Die Schläger werden in Vancouver hergestellt und müssen nach Saskatoon gebracht werden, die Helme werden in Edmonton hergestellt und nach Regina transportiert. Die Kapazität des Transportnetzwerks ändert sich jedoch nicht und die verschiedenen Elemente, d.h. die Waren, müssen sich das gleiche Netzwerk teilen.
+%
+%Dieses Beispiel ist eine Instanz des \textit{Problems multipler Warenflüsse}. Bei diesem Problem haben wir wieder einen gerichteten Graphen $G=(V,E)$ gegeben, in dem jeder Kante $(u,v) \in E$ eine nichtnegative Kapazität $c(u,v) \geq 0$ zugeordnet ist. Wie beim maximalen-Fluss-Problem setzen wir implizit voraus, dass $c(u,v)=0$ gilt, wenn $(u,v) \notin E$ und der Graph keine antiparallelen Kanten enthält. Zusätzlich haben wir $k$ verschiedene Waren $K_1, \ldots, K_k$ gegeben, wobei wir die Ware $i$ durch das Tripel $K_i=(s_i,t_i,d_i)$ spezifizieren. $s_i$ ist die Quelle für Ware $i$, $t_i$ die Senke für Ware $i$ und $d_i$ der Bedarf für Ware $i$, also der gewünschte Wert des Flusses für die Ware von $s_i$ nach $t_i$. Wir definieren einen Fluss für die Ware $i$, den wir mit $f_i$ bezeichnen (so dass $f_{iuv}$ der Fluss der Ware $i$ von Knoten $u$ nach Knoten $v$ ist), als eine reellwertige Funktion, die der Flusserhaltung und den Kapazitätsbeschränkungen genügt. Wir definieren nun $f_{uv}$, den \textit{Aggregat-Fluss}, als die Summe der einzelnen Warenflüsse, d.h. $f_{uv} = \sum\limits_{i=1}^{k}{f_{iuv}}$. Der Aggregat-Fluss entlang der Kante $(u,v)$ darf nicht größer als die Kapazität der Kante $(u,v)$ sein. 
+%
+%Wir versuchen in diesem Problem nicht, eine Zielfunktion zu minimieren; wir wollen nur prüfen, ob ein solcher Fluss existiert. Daher schreiben wir ein lineares Programm, das als Zielfunktion die \enquote{Null}-Funktion hat:
+%
+%minimiere 0 \\
+%unter den Nebenbedingungen
+%\begin{alignat*}{3}
+%\sum\limits_{i=1}^{k}{f_{iuv}} &\leq c(u,v) 
+%&&\quad \text{für alle } u,v \in V; \\
+%\sum\limits_{v \in V}{f_{iuv}} - \sum\limits_{v \in V}{f_{ivu}} &= 0 
+%&&\quad \text{für alle } i=1,\ldots,k \text{ und für alle } u \in V \setminus \bigl\{ s_i,t_i \bigr\}; \\
+%\sum\limits_{v \in V}{f_{is_iv}} - \sum\limits_{v \in V}{f_{ivs_i}} &= d_i 
+%&&\quad \text{für alle } i=i,\ldots,k; \\
+%f_{iuv} &\geq 0 
+%&&\quad \text{für alle } u,v \in V \text{ und für alle } i=1,\ldots,k.
+%\end{alignat*}
+%
+%Der einzige bekannte Algorithmus mit polynomieller Laufzeit für dieses Problem besteht darin, das Problem als lineares Programm zu formulieren und dieses durch einen Algorithmus zur Lösung linearer Programme mit polynomieller Laufzeit zu lösen.
+
+%------------------------------------------------------------ end
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Das Rucksackproblem (Knapsack Problem)"                                     %
+%------------------------------------------------------------------------------%
+
+\section{Das Rucksackproblem (Knapsack Problem)}
+\index{Rucksackproblem}\index{Problem!Rucksack-}\index{Knapsack-Problem}
+
+Die folgende Darstellung findet sich in
+\begin{itemize}
+\item S. Dasgupta, C. Papadimitriou, U. Vazirani: \textit{Algorithms}. McGraw Hill (2008).
+\end{itemize}
+
+\bigskip
+
+%------------------------------------------------------------ begin
+
+During a robbery, a burglar finds much more loot than he had expected and has to decide what to take. His bag (or \foreignquote{english}{knapsack}) will hold a total weight of at most $W$ pounds. There are $n$ items to pick from, of weight $w_1, \ldots, w_n$ and dollar value $v_1, \ldots, v_n$. What's the most valuable combination of items he can fit into his bag?\footnote{If this application seems frivolous, replace \foreignquote{english}{weight} with \foreignquote{english}{CPU time} and \foreignquote{english}{only $W$ pounds can be taken} with \foreignquote{english}{only $W$ units of CPU time are available.} Or use \foreignquote{english}{bandwidth} in place of \foreignquote{english}{CPU time,} etc. The knapsack problem generalizes a wide variety of resource-constrained selection tasks.}
+
+For instance, take $W = 10$ and
+\begin{center}
+\begin{tabular}{c|cr}
+Item & Weight & Value \\ \hline
+1 & 6 & \$30 \\
+2 & 3 & \$14 \\
+3 & 4 & \$16 \\
+4 & 2 & \$9
+\end{tabular}
+\end{center}
+
+There are two versions of this problem. If there are unlimited quantities of each item available, the optimal choice is to pick item 1 and two of item 4 (total: \$48). On the other hand, if there is one of each item (the burglar has broken into an art gallery, say), then the optimal knapsack contains items 1 and 3 (total: \$46).
+
+%------------------------------------------------------------ end
+
+\bigskip
+
+Wir formulieren das beschriebene Problem wie folgt:
+
+\underline{\textit{Version 1} (\enquote{jeder Gegenstand nur einmal vorhanden})}:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 30x_1 &\ + &\ 14x_2 &\ + &\ 16x_3 &\ + &\ 9x_4 \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 6x_1 &\ + &\ 3x_2 &\ + &\ 4x_3 &\ + &\ 2x_4 &\ \leq &\ 10 \\
+&& & & & & & & & & \llap{$x_1,x_2,x_3,x_4 \in \bigl\{ 0,1 \bigr\}$}
+\end{alignedat}
+\end{align*}
+
+
+\underline{\textit{Version 2} (\enquote{beliebig viele Exemplare von jedem Gegenstand vorhanden})}:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 30x_1 &\ + &\ 14x_2 &\ + &\ 16x_3 &\ + &\ 9x_4 \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 6x_1 &\ + &\ 3x_2 &\ + &\ 4x_3 &\ + &\ 2x_4 &\ \leq &\ 10 \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0 \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\ \in &\ \Z
+\end{alignedat}
+\end{align*}
+
+Version 1 wird für uns die wichtigere sein. \textit{Offensichtlich handelt es sich weder bei Version 1 noch bei Version 2 um ein LP-Problem}: Bedingungen der Art $x_1,x_2,x_3,x_4 \in \bigl\{ 0,1 \bigr\}$ bzw. $x_1,x_2,x_3,x_4 \in \Z$ sind in LP-Problemen ja gar nicht vorgesehen.
+
+\pagebreak
+Bei Version 2 handelt es sich um ein \textit{Ganzzahliges Lineares Programmierungsproblem}\index{Ganzzahliges Lineares Programmierungsproblem}\index{Problem!Ganzzahliges Lineares Programmierungs-} (engl. \textit{integer linear programming problem}, kurz: \textit{ILP-Problem}\index{ILP-Problem}\index{Problem!ILP-}). Allgemein gilt: Ein Optimierungsproblem wird \textit{Ganzzahliges Lineares Programmierungsproblem} oder \textit{ILP-Problem} genannt, falls Folgendes erfüllt ist:
+\begin{itemize}
+	\item Für jede Variable $x_i$ wird $x_i \in \Z$ gefordert.
+	\item Lässt man sämtliche Bedingungen $x_i \in \Z$ weg, so liegt ein LP-Problem vor.
+\end{itemize}
+
+Bei einem Ganzzahligen Linearen Programmierungsproblem dürfen die Werte der Variablen also nur ganze Zahlen sein. Bei Version 1 sind die Möglichkeiten sogar noch weiter eingeschränkt: Die Variablen dürfen nur einen der Werte 0 oder 1 annehmen. Man spricht von einem \textit{0,1-Problem}\index{0,1-Problem}\index{Problem!0,1-} (oder von einem \textit{binären Problem}\index{binäres Problem}\index{Problem!binäres}).
+
+Wenn man in der Version 2 die Bedingungen $x_1,x_2,x_3,x_4 \in \Z$ weglässt, so gelangt man in der Tat zu einem LP-Problem. (Nebenbei: Wie lautet die optimale Lösung dieses LP-Problems?) Das entstehende LP-Problem nennt man übrigens die \textit{LP-Relaxation} des ursprünglichen Problems\footnote{Allgemein gilt: Lässt man in einem ILP-Problem sämtliche Bedingungen $x_i \in \Z$ weg, so nennt man das entstehende LP-Problem die \textit{LP-Relaxation}\index{LP-Relaxation} des ursprünglichen Problems.}.
+
+Allgemein lautet das Rucksackproblem\index{Rucksackproblem}\index{Problem!Rucksack-} wie folgt:
+
+\underline{\textit{Rucksackproblem} (\textit{Version 1})}:\label{page:6:1}
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & c_1x_1 &\ + &\ \ldots &\ + &\ c_nx_n & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & \\
+&& a_1x_1 &\ + &\ \ldots &\ + &\ a_nx_n &\ \leq &\ b & \\
+&& & & & & & & \llap{$x_i \in \bigl\{ 0,1 \bigr\}$} & \qquad (i=1,\ldots,n)
+\end{alignedat}
+\end{align*}
+
+\underline{\textit{Rucksackproblem} (\textit{Version 2})}:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & c_1x_1 &\ + &\ \ldots &\ + &\ c_nx_n & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & \\
+&& a_1x_1 &\ + &\ \ldots &\ + &\ a_nx_n &\ \leq &\ b & \\
+&& & & & & \llap{$x_i$} &\ \geq &\  0 & \qquad (i=1,\ldots,n) \\
+&& & & & & \llap{$x_i$} &\ \in &\ \Z & \qquad (i=1,\ldots,n)
+\end{alignedat}
+\end{align*}
+
+
+
+Bei zahlreichen ganzzahligen oder binären Problemen handelt es sich um \textit{NP-schwere Probleme} -- das Rucksackproblem ist da keine Ausnahme (weder in der einen noch in der anderen Version).
+
+Übrigens: Die Bedingung $x_i \in \bigl\{ 0,1 \bigr\}$ kann ersetzt werden durch $0 \leq x_i \leq 1$, $x_i \in \Z$. Man kann also jedes $0,1$-Problem in ein Ganzzahliges Lineares Programmierungsproblem umschreiben. Anders gesagt: Bei den $0,1$-Problemen handelt es sich um spezielle ILP-Probleme.
+
+Wir halten noch einmal ausdrücklich fest: \textit{Bei beiden Versionen des Rucksackproblems handelt es sich \textbf{nicht} um ein LP-Problem, sondern um ein ILP-Problem.} Für ILP-Probleme kommen übrigens gänzlich andere Methoden zum Einsatz als für LP-Probleme; einen ersten Einblick in diese Methoden findet man beispielsweise im Lehrbuch von D. Bertsimas und J. N. Tsitsiklis. 
+
+
+
+
+\section{Cutting Paper Rolls}
+
+Die Liste der Anwendungsmöglichkeiten Linearer Programmierung ist lang und wir können hier natürlich längst nicht alles besprechen. Wir präsentieren deshalb nur noch ein Beispiel, in dem es um ein \textit{Verschnittproblem}\index{Verschnittproblem}\index{Problem!Verschnitt-} geht. Derartige Probleme treten sehr häufigen in industriellen Fertigungsprozessen auf: Es geht darum, Rohmaterial optimal zu nutzen.
+
+\pagebreak
+Der folgende Text stammt aus dem Buch
+\begin{itemize}
+\item Matou\v{s}ek/Gärtner: \textit{Understanding and Using Linear Programming}.
+\end{itemize}
+
+% begin
+
+Here we have another industrial problem, and the application of linear programming is quite nonobvious. Moreover, we will naturally encounter an integrality constraint, which will bring us to the topic of the next chapter.
+
+A paper mill manufactures rolls of paper of a standard width 3 meters. But customers want to buy paper rolls of shorter width, and the mill has to cut such rolls from the 3 m rolls. One 3 m roll can be cut, for instance, into two rolls 93 cm wide, one roll of width 108 cm, and a rest of 6 cm (which goes to waste).
+
+Let us consider an order of
+\begin{itemize}
+\item 97 rolls of width 135 cm,
+\item 610 rolls of width 108 cm,
+\item 395 rolls of width 93 cm, and
+\item 211 rolls of width 42 cm.
+\end{itemize}
+
+What is the smallest number of 3 m rolls that have to be cut in order to satisfy this order, and how should they be cut?
+
+In order to engage linear programming one has to be generous in introducing variables. We write down all of the requested widths: 135 cm, 108 cm, 93 cm, and 42 cm. Then we list all possibilities of cutting a 3 m paper roll into rolls of some of these widths (we need to consider only possibilities for which the wasted piece is shorter than 42 cm):
+\begin{align*}
+P_1:&\quad 2 \cdot 135 &P_7: &\quad 108 + 93 + 2 \cdot 42 \\
+P_2:&\quad 135 + 108 + 42 &P_8: &\quad 108 + 4 \cdot 42 \\
+P_3:&\quad 135 + 93 + 42 &P_9: &\quad 3 \cdot 93 \\
+P_4:&\quad 135 + 3 \cdot 42 &P_{10}: &\quad 2 \cdot 93 + 2 \cdot 42 \\
+P_5:&\quad 2 \cdot 108 + 2 \cdot 42 &P_{11}: &\quad 93 + 4 \cdot 42 \\
+P_6:&\quad 108 + 2 \cdot 93 &P_{12}: &\quad 7 \cdot 42
+\end{align*}
+
+For each possibility $P_j$ on the list we introduce a variable $x_j \geq 0$ representing the number of rolls cut according to that possibility. We want to minimize the total number of rolls cut, i.e., $\sum\limits_{j=1}^{12}{x_j}$, in such a way that the customers are satisfied. For example, to satisfy the demand for 395 rolls of width 93 cm we require
+\[
+x_3 + 2x_6 + x_7 + 3x_9 + 2x_{10} + x_{11} \geq 395.
+\]
+
+For each of the widths we obtain one constraint.
+
+For a more complicated order, the list of possibilities would most likely be produced by computer. We would be in a quite typical situation in which a linear program is not entered \foreignquote{english}{by hand,} but rather is generated by some computer program. More-advanced techniques even generate the possibilities \foreignquote{english}{on the fly,} during the solution of the linear program, which may save time and memory considerably. See the entry \foreignquote{english}{column generation} in the glossary or Chvátal's book cited in Chapter 9, from which this example is taken.
+
+The optimal solution of the resulting linear program has $x_1 = 48.5$, $x_5 = 206.25$, $x_6 = 197.5$, and all other components 0. In order to cut 48.5 rolls according to the possibility $P_1$, one has to unwind half of a roll. Here we need more information about the technical possibilities of the paper mill: Is cutting a fraction of a roll technically and economically feasible? If yes, we have solved the problem optimally. If not, we have to work further and somehow take into account the restriction that only feasible solutions of the linear program with integral $x_i$ are of interest. This is not at all easy in general, and it is the subject of Chapter 3.
+
+% end
+
+\bigskip
+
+In Chvátals Buch wird dieses Beispiel noch wesentlich genauer behandelt (Abschnitt 13: The Cutting-Stock Problem). Auch im bereits öfter zitierten Buch von Neumann und Morlock findet sich einiges über verwandte Probleme, beispielsweise über so genannte \textit{2-dimensionale Verschnittprobleme}\index{Verschnittproblem}\index{Problem!Verschnitt-}\index{Verschnittproblem!2-dimensionales}\index{2-dimensionales Verschnittproblem}.
+
+Was unter einem 2-dimensionalen Verschnittproblem zu verstehen ist, wollen wir hier nur andeuten, indem wir die folgende Zeichnung aus dem Buch von Neumann/Morlock wiedergeben:
+
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=0.8\textwidth]{verschnitt}
+
+\end{figure}

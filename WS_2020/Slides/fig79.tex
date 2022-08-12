@@ -1,0 +1,46 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.5,-1.0)(11.5,4.5)
+\footnotesize
+
+\pscircle[fillstyle=solid,fillcolor=light-gray](1,2){2}
+
+\cnode*(0,2){3pt}{S} \uput{0.2}[180](0,2){$s$}
+\cnode*(2,1){3pt}{U} \uput{0.2}[270](2,1){$u$}
+\cnode*(4,1){3pt}{V} \uput{0.2}[270](4,1){$v$}
+\cnode*(2,3){3pt}{X} \uput{0.2}[ 90](2,3){$x$}
+\cnode*(4,3){3pt}{Y} \uput{0.2}[ 90](4,3){$y$} 
+
+%\ncline{->}{S}{U} \uput{0.1}[225](1,1.5){$P_u$}
+%\ncline{->}{S}{X} \uput{0.1}[135](1,2.5){$P$}
+\pscurve{->}(0,2)(0.5,1.5)(1.5,1.5)(1.925,1.075) \uput{0.1}[270](1,1.5){$P_u$}
+\pscurve{->}(0,2)(0.5,2.5)(1.5,2.5)(1.925,2.925) \uput{0.1}[ 90](1,2.5){$P$}
+\ncline{->}{U}{V} 
+\ncline{->}{X}{Y} 
+%\ncline{->}{Y}{V} 
+\pscurve{->}(4,3)(3.75,2.5)(4.25,1.5)(4.075,1.075) 
+
+\uput{0}[0](0,3.5){$S$}
+
+\psframe[framearc=0.2](5,1.5)(11,2.75)
+\uput{0}[90](8,2.33){Der alternative $s,v$- Pfad $P$ durch}
+\uput{0}[90](8,2.00){$x$ und $y$ ist schon im Zeitpunkt des}
+\uput{0}[90](8,1.66){Verlassens der Menge $S$ zu lang.}
+
+%\uput{0.5}[270](5,0){\textbf{Figure 4.8} The shortest path $P_v$ and an alternate $s-v$ path $P$ through the node $y$.}
+
+\small
+\end{pspicture}
+\end{document}

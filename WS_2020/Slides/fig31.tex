@@ -1,0 +1,45 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.25cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1,-0.75)(9,5)
+\footnotesize
+
+\cnode*(0,2){3pt}{S} \uput{0.20}[180](0,2){$s$} \uput{0.20}[250](0,2){$(\star,\star,\infty)$}
+\cnode*(8,2){3pt}{T} \uput{0.20}[  0](8,2){$t$} \uput{0.20}[290](8,2){$(f,+,1)$}
+\cnode*(2,4){3pt}{A} \uput{0.20}[ 90](2,4){$a$} \uput{0.50}[ 90](2,4){$(s,+,11)$}
+\cnode*(2,2){3pt}{B} \uput{0.20}[270](2,2){$b$} \uput{0.50}[270](2,2){$(c,-,1)$}
+\cnode*(4,2){3pt}{C} \uput{0.20}[270](4,2){$c$} \uput{0.40}[280](4,2){$(e,-,1)$}
+\cnode*(6,4){3pt}{D} \uput{0.20}[ 90](6,4){$d$} \uput{0.50}[ 90](6,4){$(a,+,4)$}
+\cnode*(6,2.75){3pt}{E} \uput{0.20}[270](6,2.75){$e$} \uput{0.35}[270](6,2.75){$(d,+,1)$}
+\cnode*(2,0){3pt}{F} \uput{0.20}[270](2,0){$f$} \uput{0.50}[270](2,0){$(c,+,1)$}
+
+\ncline[linecolor=red, linewidth=2.00pt]{->}{S}{A} \uput{0.05}[135](1,3){$27 (38)$}
+\ncline[linewidth=0.80pt]{->}{S}{B} \uput{0.05}[270](1,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{S}{F} \uput{0.05}[225](1,1){$2 (2)$}
+\ncline[linewidth=0.80pt]{->}{A}{B} \uput{0.05}[  0](2,3){$8 (8)$}
+\ncline[linewidth=0.80pt]{->}{A}{C} \uput{0.05}[ 45](3,3){$10 (10)$}
+\ncline[linecolor=red, linewidth=2.00pt]{->}{A}{D} \uput{0.05}[ 90](4,4){$9 (13)$}
+\ncline[linewidth=0.80pt]{->}{B}{C} \uput{0.05}[270](3,2){$11 (26)$}
+\ncline[linecolor=red, linewidth=2.00pt]{->}{C}{F} \uput{0.05}[315](3,1){$13 (24)$}
+\ncline[linewidth=0.80pt]{->}{C}{T} \uput{0.05}[270](6,2){$1 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{B} \uput{0.05}[315](4,3){$2 (2)$}
+\ncline[linecolor=red, linewidth=2.00pt]{->}{D}{E} \uput{0.05}[  0](6,3.35){$0 (1)$}
+\ncline[linewidth=0.80pt]{->}{D}{T} \uput{0.05}[ 45](7,3){$7 (7)$}
+\ncline[linecolor=red, linewidth=2.00pt]{<-}{E}{C} \uput{0.05}[ 90](5,2.37){$7 (8)$}
+\ncline[linewidth=0.80pt]{->}{E}{T} \uput{0.05}[ 90](7,2.37){$7 (7)$}
+\ncline[linecolor=red, linewidth=2.00pt]{->}{F}{T} \uput{0.05}[315](5,1){$15 (27)$}
+
+\small
+\end{pspicture}
+\end{document}

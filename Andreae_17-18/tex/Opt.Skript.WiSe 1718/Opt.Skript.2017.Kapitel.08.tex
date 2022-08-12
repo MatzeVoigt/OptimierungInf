@@ -1,0 +1,744 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 08:                                                                  %
+% "Die revidierte Simplexmethode"                                              %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+\chapter{Die revidierte Simplexmethode}
+\label{chapter:8}
+\index{revidierte Simplexmethode}\index{Simplexmethode!revidierte}
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Axiome der reellen Zahlen"                                              %
+%------------------------------------------------------------------------------%
+
+\section{Matrixdarstellung}
+\label{section:8:1}
+
+Wir wollen zunächst das Simplexverfahren auf eine etwas andere Art beschreiben; in dieser neuen Beschreibung werden in wesentlich stärkerer Weise \textit{Matrizen}\index{Matrizen} zum Einsatz kommen.
+
+Im Gegensatz zum vorausgegangenen Abschnitt betrachten wir in diesem Abschnitt ausschließlich LP-Probleme in Standardform. Wir erläutern die neue Matrizendarstellung anhand des folgenden Beispiels:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:8:1}
+& \text{maximiere } & 19x_1 &\ + &\ 13x_2 &\ + &\ 12x_3 &\ + &\ 17x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 3x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ + &\ 2x_4 &\ \leq &\ 225\ \\
+&&  x_1 &\ + &\  x_2 &\ + &\  x_3 &\ + &\  x_4 &\ \leq &\ 117\ \\
+&& 4x_1 &\ + &\ 3x_2 &\ + &\ 3x_3 &\ + &\ 4x_4 &\ \leq &\ 420\ \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align}
+
+Löst man (\ref{eq:8:1}) mit dem Simplexverfahren, so erhält man nach zwei Iterationen das folgende Tableau:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:8:2}
+x_1 &\ = &\   54 &\ - &\ 0.5x_2 &\ - &\ 0.5x_4 &\ - &\ 0.5x_5 &\ + &\ 0.5x_6\ \\
+x_3 &\ = &\   63 &\ - &\ 0.5x_2 &\ - &\ 0.5x_4 &\ + &\ 0.5x_5 &\ - &\ 1.5x_6\ \\
+x_7 &\ = &\   15 &\ + &\ 0.5x_2 &\ - &\ 0.5x_4 &\ + &\ 0.5x_5 &\ + &\ 2.5x_6\ \\ \cline{1-11}
+  z &\ = &\ 1782 &\ - &\ 2.5x_2 &\ + &\ 1.5x_4 &\ - &\ 3.5x_5 &\ - &\ 8.5x_6.
+\end{alignedat}
+\end{align}
+
+Es sei an den Zusammenhang erinnert, der zwischen den ersten drei Zeilen von (\ref{eq:8:2}) und den ersten drei Ungleichungen von (\ref{eq:8:1}) besteht: Nach der Einführung von Schlupfvariablen gehen die ersten drei Ungleichungen von (\ref{eq:8:1}) über in
+\begin{align}
+\begin{alignedat}{8}
+\label{eq:8:3}
+3x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ + &\ 2x_4 &\ + &\ x_5 &\   &\     &\   &\     &\ = &\ 225\ \\
+ x_1 &\ + &\  x_2 &\ + &\  x_3 &\ + &\  x_4 &\   &\     &\ + &\ x_6 &\   &\     &\ = &\ 117\ \\
+4x_1 &\ + &\ 3x_2 &\ + &\ 3x_3 &\ + &\ 4x_4 &\   &\     &\   &\     &\ + &\ x_7 &\ = &\ 420.
+\end{alignedat}
+\end{align}
+
+Diese drei Gleichungen sind äquivalent zu den ersten drei Gleichungen des Tableaus (\ref{eq:8:2}).
+
+Was für das Tableau (\ref{eq:8:2}) gilt, gilt natürlich auch für die anderen Tableaus, die sonst noch auftreten, wenn man das Problem (\ref{eq:8:1}) mit dem Simplexverfahren löst. Wir halten dies noch einmal ausdrücklich fest.
+
+\begin{Definition}[Feststellung]
+Löst man das Problem (\ref{eq:8:1}) mit dem Simplexverfahren, so sind die ersten drei Zeilen jedes auftretenden Tableaus äquivalent zu den drei Gleichungen in (\ref{eq:8:3}).
+\end{Definition}
+
+Wir wollen das Gleichungssystem (\ref{eq:8:3}) in Matrixform darstellen. Zu diesem Zweck sei
+\[
+A = \begin{pmatrix} 3 & 2 & 1 & 2 & 1 & 0 & 0 \\ 1 & 1 & 1 & 1 & 0 & 1 & 0 \\ 4 & 3 & 3 & 4 & 0 & 0 & 1 \end{pmatrix}, \quad
+b = \begin{pmatrix} 225 \\ 117 \\ 420 \end{pmatrix}, \quad
+x = \begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\x_5 \\ x_6 \\ x_7 \end{pmatrix}.
+\]
+
+Mit diesen Bezeichnungen geht (\ref{eq:8:3}) über in (\enquote{Matrixdarstellung von (\ref{eq:8:3})}):
+\[
+Ax = b.
+\]
+
+Äquivalent zu (\ref{eq:8:3}) sind, wie gesagt, die ersten drei Zeilen von (\ref{eq:8:2}). In (\ref{eq:8:2}) sind $x_1$, $x_3$ und $x_7$ die Basisvariablen; $x_2$, $x_4$, $x_5$ und $x_6$ sind die Nichtbasisvariablen.
+
+Um den Unterschied zwischen den Basis- und den Nichtbasisvariablen zu betonen, schreiben wir $Ax$ in der Form
+\[
+A_Bx_B + A_Nx_N
+\]
+
+mit
+\[
+A_B = \begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix}  \quad \text{und} \quad
+x_B = \begin{pmatrix} x_1 \\ x_3 \\ x_7 \end{pmatrix}
+\]
+
+sowie
+\[
+A_N = \begin{pmatrix} 2 & 2 & 1 & 0 \\ 1 & 1 & 0 & 1\\ 3 & 4 & 0 & 0 \end{pmatrix}  \quad \text{und} \quad
+x_N = \begin{pmatrix} x_2 \\ x_4 \\ x_5 \\ x_6 \end{pmatrix}.
+\]
+
+Das Gleichungssystem $Ax=b$ geht somit über in $A_Bx_B + A_Nx_N = b$; hieraus erhält man
+\begin{equation}
+\label{eq:8:4}
+A_Bx_B = b - A_Nx_N.
+\end{equation}
+
+Bei (\ref{eq:8:4}) handelt es sich um nichts weiter als eine andere Art, die Gleichung $Ax=b$ zu schreiben. Wir verdeutlichen dies, indem wir beide Gleichungen in expliziter Form angeben: Die Gleichung $Ax=b$ ist, wenn man sie in expliziter Form hinschreibt, nichts anderes als (\ref{eq:8:3}); und wenn man (\ref{eq:8:4}) in expliziter Form hinschreibt, so erhält man:
+\begin{align*}
+\begin{alignedat}{8}
+3x_1 &\ + &\  x_3 &\   &\     &\ = &\ 225 &\ - &\ 2x_2 &\ - &\ 2x_4 &\ - &\ x_5 &\   &\     \\
+ x_1 &\ + &\  x_3 &\   &\     &\ = &\ 117 &\ - &\  x_2 &\ - &\  x_4 &\   &\     &\ - &\ x_6 \\
+4x_1 &\ + &\ 3x_3 &\ + &\ x_7 &\ = &\ 420 &\ - &\ 3x_2 &\ - &\ 4x_4 &\   &\     &\   &\     
+\end{alignedat}
+\end{align*}
+
+Man erkennt, was beim Übergang von $Ax=b$ zu $A_Bx_B = b - A_Nx_N$ passiert ist: (\ref{eq:8:3}) wurde so umgeschrieben, dass die Nichtbasisvariablen alle nach rechts kamen, während die Basisvariablen links blieben.
+
+Nun soll die Gleichung $A_Bx_B = b - A_Nx_N$ weiter umgeformt werden, nämlich so, dass links nur noch $x_B$ steht. Da trifft es sich gut, dass $A_B$ eine nichtsinguläre quadratische Matrix\index{nichtsinguläre Matrix}\index{Matrix!nichtsinguläre} ist\footnote{Vgl. auch (\ref{eq:8:7}) sowie den Anhang zu diesem Abschnitt (Seite \pageref{page:8:1}).}, und somit die inverse Matrix\index{inverse Matrix}\index{Matrix!inverse} $A_B^{-1}$ existiert. Nimmt man (\ref{eq:8:4}) auf beiden Seiten von links mit $A_B^{-1}$ mal, so erhält man
+\begin{equation}
+\label{eq:8:5}
+x_B = A_B^{-1}b - A_B^{-1}A_Nx_N.
+\end{equation}
+
+\textit{Die Gleichung (\ref{eq:8:5}) ist nichts weiter als eine kompakte Art, die ersten drei Zeilen von (\ref{eq:8:2}) mittels Matrizen auszudrücken}. Nun soll auch noch die letzte Zeile von (\ref{eq:8:2}) in eine entsprechende Form gebracht werden.
+
+Ähnlich, wie wir zuvor von $Ax=b$ ausgegangen sind, gehen wir nun von der Gleichung 
+\[
+z = c^Tx
+\]
+aus; hierbei ist $c = {\bigl( 19,\ 13,\ 12,\ 17,\ 0,\ 0,\ 0 \bigr)}^T$ und $x$ hat dieselbe Bedeutung wie oben. Ähnlich wie zuvor definieren wir $c_B= {\bigl(19,\ 12,\ 0\bigr)}^T$ und $c_N = {\bigl(13,\ 17,\ 0, 0\bigr)}^T$. Wir erhalten
+\[
+z = c_B^Tx_B + c_N^Tx_N.
+\]
+
+Setzt man hierin gemäß (\ref{eq:8:5}) ein, so ergibt sich
+\begin{equation*}
+\begin{aligned}
+z &= c_B^T \Bigl( A_B^{-1}b - A_B^{-1}A_Nx_N \Bigr) + c_N^Tx_N \\
+  &= c_B^T A_B^{-1}b + \Bigl( c_N^T - c_B^TA_B^{-1}A_N \Bigr) x_N.
+\end{aligned}
+\end{equation*}
+
+Zusammenfassend können wir also feststellen, dass (\ref{eq:8:2}) in Matrixform wie folgt angegeben werden kann:\index{Matrixform eines Tableaus}\index{Tableau!Matrixform eines}
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:8:6}
+x_B &\ = &\       A_B^{-1}b &\ - &\ A_B^{-1}A_Nx_N \\ \cline{1-5}
+  z &\ = &\ c_B^T A_B^{-1}b &\ + &\ \Bigl( c_N^T - c_B^TA_B^{-1}A_N \Bigr) x_N.
+\end{alignedat}
+\end{align}
+
+\textit{Nun betrachten wir den allgemeinen Fall. Gegeben sei ein beliebiges LP-Problem in Standardform}:
+\begin{align}
+\label{eq:8:*}
+\tag{$\star$}
+\begin{alignedat}{4}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i=1,\ldots,m) \\
+&&                              x_j &\ \geq &\   0 & \qquad (j=1,\ldots,n). 
+\end{alignedat}
+\end{align}
+
+Nach der Einführung von Schlupfvariablen lässt sich dies wie folgt schreiben:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\    = &\ b\ \\
+&&  x &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+\textit{Man beachte}: Es wurden \textit{Schlupfvariablen} eingeführt und $Ax=b$ ist eine \textit{Gleichung}. Dementsprechend ist $A$ eine Matrix mit $m$ Zeilen und $n+m$ Spalten; die letzten $m$ Spalten von $A$ bilden eine Einheitsmatrix.
+
+Außerdem gilt: $x$ ist ein Spaltenvektor der Länge $n+m$; $b$ ist ein Spaltenvektor der Länge $m$; $c^T$ ist ein Zeilenvektor der Länge $n+m$, für den die letzten $m$ Einträge gleich Null sind.
+
+Explizit lassen sich diese Matrizen und Vektoren wie folgt angeben:
+\[
+A = \begin{pmatrix} 
+a_{11} & \ldots & a_{1n} & 1 & \ldots & 0 \\ 
+\vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+a_{m1} & \ldots & a_{mn} & 0 & \ldots & 1
+\end{pmatrix}, \quad
+x = \begin{pmatrix} x_1 \\ \vdots \\ x_{n+m} \end{pmatrix}, \quad
+b = \begin{pmatrix} b_1 \\ \vdots \\ b_m \end{pmatrix}, \quad
+c^T = (c_1, \ldots, c_n, 0, \ldots, 0).  
+\]
+
+Es liege nun ein zulässiges Tableau zum Problem (\ref{eq:8:*}) vor. Wie wir wissen, gehört zu diesem Tableau eine zulässige Basislösung, die wir mit $x^* = {\bigl(x_1^*, \ldots, x_{n+m}^*\bigr)}^T$ bezeichnen wollen.
+
+Außerdem liefert das Tableau eine Zerlegung der Variablen $x_1,\ldots,x_{n+m}$ in Basisvariablen und Nichtbasisvariablen. Genauer: Es gibt $m$ Basisvariablen und $n$ Nichtbasisvariablen.
+
+Wie zuvor in unserem Beispiel führt die Aufteilung in Basis- und Nichtbasisvariablen zu Matrizen $A_B$ und $A_N$, zu Vektoren $x_B$ und $x_N$ sowie zu $c_B^T$ und $c_N^T$. Wir behaupten nun:
+\begin{equation}
+\label{eq:8:7}
+\textit{Die Matrix $A_B$ ist nichtsingulär.}\index{nichtsinguläre Matrix}\index{Matrix!nichtsinguläre}
+\end{equation}
+
+Wir zeigen die Richtigkeit dieser Behauptung, indem wir nachweisen, dass das Gleichungssystem
+\[
+A_Bx_B = b
+\]
+
+eindeutig lösbar ist (vgl. Seite \pageref{page:8:1} f.).
+
+Dass dieses Gleichungssystem eine Lösung besitzt, ist schnell gezeigt: Für die zulässige Basislösung $x^*$ wählen wir die Bezeichnungen $x_B^*$ und $x_N^*$ analog zu $x_B$ und $x_N$. Für $x^*$ gilt $Ax^* = b$ und $x_N^*=0$; außerdem gilt $Ax^* = A_Bx_B^* + A_Nx_N^*$. Also haben wir
+\[
+A_Bx_B^* = Ax^* - A_Nx_N^* = Ax^* = b,
+\]
+
+d.h., $x_B^*$ ist eine Lösung von $A_Bx_B=b$.
+
+Es bleibt zu zeigen, dass $x_B^*$ die einzige Lösung von $A_Bx_B=b$ ist. Um dies nachzuweisen, betrachten wir einen beliebigen Vektor $\widetilde{x}_B$, für den $A_B\widetilde{x}_B = b$ gilt. Wir bilden zu $\widetilde{x}_B$ einen Vektor $\widetilde{x}$ der Länge $n+m$, indem wir die Stellen von $\widetilde{x}$, die den $n$ Nichtbasisvariablen entsprechen, gleich Null setzen, und ansonsten die Einträge gemäß $\widetilde{x}_B$ wählen\footnote{\textit{Genauer}: Die Stellen von $\widetilde{x}$, die den Basisvariablen entsprechen, sollen die Einträge von $\widetilde{x}_B$ sein (in derselben Reihenfolge); $\widetilde{x}_N$ sei der Nullvektor der Länge $n$.}. Dann gilt also insbesondere $\widetilde{x}_N=0$, woraus 
+\[
+A\widetilde{x} = A_B\widetilde{x}_B + A_N\widetilde{x}_N = A_B\widetilde{x}_B = b
+\]
+folgt. Wir ziehen nun das Tableau heran, von dem wir oben ausgegangen waren, d.h. das Tableau, zu dem die zulässige Basislösung $x^*$  gehört. Da $A\widetilde{x}=b$ gilt, erfüllt $\widetilde{x}$ ebenfalls die ersten $m$ Gleichungen dieses Tableaus, woraus wegen $\widetilde{x}_N=0$ die Behauptung $\widetilde{x}_B = x_B^*$ folgt. Damit ist (\ref{eq:8:7}) bewiesen. $\Box$
+
+Die Feststellung (\ref{eq:8:7}) bedeutet unter anderem, dass $A_B$ invertierbar\index{invertierbar} ist (vgl. Abschnitt \ref{section:8:5}). Mit anderen Worten: $A_B^{-1}$ existiert.
+
+Mit $A_B^{-1}$ können wir nun wie im Beispiel rechnen und gelangen auch diesmal zur Matrixdarstellung (\ref{eq:8:6}) eines Tableaus.
+
+Man nennt die Matrix $A_B$ die \textit{Basismatrix}\index{Basismatrix}\index{Matrix!Basis-}. (Häufig wird die Matrix $A_B$ auch einfach nur die \textit{Basis}\index{Basis} genannt; da wir die Menge der Basisvariablen ebenfalls \enquote{Basis} genannt haben, muss bei Verwendung dieser Sprechweise darauf geachtet werden, dass keine Missverständnisse möglich sind.)
+
+Eine weitere \textbf{Konvention}: \textit{Es ist üblich, für die Basismatrix die Bezeichnung $B$ anstelle von $A_B$ zu verwenden}. Wir schließen uns dieser Konvention an und erhalten dementsprechend unsere \textit{Matrixdarstellung eines Tableaus}\index{Matrixdarstellung eines Tableaus}\index{Tableau!Matrixdarstellung eines} in folgender Form:
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:8:8}
+x_B &\ = &\ B^{-1}b &\ - &\ B^{-1}A_Nx_N\ \\ \cline{1-5}
+  z &\ = &\ c_B^TB^{-1}b &\ + &\ \Bigl( c_N^T - c_B^TB^{-1}A_N \Bigr)x_N.
+\end{alignedat}
+\end{align}
+
+Bei (\ref{eq:8:8}) handelt es sich um eine allgemeine Art, ein Tableau darzustellen. \textit{In dieser Darstellung wird in präziser Weise angegeben, wie die Koeffizienten eines Tableaus von den Eingangsdaten des Problems (also von $A$, $b$ und $c^T$) abhängen}.
+
+\textit{Zur Erinnerung}: Auch $B$ ist ein Teil der Eingangsdaten, denn $B$ ist ja nur eine Abkürzung für die Matrix $A_B$, die eine Teilmatrix von $A$ ist.
+
+\pagebreak
+
+Schaut man sich (\ref{eq:8:8}) an, so erkennt man alles wieder, was bislang immer in Tableaus vorkam:
+\begin{itemize}
+\item $B^{-1}b$ ist nichts anderes als der Vektor $x_B^*$, der die aktuellen Werte der Basisvariablen angibt.
+\item $c_B^TB^{-1}b$ ist eine allgemeine Formel für den aktuellen Wert der Zielfunktion.
+\item $c_N^T - c_B^TB^{-1}A_N$ ist eine allgemeine Formel für den Vektor der Koeffizienten, die in der $z$-Zeile bei den Nichtbasisvariablen auftreten.
+\item $-B^{-1}A_N$ ist die Matrix der Koeffizienten, die oberhalb der $z$-Zeile bei den Nichtbasisvariablen anzutreffen sind.
+\end{itemize}
+
+Am konkreten Fall des Tableaus (\ref{eq:8:2}) erläutert bedeuten diese Feststellungen, dass die folgenden Gleichungen gelten:
+\begin{align*}
+B^{-1}b &= \begin{pmatrix} 54 \\ 63 \\ 15 \end{pmatrix} \\
+c_B^TB^{-1}b &= 1782 \\[2mm]
+c_N^T - c_B^TB^{-1}A_N &= \bigl( -2.5,\ 1.5,\ -3.5,\ -8.5\bigr) \\
+-B^{-1}A_N &= \left(\begin{array}{rrrr}
+-0.5 & -0.5 & -0.5 & 0.5 \\ -0.5 & -0.5 & 0.5 & -1.5 \\ 0.5 & -0.5 & 0.5 &  2.5
+\end{array}\right).
+\end{align*}
+
+Wir kommen nun zur \textit{Beschreibung des revidierten Simplexverfahrens}, das an die Darstellung (\ref{eq:8:8}) (\enquote{Darstellung eines Tableaus mittels Matrizen}) anknüpft. Das Simplexverfahren in seiner bisherigen Form wollen wir auch \textit{Standardsimplexverfahren}\index{Standardsimplexverfahren}\index{Simplexverfahren!Standard-}\index{Verfahren!Standard-Simplex-} nennen.
+
+
+
+\section{Beschreibung des revidierten Simplexverfahrens anhand eines Beispiels}
+\label{section:8:2}
+\index{Beschreibung des revidierten Simplexverfahrens}\index{Simplexverfahren!Beschreibung des revidierten}\index{revidiertes Simplexverfahren!Beschreibung des}
+
+In jeder Iteration des Standardsimplexverfahrens wählt man zunächst eine Eingangsvariable, bestimmt danach eine Ausgangsvariable und nimmt anschließend ein Update des aktuellen Tableaus vor, wodurch man vor allem auch eine neue zulässige Basislösung erhält. Genaue Beobachtung, wie all dies im Standardsimplexverfahren geschieht, wird uns zum revidierten Simplexverfahren führen.
+
+Wir steigen mit unseren Überlegungen an der Stelle ein, an der im Standardverfahren das Tableau (\ref{eq:8:2}) vorliegt. Im Standardverfahren führt man anhand dieses Tableaus die nächste Iteration aus. Im revidierten Simplexverfahren ist dies so nicht möglich, denn wir haben das Tableau in diesem Verfahren gar nicht vorliegen. Stattdessen liegen $x_B^*$ und $B$ vor:
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_3^* \\ x_7^* \end{pmatrix} = \begin{pmatrix} 54 \\ 63 \\ 15 \end{pmatrix} \quad \text{und} \quad
+B = \begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix}.
+\]
+
+Als Eingangsvariable kommt jede Nichtbasisvariable infrage, deren Koeffizient in der letzten Zeile des Tableaus positiv ist. Wir wissen (vgl. (\ref{eq:8:8})), dass
+\[
+c_N^T - c_B^TB^{-1}A_N
+\]
+
+den Vektor der Koeffizienten der letzten Zeile angibt. \textit{Benutzt man das Standardsimplexverfahren, so hat man diesen Vektor unmittelbar zur Verfügung}: Man kann ihn ja an der letzten Zeile des aktuellen Tableaus ablesen.
+
+\textit{Benutzt man dagegen die revidierte Simplexmethode, so muss man sich diesen Vektor erst ausrechnen}; dies geschieht in zwei Schritten: Zunächst berechnet man den Zeilenvektor
+\[
+y^T = c_B^T B^{-1},
+\]
+indem man das Gleichungssystem
+\[
+y^TB = c_B^T
+\]
+löst; im 2. Schritt berechnet man anschließend $c_N^T - y^TA_N$.
+
+In unserem Beispiel sieht das so aus: Zunächst löst man das Gleichungssystem
+\[
+\Bigl( y_1,\ y_2,\ y_3\Bigr) \begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix} = \Bigl( 19,\ 12,\ 0 \Bigr).
+\]
+
+In expliziter Form lautet dieses Gleichungssystem
+\begin{align*}
+\begin{alignedat}{4}
+3y_1 &\ + &\ y_2 &\ + &\ 4y_3 &\ = &\ 19\ \\
+ y_1 &\ + &\ y_2 &\ + &\ 3y_3 &\ = &\ 12\ \\
+     &\   &\     &\   &\  y_3 &\ = &\  0. 
+\end{alignedat}
+\end{align*}
+
+Als Lösung erhält man
+\[
+y^T = \Bigl( y_1,\ y_2,\ y_3 \Bigr) = \Bigl( 3.5,\ 8.5,\ 0 \Bigr).
+\]
+
+Danach berechnet man $c_N^T-y^TA_N$; man erhält
+\begin{align*}
+c_N^T - y^TA_N &= \Bigl( 13,\ 17,\ 0,\ 0 \Bigr) - \Bigl( 3.5,\ 8.5,\ 0 \Bigr) \begin{pmatrix} 2 & 2 & 1 & 0 \\ 1 & 1 & 0 & 1 \\ 3 & 4 & 0 & 0 \end{pmatrix} \\
+&= \Bigl( -2.5,\ 1.5,\ -3.5,\ -8.5 \Bigr).
+\end{align*}
+
+Man vergleiche dies mit den Koeffizienten in der letzten Zeile von (\ref{eq:8:2}). (Noch einmal der Deutlichkeit halber: \textit{Im Standardverfahren hat man diesen Vektor bereits zu Beginn der Iteration vorliegen, im revidierten Verfahren muss man ihn erst berechnen}.)
+
+Im Vektor $(-2.5,\ 1.5,\ -3.5,\ -8.5)$ ist nur die zweite Komponente positiv; also ist die zweite Komponente des Vektors $x_N^T = (x_2,\ x_4,\ x_5,\ x_6)$ die Eingangsvariable, d.h., \textit{$x_4$ ist die Eingangsvariable}.
+
+In unserem Beispiel kam nur $x_4$ als Eingangsvariable infrage. Allgemein gilt: Die Nichtbasisvariable $x_j$ kommt als Eingangsvariable infrage, falls für die entsprechende Komponente $c_j$ von $c_N^T$ und für die entsprechende Spalte $a$ von $A_N$ gilt: $c_j-y^Ta > 0$ bzw. (was dasselbe ist) $y^Ta < c_j$. Wird $x_j$ als Eingangsvariable gewählt, so bezeichnet man die Spalte $a$ von $A_N$, die $x_j$ entspricht, als \textit{Eingangsspalte}\index{Eingangsspalte}\index{Spalte!Eingangs-}.
+
+Erläuterung an unserem Beispiel: $x_4$ ist die Eingangsvariable und
+\[
+a = \begin{pmatrix} 2 \\ 1 \\ 4 \end{pmatrix}
+\]
+ist die Eingangsspalte.
+
+Um die \textit{Ausgangsvariable} zu bestimmen, hebt man -- wie wir wissen -- den Wert der Eingangsvariablen von Null auf einen Wert $t$ an, wobei die übrigen Nichtbasisvariablen den Wert Null behalten und sich die Werte der Basisvariablen entsprechend ändern. Solange alle Basisvariablen positiv bleiben, wird $t$ weiter angehoben, bis es zum ersten Mal vorkommt, dass eine oder mehrere Basisvariablen auf Null absinken. Unter diesen Variablen wird dann eine ausgewählt, die die Basis verlässt.
+
+Wird die \textit{Standardsimplexmethode} benutzt, so kann man den Höchstwert von $t$ und eine dazugehörige Ausgangsvariable leicht bestimmen -- man hat ja das Tableau zur Verfügung, aus dem man die erforderlichen Informationen ablesen kann; in unserem Beispiel gilt
+\begin{align*}
+\begin{alignedat}{3}
+x_1 &\ = &\ 54 &\ \ldots\ - &\ 0.5x_4 &\ \ldots \\
+x_3 &\ = &\ 63 &\ \ldots\ - &\ 0.5x_4 &\ \ldots \\
+x_7 &\ = &\ 15 &\ \ldots\ - &\ 0.5x_4 &\ \ldots
+\end{alignedat}
+\end{align*} 
+
+und somit (für $x_4=t$ und $x_2=x_5=x_6=0$)
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:8:9}
+x_1 &\ = &\ 54 &\ - &\ 0.5t\ \\
+x_3 &\ = &\ 63 &\ - &\ 0.5t\ \\
+x_7 &\ = &\ 15 &\ - &\ 0.5t.  
+\end{alignedat}
+\end{align}
+
+Aus (\ref{eq:8:9}) ergibt sich, dass $t$ bis auf 30 angehoben werden kann und dass $x_7$ die Ausgangsvariable ist.
+
+Soweit die Vorgehensweise bei der Standardsimplexmethode. \textit{Wie verfährt man nun aber in der revidierten Simplexmethode, wenn man das Tableau (\ref{eq:8:2}) gar nicht zur Verfügung hat?}
+
+Was hat man stattdessen zur Verfügung?
+
+\textbf{Antwort}: $x_B^*$ und $B$ sowie die zuvor bestimmte Eingangsspalte\index{Eingangsspalte}\index{Spalte!Eingangs-} $a$ und die dazugehörige Eingangsvariable (im Beispiel: $x_4$); und außerdem natürlich $A$, $b$ und $c^T$.
+
+Wir wissen aus (\ref{eq:8:8}), dass sich die ersten $m$ Zeilen eines Tableaus wie folgt darstellen lassen\footnote{Man beachte, dass $B^{-1}b = x_B^*$ gilt.}:
+\[
+x_B = x_B^* - B^{-1}A_Nx_N.
+\]
+
+Hebt man die Eingangsvariable von Null auf $t$ (und lässt alle anderen Nichtbasisvariablen bei Null), so ändert sich $x_B$ von $x_B^*$ zu $x_B^*-td$, wobei $d$ die Spalte von $B^{-1}A_N$ bezeichnet, die der Eingangsvariablen entspricht: Dies ist die Spalte
+\[
+d = B^{-1}a,
+\]
+
+wobei $a$ wie zuvor die Eingangsspalte bezeichnet\footnote{Man beachte: Bei $-d$ handelt es sich um die \textit{Pivotspalte}.}. Benutzt man die revidierte Simplexmethode, so muss also $d = B^{-1}a$ berechnet werden. Dies geschieht dadurch, dass man das Gleichungssystem
+\[
+Bd=a
+\]
+
+löst. In unserem Beispiel sieht das wie folgt aus:
+
+Schreibt man $d = {(d_1,\ d_2,\ d_3)}^T$, so lautet die Gleichung $Bd=a$:
+\[
+\begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix} \begin{pmatrix} d_1 \\ d_2 \\ d_3 \end{pmatrix} = \begin{pmatrix} 2 \\ 1 \\ 4 \end{pmatrix}.
+\]
+
+Löst man dieses lineare Gleichungssystem mit dem Gauß-Verfahren, so erhält man
+\[
+d = \begin{pmatrix} d_1 \\ d_2 \\ d_3 \end{pmatrix} = \begin{pmatrix} 0.5 \\ 0.5 \\ 0.5 \end{pmatrix}.
+\]
+
+Dies ist genau das, was sich bei Verwendung des Standardverfahrens direkt am Tableau ablesen ließ (vgl. (\ref{eq:8:2}) bzw. (\ref{eq:8:9})).
+
+Da wir $d$ nun kennen, ist es einfach festzustellen, dass $t$ bis auf 30 angehoben werden kann. Für $t=30$ ergibt sich:
+\begin{align*}
+\begin{alignedat}{3}
+54 &\ - &\ 0.5t &\ = &\ 39\ \\
+63 &\ - &\ 0.5t &\ = &\ 48\ \\
+15 &\ - &\ 0.5t &\ = &\  0.  
+\end{alignedat}
+\end{align*}
+
+Es hat sich insbesondere ergeben, dass $x_7$ die Ausgangsvariable ist.
+
+\textit{Bislang war es so, dass wir bei Verwendung der revidierten Simplexmethode Rechnungen durchführen mussten, die bei der Standardmethode nicht nötig waren}. \textbf{Dies kehrt sich nun, am Ende der Iteration, um}: Während beim Standardverfahren nun noch das recht mühevolle Update des Tableaus zu leisten ist, sind beim revidierten Verfahren keine derartigen Rechnungen nötig. In unserem Beispiel beginnt man die nächste Iteration einfach mit
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_3^* \\ x_4^* \end{pmatrix} = \begin{pmatrix} 39 \\ 48 \\ 30 \end{pmatrix} \quad \text{und} \quad
+B = \begin{pmatrix} 3 & 1 & 2 \\ 1 & 1 & 1 \\ 4 & 3 & 4 \end{pmatrix}.
+\]
+
+Die Reihenfolge der Spalten in der Matrix $B$ ist übrigens unerheblich: \textit{Das Einzige, was gewährleistet sein muss, ist, dass diese Reihenfolge zu der Reihenfolge der Variablen in $x_B^*$ passt}. Die nächste Iteration könnte ebenso gut beginnen mit
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_4^* \\ x_3^* \end{pmatrix} = \begin{pmatrix} 39 \\ 30 \\ 48 \end{pmatrix} \quad \text{und} \quad
+B = \begin{pmatrix} 3 & 2 & 1 \\ 1 & 1 & 1 \\ 4 & 4 & 3 \end{pmatrix}.
+\]
+
+Eine gute \textit{Regel}, an die man sich auch in den Übungsaufgaben unbedingt immer halten sollte, wird im Folgenden beschrieben.
+
+\begin{Definition}[Regel zum Update von $x_B^*$ und $B$ bei der Durchführung des revidierten Simplexverfahrens]
+\index{Simplexverfahren!Regel zum Update beim revidierten}\index{Regel!zum Update beim revidierten Simplexverfahren}\index{revidiertes Simplexverfahren!Regel zum Update beim}
+Bei der Durchführung des revidierten Simplexverfahrens füge man beim \textit{Update von $x_B^*$} die Eingangsvariable an genau der Stelle ein, an der zuvor die Ausgangsvariable stand.
+
+Beim \textit{Update von $B$}\index{Update beim revidierten Simplexverfahren}\index{revidiertes Simplexverfahren!Update beim}\index{Simplexverfahren!Update beim revidierten} ist analog vorzugehen: Man füge die Eingangsspalte genau dort ein, wo zuvor die Spalte stand, die aus $B$ ausscheidet (\textit{Ausgangsspalte}\index{Ausgangsspalte}\index{Spalte!Ausgangs-}).
+\end{Definition}
+
+Der Übersichtlichkeit halber fassen wir den Ablauf einer Iteration noch einmal zusammen.
+
+
+
+
+\section{Eine Iteration im revidierten Simplexverfahren}
+\label{section:8:3}
+\index{Iteration der revidierten Simplexmethode}\index{revidierte Simplexmethode!Iteration der}\index{Simplexmethode!Iteration der revidierten}
+
+\underline{1. Schritt}:
+
+Man löse das Gleichungssystem $y^TB = c_B^T$.
+
+\underline{2. Schritt}:
+
+Wahl der Eingangsspalte\index{Eingangsspalte}\index{Spalte!Eingangs-}; es kommt jede Spalte $a$ von $A_N$ infrage, für die $y^Ta$ kleiner ist als die entsprechende Komponente von $c_N^T$. Falls es keine solche Spalte gibt, ist die aktuelle Lösung optimal.
+
+\underline{3. Schritt}:
+
+Man löse das Gleichungssystem $Bd=a$.
+
+\underline{4. Schritt}:
+
+Man finde das größte $t \geq 0$, für das $x_B^*-td \geq 0$ gilt. Falls es kein solches $t$ gibt, ist das Problem unbeschränkt; andernfalls ist mindestens eine Komponente von $x_B^*-td$ gleich Null und eine zugehörige Variable verlässt die Basis.
+
+\underline{5. Schritt}:
+
+Man setze den Wert der Eingangsvariablen auf $t$ (für das größtmögliche $t$ wie im 4. Schritt) und ersetze in $x_B^*$ die Werte der übrigen Basisvariablen durch $x_B^* - td$. Außerdem ersetze man in $B$ die Ausgangsspalte\index{Ausgangsspalte}\index{Spalte!Ausgangs-} durch die Eingangsspalte. Beim Update von $x_B^*$ und $B$ beachte man die zuvor beschriebene Regel.
+
+\medskip
+
+\textbf{Beispiel}. Wir greifen unser erstes Beispiel zur Standardsimplexmethode aus Kapitel \ref{chapter:2} wieder auf und wollen es nun mit dem revidierten Simplexverfahren lösen. Dieses Beispiel lautet wie folgt:
+
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 5x_1 &\ + &\ 4x_2 &\ + &\ 3x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 2x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\ \leq &\  5\ \\
+&& 4x_1 &\ + &\  x_2 &\ + &\ 2x_3 &\ \leq &\ 11\ \\
+&& 3x_1 &\ + &\ 4x_2 &\ + &\ 2x_3 &\ \leq &\  8\ \\
+&& & & & & \llap{$x_1, x_2, x_3$} &\ \geq &\  0.
+\end{alignedat}
+\end{align*}
+
+Die \textit{Eingangsdaten} (\enquote{original data}) für unser Beispiel sind gegeben durch\footnote{Es ist zweckmäßig und sehr zu empfehlen, sowohl bei $A$ als auch bei $c^T$ eine \textit{Kopfzeile}\index{Kopfzeile} der Form $x_1,\ldots,x_n$ hinzuzufügen. Schreibt man $A$ und $c^T$ genau untereinander, so genügt es, die Kopfzeile nur bei $A$ anzugeben.}
+\[
+A = \bordermatrix{ & x_1 & x_2 & x_3 & x_4 & x_5 & x_6 \cr & 2 & 3 & 1 & 1 & 0 & 0 \cr & 4 & 1 & 2 & 0 & 1 & 0 \cr & 3 & 4 & 2 & 0 & 0 & 1},\quad
+b = \begin{pmatrix} 5 \\ 11 \\ 8 \end{pmatrix} \quad \text{und} \quad 
+c^T = \bordermatrix{ & x_1 & x_2 & x_3 & x_4 & x_5 & x_6 \cr & 5 & 4 & 3 & 0 & 0 & 0}.
+\]
+
+Das Verfahren startet mit 
+\[
+x_B^* = \begin{pmatrix} x_4^* \\ x_5^* \\ x_6^* \end{pmatrix} = \begin{pmatrix} 5 \\ 11 \\ 8 \end{pmatrix} \quad \text{und} \quad
+B = \bordermatrix{ & x_4 & x_5 & x_6 \cr & 1 & 0 & 0 \cr & 0 & 1 & 0 \cr & 0 & 0 & 1}.
+\]
+
+Auch bei $B$ wurde eine \textit{Kopfzeile} hinzugefügt, die angibt, wie sich Basisvariablen und Spalten entsprechen. Dies dient der Übersichtlichkeit. \textit{Bei der Basismatrix $B$ ist das Hinzufügen der Kopfzeile besonders wichtig}, da die Spalten von $B$ nicht immer in derselben Reihenfolge wie in $A$ vorkommen. Auch bei der Matrix $A_N$ fügen wir im Folgenden eine Kopfzeile hinzu. 
+
+\underline{\textbf{1. Iteration}}
+
+\underline{\textit{1. Schritt}}:
+
+Das Gleichungssystem $y^TB = c_B^T$ lautet
+\begin{align*}
+\begin{alignedat}{4}
+ y_1 &\ + &\ 0y_2 &\ + &\ 0y_3 &\ = &\ 0\ \\
+0y_1 &\ + &\  y_2 &\ + &\ 0y_3 &\ = &\ 0\ \\
+0y_1 &\ + &\ 0y_2 &\ + &\  y_3 &\ = &\ 0. 
+\end{alignedat}
+\end{align*}
+
+Lösung: $y^T = (y_1,y_2,y_3) = (0,0,0)$.
+
+\underline{\textit{2. Schritt}}:
+
+Es gilt $A_N = \bordermatrix{ & x_1 & x_2 & x_3 \cr & 2 & 3 & 1 \cr & 4 & 1 & 2 \cr & 3 & 4 & 2}$; für alle Spalten $a$ von $A_N$ gilt $y^Ta = 0$ und die Komponenten von $c_N^T$ lauten 5, 4 und 3. Es kommen also alle Spalten von $A_N$ als Eingangsspalte $a$ infrage; wir wählen $a = \begin{pmatrix} 2 \\ 4 \\ 3 \end{pmatrix}$. Dies entspricht der Regel des größten Koeffizienten. Mit der Wahl der Eingangsspalte $a$ liegt auch die Eingangsvariable fest: In unserem Fall ist dies $x_1$.
+
+\pagebreak
+\underline{\textit{3. Schritt}}:
+
+Das Gleichungssystem $Bd=a$ lautet
+\begin{align*}
+\begin{alignedat}{4}
+ d_1 &\ + &\ 0d_2 &\ + &\ 0d_3 &\ = &\ 2\ \\
+0d_1 &\ + &\  d_2 &\ + &\ 0d_3 &\ = &\ 4\ \\
+0d_1 &\ + &\ 0d_2 &\ + &\  d_3 &\ = &\ 3. 
+\end{alignedat}
+\end{align*}
+
+Lösung: $d = \begin{pmatrix} 2 \\ 4 \\ 3 \end{pmatrix}$.
+
+\underline{\textit{4. Schritt}}:
+
+Es ist das größte $t \geq 0$ zu finden, für das gilt:
+\[
+\begin{pmatrix} 5 \\ 11 \\ 8 \end{pmatrix} - t \begin{pmatrix} 2 \\ 4 \\ 3 \end{pmatrix} \geq \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}.
+\]
+
+Für $t$ soll demnach
+\begin{align*}
+\begin{alignedat}{3}
+ 5 &\ - &\ 2t &\ \geq &\ 0 \\
+11 &\ - &\ 4t &\ \geq &\ 0 \\
+ 8 &\ - &\ 3t &\ \geq &\ 0
+\end{alignedat}
+\end{align*}
+
+gelten. Das größte $t$, das dies erfüllt, ist $t=2.5$. Für diese Wahl von $t$ gilt
+\[
+x_B^* - td = \begin{pmatrix} 5&-&2t \\ 11&-&4t \\ 8&-&3t \end{pmatrix} = \begin{pmatrix} 0 \\ 1 \\ 0.5 \end{pmatrix}.
+\]
+
+Wegen $x_B^* = \begin{pmatrix} x_4^* \\ x_5^* \\ x_6^* \end{pmatrix}$ erhält man also $x_4$ als Ausgangsvariable.
+
+\underline{\textit{5. Schritt (Update von $x_B^*$ und $B$)}}:
+
+Man erhält
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_5^* \\ x_6^* \end{pmatrix} = \begin{pmatrix} 2.5 \\ 1 \\ 0.5 \end{pmatrix} \quad \text{und} \quad
+B = \bordermatrix{ & x_1 & x_5 & x_6 \cr & 2 & 0 & 0 \cr & 4 & 1 & 0 \cr & 3 & 0 & 1 }. 
+\]
+
+Mit dem neuen Vektor $x_B^*$ und der neuen Basismatrix geht es nun in die nächste Runde.
+
+
+\underline{\textbf{2. Iteration}}
+
+\underline{\textit{1. Schritt}}:
+
+Das Gleichungssystem $y^TB = c_B^T$ lautet
+\begin{align*}
+\begin{alignedat}{4}
+2y_1 &\ + &\ 4y_2 &\ + &\ 3y_3 &\ = &\ 5\ \\
+     &\   &\  y_2 &\   &\      &\ = &\ 0\ \\
+     &\   &\      &\   &\  y_3 &\ = &\ 0. 
+\end{alignedat}
+\end{align*}
+
+Lösung: $y^T = (y_1,y_2,y_3) = (2.5,0,0)$.
+
+\pagebreak
+\underline{\textit{2. Schritt}}:
+
+Es gilt $A_N = \bordermatrix{ & x_2 & x_3 & x_4 \cr & 3 & 1 & 1 \cr & 1 & 2 & 0 \cr & 4 & 2 & 0 }$. Für die Spalten $a$ von $A_N$ erhält man der Reihe nach als Wert von $y^Ta$:
+\[
+7.5,\quad 2.5 \quad \text{und} \quad 2.5.
+\]
+
+Die entsprechenden Einträge von $c_N^T$ lauten
+\[
+4, \quad 3 \quad \text{und} \quad 0.
+\]
+
+Folglich ist
+\[
+a = \begin{pmatrix} 1 \\ 2 \\ 2 \end{pmatrix}
+\]
+die Eingangsspalte und $x_3$ ist die Eingangsvariable.
+
+\underline{\textit{3. Schritt}}:
+
+Das zu lösende Gleichungssystem lautet
+\begin{align*}
+\begin{alignedat}{4}
+2d_1 &\   &\      &\   &\     &\ = &\ 1\ \\
+4d_1 &\ + &\  d_2 &\   &\     &\ = &\ 2\ \\
+3d_1 &\   &\      &\ + &\ d_3 &\ = &\ 2. 
+\end{alignedat}
+\end{align*}
+
+Lösung: $d = \begin{pmatrix} 0.5 \\ 0 \\ 0.5 \end{pmatrix}$.
+
+\underline{\textit{4. Schritt}}:
+
+Es ist das größte $t \geq 0$ zu finden, so dass gilt:
+\[
+\begin{pmatrix} 2.5 \\ 1 \\ 0.5 \end{pmatrix} - t \begin{pmatrix} 0.5 \\ 0 \\ 0.5 \end{pmatrix} \geq \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}.
+\]
+
+Es folgt $t=1$. Für $t=1$ gilt: $x_B^* - td = \begin{pmatrix} 2 \\ 1 \\ 0 \end{pmatrix}$, woraus wegen $x_B^* = \begin{pmatrix} x_1^* \\ x_5^* \\ x_6^* \end{pmatrix}$ folgt, dass $x_6$ die Ausgangsvariable ist.
+
+\underline{\textit{5. Schritt}}:
+
+Als Update von $x_B^*$ und $B$ erhält man
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_5^* \\ x_3^* \end{pmatrix} = \begin{pmatrix} 2 \\ 1 \\ 1 \end{pmatrix} \quad \text{und} \quad
+B = \bordermatrix{ & x_1 & x_5 & x_3 \cr & 2 & 0 & 1 \cr & 4 & 1 & 2 \cr & 3 & 0 & 2 }.
+\]
+
+Mit dem neuen Vektor $x_B^*$ und der neuen Basismatrix geht es nun in die nächste Runde.
+
+\pagebreak
+
+\underline{\textbf{3. Iteration}}
+
+\underline{\textit{1. Schritt}}:
+
+Das zu lösende Gleichungssystem lautet\footnote{Man beachte: Zu lösen ist $y^TB = c_B^T$, wobei die Spalten von $B$ in der Reihenfolge auftreten, die der Kopfzeile $x_1,x_5,x_3$ entspricht. \textit{Diese Reihenfolge ist auch für die rechten Seiten des Gleichungssystems einzuhalten}. Dementsprechend gilt $c_B^T = (5,0,3)$.}
+\begin{align*}
+\begin{alignedat}{4}
+2y_1 &\ + &\ 4y_2 &\ + &\ 3y_3 &\ = &\ 5\ \\
+     &\   &\  y_2 &\   &\      &\ = &\ 0\ \\
+ y_1 &\ + &\ 2y_2 &\ + &\ 2y_3 &\ = &\ 3. 
+\end{alignedat}
+\end{align*}
+
+Lösung: $y^T = (y_1,y_2,y_3) = (1,0,1)$.
+
+\underline{\textit{2. Schritt}}:
+
+Es gilt $A_N = \bordermatrix{ & x_2 & x_4 & x_6 \cr & 3 & 1 & 0 \cr & 1 & 0 & 0 \cr & 4 & 0 & 1 }$. Für die Spalten $a$ von $A_N$ ergeben sich die folgenden Werte von $y^Ta$: 7, 1, 1. Als dazugehörige Einträge von $c_N^T$ haben wir 4, 0, 0. Es folgt, dass die aktuelle Lösung optimal ist.
+
+Als optimale Basislösung hat sich ergeben:
+\[
+x_1^*=2,\quad
+x_2^*=0,\quad
+x_3^*=1,\quad
+x_4^*=0,\quad
+x_5^*=1,\quad
+x_6^*=0.
+\]
+
+Als optimalen Zielfunktionswert erhält man $z=13$.
+
+
+
+\section{Vergleich der Standardsimplexmethode mit dem revidierten Verfahren}
+\label{section:8:4}
+
+Für beide Varianten gilt: \textit{In jeder Iteration wird eine zulässige Basislösung durch eine in der Regel andere zulässige Basislösung ersetzt}. Oder, in geometrischer Terminologie ausgedrückt:
+
+\begin{SKBox}
+Man bewegt sich auf dem Rand des zulässigen Bereichs (\enquote{längs einer Kante}) von einer Ecke zur nächsten.
+\end{SKBox}
+
+Die \textit{Details} sind jedoch sehr unterschiedlich:
+\begin{itemize}
+\item Im Standardverfahren arbeitet man mit \textit{Tableaus} im Sinne von \enquote{dictionary} (vgl. Chvátal) bzw. \enquote{Schlupfform} (vgl. Cormen et al), in denen sich die aktuelle zulässige Basislösung unmittelbar ablesen lässt; \textit{in jeder Iteration wird das neue Tableau direkt aus dem vorhergehenden Tableau berechnet}.
+\item Im Gegensatz dazu berechnet man in jeder Iteration des revidierten Simplexverfahrens die neue zulässige Basislösung \textit{aus den Eingangsdaten} des Problems, wobei zwei lineare Gleichungssysteme zu lösen sind.
+\end{itemize}
+
+Beide Varianten haben \textit{Vor- und Nachteile}: Diese werden im Buch von Chvátal ausführlich beschrieben und diskutiert; vgl. auch K. Neumann, M. Morlock: \textit{Operations Research} (Hanser Verlag), wo ebenfalls die \enquote{pros and cons} der beiden Varianten diskutiert werden. Hier soll nur ein Punkt etwas genauer besprochen werden.
+
+In der \textit{Praxis} hat man es meist mit \textit{sehr großen Problemen} zu tun: Probleme mit mehr als 100000 Variablen und beispielsweise $m=10000$ Gleichungen (Nebenbedingungen) sind keine Seltenheit. Häufig handelt es sich dabei um \textit{Probleme, bei denen die meisten Koeffizienten $a_{ij}$ gleich Null sind}. Man spricht dann von \textit{schwach besetzten Problemen}\index{schwach besetztes Problem}\index{Problem!schwach besetztes} und \textit{schwach besetzten Matrizen}\index{schwach besetzte Matrix}\index{Matrizen!schwach besetzte}. Typische Größen\-ord\-nungen: $n=100000$ Variablen, $m=10000$ Gleichungen, aber niemals mehr als 10 Einträge in jeder Spalte der Matrix $(a_{ij})$, die ungleich Null sind.
+
+Zur Behandlung von LP-Problemen mit schwach besetzten Matrizen gibt es ausgefeilte Methoden (vgl. etwa Chvátal, Kapitel 7 und 24). Man kann sagen: \textit{Sind LP-Probleme sehr groß, so werden sie überhaupt nur dadurch für die Behandlung in einem Computer zugänglich, dass es sich um schwach besetzte Probleme handelt}. Beispielsweise müssen die vielen Nullen nicht gespeichert werden, sondern man speichert nur, an welchen Stellen Einträge ungleich Null stehen -- und natürlich die Werte dieser Einträge.
+
+Nach diesen Bemerkungen wird klar, weshalb in der Praxis, wenn es um sehr große, schwach besetzte Matrizen geht, \textit{die revidierte Simplexmethode vorzuziehen ist}:
+\begin{itemize}
+	\item Beim \textit{Standardsimplexverfahren} kann aus dem Anfangstableau nach wenigen Iterationen ein \enquote{stark besetztes Tableau} werden, d.h. ein Tableau, in dem viele Einträge ungleich Null sind. Diese Einträge müssen alle gespeichert werden, d.h., der Vorteil, den man am Anfang durch das Vorliegen eines schwach besetzten Problems hat, ist \enquote{futsch}.
+	\item Dergleichen kann beim \textit{revidierten Verfahren} nicht passieren, da man in jeder Iteration mit den Spalten der schwach besetzten Matrix $A$ arbeitet und nicht mit einem völlig neuen Tableau, das in der Regel nicht mehr schwach besetzt ist.
+\end{itemize}
+
+Wir haben einen der Gründe angesprochen, weshalb praxistaugliche Softwarepakete auf dem revidierten Simplexverfahren basieren  und nicht auf dem Standardverfahren. Hier noch ein anderer Grund: \textit{Häufig ist die Anzahl $n$ der Variablen wesentlich größer als $m$} (= Anzahl der Nebenbedingungen ohne die Nichtnegativitätsbedingungen). Daher kann es ein großer Vorteil sein, dass man im revidierten Verfahren im Wesentlichen mit der Basismatrix $B$ arbeitet. (Man beachte: $B$ ist eine $m \times m$ - Matrix, während in einem Tableau $n$ Spalten vorkommen.)
+
+Stichwort für einen weiteren Grund: Anfälligkeit für Rundungsfehler\index{Rundungsfehler}.
+
+\textit{Für die Bearbeitung kleinerer Probleme per Hand sind beide Varianten -- die Standardmethode und das revidierte Verfahren -- sehr gut geeignet}.
+
+
+\section{Anhang zu Abschnitt \ref*{chapter:8}}
+\label{section:8:5}
+\label{page:8:1}
+
+In der linearen Algebra spielt der Unterschied zwischen invertierbaren\index{invertierbar} und nicht invertierbaren $n \times n$ - Matrizen eine zentrale Rolle. Wir betrachten hier nur reelle $n \times n$ - Matrizen, d.h. quadratische Matrizen mit Einträgen aus $\R$, und sprechen von Matrizen der Klasse I und Matrizen der Klasse II. Eine andere (sehr verbreitete) Sprechweise: \textit{Nichtsinguläre Matrizen}\index{nichtsinguläre Matrix}\index{Matrix!nichtsinguläre} (Klasse I) und \textit{singuläre Matrizen}\index{singuläre Matrix}\index{Matrix!singuläre} (Klasse II). Statt \enquote{nichtsingulär} wird häufig auch \textit{regulär} gesagt. Hier noch einmal die wesentlichen Unterschiede:
+
+
+\begin{longtable}{|p{7.5cm}|p{7.5cm}|} 
+\hline 
+\begin{center}
+\textbf{Klasse I} \\
+(invertierbare $(n,n)$-Matrizen $A$)
+\end{center}
+& 
+\begin{center}
+\textbf{Klasse II} \\
+(nicht invertierbare $(n,n)$-Matrizen $A$)
+\end{center}
+\\ \hline
+\begin{center} $\det A \neq 0$\index{Determinante} \end{center}
+& 
+\begin{center} $\det A = 0$ \end{center}
+\\ \hline
+\begin{center} Die Spalten von $A$ bilden eine Basis des $\R^n$. \end{center}
+& 
+\begin{center} Die Spalten von $A$ bilden keine Basis des $\R^n$. \end{center}
+\\ \hline
+\begin{center}Die Spalten von $A$ sind linear unabhängig. \end{center}
+& 
+\begin{center} Die Spalten von $A$ sind linear abhängig. \end{center}
+\\ \hline
+\begin{center} Die Zeilen von $A$ bilden eine Basis des $\R^n$. \end{center}
+& 
+\begin{center} Die Zeilen von $A$  bilden keine Basis des $\R^n$. \end{center}
+\\ \hline
+\begin{center} Die Zeilen von $A$ sind linear unabhängig. \end{center}
+& 
+\begin{center} Die Zeilen von $A$ sind linear abhängig. \end{center}
+\\ \hline
+\begin{center} $Ax=b$ ist für jede rechte Seite $b$ eindeutig lösbar.\label{page:8:2} \end{center}
+&
+\begin{center} Für jede rechte Seite $b$ gilt: $Ax=b$ ist nicht eindeutig lösbar, d.h., $Ax=b$ ist entweder unlösbar oder es gibt mehr als eine Lösung. \end{center}
+\\ \hline
+\begin{center} Das homogene lineare Gleichungssystem $Ax=0$ besitzt nur die triviale Lösung\footnotemark. \end{center}
+& 
+\begin{center} Das homogene lineare Gleichungssystem $Ax=0$ besitzt neben der trivialen Lösung noch weitere (nichttriviale) Lösungen. \end{center}
+\\ \hline  
+\begin{center} Mit dem Gauß-Jordan-Verfahren erhält man die reduzierte Zeilenstufenmatrix $Z = E_n$. \end{center}
+&
+\begin{center} Das Gauß-Jordan-Verfahren führt zu einer reduzierten Zeilenstufenmatrix $Z \neq E_n$. \end{center}
+\\ \hline
+\begin{center} $A^{-1}$ existiert. \end{center}
+&
+\begin{center} $A^{-1}$ existiert nicht. \end{center}
+\\ \hline
+\begin{center} Bei der linearen Abbildung $\R^n \rightarrow \R^n$, die durch $x \mapsto Ax$ gegeben ist, handelt es sich um eine \textit{bijektive} lineare Abbildung (\enquote{\textit{Vektorraumisomorphismus}}). \end{center}
+&
+\begin{center} Die lineare Abbildung $\R^n \rightarrow \R^n$, die durch $x \mapsto Ax$ gegeben ist, ist weder injektiv noch surjektiv. \end{center}
+\\ \hline
+\end{longtable}
+
+\footnotetext{Mit 0 wird hier der Nullvektor der Länge $n$ bezeichnet.}

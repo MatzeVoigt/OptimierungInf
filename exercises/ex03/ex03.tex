@@ -1,0 +1,132 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{mathtools}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 03},
+  pdfauthor={},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2019/20}
+
+\textbf{Blatt 3}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 6./7. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+
+% Aufgabe P-1
+\item Bestimmen Sie für das LP-Problem ein zulässiges Starttableau bzw. stellen Sie fest, dass das Problem unlösbar ist. Erreichen Sie dies, indem Sie die 1. Phase des Zweiphasen-Simplexverfahrens durchführen.
+\begin{align*}
+\begin{alignedat}{4}
+& \text{maximiere } & 6x_1 &\ + &\ 11x_2 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & \\
+&& 4x_1 &\ - &\ x_2 &\ \leq &\  2 \\
+&& -x_1 &\ + &\ x_2 &\ \leq &\  8 \\
+&& -x_1 &\ - &\ x_2 &\ \leq &\ -3 \\
+&&&& \llap{$x_1,x_2$} &\ \geq &\ 0
+\end{alignedat}
+\end{align*}	
+	
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 13./14. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item Bestimmen Sie für das LP-Problem ein zulässiges Starttableau bzw. stellen Sie fest, dass das Problem unlösbar ist. Erreichen Sie dies, indem Sie die 1. Phase des Zweiphasen-Simplexverfahrens durchführen.
+\begin{enumerate}[a)]
+	% Aufgabe H-1a
+	\item \begin{align*}
+	\begin{alignedat}{4}
+	& \text{maximiere } & -7x_1 &\ + &\ 10x_2 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & \\
+	&& -x_1 &\ - &\ 2x_2 &\ \leq &\ -12 \\
+	&&  x_1 &\ - &\ 4x_2 &\ \leq &\   7 \\
+	&&&& \llap{$x_1,x_2$} &\ \geq &\ 0
+	\end{alignedat}
+	\end{align*}
+	
+	% Aufgabe H-2a
+	\item \begin{align*}
+	\begin{alignedat}{4}
+	& \text{maximiere } & -13x_1 &\ + &\ 5x_2 & & \\
+	& \rlap{unter den Nebenbedingungen} & & & & & \\
+	&&  x_1 &\ - &\ x_2 &\ \leq &\ -1 \\
+	&& 2x_1 &\ + &\ x_2 &\ \leq &\  2 \\
+	&& -x_1 &\ - &\ x_2 &\ \leq &\ -4 \\
+	&&&& \llap{$x_1,x_2$} &\ \geq &\ 0
+	\end{alignedat}
+	\end{align*}
+\end{enumerate}
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+	% Aufgabe H-2a
+	\item Schreiben Sie das Klee-Minty Problem für $n=2$ auf. 
+	
+	% Aufgabe H-2b
+	\item Stellen Sie die Menge der zulässigen Lösungen dieses Problems durch eine Skizze dar, wobei Sie den Maßstab wie folgt wählen:
+	\begin{align*}
+	\text{1 Einheit auf der $x_1$-Achse} &\mathrel{\widehat{=}} \text{1cm} \\
+	\text{10 Einheiten auf der $x_2$-Achse} &\mathrel{\widehat{=}} \text{1cm}.
+	\end{align*}
+	
+	% Aufgabe H-2c
+	\item Lösen Sie das Problem mit dem Simplexverfahren auf zwei verschiedene Arten und stellen Sie für beide Arten fest, wie viele Iterationen benötigt werden.
+	\begin{enumerate}[ (i)]
+		% Aufgabe H-2c (i)
+		\item Benutzen Sie die Regel vom größten Koeffizienten.
+		% Aufgabe H-2c (ii)
+		\item Wählen Sie in der 1. Iteration $x_2$ als Eingangsvariable.
+	\end{enumerate}
+\end{enumerate}
+
+
+\end{enumerate}
+\end{enumerate}
+\end{document}

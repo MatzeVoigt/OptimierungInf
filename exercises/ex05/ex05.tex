@@ -1,0 +1,154 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{mathtools}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 05},
+  pdfauthor={},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2019/20}
+
+\textbf{Blatt 5}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 20./21. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Wir greifen das 2. Beispiel (\enquote{Second Example}) aus Kapitel 2 auf (Skript, Seite 23) und nennen es $(P)$.
+\begin{enumerate}[(i)]
+% Aufgabe P-1 (i)
+\item Stellen Sie das zugehörige duale Problem $(D)$ auf.
+% Aufgabe P-1 (ii)
+\item Eine optimale Lösung $(x_1^*, x_2^*, x_3^*)$ für $(P)$ haben wir bereits mit dem Simplexverfahren bestimmt. Lesen Sie zusätzlich eine optimale Lösung $(y_1^*, y_2^*, y_3^*, y_4^*)$ für $(D)$ am letzten Tableau ab.
+% Aufgabe P-1 (iii)
+\item Überprüfen Sie, ob die von Ihnen abgelesene Lösung $(y_1^*, y_2^*, y_3^*, y_4^*)$ tatsächlich eine \textit{zulässige} Lösung von $(D)$ ist.
+% Aufgabe P-1 (iv)
+\item Überprüfen Sie mithilfe des Dualitätssatzes, ob $(y_1^*, y_2^*, y_3^*, y_4^*)$ tatsächlich eine \textit{optimale} Lösung von $(D)$ ist.
+% Aufgabe P-1 (v)
+\item Bestätigen Sie noch einmal, dass es sich bei $(x_1^*, x_2^*, x_3^*)$ und $(y_1^*, y_2^*, y_3^*, y_4^*)$ um optimale Lösungen von (P) bzw. (D) handelt, indem Sie zeigen, dass die komplementären Schlupfbedingungen (Satz 3, Skript Seite 76) erfüllt sind. 
+
+\end{enumerate}
+
+%% Aufgabe P-2
+%\item Wir betrachten das folgende LP-Problem, das wir $(P)$ nennen:
+%\begin{align*}
+%\begin{alignedat}{4}
+%& \text{maximiere } & -x_1 &\ - &\ 2x_2 & & \\
+%& \rlap{unter den Nebenbedingungen} & & & & & \\
+%&& -3x_1 &\ + &\ x_2 &\ \leq &\ -1\ \\
+%&&   x_1 &\ - &\ x_2 &\ \leq &\ 1\ \\
+%&& -2x_1 &\ + &\ 7x_2 &\ \leq &\ 6\ \\
+%&&  9x_1 &\ - &\ 4x_2 &\ \leq &\ 6\ \\
+%&& -5x_1 &\ + &\ 2x_2 &\ \leq &\ -3\ \\
+%&&  7x_1 &\ - &\ 3x_2 &\ \leq &\ 6\ \\
+%&& && \llap{$x_1,x_2$} &\ \geq &\ 0.
+%\end{alignedat}
+%\end{align*}
+%
+%Lösen Sie $(P)$, indem Sie das zu $(P)$ duale Problem $(D)$ aufstellen und $(D)$ mit dem Simplexverfahren lösen.
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 27./28. November 2017}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item \begin{enumerate}[a)]
+
+% Aufgabe H-1a
+\item Wir greifen das Beispiel aus Hausaufgabe 1a) von Blatt 2 auf und nennen es $(P)$.
+\begin{enumerate}[(i)]
+% Aufgabe H-1a (i)
+\item Stellen Sie das zugehörige duale Problem $(D)$ auf.
+% Aufgabe H-1a (ii)
+\item Eine optimale Lösung $(x_1^*, x_2^*, x_3^*)$ für $(P)$ haben wir bereits mit dem Simplexverfahren bestimmt. Lesen Sie zusätzlich eine optimale Lösung $(y_1^*, y_2^*, y_3^*)$ für $(D)$ am letzten Tableau ab.
+% Aufgabe H-1a (iii)
+\item Überprüfen Sie, ob die von Ihnen abgelesene Lösung $(y_1^*, y_2^*, y_3^*)$ tatsächlich eine \textit{zulässige} Lösung von $(D)$ ist.
+% Aufgabe H-1a (iv)
+\item Überprüfen Sie mithilfe des Dualitätssatzes, ob $(y_1^*, y_2^*, y_3^*)$ tatsächlich eine \textit{optimale} Lösung von $(D)$ ist.
+% Aufgabe H-1a (v)
+\item Bestätigen Sie noch einmal, dass es sich bei $(x_1^*, x_2^*, x_3^*)$ und $(y_1^*, y_2^*, y_3^*)$ um optimale Lösungen von (P) bzw. (D) handelt, indem Sie zeigen, dass die komplementären Schlupfbedingungen (Satz 3, Skript Seite 76) erfüllt sind. 
+\end{enumerate}
+
+% Aufgabe H-1b
+\item Wie a) für Hausaufgabe 1b) von Blatt 2.
+
+\end{enumerate}
+
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+% Aufgabe H-2a
+\item Schauen Sie sich die in Abschnitt 7.4 im Anschluss an Satz 3' aufgeführten Beispiele 1 und 2 an (Skript Seite 78 f.) und bearbeiten Sie die auf Seite 79 gestellte Aufgabe.
+
+% Aufgabe H-2b
+\item Gegeben sei das folgende LP-Problem (P) zusammen mit einer vorgeschlagenen Lösung:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ 4x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&   x_1 &\ + &\ x_2 &\ + &\ 2x_3 &\ \leq &\ 4\ \\
+&&  2x_1 &\   &\     &\ + &\ 3x_3 &\ \leq &\ 5\ \\
+&&  2x_1 &\ + &\ x_2 &\ + &\ 3x_3 &\ \leq &\ 7\ \\
+&& &&&& \llap{$x_1,x_2,x_3$} &\ \geq &\ 0.
+\end{alignedat}
+\end{align*}
+
+Vorgeschlagene Lösung:
+\[
+x_1^*= \frac{5}{2}, \quad
+x_2^*= \frac{3}{2}, \quad
+x_3^*= 0.
+\]
+
+Prüfen Sie mithilfe von Satz 3' (Skript Seite 78), ob dies eine optimale Lösung von (P) ist.
+\end{enumerate}
+
+\end{enumerate}
+\end{enumerate}
+\end{document}

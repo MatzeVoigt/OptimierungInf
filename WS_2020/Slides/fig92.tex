@@ -1,0 +1,88 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color,amsmath,amssymb}
+\DeclareMathOperator{\opt}{OPT}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt,framesize=0.5cm}
+\begin{pspicture}(-0.1,-0.1)(4.1,5.6)
+\footnotesize
+
+\fnode(0.25,0.25){V00} \rput(V00){$0$}
+\fnode(0.75,0.25){V01} \rput(V01){$2$}
+\fnode(1.25,0.25){V02} \rput(V02){$4$}
+\fnode(1.75,0.25){V03} \rput(V03){$6$}
+\fnode(2.25,0.25){V04} \rput(V04){$7$}
+\fnode(2.75,0.25){V05} \rput(V05){$8$}
+\fnode(3.25,0.25){V06} \rput(V06){$8$}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V06}{V05}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V06}{V03}
+
+\fnode(0.25,1.25){V10} \rput(V10){$0$}
+\fnode(0.75,1.25){V11} \rput(V11){$2$}
+\fnode(1.25,1.25){V12} \rput(V12){$4$}
+\fnode(1.75,1.25){V13} \rput(V13){$6$}
+\fnode(2.25,1.25){V14} \rput(V14){$7$}
+\fnode(2.75,1.25){V15} \rput(V15){$8$}
+\fnode(3.25,1.25){V16}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V15}{V14}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V15}{V13}
+
+\fnode(0.25,2.25){V20} \rput(V20){$0$}
+\fnode(0.75,2.25){V21} \rput(V21){$2$}
+\fnode(1.25,2.25){V22} \rput(V22){$4$}
+\fnode(1.75,2.25){V23} \rput(V23){$6$}
+\fnode(2.25,2.25){V24} \rput(V24){$7$}
+\fnode(2.75,2.25){V25} 
+\fnode(3.25,2.25){V26}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V24}{V20}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V24}{V23}
+
+\fnode(0.25,3.25){V30} \rput(V30){$0$}
+\fnode(0.75,3.25){V31} \rput(V31){$2$}
+\fnode(1.25,3.25){V32} \rput(V32){$4$}
+\fnode(1.75,3.25){V33} \rput(V33){$6$}
+\fnode(2.25,3.25){V34} 
+\fnode(2.75,3.25){V35} 
+\fnode(3.25,3.25){V36}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V33}{V31}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V33}{V32}
+
+\fnode(0.25,4.25){V40} \rput(V40){$0$}
+\fnode(0.75,4.25){V41} \rput(V41){$2$}
+\fnode(1.25,4.25){V42} \rput(V42){$4$}
+\fnode(1.75,4.25){V43} 
+\fnode(2.25,4.25){V44} 
+\fnode(2.75,4.25){V45} 
+\fnode(3.25,4.25){V46}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V42}{V40}
+\ncarc[linewidth=0.5pt, arcangleA=270, arcangleB=295]{->}{V42}{V41}
+
+\fnode(0.25,5.25){V50} \rput(V50){$0$}
+\fnode(0.75,5.25){V51} \rput(V51){$2$}
+\fnode(1.25,5.25){V52} 
+\fnode(1.75,5.25){V53} 
+\fnode(2.25,5.25){V54} 
+\fnode(2.75,5.25){V55} 
+\fnode(3.25,5.25){V56}
+
+\uput{0.25}[180](0,5.25){$M=$}
+\uput{0.25}[ 90](0.25,5.5){$0$}
+\uput{0.25}[ 90](0.75,5.5){$1$}
+\uput{0.25}[ 90](1.25,5.5){$2$}
+\uput{0.25}[ 90](1.75,5.5){$3$}
+\uput{0.25}[ 90](2.25,5.5){$4$}
+\uput{0.25}[ 90](2.75,5.5){$5$}
+\uput{0.25}[ 90](3.25,5.5){$6$}
+
+\small
+\end{pspicture}
+\end{document}

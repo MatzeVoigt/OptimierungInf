@@ -1,0 +1,48 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(10.5,2.5)
+\footnotesize
+
+\cnode*( 1,2){3pt}{X1} \uput{0.2}[ 90]( 1,2){$x_1$}
+\cnode*( 3,2){3pt}{X2} \uput{0.2}[ 90]( 3,2){$x_2$}
+\cnode*( 5,2){3pt}{X3} \uput{0.2}[ 90]( 5,2){$x_3$}
+\cnode*( 7,2){3pt}{X4} \uput{0.2}[ 90]( 7,2){$x_4$}
+\cnode*( 9,2){3pt}{X5} \uput{0.2}[ 90]( 9,2){$x_5$}
+\cnode*( 0,0){3pt}{Y1} \uput{0.2}[270]( 0,0){$y_1$}
+\cnode*( 2,0){3pt}{Y2} \uput{0.2}[270]( 2,0){$y_2$}
+\cnode*( 4,0){3pt}{Y3} \uput{0.2}[270]( 4,0){$y_3$}
+\cnode*( 6,0){3pt}{Y4} \uput{0.2}[270]( 6,0){$y_4$}
+\cnode*( 8,0){3pt}{Y5} \uput{0.2}[270]( 8,0){$y_5$}
+\cnode*(10,0){3pt}{Y6} \uput{0.2}[270](10,0){$y_6$}
+
+\ncline{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y3}
+\ncline{-}{X1}{Y6}
+\ncline{-}{X2}{Y4}
+\ncline{-}{X2}{Y5}
+\ncline{-}{X3}{Y4}
+\ncline{-}{X3}{Y5}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+\ncline{-}{X4}{Y3}
+\ncline{-}{X4}{Y5}
+\ncline{-}{X4}{Y6}
+\ncline{-}{X5}{Y4}
+\ncline{-}{X5}{Y5}
+
+\small
+\end{pspicture}
+\end{document}

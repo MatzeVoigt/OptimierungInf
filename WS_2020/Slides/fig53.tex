@@ -1,0 +1,57 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=2.750cm,yunit=1.25cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-2.75)(3.5,4.75)
+
+\cnode*(1.5,4){3pt}{S}  \uput{0.20}[ 90](1.5,4){$s$}
+\cnode*(1.5,-2){3pt}{T} \uput{0.20}[270](1.5,-2){$t$} 
+\cnode*(0,2){3pt}{X1}   \uput{0.20}[180](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2}   \uput{0.20}[180](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3}   \uput{0.20}[  0](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4}   \uput{0.20}[  0](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.20}[180](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.20}[180](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.20}[  0](2.5,0){$y_3$}
+
+%\scriptsize
+\tiny
+\uput{0.50}[90](1.5,4){$(\star,\star,\infty)$} %s
+\uput{0.50}[270](1.5,-2){$(y_3,+,1)$} %t
+\uput{0.20}[ 0](0,2){$(y_1,-,1)$} %x1
+\uput{0.20}[ 0](1,2){$(y_2,-,1)$} %x2
+\uput{0.20}[180](2,2){$(s,+,1)$} %x3
+\uput{0.20}[180](3,2){$(s,+,1)$} %x4
+\uput{0.20}[  0](0.5,0){$(x_3,+,1)$} %y1
+\uput{0.20}[  0](1.5,0){$(x_4,+,1)$} %y2
+\uput{0.20}[180](2.5,0){$(x_1,+,1)$} %y3
+\ncline{->}{S}{X1} \uput{0.10}[180](0.75,3){$1(1)$} 
+\ncline{->}{S}{X2} \uput{0.10}[180](1.25,3){$1(1)$}
+\ncline[linecolor=red,linewidth=1.5pt]{->}{S}{X3} \uput{0.10}[  0](1.75,3){$0(1)$}
+\ncline{->}{S}{X4} \uput{0.10}[  0](2.25,3){$0(1)$}
+\ncline{->}{Y1}{T} \uput{0.10}[180](1,-1){$1(1)$}
+\ncline{->}{Y2}{T} \uput{0.10}[180](1.5,-1){$1(1)$}
+\ncline[linecolor=red,linewidth=1.5pt]{->}{Y3}{T} \uput{0.10}[  0](2,-1){$0(1)$}
+\ncline[linecolor=red,linewidth=1.5pt]{->}{X1}{Y1} \uput{0.05}[225](0.25,1){$1(1)$}
+\ncline{->}{X1}{Y2} \uput{0.05}[225](0.75,1){$0(1)$}
+\ncline[linecolor=red,linewidth=1.5pt]{->}{X1}{Y3} \uput{0.05}[  0](0.75,1.5){$0(1)$}
+\ncline{->}{X2}{Y2} \uput{0.05}[  0](1.13,1.5){$1(1)$}
+\ncline[linecolor=red,linewidth=1.5pt]{->}{X3}{Y1} \uput{0.05}[  0](1.70,1.5){$0(1)$}
+\ncline{->}{X4}{Y1} \uput{0.05}[315](1.75,1){$0(1)$}
+\ncline{->}{X4}{Y2} \uput{0.05}[315](2.25,1){$0(1)$}
+\small
+
+\uput{0.1}[180](0,1){$N$}
+
+\end{pspicture}
+\end{document}

@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color,amsmath,amssymb}
+\DeclareMathOperator{\ssum}{Subset-Sum}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.0cm,yunit=1.0cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-0.5,-0.5)(6.3,2.5)
+\footnotesize
+
+\cnode*(0,2){3pt}{N1} \uput{0.2}[ 90](0,2){$1$}
+\cnode*(0,0){3pt}{N2} \uput{0.2}[270](0,0){$2$}
+\cnode*(2,1){3pt}{N3} \uput{0.2}[270](2,1){$3$}
+\cnode*(4,2){3pt}{N4} \uput{0.2}[ 90](4,2){$4$}
+\cnode*(4,0){3pt}{N5} \uput{0.2}[270](4,0){$5$}
+\cnode*(6,1){3pt}{N6} \uput{0.2}[270](6,1){$6$}
+
+\ncarc[arcangle=330]{->}{N1}{N2} \uput{0.10}[180](0,1){$6$}
+\ncline{->}{N1}{N3}              \uput{0.05}[ 45](1,1.5){$1$}
+\ncline{->}{N1}{N4}              \uput{0.15}[ 90](2,2){$10$}
+\ncarc[arcangle=330]{->}{N2}{N1} \uput{0.10}[  0](0,1){$2$}
+\ncarc[arcangle=330]{->}{N2}{N3} \uput{0.05}[315](1,0.5){$4$}
+\ncline{->}{N2}{N5}              \uput{0.10}[270](2,0){$9$}
+\ncarc[arcangle=330]{->}{N3}{N2} \uput{0.05}[135](1,0.5){$6$}
+\ncarc[arcangle=330]{->}{N3}{N4} \uput{0.05}[315](3,1.5){$6$}
+\ncline{->}{N3}{N5}              \uput{0.05}[ 45](3,0.5){$3$}
+\ncarc[arcangle=330]{->}{N4}{N3} \uput{0.05}[135](3,1.5){$4$}
+\ncarc[arcangle=330]{->}{N4}{N5} \uput{0.10}[180](4,1){$4$}
+\ncline{->}{N4}{N6}              \uput{0.05}[ 45](5,1.5){$2$}
+\ncarc[arcangle=330]{->}{N5}{N4} \uput{0.10}[  0](4,1){$2$}
+\ncline{->}{N6}{N5}              \uput{0.05}[315](5,0.5){$1$}
+
+%\ncarc[arcangle=30]{->}{S}{A}  \uput{0.05}[135](2.0,3.7){$-3$}
+%\ncarc[arcangle=330]{->}{S}{C} \uput{0.05}[225](2.0,0.3){$3$}
+%\ncline{->}{S}{D} \uput{0.10}[ 90](1.0,2.5){$4$}
+%\ncline{->}{S}{E} \uput{0.10}[270](1.0,1.5){$2$}
+%\ncline{->}{A}{D} \uput{0.10}[ 90](3.0,3.5){$6$}
+%\ncline{->}{B}{A} \uput{0.10}[  0](4.0,3.0){$-4$}
+%\ncline{->}{B}{C} \uput{0.10}[  0](4.0,1.0){$8$}
+%\ncline{->}{C}{E} \uput{0.10}[270](3.0,0.5){$-3$}
+%\ncline{->}{D}{B} \uput{0.10}[ 90](3.0,2.5){$-1$}
+%\ncline{->}{E}{B} \uput{0.10}[270](3.0,1.5){$-2$}
+
+\small
+\end{pspicture}
+\end{document}

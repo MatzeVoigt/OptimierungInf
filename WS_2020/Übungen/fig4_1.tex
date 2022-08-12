@@ -1,0 +1,28 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\begin{document}
+%\begin{center}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=1pt}
+\begin{pspicture}(-0.5,-0.5)(2.5,2.5)
+
+\cnode*(0,1){3pt}{V0} \uput{0.25}[180](0,1){$v_0$}
+\cnode*(1,2){3pt}{V1} \uput{0.25}[90](1,2){$v_1$}
+\cnode*(1,0){3pt}{V2} \uput{0.25}[270](1,0){$v_2$}
+\cnode*(2,1){3pt}{V3} \uput{0.25}[0](2,1){$v_3$}
+
+\ncline{->}{V0}{V1} \uput{0.10}[135](0.5, 1.5){$5$}
+\ncline{->}{V0}{V2} \uput{0.10}[225](0.5, 0.5){$2$}
+\ncline{->}{V1}{V2} \uput{0.10}[  0](1.0, 1.0){$1$}
+\ncline{->}{V1}{V3} \uput{0.10}[ 45](1.5, 1.5){$2$}
+\ncline{->}{V2}{V3} \uput{0.10}[315](1.5, 0.5){$4$}
+
+\end{pspicture}
+%\end{center}
+
+\end{document}

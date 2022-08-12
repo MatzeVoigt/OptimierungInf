@@ -1,0 +1,36 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=2.00cm,yunit=1.00cm,linewidth=0.8pt}
+\begin{pspicture}(-0.5,-0.5)(3.5,2.5)
+
+\cnode*(0,2){3pt}{X1} \uput{0.25}[ 90](0,2){$x_1$}
+\cnode*(1,2){3pt}{X2} \uput{0.25}[ 90](1,2){$x_2$}
+\cnode*(2,2){3pt}{X3} \uput{0.25}[ 90](2,2){$x_3$}
+\cnode*(3,2){3pt}{X4} \uput{0.25}[ 90](3,2){$x_4$}
+\cnode*(0.5,0){3pt}{Y1} \uput{0.25}[270](0.5,0){$y_1$}
+\cnode*(1.5,0){3pt}{Y2} \uput{0.25}[270](1.5,0){$y_2$}
+\cnode*(2.5,0){3pt}{Y3} \uput{0.25}[270](2.5,0){$y_3$}
+
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X1}{Y1}
+\ncline{-}{X1}{Y2}
+\ncline{-}{X1}{Y3}
+\nccoil[coilaspect=0,coilheight=1,coilwidth=0.1,coilarm=0.2]{-}{X2}{Y2}
+\ncline{-}{X3}{Y1}
+\ncline{-}{X4}{Y1}
+\ncline{-}{X4}{Y2}
+
+\uput{0.1}[180](0,1){$G$}
+
+\end{pspicture}
+\end{document}

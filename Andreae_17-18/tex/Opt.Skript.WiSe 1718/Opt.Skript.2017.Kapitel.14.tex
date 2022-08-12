@@ -1,0 +1,1241 @@
+%------------------------------------------------------------------------------%
+% Skript zu:                                                                   %
+% "Optimierung für Studierende der Informatik"                                 %
+% ============================================                                 %
+%                                                                              %
+% Kapitel 14:                                                                  %
+% "Polynomielle Algorithmen für Lineare Programmierung"                        %
+%                                                                              %
+% in LaTeX gesetzt von:                                                        %
+% Steven Köhler                                                                %
+%                                                                              %
+% Version:                                                                     %
+% 2017-01-31                                                                   %
+%------------------------------------------------------------------------------%
+
+
+\chapter{Polynomielle Algorithmen für Lineare Programmierung}
+\label{chapter:14}
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Einführende Bemerkungen"                                                    %
+%------------------------------------------------------------------------------%
+
+\section{Einführende Bemerkungen}
+\label{section:14:1}
+
+Der Simplexalgorithmus bewährt sich seit Jahrzehnten in der Praxis hervorragend, obwohl er vom Standpunkt der Theorie einen \enquote{Schönheitsfehler} hat: Es handelt sich nicht um einen polynomiellen Algorithmus\index{polynomieller Algorithmus}\index{Algorithmus!polynomieller}. Genauer: \textit{Es ist keine Pivotierungsregel bekannt, bei deren Verwendung das Simplexverfahren zu einem Algorithmus mit polynomieller Laufzeit wird}. Verwendet man beispielsweise die Regel vom größten Koeffizienten, so erkennt man anhand der Klee-Minty-Beispiele, dass kein polynomieller Algorithmus vorliegt.
+
+\textit{Es war viele Jahre ebenfalls eine offene Frage, ob es überhaupt einen polynomiellen Algorithmus für Lineare Programmierung gibt}.
+
+Im Jahr 1979 gelang es \textit{L. Khachiyan}, diese Frage zu beantworten: Das erregte damals großes Aufsehen und die größten Tageszeitungen der Welt berichteten darüber -- teilweise auf der ersten Seite. Allerdings stellten die meisten Journalisten die Sache als einen Durchbruch mit unmittelbaren Auswirkungen auf die Praxis dar -- was gewiss nicht zutraf.
+
+Was Khachiyan in einer wissenschaftlichen Publikation dargestellt hatte, war dies: Er griff ein Verfahren namens \textit{Ellipsoid-Methode}\index{Ellipsoid-Methode}\index{Methode!Ellipsoid-} auf, das zuvor von Shor, Judin und Nemirovski für nichtlineare Optimierungsprobleme entwickelt worden war, und wies nach, dass diese Methode bei entsprechender Anpassung zu einem polynomiellen Algorithmus für Lineare Programmierung führt.
+
+\begin{SKBox}
+Mit der Ellipsoid-Methode lag also zum ersten Mal ein polynomieller Algorithmus für Lineare Programmierung vor. 
+\end{SKBox}
+
+Besonders interessant ist die Ellipsoid-Methode auch deshalb, weil an LP-Probleme auf eine völlig andere Art herangegangen wird als beim Simplexverfahren. \textit{Schon allein wegen dieses frappierenden Unterschieds lohnt es sich, die Ellipsoid-Methode zumindest in ihren Grundzügen zu kennen}.
+
+Im Folgenden werden die \textit{Grundideen der Ellipsoid-Methode} vorgestellt, wobei wir teilweise der Darstellung des folgenden Lehrbuchs folgen:
+\begin{itemize}
+\item J. Matou\v{s}ek, B. Gärtner: \textit{Understanding and Using Linear Programming}. Springer-Verlag. Berlin Heidelberg (2007).
+\end{itemize}
+
+Ein weiterer polynomieller Algorithmus für Lineare Programmierung wurde im Jahre 1984 von \textit{N. Karmarkar} präsentiert; es handelt sich dabei um eine \textit{Innere-Punkte-Methode}\index{Innere-Punkte-Methode}\index{Methode!Innere-Punkte-}. Ebenfalls auf der Basis des genannten Lehrbuchs werden wir auch Innere-Punkte-Methoden behandeln -- zumindest werden wir einige der Grundideen kennenlernen.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Eingabelänge eines LP-Problems und der Begriff                          %
+%  des polynomiellen Algorithmus"                                              %
+%------------------------------------------------------------------------------%
+
+\section{Die Eingabelänge eines LP-Problems und der Begriff des polynomiellen Algorithmus}
+\label{section:14:2}
+
+Um genau festzulegen, was unter einem polynomiellen Algorithmus für Lineare Programmierung verstanden werden soll, haben wir zunächst die Eingabelänge\index{Eingabelänge} eines LP-Problems zu definieren. \textit{Grob gesagt versteht man unter der Eingabelänge eines LP-Problems die Gesamtzahl der Bits, die nötig sind, um sämtliche in der Zielfunktion und in den Nebenbedingungen auftretenden Koeffizienten in Binärdarstellung aufzuschreiben} (vgl. auch Seite \pageref{page:5:1}).
+
+Dies soll nun präzisiert werden. Ist eine ganze Zahl $i$ gegeben, so verstehen wir unter der \textit{Bitlänge von $i$}\index{Bitlänge} die folgende mit $\langle i \rangle$ bezeichnete Zahl:
+\[
+\langle i \rangle = \bigl\lceil \log_2{(|i|+1)} \bigr\rceil + 1.
+\]
+
+\textit{Erläuterung}: Für $i \neq 0$ ist $\lceil \log_2{(|i|+1)} \rceil$ die Anzahl der benötigten Bits, um $|i|$ in Binärdarstellung zu kodieren; ein weiteres Bit kommt hinzu, um das Vorzeichen festzulegen. Für $i=0$ gilt $\langle i \rangle = 1$ (wegen $\log_2{(1)}=0$).
+
+Liegt eine rationale Zahl $r = \frac{p}{q}$ vor (für $p,q \in \Z$ mit $q \neq 0$), so definieren wir die \textit{Bitlänge von $r$} durch
+\[
+\langle r \rangle = \langle p \rangle + \langle q \rangle.
+\]
+
+Haben wir es mit einem Vektor $v = (v_1,\ldots,v_n)$ zu tun, dessen Einträge $v_i$ rationale Zahlen sind, so definieren wir die \textit{Bitlänge von $v$} durch
+\[
+\langle v \rangle = \sum\limits_{i=1}^{n}{\langle v_i \rangle}.
+\]
+
+Ähnlich verfahren wir mit Matrizen: Ist $A = (a_{ij})$ eine $m \times n$ - Matrix mit rationalen Einträgen (d.h. $a_{ij} \in \Q$), so sei
+\[
+\langle A \rangle = \sum\limits_{i=1}^{m}{\sum\limits_{j=1}^{n}{\langle a_{ij} \rangle}}.
+\]
+
+Bislang haben wir meistens angenommen, dass ein LP-Problem in Standardform (vgl. Skript Seite \pageref{eq:1:7}) vorliegt. Davon soll jetzt leicht abgewichen werden: In diesem Abschnitt soll -- sofern nichts anderes gesagt ist -- vorausgesetzt werden, dass LP-Probleme in der folgenden Form vorliegen:
+\begin{equation}
+\label{eq:14:1}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\leq &\ b.
+\end{alignedat}
+\end{equation}
+
+In der Darstellung (\ref{eq:14:1}) ist $A$ eine $m \times n$ - Matrix; $c$ und $x$ sind Vektoren der Länge $n$ und $b$ ist ein Vektor der Länge $m$.
+
+Der Unterschied zwischen der Darstellung (\ref{eq:14:1}) und der bislang bevorzugten Standardform besteht lediglich darin, dass mit Nichtnegativitätsbedingungen etwas anders umgegangen wird: Während in der Standardform die Nichtnegativitätsbedingungen gesondert hingeschrieben werden (in der Form $x~\geq~0$), haben möglicherweise vorhandene Nichtnegativitätsbedingungen\index{Nichtnegativitätsbedingungen}\ in der Darstellung (\ref{eq:14:1}) keinen Sonderstatus mehr. Anders gesagt: Nichtnegativitätsbedingungen können in (\ref{eq:14:1}) vorhanden sein; sie sind jedoch -- wie alle anderen Nebenbedingungen -- Teil der Forderung $Ax \leq b$.
+
+Jedes LP-Problem kann auf einfache Weise in die Form (\ref{eq:14:1}) umgeschrieben werden. Ein \textbf{Beispiel} hierzu: Es liege das LP-Problem
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\  x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& x_1 &\ + &\ 5x_2 &\ + &\ 2x_3 &\ \leq &\ 1 \\
+&&     &    &\  x_2 &\ - &\ 3x_3 &\ \leq &\ 5 \\
+&& & & & & \llap{$x_1$} &\ \geq &\ 0 
+\end{alignedat}
+\end{align*}
+
+vor. Dann kann die Nichtnegativitätsbedingung in die Form $-x_1 \leq 0$ gebracht werden. In der Darstellung (\ref{eq:14:1}) lautet dieses LP-Problem dann
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\leq &\ b,
+\end{alignedat}
+\end{align*}
+
+wobei $c^T = (3,2,1)$, $A = \begin{pmatrix} 1 & 5 & 2 \\ 0 & 1 & -3 \\ -1 & 0 & 0 \end{pmatrix}$ und $b = \begin{pmatrix} 1 \\ 5 \\ 0 \end{pmatrix}$ und gilt.
+
+Liegt ein LP-Problem $L$ in der Form (\ref{eq:14:1}) vor und sind alle Koeffizienten in $A$, $b$ und $c$ rational, so definieren wir die \textit{Bitlänge von $L$}\index{Bitlänge} durch
+\[
+\langle L \rangle = \langle A \rangle + \langle b \rangle + \langle c \rangle.
+\]
+
+Statt \enquote{Bitlänge} sagen wir auch \textit{Eingabelänge}\index{Eingabelänge} oder \textit{Kodierungslänge}\index{Kodierungslänge}.
+
+Wir betrachten auch im Folgenden nur LP-Probleme der Form (\ref{eq:14:1}), bei denen alle Einträge der Matrix $A$ sowie der Vektoren $b$ und $c$ aus der Menge $\Q$ der rationalen Zahlen stammen, was vom Standpunkt der Praxis und der Laufzeitanalyse eine vernünftige Annahme ist. Wir kommen nun zur grundlegenden Definition.
+
+\begin{Definition}[Definition]
+Ein Algorithmus wird \textit{polynomieller Algorithmus für Lineare Programmierung}\index{polynomieller Algorithmus für Lineare Programmierung} genannt, falls ein Polynom $p(x)$ existiert, für das gilt: Ist $L$ ein LP-Problem der Form (\ref{eq:14:1}) mit rationalen Einträgen für $A$, $b$ und $c$, so findet der Algorithmus eine optimale Lösung von $L$ in höchstens $p(\langle L \rangle)$ Schritten bzw. liefert in höchstens $p(\langle L \rangle)$ Schritten eine der beiden Feststellungen \enquote{$L$ ist unlösbar} oder \enquote{$L$ ist unbeschränkt}.
+\end{Definition}
+
+Dabei werden die Schritte in einem der üblichen Modelle gezählt, beispielsweise im Turingmaschinen-Modell oder im RAM-Modell von Shepherdson und Sturgis. Im vorliegenden Kontext spielt es keine Rolle, welches der üblichen Maschinenmodelle zugrunde liegt: Was beispielsweise im RAM-Modell mit einer polynomiellen Anzahl von Schritten durchführbar ist, ist im Turingmaschinen-Modell ebenfalls mit einer polynomiellen Anzahl von Schritten durchführbar; und umgekehrt. Die entsprechenden Polynome können jedoch -- abhängig vom zugrundeliegenden Maschinenmodell -- für ein und denselben Algorithmus höchst unterschiedlich ausfallen.
+
+Auf eines sei ausdrücklich hingewiesen: Bei Operationen mit Zahlen werden die Schritte \textit{bitweise} gezählt. Werden beispielsweise zwei Zahlen addiert, so wird dies nicht -- wie in anderen Situationen üblich -- als ein einzelner Schritt angesehen, sondern die Zahl der benötigten Schritte ist abhängig von der Bitlänge der beteiligten Zahlen. (\enquote{Große Zahlen zu addieren dauert länger als die Addition kleiner Zahlen.})
+
+Wir kommen noch einmal kurz auf die \textit{Klee-Minty-Beispiele}\index{Beispiele von Klee und Minty}\index{Klee und Minty!Beispiele von} zurück: Um anhand dieser Beispiele zu erkennen, dass es sich beim Simplexverfahren (mit der Regel vom größten Koeffizienten) nicht um einen polynomiellen Algorithmus handelt, reicht es nicht aus festzustellen, dass für das Klee-Minty-Beispiel mit $n$ Variablen $2^n-1$ Iterationen nötig sind. Man hat sich außerdem um die Eingabelänge der Klee-Minty-Beispiele zu kümmern. Weshalb? Nun, es muss sichergestellt sein, dass die Eingabelänge dieser Beispiele nicht ebenfalls exponentiell in $n$ wächst. \textit{Dass dies nicht der Fall ist, erkennt man anhand der folgenden Feststellungen}: Ist $L_n$ das Klee-Minty-Beispiel mit $n$ Variablen (vgl. Abschnitt \ref{section:5:1}), so ist der größte Koeffizient, der in diesem Beispiel als Eintrag von $A$, $b$ oder $c$ auftritt, gleich ${100}^{n-1}$. Obwohl ${100}^{n-1}$ auf den ersten Blick recht groß erscheint, ist die Bitlänge dieser Zahl gar nicht so \enquote{schrecklich} groß, sondern nur von der Größenordnung $O(n)$. (Man beachte, dass $\log_2{\left( {100}^{n-1} \right)} = (n-1) \cdot \log_2{(100)}$ gilt.) Da in $L_n$ insgesamt nur $O(n^2)$ Zahlen vorkommen, erhält man $\langle L_n \rangle = O(n^3)$, d.h., die Eingabelänge wächst (wie behauptet) keineswegs exponentiell in $n$.
+
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ellipsen im R^2"                                                            %
+%------------------------------------------------------------------------------%
+
+\section{\texorpdfstring{Ellipsen im $\R^2$}{Ellipsen im R\^{}2}}
+\label{section:14:3}
+
+Wir beginnen mit grundlegenden geometrischen Sachverhalten, wobei wir teilweise der Darstellung in W. Schäfer, K. Georgi, G. Trippler: \textit{Mathematik-Vorkurs} (Teubner, 2006) folgen.
+
+Sind zwei Punkte $P$ und $F$ des $\R^2$ gegeben, so bezeichnen wir mit $\overline{PF}$ den euklidischen Abstand dieser Punkte. Für $P=(x_1,y_1)$ und $F=(x_2,y_2)$ gilt demnach
+\[
+\overline{PF} = \sqrt{{(x_1-x_2)}^2 + {(y_1-y_2)}^2}.
+\]
+Die Verbindungsstrecke zwischen $P$ und $F$ bezeichnen wir mit $PF$. Unter einem \textit{Kreis mit Mittelpunkt $F$}\index{Kreis} versteht man bekanntlich die Menge aller Punkte $P=(x,y)$, für die der Abstand von $F$ gleich einer positiven Konstanten ist. Bezeichnen wir diese Konstante mit $a$, so gilt demnach für alle Punkte $P$ auf dem betrachteten Kreis:
+\[
+\overline{PF} = a.
+\]
+
+Dabei gilt $a > 0$ und, wie jeder weiß, nennt man $a$ den \textit{Radius}\index{Radius} des Kreises; die Größe $2a$ ist der \textit{Durchmesser}\index{Durchmesser}.
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(-2,-1.5)(2,1.5)
+\footnotesize
+
+\pscircle(0,0){1.5}
+\pscircle*(0,0){0.075}
+\psrotate(0,0){45}{
+  \pscircle*(1.5,0){0.075}
+	\psline(0,0)(1.5,0)}
+\uput{0.15}[270](0,0){$F$}
+\uput{0.15}[  0](1.1, 1.1){$P$}
+\uput{0.15}[100](0.5, 0.5){$a$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Während bei einem Kreis ein einziger Punkt $F$ betrachtet wird, der Mittelpunkt des Kreises genannt wird, sind bei einer Ellipse zwei Punkte $F_1$ und $F_2$ gegeben, die \textit{Brennpunkte}\index{Brennpunkt} der Ellipse genannt werden. Bei einem Kreis wird verlangt, dass der Abstand von $F$ konstant ist, während es bei einer Ellipse um die \textit{Abstandssumme}\index{Abstandssumme}
+\[
+\overline{PF_1} + \overline{PF_2}
+\]
+
+geht: \textit{Bei einer Ellipse wird verlangt, dass die Abstandssumme $\overline{PF_1} + \overline{PF_2}$ konstant ist} und man bezeichnet diese konstante Abstandssumme mit $2a$; es soll also $\overline{PF_1} + \overline{PF_2} = 2a$ gelten. Ähnlich wie wir bei einem Kreis vorausgesetzt haben, dass $a > 0$ gilt, setzen wir hierbei $2a > \overline{F_1F_2}$ voraus; ebenso gut können wir hierfür natürlich auch $a > \frac{\overline{F_1F_2}}{2}$ schreiben.
+
+In der nachfolgenden Definition wird das Gesagte zusammengefasst.
+
+\begin{Definition}[Definition]
+Gegeben seien Punkte $F_1, F_2 \in \R^2$ sowie $a \in \R$ mit $a > \frac{\overline{F_1F_2}}{2}$. Unter einer \textit{Ellipse mit den Brennpunkten $F_1$ und $F_2$}\index{Ellipse} versteht man die Menge aller Punkte $P=(x,y) \in \R^2$, für die gilt:
+\[
+\overline{PF_1} + \overline{PF_2} = 2a.
+\]
+\end{Definition}
+
+Ist eine Ellipse mit den Brennpunkten $F_1$ und $F_2$ gegeben, so bezeichnen wir den Mittelpunkt der Strecke $F_1F_2$ als den \textit{Mittelpunkt der Ellipse}\index{Mittelpunkt einer Ellipse}\index{Ellipse!Mittelpunkt einer}. In der folgenden Zeichnung liegen die Brennpunkte auf der $x$-Achse und der Mittelpunkt $Z$ der Ellipse ist gleich dem Ursprung des Koordinatensystems:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(-4,-2)(4,2)
+\footnotesize
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-4,-2)(4,2)
+\uput{0.15}[315](0,0){$Z$}
+\uput{0.15}[270](4,0){$x$}
+\uput{0.15}[180](0,2){$y$}
+
+\psellipse[linewidth=1pt](0,0)(3,1.5) 
+\uput{0.10}[225](-3,0){$A_1$} \uput{0.10}[315](3,0){$A_2$}
+\uput{0.10}[315](0,-1.5){$B_1$} \uput{0.10}[45](0,1.5){$B_2$}
+\pscircle*( 2,0){0.075} \uput{0.15}[270](2,0){$F_2$}
+\pscircle*(-2,0){0.075} \uput{0.15}[270](-2,0){$F_1$}
+
+\psline(2,0)(0,1.49) \psline(-2,0)(0,1.49)
+\psline(2,0)(-2,1.105) \psline(-2,0)(-2,1.11)
+
+\small
+\end{pspicture}
+\end{center}
+
+Wir betrachten zunächst nur Ellipsen, deren Brennpunkte (wie in der Zeichnung) auf der $x$-Achse symmetrisch zum Ursprung liegen.
+
+Wie in der Zeichnung angegeben, seien $A_1$ und $A_2$ die Schnittpunkte der Ellipse mit der $x$-Achse; $B_1$ und $B_2$ seien die Schnittpunkte mit der $y$-Achse. Wir wollen die Größe $a$ anhand der Zeichnung geometrisch interpretieren. Da der Punkt $A_2$ auf der Ellipse liegt, gilt
+\begin{equation}
+\label{eq:14:2}
+\overline{A_2F_1} + \overline{A_2F_2} = 2a.
+\end{equation}
+
+Wegen der symmetrischen Lage der Ellipse gilt $\overline{A_1F_1} = \overline{A_2F_2}$; man erhält
+\[
+\overline{A_1A_2} \ = \ \overline{A_2F_1} + \overline{A_1F_1} \ = \ \overline{A_2F_1} + \overline{A_2F_2} \ \stackrel{(\ref{eq:14:2})}{=} \ 2a.
+\]
+
+\textit{Damit haben wir die geometrische Interpretation der Größen $2a$ bzw. $a$ gefunden}: Es gilt $\overline{A_1A_2}=2a$ und somit $a = \overline{A_1Z} = \overline{A_2Z}$.
+
+Die Strecke $A_1A_2$ auf der $x$-Achse sowie die Strecke $B_1B_2$ auf der $y$-Achse nennt man die \textit{Achsen der Ellipse}; entsprechend werden die Strecken $A_1Z$, $A_2Z$, $B_1Z$ und $B_2Z$ \textit{Halbachsen der Ellipse}\index{Halbachsen einer Ellipse}\index{Ellipse!Halbachsen einer} genannt. Wir halten fest:
+
+\begin{center}
+\textit{$a$ gibt die Länge der Halbachse $A_1Z$ (bzw. $A_2Z$) an (\enquote{lange Halbachse}\index{lange Halbachse}\index{Halbachse!lange})}.
+\end{center}
+
+Nun betrachten wir die andere Achse der Ellipse und setzen $b = \overline{B_1Z} = \overline{B_2Z}$. Somit gilt:
+
+\begin{center}
+\textit{$b$ gibt die Länge der Halbachse $B_1Z$ (bzw. $B_2Z$) an (\enquote{kurze Halbachse}\index{kurze Halbachse}\index{Halbachse!kurze})}.
+\end{center}
+
+Durch Betrachtung des Dreiecks $B_2ZF_2$ erkennt man übrigens, dass tatsächlich $a \geq b$ gilt. (Hinweis: Aus $\overline{B_2F_1} + \overline{B_2F_2} = 2a$ folgt $\overline{B_2F_2} = a$.) Die Namen \enquote{lange Halbachse} und \enquote{kurze Halbachse} sind also gerechtfertigt.
+
+Wir betrachten nach wie vor eine Ellipse mit Mittelpunkt $Z=(0,0)$, deren Brennpunkte auf der $x$-Achse liegen; die Bezeichnungen seien wie bisher gewählt. Wir wollen eine solche Ellipse jetzt mithilfe der sogenannten \textit{Mittelpunktsgleichung} beschreiben. Um zu erkennen, worum es dabei geht, orientieren wir uns am Beispiel eines Kreises. Ist ein Kreis mit Mittelpunkt $Z=(0,0)$ und Radius $a>0$ gegeben, so liegt ein Punkt $P=(x,y)$ genau dann auf diesem Kreis, wenn der Abstand von $P$ und $Z$ gleich $a$ ist, d.h., wenn
+\[
+\sqrt{x^2+y^2} = a
+\]
+
+gilt. Durch Quadrieren und anschließendes Teilen durch $a^2$ geht diese Gleichung in die folgende äquivalente Form über:
+\begin{equation}
+\label{eq:14:3}
+\frac{x^2}{a^2} + \frac{y^2}{a^2} = 1.
+\end{equation}
+
+Ein Punkt $P=(x,y)$ liegt also genau dann auf dem Kreis mit Mittelpunkt $Z=(0,0)$ und Radius $a$, wenn die Gleichung (\ref{eq:14:3}) erfüllt ist. \textit{Wir behaupten nun, dass unsere Ellipse durch eine Gleichung beschrieben werden kann, die der Gleichung (\ref{eq:14:3}) sehr ähnlich ist}. Dies ist der Inhalt des folgenden Satzes.
+
+\begin{Satz}[Satz (Mittelpunktsgleichung der Ellipse mit Mittelpunkt $\mathbf{Z=(0,0)}$ und Brennpunkten auf der $\mathbf{x}$-Achse)]
+\index{Mittelpunktsgleichung einer Ellipse}
+\index{Ellipse!Mittelpunktsgleichung einer}
+Gegeben sei eine Ellipse mit Mittelpunkt $Z=(0,0)$, deren Brennpunkte auf der $x$-Achse liegen; die Bezeichnungen $a$ und $b$ für die Halbachsenlängen seien wie bisher gewählt. Dann gilt: Ein Punkt $P=(x,y)$ liegt genau dann auf der Ellipse, wenn die Gleichung
+\begin{equation}
+\label{eq:14:4}
+\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1.
+\end{equation}
+
+erfüllt ist.
+\end{Satz}
+
+Einen Beweis dieses Satzes findet man beispielsweise im zuvor genannten Buch von W. Schäfer et al.
+
+Es sei darauf hingewiesen, dass unsere Definition des Begriffs \textit{Ellipse} so abgefasst ist, dass Kreise spezielle Ellipsen sind: Ein Kreis liegt genau dann vor, wenn in der Definition einer Ellipse der spezielle Fall $F_1=F_2$ vorliegt; in diesem Fall gilt $a=b$. (\textit{Aufgabe}: Man überlege sich, weshalb in der Definition einer Ellipse die Voraussetzung $a > \frac{\overline{F_1F_2}}{2}$ gemacht wurde.)
+
+Bislang haben wir Ellipsen mithilfe von Brennpunkten beschrieben. Für die Ellipsoid-Methode benötigen wir allerdings eine etwas andere Beschreibung, in der unter anderem \textit{Matrizen} vorkommen. In dieser Beschreibung wird an die anschauliche Vorstellung angeknüpft, dass Ellipsen \enquote{deformierte Kreise} sind; es werden also Streckungen und Stauchungen eine Rolle spielen. Außerdem sollen Ellipsen beispielsweise auch gedreht oder parallel verschoben werden. Um all dies zu präzisieren, benötigen wir den Begriff der \textit{linearen Abbildung}\index{lineare Abbildung}\index{Abbildung!lineare} und darüber hinaus auch den Begriff der \textit{affinen Abbildung}\index{affine Abbildung}\index{Abbildung!affine}.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Lineare und affine Abbildungen"                                             %
+%------------------------------------------------------------------------------%
+
+\section{Lineare und affine Abbildungen}
+\label{section:14:4}
+
+Gegeben sei eine reelle $m \times n$ - Matrix $A$. Mithilfe von $A$ definieren wir eine Abbildung
+\[
+f: \R^n \rightarrow \R^m,
+\]
+
+indem wir festlegen: $f(x) = Ax$ für alle $x \in \R^n$; hierbei ist $x = {(x_1,\ldots,x_n)}^T$ ein Spaltenvektor.
+
+Da die obige Abbildung $f$ mithilfe der Matrix $A$ gebildet wurde, bezeichnen wir sie gelegentlich auch mit $f_A$. Um das Bild von $x$ unter der Abbildung $f_A$ zu bestimmen, hat man also nichts weiter zu tun, als das Produkt $Ax$ zu bilden. Gilt beispielsweise
+\[
+A = \begin{pmatrix} 7 & 5 & 2 \\ 3 & -1 & 3 \end{pmatrix},
+\]
+
+so handelt es sich bei $f_A$ um eine Abbildung vom Typ $\R^3 \rightarrow \R^2$ und das Bild eines Vektors $x = {(x_1,x_2,x_3)}^T$ ist gegeben durch
+\[
+f_A(x) = \begin{pmatrix} 7x_1 + 5x_2 + 2x_3 \\ 3x_1 -\ \ x_2 + 3x_3 \end{pmatrix}.
+\]
+
+Ist $f: \R^n \rightarrow \R^m$ eine Abbildung, die wie zuvor beschrieben von einer $m \times n$ - Matrix $A$ abstammt (d.h. $f(x) = Ax$ für alle $x \in \R^n$), so nennt man $f$ eine \textit{lineare Abbildung}\index{lineare Abbildung}\index{Abbildung!lineare} von $\R^n$ nach $\R^m$.
+
+Zwei wichtige Rechenregeln, die für alle linearen Abbildungen gelten:
+\index{Rechenregeln für lineare Abbildungen}
+\index{lineare Abbildung!Rechenregeln für}
+\begin{align}
+\label{eq:14:5}
+f(x+y) &= f(x) + f(y) \\
+\label{eq:14:6}
+f(c \cdot x) &= c \cdot f(x) \qquad (\text{für } c \in \R).
+\end{align}
+
+Dass diese beiden Regeln tatsächlich für alle $x,y \in \R^n$ und alle $c \in \R$ gelten, ergibt sich unmittelbar aus entsprechenden Regeln der Matrizenrechnung: Wenn $f$ eine lineare Abbildung ist, so gibt es eine Matrix $A$ mit $f(x)=Ax$ für alle $x \in \R^n$; es folgt (wie behauptet):
+\begin{align*}
+f(x+y) &= A(x+y) \ = \ Ax + Ay \ = \ f(x) + f(y) \\
+f(c \cdot x) &= A(c \cdot x) \ = \ c \cdot (Ax) \ = \ c \cdot f(x).
+\end{align*}
+
+Eine kurze \textit{Nebenbemerkung} zur Rolle der Rechenregeln (\ref{eq:14:5}) und (\ref{eq:14:6}): Es lässt sich (unschwer) zeigen, dass es außer den Abbildungen, die wie beschrieben mithilfe von Matrizen $A$ gebildet werden, keine weiteren Abbildungen $f: \R^n \rightarrow \R^m$ gibt, die die beiden Eigenschaften (\ref{eq:14:5}) und (\ref{eq:14:6}) besitzen. Aus diesem Grund hätten wir ebenso gut definieren können, dass eine Abbildung $f: \R^n \rightarrow \R^m$ \textit{lineare Abbildung} genannt wird, falls (\ref{eq:14:5}) und (\ref{eq:14:6}) für alle $x,y \in \R^n$ und $c \in \R$ gelten. Diese Möglichkeit, den Begriff der linearen Abbildung zu definieren, werden Sie in den meisten Lehrbüchern der Linearen Algebra finden.
+
+Nach dieser Nebenbemerkung wollen wir uns einige Beispiele für lineare Abbildungen $f: \R^2 \rightarrow \R^2$ anschauen. Wir beginnen mit einem besonders einfachen Beispiel.
+
+\textbf{Beispiel 1}. Es sei $A = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ und $x = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$. Dann gilt $Ax=x$, d.h., bei der dazugehörigen linearen Abbildung handelt es sich um die \textit{Identität}\index{Identität}.
+
+\bigskip
+In den folgenden Beispielen gelte, wenn nichts anderes gesagt ist, $x = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \in \R^2$.
+\bigskip
+
+\textbf{Beispiel 2}. Es sei $A = \begin{pmatrix} a & 0 \\ 0 & a \end{pmatrix}$. Dann gilt $Ax = \begin{pmatrix} a & 0 \\ 0 & a \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \begin{pmatrix} ax_1 \\ ax_2 \end{pmatrix} = ax$. Jeder Vektor $x$ wird also auf sein $a$-faches abgebildet. Ist $a>1$, so handelt es sich um eine \textit{Streckung}\index{Streckung} mit dem Faktor $a$. (Man gebe ähnliche Beschreibungen für die Fälle $0<a<1$, $a=0$ und $a<0$.)
+
+\textbf{Beispiel 3}. Es sei $A = \begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix}$ für $a>0$ und $b>0$. Dann gilt $Ax = \begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \begin{pmatrix} ax_1 \\ bx_2 \end{pmatrix}$. Man erhält also das Bild eines Vektors $x = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$, indem man die erste Komponente von $x$ mit $a$ und die zweite mit $b$ multipliziert. Wir wollen uns anschauen, wohin bei dieser Abbildung die Einheitsvektoren\index{Einheitsvektor}\index{Vektor!Einheits-}
+\[
+e_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+\quad \text{und} \quad
+e_2 = \begin{pmatrix} 0 \\ 1 \end{pmatrix}
+\]
+abgebildet werden. Es gilt
+\[
+Ae_1 = A\begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} a \\ 0 \end{pmatrix}
+\quad \text{und} \quad
+Ae_2 = A\begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 0 \\ b \end{pmatrix},
+\]
+
+d.h. für $a>1$ und $b>1$, dass der erste Einheitsvektor $e_1$ um den Faktor $a$ gestreckt wird, während $e_2$ um den Faktor $b$ gestreckt wird. (Für $a \leq 1$ bzw. $b \leq 1$ gebe man ähnliche Interpretationen.)
+
+Wir wollen uns zusätzlich anschauen, wohin bei der Abbildung aus Beispiel 3 der Einheitskreis abgebildet wird. Zur Erinnerung: Unter dem \textit{Einheitskreis} versteht man die Menge aller $(x_1,x_2) \in \R^2$, für die gilt:
+\begin{equation}
+\label{eq:14:7}
+x_1^2 + x_2^2 = 1.
+\end{equation}
+
+\begin{Definition}[Behauptung]
+Es gelte (wie in Beispiel 3 vorausgesetzt) $a>0$, $b>0$. Dann wird der Einheitskreis durch die lineare Abbildung
+\[
+\begin{pmatrix} x_1 \\ x_2 \end{pmatrix} 
+\mapsto
+\begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} 
+=
+\begin{pmatrix} ax_1 \\ bx_2 \end{pmatrix} 
+\]
+
+auf die Ellipse abgebildet, die gegeben ist durch
+\begin{equation}
+\label{eq:14:8}
+\frac{x_1^2}{a^2} + \frac{x_2^2}{b^2} = 1.
+\end{equation}
+\end{Definition}
+
+Die Richtigkeit dieser Behauptung ist leicht ersichtlich: Der Punkt $(x_1,x_2)$ liegt genau dann auf dem Einheitskreis, wenn $x_1^2 + x_2^2 = 1$ gilt; der Punkt $(ax_1, bx_2)$ liegt genau dann auf der Ellipse, die durch (\ref{eq:14:8}) gegeben ist, wenn
+\[
+\frac{{\left( ax_1 \right)}^2}{a^2} + \frac{{\left( bx_2 \right)}^2}{b^2} = 1
+\]
+gilt. Hieraus ergibt sich die Behauptung, da offenbar Folgendes gilt:
+\[
+x_1^2 + x_2^2 = 1 \quad \Longleftrightarrow \quad \frac{{(ax_1)}^2}{a^2} + \frac{{(bx_2)}^2}{b^2} = 1.
+\]
+
+Bislang hatten wir uns vornehmlich auf Ellipsen konzentriert, deren Brennpunkte symmetrisch zum Ursprung auf der $x_1$-Achse liegen: Ist eine derartige Ellipse gegeben, so haben wir weiter oben festgestellt, dass $a \geq b$ gilt. Dabei ist der Fall $a=b$ der Spezialfall, dass ein Kreis vorliegt.
+
+\textit{Frage}: Welcher Typ von Ellipse wird in (\ref{eq:14:8}) beschrieben, wenn $b>a$ gilt?
+
+\textit{Antwort}: In diesem Fall liegt eine Ellipse vor, deren Brennpunkte symmetrisch zum Ursprung auf der $x_2$-Achse liegen. In diesem Fall ist der Mittelpunkt der Ellipse nach wie vor $Z=(0,0)$, \textit{die lange Achse und die Brennpunkte liegen jedoch auf der $x_2$-Achse}. Man kann die Sache auch so sehen: Eine Ellipse mit Brennpunkten auf der $x_1$-Achse wurde um $90^\circ$ gedreht, wodurch eine Ellipse entstanden ist, deren Brennpunkte auf der $x_2$-Achse liegen.
+
+Natürlich gibt es auch Ellipsen, deren Brennpunkte weder auf der $x_1$- noch auf der $x_2$-Achse liegen. Diese Ellipsen lassen sich mithilfe von \textit{Drehungen}\index{Drehung} und \textit{Translationen}\index{Translation} (Parallelverschiebungen\index{Parallelverschiebung}) beschreiben. Dabei kann man sich auf Drehungen beschränken, deren Drehzentrum der Ursprung ist. Derartige Drehungen werden im nachfolgenden Beispiel behandelt.
+
+\textbf{Beispiel 4}. Es sei $A=\begin{pmatrix} \cos\alpha & -\sin\alpha \\ \sin\alpha & \cos\alpha \end{pmatrix}$ für $0 \leq \alpha \leq 2\pi$. Es handelt sich um eine \textit{Drehung}\index{Drehung} um den Winkel $\alpha$ (entgegen dem Uhrzeigersinn und mit dem Ursprung als Drehzentrum).
+
+Um dies einzusehen, verwenden wir Polarkoordinaten\index{Polarkoordinaten}: Für $(x,y) \neq (0,0)$ gelte (siehe Skizze)
+\[
+\begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} r\cos\varphi \\ r\sin\varphi \end{pmatrix}.
+\]
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=1cm}
+\begin{pspicture}(-3,-1.5)(8,2.5)
+\psaxes[labels=none,ticks=none]{->}(0,0)(-3,-1.5)(8,2.5)
+\psline{->}(0,0)(3,1.5)
+\psline[linestyle=dotted,linewidth=0.5pt](0,1.5)(3,1.5)
+\psline[linestyle=dotted,linewidth=0.5pt](3,0)(3,1.5)
+\psarc{->}(0,0){1.5}{0}{27}
+
+\uput{0.1}[135](2,1){$r$}
+\uput{0.25}[270](1.5,0){$x = r \cos \varphi$}
+\uput{0.25}[180](0,0.75){$y = r \sin \varphi$}
+\uput{0.25}[27](3,1.5){$(x,y) = (r \cos \varphi, r \sin \varphi)$}
+\uput{1}[13.5](0,0){$\varphi$}
+
+\end{pspicture}
+\end{center}
+
+Es folgt 
+\begin{align*}
+A\begin{pmatrix} r\cos\varphi \\ r\sin\varphi \end{pmatrix}  
+&= \begin{pmatrix} \cos\alpha & -\sin\alpha \\ \sin\alpha & \cos\alpha \end{pmatrix}\begin{pmatrix} r\cos\varphi \\ r\sin\varphi \end{pmatrix} \\
+&= \begin{pmatrix} r(\cos\alpha \cdot \cos\varphi - \sin\alpha \cdot \sin\varphi) \\ r(\sin\alpha \cdot \cos\varphi + \cos\alpha \cdot \sin\varphi) \end{pmatrix} \\
+&\stackrel{(\star)}{=} \begin{pmatrix} r\cos(\varphi+\alpha) \\ r\sin(\varphi + \alpha) \end{pmatrix}.
+\end{align*}
+
+\textit{$A$ bewirkt also eine Drehung der beschriebenen Art um den Winkel $\alpha$}.
+
+Die Gleichheit ($\star$) gilt aufgrund der bekannten \textit{Additionstheoreme}\index{Additionstheoreme} für $\sin$ und $\cos$, welche besagen, dass für alle $x_1, x_2 \in \R$ gilt:
+\begin{align*}
+\sin(x_1+x_2) &= \sin x_1\cos x_2 + \cos x_1\sin x_2 \\
+\cos(x_1+x_2) &= \cos x_1\cos x_2 - \sin x_1\sin x_2.
+\end{align*}
+
+
+Durch die Betrachtung von linearen Abbildungen haben wir eine neue Möglichkeit gewonnen, Ellipsen mit Mittelpunkt $Z=(0,0)$ darzustellen: \textit{Jede Ellipse mit Mittelpunkt $Z=(0,0)$ lässt sich aus dem Einheitskreis gewinnen, indem man zwei lineare Abbildungen nacheinander ausführt}. 
+
+Um welche Typen von linearen Abbildungen es sich dabei handelt, wird im Folgenden beschrieben:
+\begin{itemize}
+\item Die erste dieser beiden linearen Abbildungen ist eine Abbildung vom Typ
+\[
+\begin{pmatrix} x_1 \\ x_2 \end{pmatrix} 
+\mapsto
+\begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} 
+=
+\begin{pmatrix} ax_1 \\ bx_2 \end{pmatrix},
+\]
+
+wobei $a \geq b > 0$ gilt. Durch diese lineare Abbildung wird -- wie wir gesehen haben -- der Einheitskreis zu einer Ellipse \enquote{deformiert}, deren Brennpunkte symmetrisch zum Ursprung auf der $x_1$-Achse liegen; $a$ ist die Länge der langen Halbachse dieser Ellipse; $b$ ist die Länge der kurzen Halbachse.
+
+\item Durch die zweite dieser linearen Abbildungen wird die Ellipse anschließend gedreht, wobei der Ursprung $Z=(0,0)$ das Drehzentrum ist. Ist $\alpha$ der Drehwinkel, so lautet die dazugehörige Matrix
+\[
+A = \begin{pmatrix} \cos\alpha & -\sin\alpha \\ \sin\alpha & \cos\alpha \end{pmatrix}.
+\]
+\end{itemize}
+
+Die Matrix der ersten linearen Abbildung wollen wir mit $B$ bezeichnen, d.h.
+\[
+B = \begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix}.
+\]
+
+Führt man die beiden linearen Abbildungen nacheinander aus (\enquote{erst $B$, dann $A$}), so geht jeder Vektor $\begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \in \R^2$ über in den Vektor
+\[
+A \left( B \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \right).
+\]
+
+\textit{Handelt es sich bei dieser Nacheinanderausführung wiederum um eine lineare Abbildung?}
+
+Die Antwort lautet ja, wie man anhand der folgenden Gleichung sofort erkennt:
+\begin{equation}
+\label{eq:14:9}
+A \left( B \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \right) 
+=
+(AB) \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}.
+\end{equation}
+
+Die Gleichung (\ref{eq:14:9}) beruht auf dem Assoziativgesetz für die Matrizenmultiplikation. Man erkennt anhand von (\ref{eq:14:9}), welche Matrix zur Nacheinanderausführung der beiden linearen Abbildungen\index{Nacheinanderausführung von linearen Abbildungen}\index{lineare Abbildung!Nacheinanderausführung} gehört: \textit{Die Nacheinanderausführung wird durch die Produktmatrix $AB$ beschrieben}. Diese lautet wie folgt:
+\begin{equation}
+\label{eq:14:10}
+AB = \begin{pmatrix} a\cos\alpha & -b\sin\alpha \\ a\sin\alpha & b\cos\alpha \end{pmatrix}.
+\end{equation}
+
+Wir illustrieren das Gesagte noch einmal anhand einer Skizze:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(-5,-2)(5,14)
+\footnotesize
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,12)(-4,10)(4,14)
+\uput{0.15}[270](4,12){$x_1$}
+\uput{0.15}[180](0,14){$x_2$}
+\pscircle[linewidth=1pt](0,12){1}
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,6)(-4,4)(4,8)
+\uput{0.15}[270](4,6){$x_1$}
+\uput{0.15}[180](0,8){$x_2$}
+\psellipse[linewidth=1pt](0,6)(3,1.5)
+\psline[linewidth=1pt](-3,6)(3,6)
+\psline[linewidth=1pt](0,4.5)(0,7.5)
+\uput{0.15}[ 90](1.5,6){$a$}
+\uput{0.15}[180](0,6.75){$b$}
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-4,-2)(4,2)
+\uput{0.15}[270](4,0){$x_1$}
+\uput{0.15}[180](0,2){$x_2$}
+\psrotate(0,0){30}{
+  \psellipse[linewidth=1pt](0,0)(3,1.5)
+	\psline[linewidth=1pt](-3,0)(3,0)
+	\psline[linewidth=1pt](0,-1.5)(0,1.5)
+	\uput{0.15}[ 90](1.5,0){$a$}
+  \uput{0.15}[180](0,0.75){$b$}}
+\psarc(0,0){0.75}{0}{30}
+\uput{0.40}[15](0,0){$\alpha$}
+
+\psline{->}(-3,10.5)(-3,7.5)
+\uput{0.15}[180](-3,9){$f_B$}
+
+\psline{->}(-3,4.5)(-3,1.5)
+\uput{0.15}[180](-3,3){$f_A$}
+
+\psline{->}(-4.5,10.5)(-4.5,1.5)
+\uput{0.15}[180](-4.5,6){$f_{AB}$}
+
+\small
+\end{pspicture}
+\end{center}
+
+Es sei darauf hingewiesen, dass die Determinante\index{Determinante} der Matrix $AB$ aus (\ref{eq:14:10}) ungleich $0$ ist. Dies ergibt sich wie folgt:
+\begin{align*}
+\det{(AB)} 
+&= ab \cos^2\alpha + ab \sin^2\alpha \\
+&= ab \left( \cos^2\alpha + \sin^2\alpha \right) \\
+&= ab \ \neq \ 0.
+\end{align*}
+
+Wir setzen $M=AB$. Es gilt also $\det{M} \neq 0$, was bedeutet, dass es sich bei $M$ um eine reguläre Matrix\index{reguläre Matrix}\index{Matrix!reguläre} handelt\footnote{\enquote{Regulär} bedeutet dasselbe wie \enquote{nichtsingulär}; zum Unterschied zwischen singulären und nichtsingulären Matrizen, siehe auch Abschnitt \ref{section:8:5}.}. Das bedeutet insbesondere, dass die Zeilen von $M$ linear unabhängig sind -- ebenso wie die Spalten -- und dass $M^{-1}$ existiert. Außerdem gilt aufgrund der Regularität von $M$, dass die zu $M$ gehörige lineare Abbildung $f_M$ bijektiv ist. (Die Bijektivität von $f_M$ ergibt sich unmittelbar aus dem ersten Eintrag der linken Spalte auf Seite \pageref{page:8:2}.)
+
+Wir können das Ergebnis unserer bisherigen Überlegungen wie folgt aussprechen.
+
+\begin{Definition}[Feststellung 1]
+Ist $\mathcal{E}$ eine Ellipse mit Mittelpunkt $Z=(0,0)$, so gibt es eine reguläre Matrix $M$, so dass $\mathcal{E}$ das Bild des Einheitskreises unter der zu $M$ gehörigen linearen Abbildung $f_M$ ist.
+\end{Definition}
+
+Zu Feststellung 1 gibt es eine Umkehrung, die sich mit Mitteln der Linearen Algebra (Stichwort: Klassifikation der Quadriken im $\R^2$) beweisen lässt. Wir geben diese Umkehrung ohne Beweis als Feststellung 2 an.
+
+\begin{Definition}[Feststellung 2]
+Ist $M$ eine beliebige reguläre $2 \times 2$ - Matrix und $f_M : \R^2 \rightarrow \R^2$ die zu $M$ gehörige lineare Abbildung, so ist das Bild $f_M(C)$ des Einheitskreises $C$ immer eine Ellipse mit Mittelpunkt $Z=(0,0)$.
+\end{Definition} 
+
+Bislang haben wir ausschließlich Ellipsen behandelt, für die $Z=(0,0)$ galt, d.h., deren Mittelpunkt der Koordinatenursprung ist -- wie beispielsweise in der folgenden Zeichnung.
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(-4,-2)(4,2)
+\footnotesize
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-4,-2)(4,2)
+\pscircle*(0,0){0.075}
+\uput{0.15}[315](0,0){$Z=(0,0)$}
+
+\uput{0.15}[270](4,0){$x_1$}
+\uput{0.15}[180](0,2){$x_2$}
+
+\psrotate(0,0){20}{
+  \psellipse[linewidth=1pt](0,0)(3,1.5) }
+
+\small
+\end{pspicture}
+\end{center}
+
+Nun sollen die übrigen Ellipsen in die Betrachtung einbezogen werden. Das ist sehr einfach: Durch eine Translation\index{Translation}, die sich an die lineare Abbildung anschließt, kann der Ellipsenmittelpunkt an jeden beliebigen Ort verlegt werden. Statt \enquote{Translation} kann man auch \enquote{Parallelverschiebung}\index{Parallelverschiebung} sagen. Hier ist die genaue Definition.
+
+\begin{Definition}[Definition]
+Ist $s = \begin{pmatrix} s_1 \\ s_2 \end{pmatrix} \in \R^2$ ein fest gewählter Vektor, so wird unter der \textit{Translation} $T$ mit Translationsvektor $s$ die folgende Abbildung verstanden:
+\begin{align*}
+T: \R^2 &\longrightarrow \R^2 \\
+\begin{pmatrix} x_1 \\ x_2 \end{pmatrix} &\longmapsto \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} + \begin{pmatrix} s_1 \\ s_2 \end{pmatrix}
+\end{align*}
+\end{Definition}
+
+Bei einer Translation wird also zu jedem $x = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$ ein fester Vektor $s = \begin{pmatrix} s_1 \\ s_2 \end{pmatrix}$ addiert. Eine gegebene Ellipse wird dadurch parallel verschoben. Dabei ist auch der Fall, dass $s$ der Nullvektor ist, mit einbezogen; in diesem Fall ist $T$ nichts anderes als die Identität.
+
+\begin{Definition}[Definition]
+Unter einer \textit{affinen Abbildung}\index{affine Abbildung}\index{Abbildung!affine} $\R^2 \rightarrow \R^2$ versteht man eine Abbildung vom Typ
+\begin{equation}
+\label{eq:14:11}
+x \longmapsto Mx + s,
+\end{equation}
+
+wobei $M$ eine $2 \times 2$ - Matrix ist und $s \in \R^2$ ein fester Vektor.
+\end{Definition}
+
+Mit anderen Worten: \textit{Eine affine Abbildung\index{affine Abbildung}\index{Abbildung!affine} ist die Komposition einer linearen Abbildung mit einer anschließenden Translation}. (Beachte: Jede lineare Abbildung ist eine spezielle affine Abbildung, da für $s$ auch der Nullvektor zugelassen ist.)
+
+Aufgrund der vorangegangenen Ausführungen können wir feststellen: \textit{Ellipsen im $\R^2$ sind nichts anderes als die Bilder des Einheitskreises unter einer affinen Abbildung (\ref{eq:14:11}) mit einer regulären Matrix $M$}.
+
+Unter einem \textit{Ellipsoid} im $\R^2$ versteht man eine Ellipse zusammen mit ihrem Inneren (siehe Zeichnung).
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(-0.5,-0.5)(8,4.5)
+\footnotesize
+
+\psaxes[ticks=none,labels=none,linewidth=0.5pt]{->}(0,0)(-0.5,-0.5)(8,4.5)
+
+\psrotate(0,0){30}{
+  \psellipse[linewidth=1pt,fillstyle=vlines,hatchwidth=0.1pt](4.5,0)(3,1.5) }
+
+\small
+\end{pspicture}
+\end{center}
+
+Unter einer affinen Abbildung (\ref{eq:14:11}) mit regulärer Matrix $M$ geht das Innere des Einheitskreises in das Innere einer Ellipse über\footnote{Auf den (nicht schwierigen) Beweis dieser anschaulich einleuchtenden Feststellung wollen wir verzichten.}. Mit $B^2$ wollen wir den Einheitskreis zusammen mit seinem Inneren bezeichnen, d.h.\footnote{Man beachte, dass für $x = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$ gilt: $x^Tx = x_1^2 + x_2^2$.}
+\begin{equation}
+\label{eq:14:12}
+B^2 = \Bigl\{ x \in \R^2 : x^Tx \leq 1 \Bigr\}.
+\end{equation}
+
+Nach dem zuvor Gesagten ist ein Ellipsoid im $\R^2$ eine Menge der Form
+\begin{equation}
+\label{eq:14:13}
+E = \Bigl\{ Mx+s : x \in B^2 \Bigr\},
+\end{equation}
+
+wobei $M$ eine reguläre $2 \times 2$ - Matrix und $s \in \R^2$ ein Vektor ist.
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Ellipsoide im R^n"                                                          %
+%------------------------------------------------------------------------------%
+
+\section{\texorpdfstring{Ellipsoide im $\R^n$}{Ellipsoide im R\^{}n}}
+\label{section:14:5}
+\index{Ellipsoid}
+
+Die Einheitskreisscheibe (mit Rand) haben wir in (\ref{eq:14:12}) mit $B^2$ bezeichnet und Ellipsoide im $\R^2$ haben wir in (\ref{eq:14:13}) beschrieben als Bilder der Einheitskreisscheibe $B^2$ unter affinen Abbildungen $x \mapsto Mx+s$ mit regulärer $2 \times 2$ - Matrix $M$. \textit{Damit haben wir Ellipsoide in einer Form dargestellt, die für die Beschreibung der Ellipsoid-Methode günstig ist}. Wir folgen nun der Darstellung des Lehrbuchs
+\begin{itemize}
+\item J. Matou\v{s}ek, B. Gärtner: \textit{Understanding and Using Linear Programming}. Springer-Verlag. Berlin Heidelberg (2007)
+\end{itemize}
+
+und geben zum Einstieg die dort verwendete \textit{Definition eines Ellipsoids im $\R^n$} wieder\footnote{Zur Erinnerung: \enquote{Reguläre $n \times n$ - Matrix} und \enquote{nichtsinguläre $n \times n$ -  Matrix} bedeutet dasselbe. Eine $n \times n$ - Matrix $M$ ist genau dann nichtsingulär, wenn die inverse Matrix $M^{-1}$ existiert.}:
+
+\begin{Definition}[Definition (Ellipsoid)]
+\index{Ellipsoid}
+A two-dimensional ellipsoid is an ellipse plus its interior. An ellipsoid in general can most naturally be introduced as an affine transformation of a ball. We let
+\[
+B^n = \Bigl\{ x \in \R^n : x^Tx \leq 1 \Bigr\}
+\]
+
+be the $n$-dimensional ball of unit radius centered at $0$. Then an $n$-dimensional \textit{ellipsoid} is a set of the form
+\[
+E = \Bigl\{ Mx+s : x \in B^n \Bigr\},
+\] 
+
+where $M$ is a nonsingular $n \times n$ matrix and $s \in \R^n$ is a vector. The mapping $x \mapsto Mx+s$ is a composition of a linear function and a translation; this is called an \textit{affine map}.
+\end{Definition}
+
+Unter einem \textit{$n$-dimensionalen Ellipsoid} verstehen wir also eine Menge der Form
+\begin{equation}
+\label{eq:14:14}
+E = \Bigl\{ Mx+s : x \in B^n \Bigr\},
+\end{equation}
+
+wobei $M$ eine nichtsinguläre $n \times n$ - Matrix und $s \in \R^n$ ein Vektor ist. Anders gesagt: \textit{Ein $n$-dimensionales Ellipsoid ist das Bild der $n$-dimensionalen Kugel $B^n = \bigl\{ x \in \R^n : x^Tx \leq 1 \bigr\}$ unter einer affinen Abbildung $x \mapsto Mx+s$, wobei $M$ nichtsingulär\index{nichtsinguläre Matrix}\index{Matrix!nichtsinguläre} ist}. Man nennt $B^n$ die \textit{$n$-dimensionale Einheitskugel}.
+
+Damit die Beschreibung der Menge $E$ genau den Anforderungen der Ellipsoid-Methode entspricht, wollen wir sie noch etwas umformen. Dabei wird die Matrix $MM^T$ ins Spiel kommen; wir wollen diese Matrix mit $Q$ bezeichnen, d.h., wir definieren (für $M$ wie zuvor)
+\begin{equation}
+\label{eq:14:15}
+Q = MM^T.
+\end{equation}
+
+Da $M$ nichtsingulär ist, sind auch $M^T$ und $Q$ nichtsingulär, d.h., dass neben $M^{-1}$ auch ${\left( M^T \right)}^{-1}$ und $Q^{-1}$ existieren. Aufgrund bekannter Rechenregeln für Matrizen gilt
+\begin{equation}
+\label{eq:14:16}
+Q^{-1} = {\left( MM^T \right)}^{-1} = {\left( M^T \right)}^{-1} M^{-1} = {\left( M^{-1} \right)}^{T} M^{-1}.
+\end{equation}
+
+Ist $x \in \R^n$ gegeben, so bezeichnen wir das Bild von $x$ unter der affinen Abbildung $x \mapsto Mx+s$ mit $y$, d.h., wir setzen
+\begin{equation}
+\label{eq:14:17}
+y = Mx+s.
+\end{equation}
+
+Auflösung der Gleichung (\ref{eq:14:17}) nach $x$ ergibt
+\begin{equation}
+\label{eq:14:18}
+x = M^{-1}(y-s).
+\end{equation}
+
+Unter Verwendung von (\ref{eq:14:18}) erhält man
+\[
+y \in E
+\quad\Leftrightarrow\quad x \in B^n
+\quad\Leftrightarrow\quad x^Tx \leq 1
+\quad\Leftrightarrow\quad \left( M^{-1}(y-s) \right)^T M^{-1} (y-s) \leq 1.
+\]
+
+
+Den rechts stehenden, etwas \enquote{wild} aussehenden Ausdruck $\left( M^{-1}(y-s) \right)^T M^{-1} (y-s)$ wollen wir noch etwas vereinfachen; dafür haben wir in (\ref{eq:14:16}) bereits vorgearbeitet. Es gilt
+\begin{eqnarray*}
+\left( M^{-1}(y-s) \right)^T M^{-1} (y-s)
+&=& {(y-s)}^T {\left(M^{-1} \right)}^T M^{-1} (y-s) \\
+&\stackrel{(\ref{eq:14:16})}{=}& {(y-s)}^T Q^{-1} (y-s)
+\end{eqnarray*}
+
+Insgesamt können wir also feststellen:
+\begin{equation}
+\label{eq:14:19}
+y \in E 
+\quad\Leftrightarrow\quad 
+{(y-s)}^T Q^{-1} (y-s) \leq 1.
+\end{equation}
+
+\textit{Damit haben wir die angekündigte Beschreibung des Ellipsoids $E$ erhalten, die genau den Anforderungen der Ellipsoid-Methode entspricht}: Bislang haben wir ein Ellipsoid $E$ in der Form $E = \bigl\{ Mx+s: x \in B^n \bigr\}$ beschrieben; ab jetzt werden wir meist die folgende Darstellung verwenden, die aufgrund von (\ref{eq:14:19}) gleichwertig ist:
+
+\begin{equation}
+\label{eq:14:20}
+E = \Bigl\{ y \in \R^n : {(y-s)}^T Q^{-1} (y-s) \leq 1 \Bigr\}.
+\end{equation}
+
+\textit{Ein Wort zur Matrix $Q$}: Es ist nicht sonderlich schwierig, sich zu überlegen, dass $Q = MM^T$ eine symmetrische, positiv definite Matrix ist\footnote{$Q$ ist \textit{symmetrisch} bedeutet, dass $Q=Q^T$ gilt; $Q$ ist \textit{positiv definit} bedeutet, dass $x^TQx > 0$ für alle $x \in \R^n$ mit $x \neq 0$ gilt.}. Mit etwas fortgeschritteneren Hilfsmitteln der Linearen Algebra (Stichwort: Hauptachsentransformation) lässt sich zeigen, dass es auch umgekehrt zu jeder symmetrischen, positiv definiten Matrix\index{positiv definite Matrix}\index{Matrix!positiv definite} $Q$ eine nichtsinguläre Matrix $M$ gibt, so dass $Q=MM^T$ gilt. \textit{Das bedeutet}: Sind eine symmetrische, positiv definite Matrix $Q$ und ein Vektor $s$ gegeben, so wird durch (\ref{eq:14:20}) immer ein Ellipsoid beschrieben. Wir nennen dieses Ellipsoid das \textit{durch $Q$ und $s$ erzeugte Ellipsoid}.
+
+Geometrisch handelt es sich bei $s$ um den \textit{Mittelpunkt} des Ellipsoids\index{Mittelpunkt eines Ellipsoids}\index{Ellipsoid!Mittelpunkt eines} (\ref{eq:14:14}) bzw. (\ref{eq:14:20}).
+
+\textbf{Abschließende Bemerkungen}: Durch die Formeln (\ref{eq:14:14}) und (\ref{eq:14:20}) werden Ellipsoide im $\R^n$ beschrieben. Es leuchtet ein, dass derartige Formeln nützlich und wichtig sind -- darüber hinaus ist es aber auch wichtig, sich Ellipsoide im $\R^2$ und $\R^3$ konkret vorstellen zu können. Ein Ellipsoid im $\R^2$ ist eine Ellipse zusammen mit ihrem Inneren -- das hatten wir ja bereits besprochen. Sich ein Ellipsoid im $\R^3$ vorzustellen ist ebenfalls nicht schwierig. Tipp: Denken Sie an einen \textit{Rugbyball}. Oder geben Sie das Stichwort \textit{Ellipsoid} bei Google ein: Sie werden haufenweise schöne Bilder von Ellipsoiden im $\R^3$ geliefert bekommen. Und Formeln werden Sie dort ebenfalls finden: Dabei ist zu beachten, dass die Matrix, die wir $Q^{-1}$ genannt haben, häufig auch mit $Q$ bezeichnet wird.
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Eine Reduktion"                                                             %
+%------------------------------------------------------------------------------%
+
+\section{Eine Reduktion}
+\label{section:14:6}
+
+Gegeben sei eine $m \times n$ - Matrix $A$ und ein Vektor $b$ der Länge $m$; wir betrachten das folgende System von Ungleichungen:
+\begin{equation}
+\label{eq:14:21}
+Ax \leq b.
+\end{equation}
+
+\textit{Bei der Ellipsoid-Methode handelt es sich um ein Verfahren, das für jedes derartige System von Ungleichungen feststellt, ob eine Lösung existiert, und das -- falls vorhanden -- eine Lösung $x$ liefert}.
+
+\textit{Frage}: Wenn die Ellipsoid-Methode \enquote{nur} das eben Gesagte leistet, wie kann man sie dann einsetzen, um jedes LP-Problem zu lösen?
+
+Im Folgenden wird beschrieben, wie dies geht. Hierzu betrachten wir ein beliebiges LP-Problem in Standardform:
+\begin{equation}
+\tag{P}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Bx &\leq &\ d\ \\
+&&  x &\geq &\ 0.
+\end{alignedat}
+\end{equation}
+
+Das zu (P) duale Problem lautet
+\begin{equation}
+\tag{D}
+\begin{alignedat}{3}
+& \text{minimiere } & d^Ty & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& B^Ty &\geq &\ c\ \\
+&&  y &\geq &\ 0.
+\end{alignedat}
+\end{equation}
+
+Aus (P) und (D) formen wir nun ein Ungleichungssystem:
+\begin{equation}
+\label{eq:14:22}
+\begin{aligned}
+Bx &\leq d \\
+-x &\leq 0 \\
+-B^Ty &\leq -c \\
+-y &\leq 0 \\
+d^Ty - c^Tx &\leq 0. 
+\end{aligned}
+\end{equation}
+
+Das Ungleichungssystem (\ref{eq:14:22}) besitzt also genau $m+n$ Variablen: Die Variablen von (\ref{eq:14:22}) sind $x_1, \ldots, x_n$ und $y_1,\ldots,y_m$. Man beachte, dass $-x \leq 0$ äquivalent zu $x \geq 0$ ist; außerdem ist $-B^Ty \leq -c$ äquivalent zu $B^Ty \geq c$ und $-y \leq 0$ ist äquivalent zu $y \geq 0$. Besonders wichtige Beobachtung: Die letzte Zeile von (\ref{eq:14:22}) ist äquivalent zu $d^Ty \leq c^Tx$. Demnach gilt (vgl. (\ref{eq:7:3}) und den anschließenden Kommentar):
+
+\begin{enumerate}[(i)]
+\item Bilden $x$ und $y$ eine Lösung des Ungleichungssystems (\ref{eq:14:22}), so ist $x$ eine optimale Lösung von (P) und $y$ ist eine optimale Lösung von (D) (und es gilt $d^Ty = c^Tx$).
+\end{enumerate}
+
+Außerdem gilt aufgrund des \textit{Dualitätssatzes}\index{Dualitätssatz}\index{Satz!Dualitäts-}:
+
+\begin{enumerate}[(i)]
+\addtocounter{enumi}{1}
+\item Ist (\ref{eq:14:22}) unlösbar, so besitzt (P) keine optimale Lösung.
+\end{enumerate}
+
+\textit{Begründung zu (ii)}: Ist (\ref{eq:14:22}) unlösbar, so kann (P) keine optimale Lösung besitzen, denn: Würde (P) eine optimale Lösung $x$ besitzen, so würde (nach dem Dualitätssatz) auch (D) eine optimale Lösung $y$ besitzen und die Zielfunktionswerte würden übereinstimmen, d.h., es würde $d^Ty=c^Tx$ gelten. Dann würden $x$ und $y$ aber eine Lösung von (\ref{eq:14:22}) bilden -- im Widerspruch zur Annahme, dass (\ref{eq:14:22}) unlösbar ist.
+
+Aufgrund von (i) und (ii) ist die Frage geklärt, die wir oben im Anschluss an (\ref{eq:14:21}) gestellt haben.
+
+Besitzt man einen Algorithmus $\mathcal{A}$, der für jedes Ungleichungssystem (\ref{eq:14:21}) herausfindet, ob es lösbar ist, und gegebenenfalls eine Lösung liefert, so kann man diesen Algorithmus auch zur Lösung von (P) verwenden: \textit{Man hat aufgrund von (i) und (ii) nichts weiter zu tun, als $\mathcal{A}$ auf das Ungleichungssystem (\ref{eq:14:22}) anzuwenden}.
+
+Für Abschnitt \ref{section:14:6} wurde die Überschrift \enquote{Eine Reduktion} gewählt. \textbf{Erklärung}: Aufgrund der Ergebnisse dieses Abschnitts lässt sich die Aufgabe, einen Algorithmus zu entwerfen, der jedes LP-Problem $(P)$ löst, auf die folgende Aufgabe zurückführen (Statt \enquote{zurückführen} sagt man auch \enquote{reduzieren}!): \textit{Finde einen Algorithmus, der für jedes Ungleichungssystem $Ax\leq b$ entscheidet, ob eine Lösung existiert, und der ggf. auch eine Lösung $x$ liefert.} Es handelt sich also um eine \textit{Reduktion}\index{Reduktion} einer gegebenen Aufgabenstellung auf eine andere Aufgabenstellung. Da man klarerweise die Erzeugung von (\ref{eq:14:22}) aus $(P)$ in polynomieller Zeit durchführen kann, spricht man auch von einer \textit{polynomiellen Reduktion}\index{polynomielle Reduktion}\index{Reduktion!polynomielle}.
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Die Ellipsoid-Methode"                                                      %
+%------------------------------------------------------------------------------%
+
+%\addtocontents{toc}{\protect\newpage}
+\section{Die Ellipsoid-Methode}
+\label{section:14:7}
+\index{Ellipsoid-Methode}
+\index{Methode!Ellipsoid-}
+
+Es kann hier nur darum gehen, die \textit{Grundideen der Ellipsoid-Methode} kennenzulernen -- die Details können schon allein aus Zeitgründen nicht behandelt werden.
+
+\textit{Zur Erinnerung}: Sind eine $m \times n$ - Matrix $A$ und eine dazugehörige rechte Seite $b$ gegeben (beide mit Einträgen aus $\Q$), so geht es darum festzustellen, ob
+\begin{equation}
+\label{eq:14:23}
+Ax \leq b
+\end{equation}
+
+eine Lösung besitzt; außerdem soll, falls die Lösungsmenge nicht leer ist, auch tatsächlich eine Lösung $x$ ermittelt werden. 
+
+Die Lösungsmenge von (\ref{eq:14:23}) sei mit $P$ bezeichnet; der Buchstabe $P$ weist darauf hin, dass es sich bei der Lösungsmenge von (\ref{eq:14:23}) um ein \textit{Polyeder}\index{Polyeder} handelt (vgl. Kapitel \ref{chapter:4}).
+
+Für $x = (x_1, \ldots, x_n) \in \R^n$ bezeichnen wir mit $|x|$ die \textit{Länge} von $x$, d.h.
+\[
+|x| = \sqrt{\sum\limits_{i=1}^{n}{x_i^2}}.
+\]
+
+Für zwei Punkte $x=(x_1,\ldots,x_n)$ und $z=(z_1,\ldots,z_n)$ des $\R^n$ ist der \textit{Abstand} von $x$ und $z$ gegeben durch
+\[
+|x-z| = \sqrt{\sum\limits_{i=1}^{n}{{(x_i-z_i)}^2}}.
+\]
+
+Sind $r>0$ und $z \in \R^n$ gegeben, so bezeichnen wir mit $B(z,r)$ die \textit{$n$-dimensionale Kugel mit Mittelpunkt $z$ und Radius $r$}, d.h.
+\[
+B(z,r) = \Bigl\{ x \in \R^n : |x-z| \leq r \Bigr\}.
+\]
+
+Wir werden im Folgenden den besonders wichtigen Fall diskutieren, dass neben der Matrix $A$ und dem Vektor $b$ außerdem noch zwei rationale Zahlen $R$ und $\varepsilon$ gegeben sind, für die wir annehmen, dass
+\[
+0 < \varepsilon < R
+\]
+
+gilt. Die \textit{Rolle von $R$} ist einfach zu beschreiben: Da es uns darum geht, die Grundidee der Ellipsoid-Methode zu erfassen, betrachten wir hier ausschließlich den besonders wichtigen Fall, dass $P$ \textit{beschränkt}\index{beschränkt} ist. Genauer: \textit{Wir nehmen an, dass uns bekannt ist, dass die Menge $P$ aller Lösungen von $Ax \leq b$ in der Kugel $B(0,R)$ mit Mittelpunkt $0$ und Radius $R$ enthalten ist}.
+
+Die \textit{Rolle von $\varepsilon$} ist etwas diffiziler. \textit{Es geht darum, die Anforderungen an unseren Algorithmus etwas abzuschwächen}:
+\begin{itemize}
+\item Falls $P$ eine Kugel vom Radius $\varepsilon$ (mit beliebigem Mittelpunkt) enthält, so wollen wir weiterhin \enquote{streng} sein, d.h., wir wollen weiterhin verlangen, dass der Algorithmus uns ein Element $x \in P$ liefert.
+
+\item Falls sich im Laufe des Verfahrens jedoch herausstellt, dass $P$ keine Kugel vom Radius $\varepsilon$ enthält, so soll der Algorithmus entweder ein korrektes $x \in P$ abliefern oder aber die Antwort NO SOLUTION geben. Dabei ist es auch erlaubt, dass die Antwort NO SOLUTION lautet, obwohl $P \neq \emptyset$ gilt.
+\end{itemize}
+
+Vom Algorithmus wird demnach eine korrekte Antwort erwartet, wenn $P$ an irgendeiner Stelle \enquote{hinreichend dick} ist, d.h., wenn $P$ irgendwo eine Kugel vom Radius $\varepsilon$ enthält. Ist dies nicht der Fall, so ist es dem Algorithmus erlaubt, mit der Meldung NO SOLUTION abzubrechen.
+
+Unter den genannten Annahmen liefert die \textit{Ellipsoid-Methode} auf folgende Art eine Folge $E_0, \ldots, E_t$ von Ellipsoiden, die alle die Menge $P$ umfassen, für die also $P \subseteq E_k$ ($k = 0,\ldots,t$) gilt:
+\begin{enumerate}[\bfseries 1.]
+\item (\textbf{Initialisierung}): Setze $k=0$ und $E_0 = B(0,R)$.
+
+\item Für das aktuelle Ellipsoid $E_k$ gelte $E_k = \bigl\{ y \in \R^n : {(y-s_k)}^T Q_k^{-1} (y-s_k) \leq 1 \bigr\}$. Falls der Mittelpunkt $s_k$ von $E_k$ sämtliche Ungleichungen des Systems $Ax \leq b$ erfüllt: Ausgabe von $s_k$ und \textbf{stop}.
+
+\item Andernfalls wähle man eine Ungleichung des Systems $Ax \leq b$, die von $s_k$ nicht erfüllt wird; dies sei, sagen wir, die $i$-te Ungleichung. Bezeichnen wir die $i$-te Zeile von $A$ mit $a_i^T$, so gilt also $a_i^Ts_k > b_i$. Wir definieren $E_{k+1}$ als das Ellipsoid mit kleinstmöglichem Volumen, das die Menge $H_k = E_k \cap \bigl\{ x \in \R^n : a_i^Tx \leq a_i^Ts_k \bigr\}$ umfasst. Wir können uns die Menge $H_k$ als ein \enquote{Halbellipsoid}\index{Halbellipsoid}\index{Ellipsoid!Halb-} vorstellen (siehe Zeichnung):
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm,linewidth=0.5pt}
+\begin{pspicture}(-4,-3)(4,3)
+\footnotesize
+
+\psellipticarc[fillstyle=solid,fillcolor=light-gray]{-}(0,0)(4,2){336}{156}
+\psellipse[linewidth=1pt](0,0)(4,2)
+\psrotate(1,0.47){344.8}{ 
+  \psellipse[linewidth=1pt](1,0.47)(4.1,1.5) }
+\psline[linewidth=1pt](5,-2.235)(-5,2.235)
+
+\psline[linewidth=0.25pt](-4.9, 2.20)(-4.6,2.40)
+\psline[linewidth=0.25pt](-4.8, 2.15)(-4.5,2.35)
+\psline[linewidth=0.25pt](-4.7, 2.10)(-4.4,2.30)
+\psline[linewidth=0.25pt](-4.6, 2.05)(-4.3,2.25)
+\psline[linewidth=0.25pt](-4.5, 2.00)(-4.2,2.20)
+\psline[linewidth=0.25pt](-4.4, 1.95)(-4.1,2.15)
+\psline[linewidth=0.25pt](-4.3, 1.90)(-4.0,2.10)
+%\psline[linewidth=0.25pt](-4.2, 1.85)(-3.9,2.05)
+%\psline[linewidth=0.25pt](-4.1, 1.80)(-3.8,2.00)
+%\psline[linewidth=0.25pt](-4.0, 1.75)(-3.7,1.95)
+
+\pscircle*(0,0){0.075} \uput{0.15}[270](0,0){$s_k$}
+\pscircle*(1,0.5){0.075} \uput{0.15}[90](1,0.5){$s_{k+1}$}
+\uput{0}[0](2.5,0.5){$H_k$}
+\uput{0}[0](4.25,1){$E_{k+1}$}
+\uput{0}[180](-3.75,-1){$E_k$}
+\uput{0.1}[90](-4.75, 2.5){$a_i^Tx \leq a_i^Ts_k$}
+
+
+\small
+\end{pspicture}
+\end{center}
+
+
+\item Falls das Volumen des Ellipsoids $E_{k+1}$ kleiner ist als das Volumen einer $n$-dimensionalen Kugel vom Radius $\varepsilon$, so lautet das Ergebnis NO SOLUTION; \textbf{stop}. Andernfalls erhöht man $k$ um $1$ und fährt bei \textbf{2.} fort.
+\end{enumerate}
+
+\pagebreak
+Einige \textit{Bemerkungen} zu diesem Algorithmus:
+\begin{enumerate}[a)]
+\item Es ist nicht schwer, das in \textbf{1.} auftretende Ellipsoid $E_0 = B(0,R)$ in der Form $E_0 = \bigl\{ y \in \R^n : {(y-s_0)}^T Q_0^{-1} (y-s_0) \leq 1 \bigr\}$ anzugeben. Hierzu hat man lediglich $s_0$ als den Ursprung des $\R^n$ zu wählen, also $s_0=0$, und ferner daran zu denken, dass $B(0,R) = \bigl\{ y \in \R^n : |y| \leq R \bigr\} = \bigl\{ y \in \R^n : y^Ty \leq R^2 \bigr\}$ gilt. \textit{Aufgabe}: Überlegen Sie sich, wie man $Q_0$ zu wählen hat, damit
+\[
+E_0 = \Bigl\{ y \in \R^n : y^TQ_0^{-1}y \leq 1 \Bigr\}
+\]
+gilt.
+
+\item Es lässt sich beweisen, dass das Ellipsoid $E_{k+1}$, d.h. das Ellipsoid mit kleinstmöglichem Volumen, das die Menge $H_k$ umfasst, immer eindeutig bestimmt ist. \textit{Genauer}: Es gilt $E_{k+1} = \bigl\{ y \in \R^n : {(y-s_{k+1})}^T Q_{k+1}^{-1} (y - s_{k+1}) \bigr\}$, wobei sich $s_{k+1}$ und $Q_{k+1}$ mithilfe der folgenden \textit{Update-Formeln} aus $s_k$ und $Q_k$ berechnen lassen:
+\index{Update-Formeln für die Ellipsoid-Methode}
+\index{Ellipsoid-Methode!Update-Formeln}
+\begin{align*}
+s_{k+1} &= s_k - \frac{1}{n+1} \cdot \frac{Q_ka_i}{\sqrt{a_i^TQ_ka_i}}\\
+Q_{k+1} &= \frac{n^2}{n^2-1} \left( Q_k - \frac{2}{n+1} \cdot \frac{Q_ka_ia_i^TQ_k^T}{a_i^TQ_ka_i} \right).
+\end{align*}
+
+Um diesen Formeln eine etwas übersichtlichere Gestalt zu geben, setzen wir
+\[
+v = \frac{Q_ka_i}{\sqrt{a_i^TQ_ka_i}}.
+\]
+
+Dann gilt
+\begin{align*}
+s_{k+1} &= s_k - \frac{1}{n+1} v\\
+Q_{k+1} &= \frac{n^2}{n^2-1} \left( Q_k - \frac{2}{n+1} \cdot vv^T \right).
+\end{align*}
+\end{enumerate}
+
+Beweise für die in b) aufgeführten Tatsachen findet man beispielsweise in
+\begin{itemize}
+\item D. Bertsimas, J. N. Tsitsiklis: \textit{Introduction to Linear Optimization}. Athena Scientific (1997).\footnote{Man kann die im Buch von Bertsimas und Tsitsiklis gegebenen Beweise nicht 1--1 übernehmen; die ein oder andere Anpassung ist nötig, beispielsweise weil Bertsimas und Tsitsiklis andere Bezeichnungen benutzen und meistens Minimierungsprobleme betrachten.}
+\end{itemize}
+
+\textit{Die nächste Bemerkung c) spielt für die Korrektheit und Effizienz der Ellipsoid-Methode eine besonders wichtige Rolle}. In dieser Bemerkung wird es um das Volumen der Ellipsoide\index{Volumen eines Ellipsoids}\index{Ellipsoid!Volumen eines} $E_k$ und $E_{k+1}$ gehen; auch das Volumen der $n$-dimensionalen Kugel $B(0,R)$ bzw. einer $n$-dimensionalen Kugel vom Radius $\varepsilon$ wird eine Rolle spielen. Wir wollen nicht ausführen, wie all diese Volumina definiert sind, und auch keine Formeln oder Abschätzungen für die Volumina geben, sondern wir konzentrieren uns hier allein auf die für unsere Zwecke relevanten Fakten, wobei wir auf Beweise verzichten. Wer an weiteren Details interessiert ist, findet diese im oben genannten Buch von Bertsimas und Tsitsiklis, im Skript von M. Grötschel (siehe Literaturverzeichnis) oder auch in
+\begin{itemize}
+\item M. Grötschel, L. Lovász, A. Schrijver: \textit{Geometric Algorithms and Combinational Optimization}. Springer (1994).
+\end{itemize}
+
+\begin{enumerate}[a)]
+\addtocounter{enumi}{2}
+\item Die Volumina von $E_k$ und $E_{k+1}$ seien mit $\vol{(E_k)}$ bzw. $\vol{(E_{k+1})}$ bezeichnet.
+
+Dann gilt
+\[
+\vol{(E_{k+1})} \leq e^{-\frac{1}{2n+2}} \cdot \vol{(E_k)}.
+\]
+
+Mit jeder Iteration verkleinert sich das Volumen des jeweiligen Ellipsoids also um den Faktor $e^{-\frac{1}{2n+2}}$. Folglich gilt
+\begin{equation}
+\label{eq:14:28}
+\vol{(E_k)} \leq e^{-\frac{k}{2n+2}} \cdot \vol{(E_0)}.
+\end{equation}
+
+Damit man mit der Formel (\ref{eq:14:28}) etwas anfangen kann, ist es natürlich wichtig, über $\vol{(E_0)}$ Bescheid zu wissen. Es sei daran erinnert, dass
+\[
+E_0 = B(0,R)
+\]
+
+gilt, d.h., bei $E_0$ handelt es sich um eine Kugel im $\R^n$ mit Radius $R$. Es ist eine bekannte Tatsache, dass das Volumen einer solchen Kugel proportional zur $n$-ten Potenz ihres Radius $R$ ist (vgl. beispielsweise das oben genannte Buch von Grötschel, Lovász und Schrijver). Genauer gilt Folgendes: Zu jedem $n \in \N$ existiert eine Konstante $c_n$, so dass gilt:
+\begin{equation}
+\label{eq:14:29}
+\vol{(E_0)} = \vol{(B(0,R))} = c_nR^n.
+\end{equation}
+
+Die auftretende Konstante wurde mit $c_n$ bezeichnet, da sie von der Dimension $n$ abhängt. Zum besseren Verständnis der Formel (\ref{eq:14:29}) betrachten wir die Fälle $n=2$ und $n=3$:
+\begin{itemize}
+\item Es gilt $c_2 = \pi$, da $\pi R^2$ die allseits bekannte Formel für die Fläche eines Kreises\index{Fläche eines Kreises}\index{Kreis!Fläche eines} vom Radius $R$ ist.
+
+\item Es gilt $c_3 = \frac{4}{3} \pi$, da $\frac{4}{3} \pi R^3$ die ebenso bekannte Formel für das Volumen einer Kugel\index{Volumen einer Kugel}\index{Kugel!Volumen einer} mit Radius $R$ ist (im $\R^3$).
+\end{itemize}
+
+\textit{Frage}: Nach wie vielen Iterationen können wir sicher sein, dass das Volumen $\vol{(E_k)}$ kleiner als das Volumen einer $n$-dimensionalen Kugel vom Radius $\varepsilon$ geworden ist?
+
+\textit{Antwort}: Eine $n$-dimensionale Kugel vom Radius $\varepsilon$ besitzt das Volumen $c_n\varepsilon^n$, d.h., für $k$ soll $\vol{(E_k)} < c_n\varepsilon^n$ gelten. Wegen (\ref{eq:14:28}) und (\ref{eq:14:29}) ist dies gewiss dann der Fall, wenn gilt:
+\begin{equation}
+\label{eq:14:30}
+e^{-\frac{k}{2n+2}} \cdot c_nR^n < c_n\varepsilon^n.
+\end{equation}
+
+Äquivalente Umformung von (\ref{eq:14:30}) ergibt:
+\begin{align*}
+e^{-\frac{k}{2n+2}} \cdot c_nR^n < c_n\varepsilon^n
+&\quad\Leftrightarrow\quad {\left( \frac{R}{\varepsilon} \right)}^n < e^{\frac{k}{2n+2}} \\
+&\quad\Leftrightarrow\quad \frac{R}{\varepsilon} < e^{\frac{k}{n(2n+2)}} \\
+&\quad\Leftrightarrow\quad \ln{\left( \frac{R}{\varepsilon} \right)} < \frac{k}{n(2n+2)} \\
+&\quad\Leftrightarrow\quad n(2n+2) \ln{\left( \frac{R}{\varepsilon} \right)} < k.
+\end{align*}
+\end{enumerate}
+
+Damit ist unsere Bemerkung c) über die Volumina von $E_k$, $E_{k+1}$ und $B(0,R)$ zum Abschluss gekommen. Als Ergebnis unserer Ausführungen können wir festhalten:
+
+\begin{Definition}[Feststellung]
+Gilt $k = \left\lceil n (2n+2) \ln{\left( \frac{R}{\varepsilon} \right)} \right\rceil + 1$, so ist das Volumen $\vol{(E_k)}$ garantiert kleiner als das Volumen einer $n$-dimensionalen Kugel vom Radius $\varepsilon$.
+\end{Definition}
+
+Da das Ellipsoid $E_k$ das Polyeder $P$ umfasst, kann $P$ keine $n$-dimensionale Kugel vom Radius $\varepsilon$ mehr enthalten, wenn das Volumen $\vol{(E_k)}$ unter das Volumen einer solchen Kugel gesunken ist. Wir halten fest: 
+\begin{equation}
+\label{eq:14:31}
+\text{Unser Algorithmus stoppt nach höchstens } k = \left\lceil n (2n+2) \ln{\left( \frac{R}{\varepsilon} \right)} \right\rceil + 1 \text{ Iterationen}.
+\end{equation}
+
+%Wir kommen nun zur Frage nach der \textit{Laufzeit} unseres Algorithmus.
+%
+%\textit{Zur Erinnerung}: Unser Algorithmus löst nicht das ursprüngliche Problem, bei dem es ausschließlich um das System $Ax \leq b$ ging, sondern ein \textit{modifiziertes Problem}, bei dem zusätzlich zu $A$ und $b$ zwei rationale Zahlen $R$ und $\varepsilon$ gegeben sind. Die Eingabelänge für das modifizierte Problem ist deshalb gegeben durch
+%\[
+%\ell = \langle A \rangle + \langle b \rangle + \langle R \rangle + \langle \varepsilon \rangle.
+%\]
+%
+%Zusätzlich zu $\ell$ betrachten wir den einfacheren Ausdruck $r = n+ \langle R \rangle + \langle \varepsilon \rangle$. Da die Anzahl der Spalten von $A$ gleich $n$ ist, gilt $\langle A \rangle \geq n$ und somit $r \leq \ell$. Aus (\ref{eq:14:31}) erhält man, dass unser Algorithmus spätestens nach $O(r^3)$ Iterationen stoppt. (Hierzu beachte man, dass $n \leq r$ und $\ln{\left( \frac{R}{\varepsilon} \right)} = \ln{(R)} - \ln{(\varepsilon)}$ gilt, und mache sich auch noch einmal die Definition von $\langle R \rangle$ und $\langle \varepsilon \rangle$ klar.) Wegen $r \leq \ell$ können wir also festhalten:
+%
+%\begin{SKBox}
+%Die Kodierungslänge unseres modifizierten Problems ist $\ell$ und unser Algorithmus zur Lösung des Problems stoppt nach höchstens $O(\ell^3)$ Iterationen.
+%\end{SKBox}
+%
+%Darüber hinaus lässt sich nachweisen, dass auch für jede Iteration nur eine polynomielle Anzahl von Schritten nötig ist\footnote{Siehe die Lehrbücher von Bertsimas und Tsitsiklis bzw. Grötschel, Lovász und Schrijver. Insbesondere wird dort auch auf die Schwierigkeit eingegangen, die daher rührt, dass der Wurzelausdruck in der Update-Formel für $s_{k+1}$ im Allgemeinen nur näherungsweise berechnet werden kann.}, \textit{woraus sich ergibt, dass unser Algorithmus für das modifizierte Problem (mit $A$, $b$, $R$ und $\varepsilon$ als Eingabe) ein polynomieller Algorithmus ist}.
+%
+%Wir haben bislang nur besprochen, wie man das modifizierte Problem behandelt, bei dem $R$ und $\varepsilon$ als Teil der Eingabe hinzugenommen wurden. Bei der Lösung des modifizierten Problems handelt es sich aber nur um den ersten Schritt zur Lösung des \enquote{unmodifizierten} Problems, bei dem es um $Ax \leq b$ geht (ohne $R$ und $\varepsilon$). \textit{Allerdings waren in diesem ersten Schritt die geometrischen Grundideen der Ellipsoid-Methode bereits zu erkennen}. Deshalb wollen wir auf die Darstellung des weiteren Vorgehens verzichten und verweisen auf die Literatur.
+
+Das Ergebnis (\ref{eq:14:31}) ist ein erster Schritt auf dem Weg zu einer kompletten Laufzeitanalyse der Ellipsoid-Methode. Am Ende dieser Analyse steht die Feststellung, dass es sich bei der Ellipsoid-Methode um einen Algorithmus mit polynomieller Laufzeit handelt. Es bleiben jedoch noch viele Details zu klären und etliche Schwierigkeiten müssen aus dem Weg geräumt werden:
+\begin{itemize}
+\item Beispielsweise muss geklärt werden, wie mit der Tatsache umzugehen ist, dass in der Update-Formel für $s_{k+1}$ ein Wurzelausdruck vorkommt, der im Allgemeinen ja nur näherungsweise berechnet werden kann.
+\item Außerdem ist zu bedenken, dass unser Algorithmus nicht das ursprüngliche Problem löst, bei dem es ausschließlich um das System $Ax \leq b$ geht (ohne $R$ und $\varepsilon$). Es stellt sich also -- etwas salopp ausgedrückt -- die Frage, wie man ohne $R$ und $\varepsilon$ zurechtkommt.
+\end{itemize}
+
+\textit{Fazit}: Wir haben das modifizierte Problem besprochen, bei dem $R$ und $\varepsilon$ hinzugenommen wurden, wobei wir nicht auf alle Einzelheiten eingegangen sind. Allerdings -- und darauf kam es uns an -- \textit{waren die geometrischen Grundideen der Ellipsoid-Methode bereits zu erkennen.} Deshalb verzichten wir auf die Darstellung weiterer Details und verweisen auf die Literatur. 
+
+Erste Einblicke, wie es weitergeht, erhält man im Buch von Matou\v{s}ek und Gärtner; \textit{für ausführliche Darstellungen der Ellipsoid-Methode verweisen wir auf das bereits genannte Buch von Bertsimas und Tsitsiklis sowie auf das Werk von Grötschel, Lovász und Schrijver und auf \textit{A. Schrijver, Theory of Linear and Integer Programming}; empfehlenswert ist auch das Skript von Grötschel} (siehe Literaturverzeichnis).
+
+
+
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Theorie und Praxis"                                                         %
+%------------------------------------------------------------------------------%
+
+\section{Theorie und Praxis}
+\label{section:14:8}
+
+Bei der Ellipsoid-Methode handelt es sich um einen Algorithmus mit polynomieller Laufzeit, was auf den Simplexalgorithmus nicht zutrifft.
+
+In zahlreichen Lehrbüchern wird andererseits darauf hingewiesen, dass die Ellipsoid-Methode \textit{in der Praxis} allem Anschein nach nicht konkurrenzfähig zum Simplexalgorithmus ist; vgl. etwa Cormen et al.
+
+Einer der möglichen Gründe, weshalb der Simplexalgorithmus in der Praxis nicht leicht zu schlagen ist: Das Simplexverfahren benötigt möglicherweise nur für wenige \enquote{künstliche} Beispiele eine exponentiell wachsende Anzahl von Schritten, also für Beispiele, die in der Praxis nicht vorkommen.
+
+Im Jahre 1984, also schon recht bald nach Vorstellung der Ellipsoid-Methode, präsentierte \textit{N. Karmarkar}, ein Forscher von Bell Labs (New Jersey), einen polynomiellen Algorithmus für Lineare Programmierung, der auf ganz anderen Grundideen beruht als die Ellipsoid-Methode bzw. das Simplexverfahren. Beim Algorithmus von Karmarkar handelt es sich um eine \textit{Innere-Punkte-Methode}\index{Innere-Punkte-Methode}\index{Methode!Innere-Punkte-}.
+
+In der Zwischenzeit sind eine ganze Reihe von verwandten Algorithmen entwickelt worden, die alle zur Klasse der Innere-Punkte-Methoden (engl. \textit{interior-point-methods}) gehören.
+
+Nach Meinung von Experten haben Innere-Punkte-Methoden durchaus das Zeug dafür, dem Simplexalgorithmus auch in der Praxis Konkurrenz zu machen (vgl. etwa Matou\v{s}ek/Gärtner).
+
+
+
+
+%------------------------------------------------------------------------------%
+% Abschnitt:                                                                   %
+% "Innere-Punkte-Methoden"                                                     %
+%------------------------------------------------------------------------------%
+
+\section{Innere-Punkte-Methoden}
+\label{section:14:9}
+
+Innere-Punkte-Methoden basieren -- ebenso wie der Ellipsoidalgorithmus und das Simplexverfahren -- auf einer \textit{geometrischen Grundidee}. Interessanterweise unterscheiden sich die Grundideen in allen drei Fällen erheblich:
+\begin{itemize}
+\item Beim \textit{Simplexverfahren} bewegt man sich längs Kanten von einer Ecke eines Polyeders zur nächsten.
+
+\item Beim \textit{Ellipsoidalgorithmus} geht es darum, eine Lösung mithilfe von Ellipsoiden, deren Volumen man fortlaufend verkleinert, einzukesseln.
+
+\item Bei den \textit{Innere-Punkte-Methoden} wandert man -- im Gegensatz zum Simplexverfahren -- durch das Innere des Polyeders, wobei man sorgfältig darauf achtet, den Rand nicht zu berühren; im letzten Schritt hüpft man dann aber doch auf den Rand -- nämlich auf eine Ecke, der man sich zuvor bereits genähert hat.
+\end{itemize}
+
+Natürlich ist diese Beschreibung der geometrischen Grundideen der drei Methoden etwas grob -- und es kann auch Varianten geben. Es sollte aber zumindest klar geworden sein, woher der Name \enquote{Innere-Punkte-Methoden} stammt. 
+
+Wir illustrieren das Vorgehen einer Innere-Punkte-Methode noch einmal anhand einer Skizze:
+
+\begin{center}
+\psset{linewidth=0.8pt,unit=0.8cm}
+\begin{pspicture}(0,0)(5,3)
+\footnotesize
+
+\pspolygon[linewidth=1pt](1,0)(4,0)(5,1.75)(4,3)(1.5,2.75)(0,1.75)
+\pscircle*(4,3){0.075}
+
+\psline[linewidth=0.5pt]{->}(2.5,0.5)(2,1)
+\psline[linewidth=0.5pt]{->}(2,1)(2,1.5)
+\psline[linewidth=0.5pt]{->}(2,1.5)(2.5, 2)
+\psline[linewidth=0.5pt]{->}(2.5, 2)(3,2.1)
+\psline[linewidth=0.5pt]{->}(3,2.1)(3.5,2.3)
+\psline[linewidth=0.5pt]{->}(3.5,2.3)(3.5, 2.6)
+\psline[linewidth=0.5pt]{->}(3.5, 2.6)(3.7,2.8)
+\psline[linewidth=0.5pt]{->}(3.7,2.8)(4,3)
+
+
+\small
+\end{pspicture}
+\end{center}
+
+Es gibt viele verschiedene Arten von Innere-Punkte-Methoden, mit jeweils etlichen Varianten. Wir wollen uns hier nur eine Klasse von Innere-Punkte-Methoden etwas genauer anschauen, ohne auf allzu viele Details einzugehen. Diese Klasse ist unter dem Namen \textit{Zentrale-Pfad-Methoden}\index{Zentraler-Pfad-Methode}\index{Methode!Zentraler-Pfad-} bekannt.
+
+Der Einfachheit halber setzen wir ab jetzt immer voraus, dass uns ein innerer Punkt, d.h. eine zulässige Lösung, die nicht auf den Rand liegt, als \textit{Startpunkt} zur Verfügung steht.
+
+\subsection{Logarithmische Barriere-Funktionen}
+\index{logarithmische Barriere-Funktion}
+\index{Barriere-Funktion!logarithmische}
+\index{Funktion!logarithmische Barriere-}
+
+Wir betrachten ein beliebiges konvexes Polyeder $P$ im $\R^n$, das durch ein System $Ax \leq b$ von $m$ linearen Ungleichungen gegeben ist; außerdem sei eine lineare Zielfunktion $f(x) = c^Tx$ gegeben, die zu maximieren ist. Das dazugehörige LP-Problem lautet also:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\leq &\ b.
+\end{alignedat}
+\end{align*}
+
+Die $i$-te Nebenbedingung (Ungleichung) wollen wir mit $a_i^Tx \leq b_i$ bezeichnen ($i=1,\ldots,m$).
+
+Bislang ist also alles wie gewohnt; das Neue kommt jetzt: \textit{Wir betrachten zusätzlich für jedes $\mu \in [0,\infty)$ eine weitere Zielfunktion, die wir mit
+\[
+f_\mu(x)
+\] 
+bezeichnen}. Die Zielfunktion $f_\mu(x)$ ist folgendermaßen definiert:
+\begin{equation}
+\label{eq:14:32}
+f_\mu(x) = c^Tx + \mu \cdot \sum\limits_{i=1}^{m}{\ln{(b_i-a_i^Tx)}}.
+\end{equation}
+
+Ist $\mu = 0$, so handelt es sich hierbei also um nichts weiter, als die ursprünglich gegebene Zielfunktion $f(x) = c^Tx$.
+
+Gilt dagegen $\mu > 0$, so handelt es sich bei $f_\mu(x)$ offenbar um eine \textit{nichtlineare Zielfunktion}\index{nichtlineare Zielfunktion}\index{Zielfunktion!nichtlineare}\index{Funktion!nichtlineare Ziel-}: Dass $f_\mu(x)$ für $\mu > 0$ nichtlinear ist, liegt an der auf der rechten Seite von (\ref{eq:14:32}) auftretenden Logarithmusfunktion. Man beachte auch, dass es sich bei $b_i - a_i^Tx$ um den Schlupf\index{Schlupf} der $i$-ten Ungleichung handelt.
+
+Wir können die Zielfunktionen $f_\mu(x)$ für $\mu > 0$ auch als \textit{Hilfszielfunktionen}\index{Hilfszielfunktion}\index{Zielfunktion!Hilfs-}\index{Funktion!Hilfsziel-} bezeichnen, da sie dabei helfen, dass man bei der Durchführung des Innere-Punkte-Verfahrens dem Rand nicht unbeabsichtigt zu nahe kommt. Es werden Hilfsprobleme betrachtet, in denen es darum geht, jeweils eine der Funktionen $f_\mu(x)$ für $\mu > 0$ zu maximieren. \textit{Die Idee dabei}: Wenn $x$ dem Rand von $P$ zu nahe kommt, d.h., wenn für ein $i$ der Schlupf $b_i-a_i^Tx$ gegen 0 tendiert, so tendiert $f_\mu(x)$ in Richtung $-\infty$. Anders gesagt: \textit{Wenn man sich darum bemüht $f_\mu(x)$ zu maximieren, so wirkt man gleichzeitig darauf hin, dass man dem Rand fernbleibt}. 
+
+Man nennt den in (\ref{eq:14:32}) zu $c^Tx$ hinzugefügten Ausdruck
+\begin{equation}
+\label{eq:14:33}
+\mu \cdot \sum\limits_{i=1}^{m}{\ln{(b_i-a_i^Tx)}}
+\end{equation}
+
+eine \textit{Barriere-Funktion}\index{Barriere-Funktion}\index{Funktion!Barriere-} oder auch (genauer) \textit{logarithmische Barriere-Funktion} (engl. \textit{barrier function} bzw. \textit{logarithmic barrier function}).
+
+Im Folgenden präzisieren wir einige der vorangegangenen Bemerkungen.
+
+Unter dem \textit{Rand von $P$}\index{Rand} versteht man die Menge aller $x \in P$, für die
+\[
+b_i - a_i^Tx = 0
+\]
+
+für mindestens ein $i$ gilt ($1 \leq i \leq m$); unter dem \textit{Inneren von $P$}\index{Inneres von $P$} versteht man die Menge aller $x \in P$, die nicht zum Rand von $P$ gehören.
+
+Wir bezeichnen im Folgenden das Innere von $P$ mit $\operatorname{int}{(P)}$; diese Bezeichnung leitet sich von \foreignquote{english}{interior of $P$} ab. Damit die nachfolgenden Ausführungen sinnvoll sind, \textit{setzen wir ab jetzt immer $\operatorname{int}{(P)} \neq \emptyset$ voraus}.
+
+Da die Funktion $f_\mu(x)$ für $\mu > 0$ auf dem Rand von $P$ nicht definiert ist, betrachten wir nur das Innere von $P$. Unser \textit{Hilfsproblem} lautet somit:
+
+\begin{center}
+Für gegebenes $\mu > 0$ finde man (sofern vorhanden) ein $x \in \operatorname{int}{(P)}$, für das $f_\mu(x)$ maximal ist.
+\end{center}
+
+
+Es gilt nun folgender Satz, der für den Fall, dass $P$ beschränkt ist, die eindeutige Lösbarkeit unseres Hilfsproblems feststellt (Beweis siehe Matou\v{s}ek/Gärtner).
+
+\begin{Satz}[Satz]
+Es sei $P$ ein beschränktes Polyeder\index{beschränktes Polyeder}\index{Polyeder!beschränktes} mit $\operatorname{int}{(P)} \neq \emptyset$; außerdem sei $\mu > 0$ gegeben. Dann existiert immer ein eindeutig bestimmter Punkt $x^* \in \operatorname{int}{(P)}$, für den die Funktion $f_\mu$ maximal ist, d.h. $f_\mu(x^*) > f_\mu(x)$ für alle $x \in \operatorname{int}{(P)}$ mit $x \neq x^*$.
+\end{Satz}
+
+Welcher Punkt $x^* \in \operatorname{int}{(P)}$ der genannte \textit{Maximalpunkt} ist, hängt vom betrachteten $\mu$ ab. Wir bezeichnen den Maximalpunkt daher im Folgenden immer mit $x^*(\mu)$.
+
+\textit{Typischerweise gilt}: Ist $\mu$ eine sehr große Zahl, so ist der Einfluss des Terms $c^Tx$ auf den Wert von $f_\mu(x)$ nur sehr gering und $x^*(\mu)$ ist ein Punkt, der in allen Richtungen weit vom Rand entfernt ist; anders gesagt: Der Maximalpunkt $x^*(\mu)$ nimmt in $P$ eine zentrale Lage ein.
+
+Ist $\mu$ dagegen klein, so besitzt der Term $c^Tx$ einen bestimmenden Einfluss auf den Wert von $f_\mu(x)$. In diesem Fall unterscheiden sich die Funktionen $f_\mu(x)$ und $f(x)=c^Tx$ nur wenig und der Maximalpunkt $x^*(\mu)$ von $f_\mu$ wird in der Nähe eines Maximalpunktes für $f(x)=c^Tx$ liegen.
+
+\textit{In den folgenden Zeichnungen, die aus dem Buch von Matou\v{s}ek und Gärtner stammen, wird der beschriebene Effekt illustriert}. Der Pfeil gibt die Richtung des Vektors $c$ an; es sind Höhenlinien\index{Höhenlinie} für die Funktion $f_\mu(x)$ eingezeichnet und der Punkt gibt die Lage von $x^*(\mu)$ an. Man stelle sich vor, dass sich an der Stelle $x^*(\mu)$ ein Gipfel (\enquote{globales Maximum der Funktion $f_\mu(x)$}) befindet. Die erste Zeichnung gibt -- für ein 2-dimensionales Polyeder $P$ -- den Fall $\mu = 100$ wieder; die beiden weiteren Zeichnungen illustrieren die Funktion $f_\mu(x)$ für die Fälle $\mu = 0.5$ und $\mu = 0.1$.
+
+Der sehr anschauliche Begriff der \textit{Höhenlinie} -- man denke an Landkarten -- wird anschließend exakt definiert. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{img-14-1}
+\caption*{Der Graph der Funktion $f_\mu(x)$ für den Fall $\mu = 100$.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{img-14-2}
+\caption*{Der Graph der Funktion $f_\mu(x)$ für den Fall $\mu = 0.5$.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{img-14-3}
+\caption*{Der Graph der Funktion $f_\mu(x)$ für den Fall $\mu = 0.1$.}
+\end{figure}
+
+\begin{Definition}[Definition der Höhenlinien]
+\index{Höhenlinie}
+Ist $f: \R^2 \rightarrow \R$ eine Funktion und $\alpha \in \R$, so definiert man die \textit{Höhenlinie von $f$ zum Wert $\alpha$} als die Menge der Punkte $(x_1,x_2) \in \R^2$, für die $f(x_1,x_2)=\alpha$ gilt. 
+\end{Definition}
+
+Anders gesagt: Unter einer Höhenlinie versteht man die Menge aller Punkte $(x_1,x_2)$, für die die Funktion $f$ einen vorgegebenen Wert (\enquote{Höhe}) annimmt\footnote{Höhenlinien werden natürlich analog definiert, wenn die betrachtete Funktion nur auf einer Teilmenge $D$ von $\R^2$ existiert.}.
+
+
+
+\subsection{Der Begriff des zentralen Pfades}
+
+Wir betrachten die im vorangegangenen Abschnitt definierten Maximalpunkte $x^*(\mu)$ und führen den Begriff des \enquote{zentralen Pfads} ein: Unter dem \textit{zentralen Pfad}\index{zentraler Pfad}\index{Pfad!zentraler} versteht man die Menge
+\[
+\Bigl\{ x^*(\mu) : \mu > 0 \Bigr\}.
+\]
+
+Der zentrale Pfad ist also die Menge aller Maximalpunkte $x^*(\mu)$ für $\mu > 0$. Es sei betont, dass der zentrale Pfad nicht nur von $P$ und der Zielfunktion $c$ abhängt, sondern auch von der Darstellung von $P$, d.h. vom Ungleichungssystem $Ax \leq b$, durch das $P$ gegeben ist: Dass dies so ist, erkennt man anhand von (\ref{eq:14:32}). 
+
+Wir sind nun in der Lage, die \textit{Grundidee von Zentralen-Pfad-Methoden} zu formulieren.
+
+\begin{Definition}[Grundidee von Zentralen-Pfad-Methoden]
+Man startet mit einem $x^*(\mu)$ für ein geeignetes großes $\mu$ und folgt dann dem zentralen Pfad, indem man $\mu$ fortlaufend verkleinert.
+\end{Definition}
+
+Folgt man dieser Grundidee, so hat man -- wie wir zuvor gesehen haben -- in jedem Schritt ein Hilfsproblem mit einer nichtlinearen Zielfunktion $f_\mu(x)$ zu lösen. Dadurch erhält man fortlaufend verbesserte Näherungswerte für die angestrebte Lösung des Problems
+\begin{equation}
+\label{eq:14:34}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\leq &\ b.
+\end{alignedat}
+\end{equation}
+
+Zum Schluss geht es dann darum, wie man aus den gewonnenen Näherungslösungen eine exakte Lösung von (\ref{eq:14:34}) gewinnt.
+
+\textit{Es gäbe noch viele weitere Details zu besprechen}. Da es uns nur darum ging, die Grundideen darzulegen, brechen wir an dieser Stelle ab und verweisen auf das Buch von Matou\v{s}ek und Gärtner sowie auf die dort genannte Literatur.
+
+

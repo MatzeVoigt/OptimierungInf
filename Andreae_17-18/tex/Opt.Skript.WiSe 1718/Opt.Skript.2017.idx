@@ -1,0 +1,991 @@
+\indexentry{Di\"atproblem|hyperpage}{5}
+\indexentry{Problem!Di\"at-|hyperpage}{5}
+\indexentry{trial and error|hyperpage}{6}
+\indexentry{Di\"atproblem|hyperpage}{6}
+\indexentry{Problem!Di\"at-|hyperpage}{6}
+\indexentry{lineares Programmierungsproblem|hyperpage}{6}
+\indexentry{Programmierungsproblem, lineares|hyperpage}{6}
+\indexentry{Problem!lineares Programmierungs-|hyperpage}{6}
+\indexentry{LP-Problem|hyperpage}{6}
+\indexentry{Problem!LP-|hyperpage}{6}
+\indexentry{lineare Funktion|hyperpage}{7}
+\indexentry{Funktion!lineare|hyperpage}{7}
+\indexentry{lineare Gleichung|hyperpage}{7}
+\indexentry{Gleichung!lineare|hyperpage}{7}
+\indexentry{lineare Ungleichung|hyperpage}{7}
+\indexentry{Ungleichung!lineare|hyperpage}{7}
+\indexentry{Nebenbedingungen|hyperpage}{7}
+\indexentry{lineare Nebenbedingung|hyperpage}{7}
+\indexentry{Nebenbedingungen!lineare|hyperpage}{7}
+\indexentry{Standardform|hyperpage}{7}
+\indexentry{lineares Programmierungsproblem|hyperpage}{7}
+\indexentry{Programmierungsproblem, lineares|hyperpage}{7}
+\indexentry{Problem!lineares Programmierungs-|hyperpage}{7}
+\indexentry{lineares Optimierungsproblem|hyperpage}{7}
+\indexentry{Optimierungsproblem, lineares|hyperpage}{7}
+\indexentry{Problem!lineares Optimierungs-|hyperpage}{7}
+\indexentry{Nichtnegativit\"atsbedingungen|hyperpage}{8}
+\indexentry{Zielfunktion|hyperpage}{8}
+\indexentry{Funktion!Ziel-|hyperpage}{8}
+\indexentry{zul\"assige L\"osung|hyperpage}{8}
+\indexentry{L\"osung!zul\"assige|hyperpage}{8}
+\indexentry{optimale L\"osung|hyperpage}{8}
+\indexentry{L\"osung!optimale|hyperpage}{8}
+\indexentry{optimaler Zielfunktionswert|hyperpage}{8}
+\indexentry{Zielfunktionswert, optimaler|hyperpage}{8}
+\indexentry{unl\"osbar|hyperpage}{8}
+\indexentry{unbeschr\"ankt|hyperpage}{8}
+\indexentry{Matrixschreibweise|hyperpage}{8}
+\indexentry{lineares Programm|hyperpage}{9}
+\indexentry{Programm, lineares|hyperpage}{9}
+\indexentry{zul\"assiger Bereich|hyperpage}{9}
+\indexentry{Bereich, zul\"assiger|hyperpage}{9}
+\indexentry{freie Variable|hyperpage}{9}
+\indexentry{Variable!freie|hyperpage}{9}
+\indexentry{englische Terminologie|hyperpage}{9}
+\indexentry{Terminologie, englische|hyperpage}{9}
+\indexentry{constraint|hyperpage}{9}
+\indexentry{objective function|hyperpage}{9}
+\indexentry{function, objective|hyperpage}{9}
+\indexentry{feasible solution|hyperpage}{9}
+\indexentry{solution!feasible|hyperpage}{9}
+\indexentry{\"Olraffinerie|hyperpage}{9}
+\indexentry{\"Uberf\"uhrung in Standardform|hyperpage}{10}
+\indexentry{Standardform!\"Uberf\"uhrung in|hyperpage}{10}
+\indexentry{grafische Methode|hyperpage}{11}
+\indexentry{Methode!grafische|hyperpage}{11}
+\indexentry{Gerade!im $\R^2$|hyperpage}{11}
+\indexentry{Halbebene|hyperpage}{11}
+\indexentry{Ebene!Halb-|hyperpage}{11}
+\indexentry{zul\"assiger Bereich|hyperpage}{14}
+\indexentry{Bereich!zul\"assiger|hyperpage}{14}
+\indexentry{Simplexverfahren|hyperpage}{15}
+\indexentry{Verfahren!Simplex-|hyperpage}{15}
+\indexentry{Simplexmethode|hyperpage}{15}
+\indexentry{Methode!Simplex-|hyperpage}{15}
+\indexentry{Simplexalgorithmus|hyperpage}{15}
+\indexentry{Algorithmus!Simplex-|hyperpage}{15}
+\indexentry{G. B. Dantzig|hyperpage}{15}
+\indexentry{Dantzig, G. B.|hyperpage}{15}
+\indexentry{Simplexverfahren|hyperpage}{17}
+\indexentry{Verfahren!Simplex-|hyperpage}{17}
+\indexentry{Standardform|hyperpage}{17}
+\indexentry{Schlupfvariable|hyperpage}{17}
+\indexentry{Variable!Schlupf-|hyperpage}{17}
+\indexentry{slack variable|hyperpage}{17}
+\indexentry{Variable!slack|hyperpage}{17}
+\indexentry{Startl\"osung|hyperpage}{18}
+\indexentry{L\"osung!Start-|hyperpage}{18}
+\indexentry{Iteration|hyperpage}{20}
+\indexentry{Austausch|hyperpage}{20}
+\indexentry{Schlupfvariable|hyperpage}{21}
+\indexentry{Variable!Schlupf-|hyperpage}{21}
+\indexentry{Schlupfform|hyperpage}{22}
+\indexentry{Basis|hyperpage}{22}
+\indexentry{Pivotschritt|hyperpage}{23}
+\indexentry{Basisaustauschschritt|hyperpage}{23}
+\indexentry{Basistausch|hyperpage}{23}
+\indexentry{Eingangsvariable|hyperpage}{23}
+\indexentry{Variable!Eingangs-|hyperpage}{23}
+\indexentry{Ausgangsvariable|hyperpage}{23}
+\indexentry{Variable!Ausgangs-|hyperpage}{23}
+\indexentry{Pivotzeile|hyperpage}{23}
+\indexentry{Pivotspalte|hyperpage}{23}
+\indexentry{Tableau|hyperpage}{23}
+\indexentry{dictionary|hyperpage}{23}
+\indexentry{Basisvariable|hyperpage}{23}
+\indexentry{Variable!Basis-|hyperpage}{23}
+\indexentry{Nichtbasisvariable|hyperpage}{23}
+\indexentry{Basisvariable!Nicht-|hyperpage}{23}
+\indexentry{Variable!Nichtbasis-|hyperpage}{23}
+\indexentry{zul\"assiges Tableau|hyperpage}{23}
+\indexentry{Tableau!zul\"assiges|hyperpage}{23}
+\indexentry{feasible dictionary|hyperpage}{23}
+\indexentry{dictionary!feasible|hyperpage}{23}
+\indexentry{zul\"assige Basisl\"osung|hyperpage}{23}
+\indexentry{Basisl\"osung, zul\"assige|hyperpage}{23}
+\indexentry{L\"osung!zul\"assige Basis-|hyperpage}{23}
+\indexentry{basic feasible solution|hyperpage}{23}
+\indexentry{solution!basic feasible|hyperpage}{23}
+\indexentry{Ergebnis einer Iteration|hyperpage}{25}
+\indexentry{Iteration!Ergebnis einer|hyperpage}{25}
+\indexentry{Konventionen beim Simplexverfahren|hyperpage}{25}
+\indexentry{Simplexverfahren!Konventionen beim|hyperpage}{25}
+\indexentry{$z$-Zeile|hyperpage}{25}
+\indexentry{Muster f\"ur das L\"osen von \"Ubungsaufgaben|hyperpage}{25}
+\indexentry{\"Ubungsaufgaben, Muster f\"ur das L\"osen von|hyperpage}{25}
+\indexentry{Ergebnis einer Iteration|hyperpage}{27}
+\indexentry{Iteration!Ergebnis einer|hyperpage}{27}
+\indexentry{zul\"assige Basisl\"osung|hyperpage}{27}
+\indexentry{Basisl\"osung, zul\"assige|hyperpage}{27}
+\indexentry{Problemvariable|hyperpage}{27}
+\indexentry{Variable!Problem-|hyperpage}{27}
+\indexentry{Entscheidungsvariable|hyperpage}{27}
+\indexentry{Variable!Entscheidungs-|hyperpage}{27}
+\indexentry{decision variable|hyperpage}{27}
+\indexentry{Variable!decision|hyperpage}{27}
+\indexentry{Initialisierung|hyperpage}{28}
+\indexentry{Iteration|hyperpage}{28}
+\indexentry{Terminierung|hyperpage}{28}
+\indexentry{Initialisierung|hyperpage}{28}
+\indexentry{Iteration|hyperpage}{29}
+\indexentry{Wahl der Eingangsvariable|hyperpage}{29}
+\indexentry{Variable!Wahl der Eingangs-|hyperpage}{29}
+\indexentry{Eingangsvariable!Wahl der|hyperpage}{29}
+\indexentry{Wahl der Ausgangsvariable|hyperpage}{29}
+\indexentry{Variable!Wahl der Ausgangs-|hyperpage}{29}
+\indexentry{Ausgangsvariable!Wahl der|hyperpage}{29}
+\indexentry{unbeschr\"ankt|hyperpage}{29}
+\indexentry{Entartung|hyperpage}{30}
+\indexentry{degeneriert|hyperpage}{30}
+\indexentry{entartet|hyperpage}{30}
+\indexentry{degenerate|hyperpage}{30}
+\indexentry{degenerierter Iterationsschritt|hyperpage}{31}
+\indexentry{Iterationsschritt!degenerierter|hyperpage}{31}
+\indexentry{entarteter Iterationsschritt|hyperpage}{31}
+\indexentry{Iterationsschritt!entarteter|hyperpage}{31}
+\indexentry{Kreisen des Simplexverfahrens|hyperpage}{31}
+\indexentry{Simplexverfahren!Kreisen des|hyperpage}{31}
+\indexentry{cycling|hyperpage}{31}
+\indexentry{Terminierung|hyperpage}{31}
+\indexentry{Kreisen des Simplexverfahrens|hyperpage}{32}
+\indexentry{Simplexverfahren!Kreisen des|hyperpage}{32}
+\indexentry{degenerierter Iterationsschritt|hyperpage}{32}
+\indexentry{Iterationsschritt!degenerierter|hyperpage}{32}
+\indexentry{entarteter Iterationsschritt|hyperpage}{32}
+\indexentry{Iterationsschritt!entarteter|hyperpage}{32}
+\indexentry{Blandsche Regel|hyperpage}{33}
+\indexentry{Regel!Blandsche|hyperpage}{33}
+\indexentry{Bland's rule|hyperpage}{33}
+\indexentry{Initialisierung|hyperpage}{35}
+\indexentry{Hilfsproblem|hyperpage}{35}
+\indexentry{Problem!Hilfs-|hyperpage}{35}
+\indexentry{unzul\"assiges Tableau|hyperpage}{36}
+\indexentry{Tableau!unzul\"assiges|hyperpage}{36}
+\indexentry{Starttableau|hyperpage}{38}
+\indexentry{Tableau!Start-|hyperpage}{38}
+\indexentry{Zweiphasen-Simplexverfahren|hyperpage}{39}
+\indexentry{Simplexverfahren!Zweiphasen-|hyperpage}{39}
+\indexentry{Verfahren!Zweiphasen-Simplex-|hyperpage}{39}
+\indexentry{Fundamentalsatz der Linearen Programmierung|hyperpage}{39}
+\indexentry{Lineare Programmierung, Fundamentalsatz der|hyperpage}{39}
+\indexentry{Satz!Fundamental- der Linearen Programmierung|hyperpage}{39}
+\indexentry{Programmierung, Fundamentalsatz der Linearen|hyperpage}{39}
+\indexentry{Beweis!des Fundamentalsatzes der Linearen Programmierung|hyperpage}{39}
+\indexentry{Fundamentalsatz der Linearen Programmierung!Beweis|hyperpage}{39}
+\indexentry{Geometrie|hyperpage}{41}
+\indexentry{Gerade im $\mathbb{R}^2$|hyperpage}{41}
+\indexentry{Halbebene|hyperpage}{41}
+\indexentry{Ebene!Halb-|hyperpage}{41}
+\indexentry{Ebene!im $\mathbb{R}^3$|hyperpage}{41}
+\indexentry{Halbraum|hyperpage}{41}
+\indexentry{Halbraum des $\mathbb{R}^n$|hyperpage}{41}
+\indexentry{Hyperebene im $\mathbb{R}^n$|hyperpage}{41}
+\indexentry{Ebene!Hyper- des $\mathbb{R}^n$|hyperpage}{41}
+\indexentry{Polyeder|hyperpage}{41}
+\indexentry{Prisma|hyperpage}{42}
+\indexentry{Fl\"achen eines Polyeders|hyperpage}{42}
+\indexentry{Polyeder!Fl\"achen eines|hyperpage}{42}
+\indexentry{Seitenfl\"achen eines Polyeders|hyperpage}{42}
+\indexentry{Polyeder!Seitenfl\"aches eines|hyperpage}{42}
+\indexentry{vertex|hyperpage}{43}
+\indexentry{Ecke!eines Polyeders|hyperpage}{43}
+\indexentry{Polyeder!Ecke eines|hyperpage}{43}
+\indexentry{Geometrische Interpretation des Simplexverfahrens|hyperpage}{43}
+\indexentry{Simplexverfahren!geometrische Interpretation|hyperpage}{43}
+\indexentry{Ecke!eines Prismas|hyperpage}{43}
+\indexentry{Prisma!Ecke eines|hyperpage}{43}
+\indexentry{Kante!eines Polyeders|hyperpage}{43}
+\indexentry{Polyeder!Kanten eines|hyperpage}{43}
+\indexentry{optimale Ecke|hyperpage}{44}
+\indexentry{Ecke!optimale|hyperpage}{44}
+\indexentry{Konvexit\"at|hyperpage}{44}
+\indexentry{konvexe Mengen|hyperpage}{44}
+\indexentry{Menge, konvexe|hyperpage}{44}
+\indexentry{Parameterform einer Geraden|hyperpage}{44}
+\indexentry{Gerade!Parameterform einer|hyperpage}{44}
+\indexentry{St\"utzvektor|hyperpage}{44}
+\indexentry{Vektor!St\"utz-|hyperpage}{44}
+\indexentry{Richtungsvektor|hyperpage}{44}
+\indexentry{Vektor!Richtungs-|hyperpage}{44}
+\indexentry{Halbgerade|hyperpage}{44}
+\indexentry{Gerade!Halb-|hyperpage}{44}
+\indexentry{konvex|hyperpage}{45}
+\indexentry{Verbindungsstrecke|hyperpage}{45}
+\indexentry{konvex|hyperpage}{45}
+\indexentry{konvexe Mengen|hyperpage}{46}
+\indexentry{Menge, konvexe|hyperpage}{46}
+\indexentry{konvexe Funktion|hyperpage}{46}
+\indexentry{Funktion!konvexe|hyperpage}{46}
+\indexentry{Epigraph|hyperpage}{47}
+\indexentry{konvexe H\"ulle|hyperpage}{48}
+\indexentry{H\"ulle!konvexe|hyperpage}{48}
+\indexentry{Algorithmische Geometrie|hyperpage}{49}
+\indexentry{Geometrie!Algorithmische|hyperpage}{49}
+\indexentry{Linearkombination|hyperpage}{49}
+\indexentry{Konvexkombination|hyperpage}{50}
+\indexentry{konische H\"ulle|hyperpage}{52}
+\indexentry{H\"ulle!konische|hyperpage}{52}
+\indexentry{konvexer Kegel|hyperpage}{53}
+\indexentry{Kegel!konvexer|hyperpage}{53}
+\indexentry{konische Linearkombination|hyperpage}{54}
+\indexentry{Linearkombination!konische|hyperpage}{54}
+\indexentry{endlich erzeugter konvexer Kegel|hyperpage}{54}
+\indexentry{konvexer Kegel!endlich erzeugter|hyperpage}{54}
+\indexentry{Beispiele von Klee und Minty|hyperpage}{55}
+\indexentry{Klee und Minty!Beispiele von|hyperpage}{55}
+\indexentry{Regel!vom gr\"o\IeC {\ss }ten Koeffizienten|hyperpage}{55}
+\indexentry{Koeffizient, Regel vom gr\"o\IeC {\ss }ten|hyperpage}{55}
+\indexentry{largest-coefficient rule|hyperpage}{55}
+\indexentry{alternative Pivotierungsregeln|hyperpage}{57}
+\indexentry{Pivotierungsregeln, alternative|hyperpage}{57}
+\indexentry{Regel!alternative Pivotierungs-|hyperpage}{57}
+\indexentry{Regel!vom gr\"o\IeC {\ss }ten Zuwachs|hyperpage}{57}
+\indexentry{Zuwachs, Regel vom gr\"o\IeC {\ss }ten|hyperpage}{57}
+\indexentry{largest-increase rule|hyperpage}{57}
+\indexentry{Regel!vom kleinsten Index|hyperpage}{57}
+\indexentry{Index, Regel vom kleinsten|hyperpage}{57}
+\indexentry{Blandsche Regel|hyperpage}{57}
+\indexentry{Regel!Blandsche|hyperpage}{57}
+\indexentry{smallest-subscript rule|hyperpage}{57}
+\indexentry{Bland's rule|hyperpage}{57}
+\indexentry{Ellipsoid-Methode|hyperpage}{58}
+\indexentry{Methode!Ellipsoid-|hyperpage}{58}
+\indexentry{Khachiyan-Algorithmus|hyperpage}{58}
+\indexentry{Algorithmus!Khachiyan-|hyperpage}{58}
+\indexentry{Innere-Punkte-Algorithmus|hyperpage}{58}
+\indexentry{Algorithmus!Innere-Punkte-|hyperpage}{58}
+\indexentry{Di\"atproblem|hyperpage}{59}
+\indexentry{Problem!Di\"at-|hyperpage}{59}
+\indexentry{allgemeines Di\"atproblem|hyperpage}{59}
+\indexentry{Di\"atproblem!allgemeines|hyperpage}{59}
+\indexentry{Problem!allgemeines Di\"at-|hyperpage}{59}
+\indexentry{Nebenbedingungen!Hinzunahme von zus\"atzlichen|hyperpage}{60}
+\indexentry{Hinzunahme von zus\"atzlichen Nebenbedingungen|hyperpage}{60}
+\indexentry{Wahlkampf|hyperpage}{60}
+\indexentry{Politik|hyperpage}{60}
+\indexentry{Energieflussproblem|hyperpage}{62}
+\indexentry{Problem!Energiefluss-|hyperpage}{62}
+\indexentry{Quelle|hyperpage}{63}
+\indexentry{Senke|hyperpage}{63}
+\indexentry{Knotenbedingungen|hyperpage}{63}
+\indexentry{Kapazit\"atsschranke|hyperpage}{63}
+\indexentry{Schranke!Kapazit\"ats-|hyperpage}{63}
+\indexentry{Fluss!maximaler St\"arke|hyperpage}{63}
+\indexentry{kostenoptimaler Fluss|hyperpage}{63}
+\indexentry{Fluss!kostenoptimaler|hyperpage}{63}
+\indexentry{Rucksackproblem|hyperpage}{64}
+\indexentry{Problem!Rucksack-|hyperpage}{64}
+\indexentry{Knapsack-Problem|hyperpage}{64}
+\indexentry{Ganzzahliges Lineares Programmierungsproblem|hyperpage}{65}
+\indexentry{Problem!Ganzzahliges Lineares Programmierungs-|hyperpage}{65}
+\indexentry{ILP-Problem|hyperpage}{65}
+\indexentry{Problem!ILP-|hyperpage}{65}
+\indexentry{0,1-Problem|hyperpage}{65}
+\indexentry{Problem!0,1-|hyperpage}{65}
+\indexentry{bin\"ares Problem|hyperpage}{65}
+\indexentry{Problem!bin\"ares|hyperpage}{65}
+\indexentry{Rucksackproblem|hyperpage}{65}
+\indexentry{Problem!Rucksack-|hyperpage}{65}
+\indexentry{Verschnittproblem|hyperpage}{65}
+\indexentry{Problem!Verschnitt-|hyperpage}{65}
+\indexentry{LP-Relaxation|hyperpage}{65}
+\indexentry{Verschnittproblem|hyperpage}{67}
+\indexentry{Problem!Verschnitt-|hyperpage}{67}
+\indexentry{Verschnittproblem!2-dimensionales|hyperpage}{67}
+\indexentry{2-dimensionales Verschnittproblem|hyperpage}{67}
+\indexentry{Dualit\"at|hyperpage}{68}
+\indexentry{obere Schranke|hyperpage}{68}
+\indexentry{Schranke!obere|hyperpage}{68}
+\indexentry{Linearkombination von Nebenbedingungen|hyperpage}{68}
+\indexentry{Nebenbedingungen!Linearkombination von|hyperpage}{68}
+\indexentry{duales Problem|hyperpage}{69}
+\indexentry{Problem!duales|hyperpage}{69}
+\indexentry{primales Problem|hyperpage}{69}
+\indexentry{Problem!primales|hyperpage}{69}
+\indexentry{Duales|hyperpage}{70}
+\indexentry{primale Nebenbedingung|hyperpage}{70}
+\indexentry{Nebenbedingungen!primale|hyperpage}{70}
+\indexentry{duale Variable|hyperpage}{70}
+\indexentry{Variable!duale|hyperpage}{70}
+\indexentry{duale Nebenbedingung|hyperpage}{70}
+\indexentry{Nebenbedingungen!duale|hyperpage}{70}
+\indexentry{primale Variable|hyperpage}{70}
+\indexentry{Variable!primale|hyperpage}{70}
+\indexentry{Matrixschreibweise|hyperpage}{70}
+\indexentry{primale zul\"assige L\"osung|hyperpage}{71}
+\indexentry{L\"osung!primale zul\"assige|hyperpage}{71}
+\indexentry{zul\"assige L\"osung!primale|hyperpage}{71}
+\indexentry{duale zul\"assige L\"osung|hyperpage}{71}
+\indexentry{L\"osung!duale zul\"assige|hyperpage}{71}
+\indexentry{zul\"assige L\"osung!duale|hyperpage}{71}
+\indexentry{schwache Dualit\"at|hyperpage}{71}
+\indexentry{Dualit\"at!schwache|hyperpage}{71}
+\indexentry{Dualit\"atssatz|hyperpage}{72}
+\indexentry{Satz!Dualit\"ats-|hyperpage}{72}
+\indexentry{optimale L\"osung!des dualen Problems|hyperpage}{72}
+\indexentry{duales Problem!optimale L\"osung|hyperpage}{72}
+\indexentry{L\"osung!optimale duale|hyperpage}{72}
+\indexentry{Beweis!des Dualit\"atssatzes|hyperpage}{72}
+\indexentry{Dualit\"atssatz!Beweis des|hyperpage}{72}
+\indexentry{Beweis!des Dualit\"atssatzes|hyperpage}{73}
+\indexentry{Dualit\"atssatz!Beweis des|hyperpage}{73}
+\indexentry{Dualit\"atssatz|hyperpage}{74}
+\indexentry{Satz!Dualit\"ats-|hyperpage}{74}
+\indexentry{Zertifikat!f\"ur Optimalit\"at|hyperpage}{75}
+\indexentry{Optimalit\"at!Zertifikat f\"ur|hyperpage}{75}
+\indexentry{zertifizierender Algorithmus|hyperpage}{75}
+\indexentry{Algorithmus!zertifizierender|hyperpage}{75}
+\indexentry{Folgerung aus dem Dualit\"atssatz|hyperpage}{75}
+\indexentry{Dualit\"atssatz!Folgerung aus dem|hyperpage}{75}
+\indexentry{Complementary Slackness Theorem|hyperpage}{76}
+\indexentry{Satz!vom komplement\"aren Schlupf|hyperpage}{76}
+\indexentry{Schlupf, Satz vom komplement\"aren|hyperpage}{76}
+\indexentry{Beweis!des Satzes vom komplement\"aren Schlupf|hyperpage}{76}
+\indexentry{einschlie\IeC {\ss }endes Oder|hyperpage}{76}
+\indexentry{Oder, einschlie\IeC {\ss }endes|hyperpage}{76}
+\indexentry{tight|hyperpage}{77}
+\indexentry{complementary slackness conditions|hyperpage}{77}
+\indexentry{komplement\"are Schlupfbedingung|hyperpage}{77}
+\indexentry{Schlupf, komplement\"are -bedingung|hyperpage}{77}
+\indexentry{komplement\"are Schlupfbedingung|hyperpage}{77}
+\indexentry{Schlupf, komplement\"are -bedingung|hyperpage}{77}
+\indexentry{Test auf Optimalit\"at|hyperpage}{77}
+\indexentry{Optimalit\"at!Test auf|hyperpage}{77}
+\indexentry{Satz!vom komplement\"aren Schlupf (zweite Fassung)|hyperpage}{78}
+\indexentry{Schlupf, Satz vom komplement\"aren!zweite Fassung|hyperpage}{78}
+\indexentry{\"okonomische Bedeutung dualer Variablen|hyperpage}{79}
+\indexentry{duale Variable!\"okonomische Bedeutung|hyperpage}{79}
+\indexentry{Beispiel!\enquote{Gewinn eines Kosmetikherstellers}|hyperpage}{79}
+\indexentry{$i$-te Ressource|hyperpage}{79}
+\indexentry{Ressource|hyperpage}{79}
+\indexentry{Schattenpreis!der $i$-ten Ressource|hyperpage}{81}
+\indexentry{$i$-te Ressource!Schattenpreis der|hyperpage}{81}
+\indexentry{Ressource!Schattenpreise der $i$-ten|hyperpage}{81}
+\indexentry{Beispiel!\enquote{Forstunternehmerin}|hyperpage}{81}
+\indexentry{Forstunternehmerin|hyperpage}{81}
+\indexentry{Schattenpreis|hyperpage}{83}
+\indexentry{allgemeiner Fall eines LP-Problems|hyperpage}{83}
+\indexentry{LP-Problem!allgemeiner Fall|hyperpage}{83}
+\indexentry{Dualit\"at!eines allgemeinen LP-Problems|hyperpage}{83}
+\indexentry{freie Variable|hyperpage}{83}
+\indexentry{Variable!freie|hyperpage}{83}
+\indexentry{Gleichung|hyperpage}{83}
+\indexentry{freie Variable|hyperpage}{83}
+\indexentry{Variable!freie|hyperpage}{83}
+\indexentry{Ungleichung|hyperpage}{84}
+\indexentry{Gleichung|hyperpage}{84}
+\indexentry{restringierte Variable|hyperpage}{84}
+\indexentry{Variable!restringierte|hyperpage}{84}
+\indexentry{freie Variable|hyperpage}{84}
+\indexentry{Variable!freie|hyperpage}{84}
+\indexentry{Linearkombination von Nebenbedingungen|hyperpage}{84}
+\indexentry{Nebenbedingungen!Linearkombination von|hyperpage}{84}
+\indexentry{duale Variable|hyperpage}{84}
+\indexentry{Variable!duale|hyperpage}{84}
+\indexentry{restringierte duale Variable|hyperpage}{84}
+\indexentry{duale Variable!restringierte|hyperpage}{84}
+\indexentry{Variable!restringierte duale|hyperpage}{84}
+\indexentry{freie duale Variable|hyperpage}{84}
+\indexentry{Variable!freie duale|hyperpage}{84}
+\indexentry{duale Variable!freie|hyperpage}{84}
+\indexentry{duales Problem|hyperpage}{86}
+\indexentry{Problem!duales|hyperpage}{86}
+\indexentry{Duales|hyperpage}{86}
+\indexentry{primales Problem|hyperpage}{86}
+\indexentry{Problem!primales|hyperpage}{86}
+\indexentry{Dualisierungsrezept|hyperpage}{86}
+\indexentry{Dualisierungsrezept|hyperpage}{86}
+\indexentry{Dualit\"atssatz!f\"ur allgemeine LP-Probleme|hyperpage}{88}
+\indexentry{Satz!Dualit\"ats- f\"ur allgemeine LP-Probleme|hyperpage}{88}
+\indexentry{Variante des Lemma von Farkas|hyperpage}{91}
+\indexentry{revidierte Simplexmethode|hyperpage}{93}
+\indexentry{Simplexmethode!revidierte|hyperpage}{93}
+\indexentry{Matrizen|hyperpage}{93}
+\indexentry{nichtsingul\"are Matrix|hyperpage}{94}
+\indexentry{Matrix!nichtsingul\"are|hyperpage}{94}
+\indexentry{inverse Matrix|hyperpage}{94}
+\indexentry{Matrix!inverse|hyperpage}{94}
+\indexentry{Matrixform eines Tableaus|hyperpage}{95}
+\indexentry{Tableau!Matrixform eines|hyperpage}{95}
+\indexentry{nichtsingul\"are Matrix|hyperpage}{96}
+\indexentry{Matrix!nichtsingul\"are|hyperpage}{96}
+\indexentry{invertierbar|hyperpage}{96}
+\indexentry{Basismatrix|hyperpage}{96}
+\indexentry{Matrix!Basis-|hyperpage}{96}
+\indexentry{Basis|hyperpage}{96}
+\indexentry{Matrixdarstellung eines Tableaus|hyperpage}{96}
+\indexentry{Tableau!Matrixdarstellung eines|hyperpage}{96}
+\indexentry{Standardsimplexverfahren|hyperpage}{97}
+\indexentry{Simplexverfahren!Standard-|hyperpage}{97}
+\indexentry{Verfahren!Standard-Simplex-|hyperpage}{97}
+\indexentry{Beschreibung des revidierten Simplexverfahrens|hyperpage}{97}
+\indexentry{Simplexverfahren!Beschreibung des revidierten|hyperpage}{97}
+\indexentry{revidiertes Simplexverfahren!Beschreibung des|hyperpage}{97}
+\indexentry{Eingangsspalte|hyperpage}{98}
+\indexentry{Spalte!Eingangs-|hyperpage}{98}
+\indexentry{Eingangsspalte|hyperpage}{99}
+\indexentry{Spalte!Eingangs-|hyperpage}{99}
+\indexentry{Simplexverfahren!Regel zum Update beim revidierten|hyperpage}{100}
+\indexentry{Regel!zum Update beim revidierten Simplexverfahren|hyperpage}{100}
+\indexentry{revidiertes Simplexverfahren!Regel zum Update beim|hyperpage}{100}
+\indexentry{Update beim revidierten Simplexverfahren|hyperpage}{100}
+\indexentry{revidiertes Simplexverfahren!Update beim|hyperpage}{100}
+\indexentry{Simplexverfahren!Update beim revidierten|hyperpage}{100}
+\indexentry{Ausgangsspalte|hyperpage}{100}
+\indexentry{Spalte!Ausgangs-|hyperpage}{100}
+\indexentry{Iteration der revidierten Simplexmethode|hyperpage}{100}
+\indexentry{revidierte Simplexmethode!Iteration der|hyperpage}{100}
+\indexentry{Simplexmethode!Iteration der revidierten|hyperpage}{100}
+\indexentry{Eingangsspalte|hyperpage}{100}
+\indexentry{Spalte!Eingangs-|hyperpage}{100}
+\indexentry{Ausgangsspalte|hyperpage}{100}
+\indexentry{Spalte!Ausgangs-|hyperpage}{100}
+\indexentry{Kopfzeile|hyperpage}{101}
+\indexentry{schwach besetztes Problem|hyperpage}{104}
+\indexentry{Problem!schwach besetztes|hyperpage}{104}
+\indexentry{schwach besetzte Matrix|hyperpage}{104}
+\indexentry{Matrizen!schwach besetzte|hyperpage}{104}
+\indexentry{Rundungsfehler|hyperpage}{105}
+\indexentry{invertierbar|hyperpage}{105}
+\indexentry{nichtsingul\"are Matrix|hyperpage}{105}
+\indexentry{Matrix!nichtsingul\"are|hyperpage}{105}
+\indexentry{singul\"are Matrix|hyperpage}{105}
+\indexentry{Matrix!singul\"are|hyperpage}{105}
+\indexentry{Determinante|hyperpage}{105}
+\indexentry{Kapazit\"at|hyperpage}{107}
+\indexentry{Kante!Kapazit\"at einer|hyperpage}{107}
+\indexentry{Flussnetzwerk|hyperpage}{107}
+\indexentry{Netzwerk!Fluss-|hyperpage}{107}
+\indexentry{Netzwerk|hyperpage}{107}
+\indexentry{gerichteter Graph|hyperpage}{107}
+\indexentry{Graph!gerichteter|hyperpage}{107}
+\indexentry{Digraph|hyperpage}{107}
+\indexentry{Graph!Di-|hyperpage}{107}
+\indexentry{schlingenloser Digraph|hyperpage}{107}
+\indexentry{Digraph!schlingenloser|hyperpage}{107}
+\indexentry{Knoten|hyperpage}{107}
+\indexentry{Kante|hyperpage}{107}
+\indexentry{gerichtete Kante|hyperpage}{107}
+\indexentry{Kante!gerichtete|hyperpage}{107}
+\indexentry{Kapazit\"at|hyperpage}{107}
+\indexentry{Kante!Kapazit\"at einer|hyperpage}{107}
+\indexentry{Flussnetzwerk|hyperpage}{107}
+\indexentry{Netzwerk!Fluss-|hyperpage}{107}
+\indexentry{Quelle|hyperpage}{107}
+\indexentry{Senke|hyperpage}{107}
+\indexentry{Netzwerk|hyperpage}{107}
+\indexentry{Ecke|hyperpage}{107}
+\indexentry{vertex|hyperpage}{107}
+\indexentry{node|hyperpage}{107}
+\indexentry{edge|hyperpage}{107}
+\indexentry{Erhaltungsregel|hyperpage}{108}
+\indexentry{Regel!Erhaltungs-|hyperpage}{108}
+\indexentry{Komplement|hyperpage}{108}
+\indexentry{Fluss|hyperpage}{109}
+\indexentry{innerer Knoten|hyperpage}{109}
+\indexentry{Knoten!innerer|hyperpage}{109}
+\indexentry{Anfangsknoten einer Kante|hyperpage}{110}
+\indexentry{Kante!Anfangsknoten einer|hyperpage}{110}
+\indexentry{Endknoten einer Kante|hyperpage}{110}
+\indexentry{Kante!Endknoten einer|hyperpage}{110}
+\indexentry{Wert eines Flusses|hyperpage}{110}
+\indexentry{Fluss!Wert des|hyperpage}{110}
+\indexentry{maximaler Fluss|hyperpage}{111}
+\indexentry{Fluss!maximaler|hyperpage}{111}
+\indexentry{Schnitt|hyperpage}{111}
+\indexentry{Maximalfluss|hyperpage}{111}
+\indexentry{Fluss!Maximal-|hyperpage}{111}
+\indexentry{Kapazit\"at|hyperpage}{112}
+\indexentry{Kante!Kapazit\"at einer|hyperpage}{112}
+\indexentry{Nettofluss|hyperpage}{113}
+\indexentry{Fluss!Netto-|hyperpage}{113}
+\indexentry{minimaler Schnitt|hyperpage}{114}
+\indexentry{Schnitt!minimaler|hyperpage}{114}
+\indexentry{Max-Flow Min-Cut Theorem|hyperpage}{114}
+\indexentry{Beweis!des Max-Flow Min-Cut Theorems|hyperpage}{114}
+\indexentry{Vorw\"artskanten|hyperpage}{115}
+\indexentry{Kante!Vorw\"arts-|hyperpage}{115}
+\indexentry{R\"uckw\"artskante|hyperpage}{115}
+\indexentry{Kante!R\"uckw\"arts-|hyperpage}{115}
+\indexentry{antiparallele Kante|hyperpage}{116}
+\indexentry{Kante!antiparallele|hyperpage}{116}
+\indexentry{flussvergr\"o\IeC {\ss }ernder Pfad|hyperpage}{117}
+\indexentry{Pfad!flussvergr\"o\IeC {\ss }ernder|hyperpage}{117}
+\indexentry{zunehmender Pfad|hyperpage}{117}
+\indexentry{Pfad!zunehmender|hyperpage}{117}
+\indexentry{zunehmender Pfad nach $v_k$|hyperpage}{117}
+\indexentry{Vorw\"artskante|hyperpage}{117}
+\indexentry{Kante!Vorw\"arts-|hyperpage}{117}
+\indexentry{R\"uckw\"artskante|hyperpage}{117}
+\indexentry{Kante!R\"uckw\"arts-|hyperpage}{117}
+\indexentry{Vorw\"artskanten|hyperpage}{117}
+\indexentry{Kante!Vorw\"arts-|hyperpage}{117}
+\indexentry{R\"uckw\"artskante|hyperpage}{117}
+\indexentry{Kante!R\"uckw\"arts-|hyperpage}{117}
+\indexentry{ganzzahliger Fluss|hyperpage}{118}
+\indexentry{Fluss!ganzzahliger|hyperpage}{118}
+\indexentry{Verfahren!zur Bestimmung eines maximalen Flusses|hyperpage}{118}
+\indexentry{Maximalfluss!Verfahren zur Bestimmung|hyperpage}{118}
+\indexentry{Nullfluss|hyperpage}{118}
+\indexentry{Fluss!Null-|hyperpage}{118}
+\indexentry{Ford-Fulkerson-Methode|hyperpage}{118}
+\indexentry{Methode!Ford-Fulkerson-|hyperpage}{118}
+\indexentry{Ford-Fulkerson-Verfahren|hyperpage}{118}
+\indexentry{Verfahren!Ford-Fulkerson-|hyperpage}{118}
+\indexentry{Ford-Fulkerson-Algorithmus|hyperpage}{118}
+\indexentry{Algorithmus!Ford-Fulkerson-|hyperpage}{118}
+\indexentry{Zertifikat!f\"ur Optimalit\"at eines Flusses|hyperpage}{119}
+\indexentry{Fluss!Zertifikat f\"ur Optimalit\"at|hyperpage}{119}
+\indexentry{zertifizierender Algorithmus|hyperpage}{119}
+\indexentry{Algorithmus!zertifizierender|hyperpage}{119}
+\indexentry{Max-Flow Min-Cut Theorem|hyperpage}{120}
+\indexentry{Beweis!des Max-Flow Min-Cut Theorems|hyperpage}{120}
+\indexentry{labelling algorithm|hyperpage}{120}
+\indexentry{Labelling-Algorithmus|hyperpage}{120}
+\indexentry{Algorithmus!Labelling-|hyperpage}{120}
+\indexentry{Markierungsalgorithmus|hyperpage}{120}
+\indexentry{Algorithmus!Markierungs-|hyperpage}{120}
+\indexentry{Labelling-Algorithmus|hyperpage}{120}
+\indexentry{Algorithmus!Labelling-|hyperpage}{120}
+\indexentry{Algorithmus!von Edmonds und Karp|hyperpage}{120}
+\indexentry{Edmonds und Karp!Algorithmus von|hyperpage}{120}
+\indexentry{Anfangsknoten einer Kante|hyperpage}{120}
+\indexentry{Kante!Anfangsknoten einer|hyperpage}{120}
+\indexentry{Endknoten einer Kante|hyperpage}{120}
+\indexentry{Kante!Endknoten einer|hyperpage}{120}
+\indexentry{Labelling-Algorithmus|hyperpage}{120}
+\indexentry{Algorithmus!Labelling-|hyperpage}{120}
+\indexentry{augmenting path|hyperpage}{120}
+\indexentry{Knotenmarkierungen|hyperpage}{121}
+\indexentry{Labelling-Algorithmus|hyperpage}{121}
+\indexentry{Algorithmus!Labelling-|hyperpage}{121}
+\indexentry{Labelling-Algorithmus|hyperpage}{121}
+\indexentry{Algorithmus!Labelling-|hyperpage}{121}
+\indexentry{untersuchter Knoten|hyperpage}{121}
+\indexentry{Knoten!untersuchter|hyperpage}{121}
+\indexentry{inspizierter Knoten|hyperpage}{121}
+\indexentry{Knoten!inspizierter|hyperpage}{121}
+\indexentry{Labelling-Algorithmus|hyperpage}{122}
+\indexentry{Algorithmus!Labelling-|hyperpage}{122}
+\indexentry{Satz!von Edmonds und Karp|hyperpage}{122}
+\indexentry{Edmonds und Karp!Satz von|hyperpage}{122}
+\indexentry{Breitensuche|hyperpage}{122}
+\indexentry{breadth first search|hyperpage}{122}
+\indexentry{BFS|hyperpage}{122}
+\indexentry{Algorithmus!von Edmonds und Karp|hyperpage}{122}
+\indexentry{Edmonds und Karp!Algorithmus von|hyperpage}{122}
+\indexentry{first labelled -- first scanned|hyperpage}{123}
+\indexentry{Warteschlange|hyperpage}{123}
+\indexentry{queue|hyperpage}{123}
+\indexentry{Erreichbarkeit durch einen zunehmenden Pfad|hyperpage}{128}
+\indexentry{Flaschenhals|hyperpage}{128}
+\indexentry{bottleneck|hyperpage}{128}
+\indexentry{Flaschenhalskante|hyperpage}{129}
+\indexentry{Kante!Flaschenhals-|hyperpage}{129}
+\indexentry{Komplexit\"at des Algorithmus von Edmonds und Karp|hyperpage}{129}
+\indexentry{Adjazenzliste|hyperpage}{129}
+\indexentry{Beweis!des Satzes von Edmonds und Karp|hyperpage}{129}
+\indexentry{Flaschenhalskante|hyperpage}{130}
+\indexentry{Kante!Flaschenhals-|hyperpage}{130}
+\indexentry{kritische Kante|hyperpage}{130}
+\indexentry{Kante!kritische|hyperpage}{130}
+\indexentry{Residualgraph|hyperpage}{131}
+\indexentry{Graph!Residual-|hyperpage}{131}
+\indexentry{Restgraph|hyperpage}{131}
+\indexentry{Graph!Rest-|hyperpage}{131}
+\indexentry{antiparallele Kante|hyperpage}{131}
+\indexentry{Kante!antiparallele|hyperpage}{131}
+\indexentry{R\"uckw\"artskante von $e$|hyperpage}{131}
+\indexentry{Kante!R\"uckw\"arts-|hyperpage}{131}
+\indexentry{Multigraph|hyperpage}{132}
+\indexentry{Graph!Multi-|hyperpage}{132}
+\indexentry{Residualgraph|hyperpage}{132}
+\indexentry{Graph!Residual-|hyperpage}{132}
+\indexentry{Residualkapazit\"at|hyperpage}{132}
+\indexentry{Kapazit\"at!Residual-|hyperpage}{132}
+\indexentry{kostenoptimaler Fluss|hyperpage}{134}
+\indexentry{Fluss!kostenoptimaler|hyperpage}{134}
+\indexentry{Push-Relabel-Algorithmus|hyperpage}{134}
+\indexentry{Algorithmus!Push-Relabel-|hyperpage}{134}
+\indexentry{Simplexalgorithmus|hyperpage}{135}
+\indexentry{Algorithmus!Simplex-|hyperpage}{135}
+\indexentry{minimaler Schnitt|hyperpage}{135}
+\indexentry{Schnitt!minimaler|hyperpage}{135}
+\indexentry{Maximalflussproblem als LP-Problem|hyperpage}{135}
+\indexentry{LP-Problem!Maximalflussproblem als|hyperpage}{135}
+\indexentry{duales Problem!zum Maximalflussproblem|hyperpage}{136}
+\indexentry{Maximalflussproblem als LP-Problem|hyperpage}{136}
+\indexentry{LP-Problem!Maximalflussproblem als|hyperpage}{136}
+\indexentry{Dualisierungsrezept|hyperpage}{137}
+\indexentry{duales Problem!zum Maximalflussproblem|hyperpage}{138}
+\indexentry{Simplexalgorithmus|hyperpage}{138}
+\indexentry{Algorithmus!Simplex-|hyperpage}{138}
+\indexentry{Simplexalgorithmus|hyperpage}{138}
+\indexentry{Algorithmus!Simplex-|hyperpage}{138}
+\indexentry{minimaler Schnitt|hyperpage}{138}
+\indexentry{Schnitt!minimaler|hyperpage}{138}
+\indexentry{minimaler Schnitt|hyperpage}{139}
+\indexentry{Schnitt!minimaler|hyperpage}{139}
+\indexentry{bipartit|hyperpage}{140}
+\indexentry{bipartite Graphen!Matching in|hyperpage}{140}
+\indexentry{Matching!in bipartiten Graphen|hyperpage}{140}
+\indexentry{ungerichteter Graph|hyperpage}{140}
+\indexentry{Graph!ungerichteter|hyperpage}{140}
+\indexentry{Matching|hyperpage}{140}
+\indexentry{Matchingzahl|hyperpage}{141}
+\indexentry{Zahl!Matching-|hyperpage}{141}
+\indexentry{Matching-Problem|hyperpage}{141}
+\indexentry{Problem!Matching-|hyperpage}{141}
+\indexentry{bipartit|hyperpage}{141}
+\indexentry{bipartite Graphen|hyperpage}{141}
+\indexentry{Graph!bipartiter|hyperpage}{141}
+\indexentry{Job|hyperpage}{142}
+\indexentry{perfektes Matching|hyperpage}{142}
+\indexentry{Matching!perfektes|hyperpage}{142}
+\indexentry{perfekt|hyperpage}{142}
+\indexentry{Matching-Problem!f\"ur bipartite Graphen|hyperpage}{143}
+\indexentry{bipartite Graphen!Matching-Problem f\"ur|hyperpage}{143}
+\indexentry{Problem!des Matchings f\"ur bipartite Graphen|hyperpage}{143}
+\indexentry{isolierter Knoten|hyperpage}{143}
+\indexentry{Knoten!isolierter|hyperpage}{143}
+\indexentry{Netzwerk-Fluss-Algorithmus|hyperpage}{143}
+\indexentry{Algorithmus!Netzwerk-Fluss-|hyperpage}{143}
+\indexentry{ganzzahliger Maximalfluss|hyperpage}{144}
+\indexentry{Maximalfluss!ganzzahliger|hyperpage}{144}
+\indexentry{ungepaart|hyperpage}{147}
+\indexentry{augmentierender Pfad|hyperpage}{147}
+\indexentry{Pfad!augmentierender|hyperpage}{147}
+\indexentry{alternierender Pfad|hyperpage}{148}
+\indexentry{Pfad!alternierender|hyperpage}{148}
+\indexentry{Knoten\"uberdeckung|hyperpage}{149}
+\indexentry{minimale Knoten\"uberdeckung|hyperpage}{149}
+\indexentry{Knoten\"uberdeckung!minimale|hyperpage}{149}
+\indexentry{node cover|hyperpage}{149}
+\indexentry{vertex cover|hyperpage}{149}
+\indexentry{Knoten\"uberdeckungszahl|hyperpage}{150}
+\indexentry{Zahl!Knoten\"uberdeckungs-|hyperpage}{150}
+\indexentry{Satz!von K\"onig|hyperpage}{150}
+\indexentry{K\"onig, Satz von|hyperpage}{150}
+\indexentry{Beweis!des Satzes von K\"onig|hyperpage}{150}
+\indexentry{K\"onig, Satz von! Beweis|hyperpage}{150}
+\indexentry{minimale Knoten\"uberdeckung|hyperpage}{150}
+\indexentry{Knoten\"uberdeckung!minimale|hyperpage}{150}
+\indexentry{verifizieren|hyperpage}{150}
+\indexentry{Zertifikat|hyperpage}{150}
+\indexentry{node covering number|hyperpage}{150}
+\indexentry{covering number|hyperpage}{150}
+\indexentry{Beweis!des Satzes von K\"onig|hyperpage}{151}
+\indexentry{K\"onig, Satz von! Beweis|hyperpage}{151}
+\indexentry{alternierender Pfad|hyperpage}{151}
+\indexentry{Pfad!alternierender|hyperpage}{151}
+\indexentry{maximales Matching|hyperpage}{151}
+\indexentry{Matching!maximales|hyperpage}{151}
+\indexentry{alternierender Baum|hyperpage}{161}
+\indexentry{Baum!alternierender|hyperpage}{161}
+\indexentry{Heiratssatz|hyperpage}{161}
+\indexentry{Satz!Heirats-|hyperpage}{161}
+\indexentry{Job|hyperpage}{161}
+\indexentry{Matching!in Graphen|hyperpage}{161}
+\indexentry{Graphen, Matching in|hyperpage}{161}
+\indexentry{Satz!von Hall|hyperpage}{162}
+\indexentry{Heiratssatz|hyperpage}{162}
+\indexentry{Satz!Heirats-|hyperpage}{162}
+\indexentry{Beweis!des Heiratssatzes|hyperpage}{162}
+\indexentry{Heiratssatz!Beweis des|hyperpage}{162}
+\indexentry{Heiratssatz|hyperpage}{163}
+\indexentry{Satz!Heirats-|hyperpage}{163}
+\indexentry{augmentierender Pfad|hyperpage}{163}
+\indexentry{Pfad!augmentierender|hyperpage}{163}
+\indexentry{Bl\"utenalgorithmus von Edmonds|hyperpage}{163}
+\indexentry{2-Approximationsalgorithmus|hyperpage}{164}
+\indexentry{Algorithmus!2-Approximations-|hyperpage}{164}
+\indexentry{N\"aherungsl\"osung|hyperpage}{164}
+\indexentry{L\"osung!N\"aherungs-|hyperpage}{164}
+\indexentry{$\gamma$-Approximationsalgorithmus|hyperpage}{164}
+\indexentry{Algorithmus!$\gamma$-Approximations-|hyperpage}{164}
+\indexentry{Knoten\"uberdeckungsproblem|hyperpage}{165}
+\indexentry{Problem!Knoten\"uberdeckungs-|hyperpage}{165}
+\indexentry{Knoten\"uberdeckungszahl|hyperpage}{165}
+\indexentry{Zahl!Knoten\"uberdeckungs-|hyperpage}{165}
+\indexentry{nicht erweiterbares Matching|hyperpage}{165}
+\indexentry{Matching!nicht erweiterbares|hyperpage}{165}
+\indexentry{maximal matching|hyperpage}{165}
+\indexentry{maximum matching|hyperpage}{165}
+\indexentry{2-Approximationsalgorithmus f\"ur das Knoten\"uberdeckungsproblem|hyperpage}{166}
+\indexentry{Satz!von Dinur und Safra|hyperpage}{166}
+\indexentry{Gewichtete Knoten\"uberdeckung|hyperpage}{166}
+\indexentry{Knoten\"uberdeckung!gewichtete|hyperpage}{166}
+\indexentry{Relaxieren und Runden|hyperpage}{167}
+\indexentry{LP-Relaxation|hyperpage}{167}
+\indexentry{Relaxation!LP-|hyperpage}{167}
+\indexentry{LP-Relaxation|hyperpage}{168}
+\indexentry{Relaxation!LP-|hyperpage}{168}
+\indexentry{Greedy-Algorithmus|hyperpage}{169}
+\indexentry{Algorithmus!Greedy-|hyperpage}{169}
+\indexentry{Austauschargument|hyperpage}{169}
+\indexentry{exchange argument|hyperpage}{169}
+\indexentry{Austauschargument|hyperpage}{170}
+\indexentry{Intervall-Scheduling-Problem|hyperpage}{170}
+\indexentry{Problem!Intervall-Scheduling-|hyperpage}{170}
+\indexentry{Ressource|hyperpage}{170}
+\indexentry{Anfrage|hyperpage}{170}
+\indexentry{kompatibel|hyperpage}{170}
+\indexentry{kompatible Anfrage|hyperpage}{170}
+\indexentry{Anfrage!kompatible|hyperpage}{170}
+\indexentry{\"uberlappen|hyperpage}{170}
+\indexentry{\"uberlappende Intervalle|hyperpage}{170}
+\indexentry{Intervalle, \"uberlappende|hyperpage}{170}
+\indexentry{starting time|hyperpage}{170}
+\indexentry{finishing time|hyperpage}{170}
+\indexentry{Intervall-Scheduling-Algorithmus|hyperpage}{171}
+\indexentry{Algorithmus!Intervall-Scheduling-|hyperpage}{171}
+\indexentry{Austauschargument|hyperpage}{173}
+\indexentry{Deadline|hyperpage}{173}
+\indexentry{versp\"atet|hyperpage}{174}
+\indexentry{late|hyperpage}{174}
+\indexentry{Job|hyperpage}{174}
+\indexentry{Versp\"atung|hyperpage}{174}
+\indexentry{lateness|hyperpage}{174}
+\indexentry{Earliest Deadline First|hyperpage}{175}
+\indexentry{L\"ucken|hyperpage}{175}
+\indexentry{idle time|hyperpage}{175}
+\indexentry{Austauschargument|hyperpage}{175}
+\indexentry{exchange argument|hyperpage}{175}
+\indexentry{Inversion|hyperpage}{176}
+\indexentry{Austauschargument|hyperpage}{176}
+\indexentry{k\"urzeste Pfade|hyperpage}{176}
+\indexentry{Pfad!k\"urzester|hyperpage}{176}
+\indexentry{L\"ange einer Kante|hyperpage}{176}
+\indexentry{Kante!L\"ange einer|hyperpage}{176}
+\indexentry{L\"ange eines $u,v$-Pfades|hyperpage}{176}
+\indexentry{$u,v$-Pfad, L\"ange eines|hyperpage}{176}
+\indexentry{Algorithmus!von Dijkstra|hyperpage}{177}
+\indexentry{Dijkstra, Algorithmus von|hyperpage}{177}
+\indexentry{Algorithmus!von Dijkstra|hyperpage}{178}
+\indexentry{Dijkstra, Algorithmus von|hyperpage}{178}
+\indexentry{minimaler aufspannender Baum|hyperpage}{183}
+\indexentry{Baum!minimaler aufspannender|hyperpage}{183}
+\indexentry{Kommunikationsnetzwerk|hyperpage}{183}
+\indexentry{Netzwerk!Kommunikations-|hyperpage}{183}
+\indexentry{zusammenh\"angend|hyperpage}{183}
+\indexentry{Baum|hyperpage}{184}
+\indexentry{aufspannender Baum|hyperpage}{184}
+\indexentry{Baum!aufspannender|hyperpage}{184}
+\indexentry{minimaler aufspannender Baum|hyperpage}{184}
+\indexentry{Baum!minimaler aufspannender|hyperpage}{184}
+\indexentry{minimum spanning tree|hyperpage}{184}
+\indexentry{MST|hyperpage}{184}
+\indexentry{Satz!von Cayley|hyperpage}{184}
+\indexentry{Cayley, Satz von|hyperpage}{184}
+\indexentry{Algorithmus!von Kruskal|hyperpage}{185}
+\indexentry{Kruskal, Algorithmus von|hyperpage}{185}
+\indexentry{Algorithmus!von Prim|hyperpage}{185}
+\indexentry{Prim, Algorithmus von|hyperpage}{185}
+\indexentry{Reverse-Delete-Algorithmus|hyperpage}{185}
+\indexentry{Algorithmus!Reverse-Delete-|hyperpage}{185}
+\indexentry{Austauschargument|hyperpage}{185}
+\indexentry{Minimum-Spanning-Tree-Problem|hyperpage}{186}
+\indexentry{Problem!Minimum-Spanning-Tree-|hyperpage}{186}
+\indexentry{Pfadbedingung|hyperpage}{188}
+\indexentry{Bedingung!Pfad-|hyperpage}{188}
+\indexentry{Schnittbedingung|hyperpage}{188}
+\indexentry{Bedingung!Schnitt-|hyperpage}{188}
+\indexentry{Reihenfolgebedingung|hyperpage}{188}
+\indexentry{Bedingung!Reihenfolge-|hyperpage}{188}
+\indexentry{Komponente|hyperpage}{188}
+\indexentry{Pfadbedingung|hyperpage}{189}
+\indexentry{Bedingung!Pfad-|hyperpage}{189}
+\indexentry{Schnittbedingung|hyperpage}{189}
+\indexentry{Bedingung!Schnitt-|hyperpage}{189}
+\indexentry{Reihenfolgebedingung|hyperpage}{189}
+\indexentry{Bedingung!Reihenfolge-|hyperpage}{189}
+\indexentry{Kruskals Algorithmus|hyperpage}{189}
+\indexentry{Algorithmus!von Kruskal|hyperpage}{189}
+\indexentry{Union-Find-Datenstruktur|hyperpage}{191}
+\indexentry{Datenstruktur, Union-Find-|hyperpage}{191}
+\indexentry{Zusammenhangskomponente|hyperpage}{191}
+\indexentry{Komponente|hyperpage}{191}
+\indexentry{Algorithmus von Kruskal|hyperpage}{191}
+\indexentry{Kruskal!Algorithmus von|hyperpage}{191}
+\indexentry{Partition|hyperpage}{191}
+\indexentry{Operation Find($u$)|hyperpage}{191}
+\indexentry{Operation Union($A$,$B$)|hyperpage}{191}
+\indexentry{Operation MakeUnionFind($S$)|hyperpage}{192}
+\indexentry{Zerlegung|hyperpage}{192}
+\indexentry{Klasse|hyperpage}{192}
+\indexentry{Array-Implementierung der Union-Find-Datenstruktur|hyperpage}{193}
+\indexentry{Union-Find-Datenstruktur!Array-Implementierung|hyperpage}{193}
+\indexentry{Operation $\opmakeunionfind{(S)}$|hyperpage}{194}
+\indexentry{Operation $\opunion$|hyperpage}{194}
+\indexentry{Operation $\opunion$|hyperpage}{195}
+\indexentry{Operation $\operatorname  {Find}$|hyperpage}{195}
+\indexentry{zeigerbasierte Implementierung der Union-Find-Datenstruktur|hyperpage}{195}
+\indexentry{Union-Find-Datenstruktur!zeigerbasierte Implementierung|hyperpage}{195}
+\indexentry{Pfadverk\"urzung|hyperpage}{196}
+\indexentry{path compression|hyperpage}{196}
+\indexentry{Dynamisches Programmieren|hyperpage}{199}
+\indexentry{Programmieren, Dynamisches|hyperpage}{199}
+\indexentry{dynamic programming|hyperpage}{199}
+\indexentry{Divide and Conquer|hyperpage}{199}
+\indexentry{Mergesort-Algorithmus|hyperpage}{199}
+\indexentry{Algorithmus!Mergesort-|hyperpage}{199}
+\indexentry{Algorithmus!von Strassen|hyperpage}{199}
+\indexentry{Strassen, Algorithmus von|hyperpage}{199}
+\indexentry{gewichtetes Intervall-Scheduling-Problem|hyperpage}{199}
+\indexentry{Intervall-Scheduling-Problem!gewichtetes|hyperpage}{199}
+\indexentry{Problem!gewichtetes Intervall-Scheduling-|hyperpage}{199}
+\indexentry{Fibonacci-Zahlen|hyperpage}{202}
+\indexentry{Zahlen!Fibonacci-|hyperpage}{202}
+\indexentry{Memoisation|hyperpage}{202}
+\indexentry{Problem!der k\"urzesten Wege|hyperpage}{204}
+\indexentry{Rucksackproblem|hyperpage}{204}
+\indexentry{Problem!Rucksack-|hyperpage}{204}
+\indexentry{Knapsack-Problem|hyperpage}{204}
+\indexentry{Subset-Sum-Problem|hyperpage}{204}
+\indexentry{Problem!Subset-Sum-|hyperpage}{204}
+\indexentry{Teilsummenproblem|hyperpage}{204}
+\indexentry{Problem!Teilsummen-|hyperpage}{204}
+\indexentry{Subset-Sum-Algorithmus|hyperpage}{205}
+\indexentry{Algorithmus!Subset-Sum-|hyperpage}{205}
+\indexentry{Subset-Sum-Algorithmus|hyperpage}{206}
+\indexentry{Algorithmus!Subset-Sum-|hyperpage}{206}
+\indexentry{Rucksackproblem|hyperpage}{207}
+\indexentry{Problem!Rucksack-|hyperpage}{207}
+\indexentry{Algorithmus!von Bellman und Ford|hyperpage}{207}
+\indexentry{Bellman und Ford, Algorithmus von|hyperpage}{207}
+\indexentry{pseudo-polynomieller Algorithmus|hyperpage}{207}
+\indexentry{Algorithmus!pseudo-polynomieller|hyperpage}{207}
+\indexentry{negativer Kreis|hyperpage}{208}
+\indexentry{Kreise, negative|hyperpage}{208}
+\indexentry{Problem!der negativen Kreise|hyperpage}{208}
+\indexentry{Kreise, negative!Problem der|hyperpage}{208}
+\indexentry{kostenminimaler Pfad|hyperpage}{208}
+\indexentry{kostenminimaler Pfad!Problem des|hyperpage}{208}
+\indexentry{Pfad!kostenminimaler|hyperpage}{208}
+\indexentry{Problem!des kostenminimalen Pfades|hyperpage}{208}
+\indexentry{einfacher Pfad|hyperpage}{209}
+\indexentry{Pfad!einfacher|hyperpage}{209}
+\indexentry{Algorithmus!von Bellman und Ford|hyperpage}{210}
+\indexentry{Bellman und Ford, Algorithmus von|hyperpage}{210}
+\indexentry{Algorithmus!von Floyd und Warshall|hyperpage}{213}
+\indexentry{Floyd und Warshall!Algorithmus von|hyperpage}{213}
+\indexentry{gewichteter Graph|hyperpage}{213}
+\indexentry{Graph!gewichteter|hyperpage}{213}
+\indexentry{all-to-all|hyperpage}{213}
+\indexentry{Distanzmatrix|hyperpage}{216}
+\indexentry{Matrix!Distanz-|hyperpage}{216}
+\indexentry{Adjazenzmatrix|hyperpage}{216}
+\indexentry{Matrix!Adjazenz-|hyperpage}{216}
+\indexentry{negativer Kreis|hyperpage}{217}
+\indexentry{polynomieller Algorithmus|hyperpage}{218}
+\indexentry{Algorithmus!polynomieller|hyperpage}{218}
+\indexentry{Ellipsoid-Methode|hyperpage}{218}
+\indexentry{Methode!Ellipsoid-|hyperpage}{218}
+\indexentry{Innere-Punkte-Methode|hyperpage}{218}
+\indexentry{Methode!Innere-Punkte-|hyperpage}{218}
+\indexentry{Eingabel\"ange|hyperpage}{218}
+\indexentry{Bitl\"ange|hyperpage}{219}
+\indexentry{Nichtnegativit\"atsbedingungen|hyperpage}{219}
+\indexentry{Bitl\"ange|hyperpage}{220}
+\indexentry{Eingabel\"ange|hyperpage}{220}
+\indexentry{Kodierungsl\"ange|hyperpage}{220}
+\indexentry{polynomieller Algorithmus f\"ur Lineare Programmierung|hyperpage}{220}
+\indexentry{Beispiele von Klee und Minty|hyperpage}{220}
+\indexentry{Klee und Minty!Beispiele von|hyperpage}{220}
+\indexentry{Kreis|hyperpage}{221}
+\indexentry{Radius|hyperpage}{221}
+\indexentry{Durchmesser|hyperpage}{221}
+\indexentry{Brennpunkt|hyperpage}{221}
+\indexentry{Abstandssumme|hyperpage}{221}
+\indexentry{Ellipse|hyperpage}{221}
+\indexentry{Mittelpunkt einer Ellipse|hyperpage}{221}
+\indexentry{Ellipse!Mittelpunkt einer|hyperpage}{221}
+\indexentry{Halbachsen einer Ellipse|hyperpage}{222}
+\indexentry{Ellipse!Halbachsen einer|hyperpage}{222}
+\indexentry{lange Halbachse|hyperpage}{222}
+\indexentry{Halbachse!lange|hyperpage}{222}
+\indexentry{kurze Halbachse|hyperpage}{222}
+\indexentry{Halbachse!kurze|hyperpage}{222}
+\indexentry{Mittelpunktsgleichung einer Ellipse|hyperpage}{222}
+\indexentry{Ellipse!Mittelpunktsgleichung einer|hyperpage}{222}
+\indexentry{lineare Abbildung|hyperpage}{223}
+\indexentry{Abbildung!lineare|hyperpage}{223}
+\indexentry{affine Abbildung|hyperpage}{223}
+\indexentry{Abbildung!affine|hyperpage}{223}
+\indexentry{lineare Abbildung|hyperpage}{223}
+\indexentry{Abbildung!lineare|hyperpage}{223}
+\indexentry{Rechenregeln f\"ur lineare Abbildungen|hyperpage}{223}
+\indexentry{lineare Abbildung!Rechenregeln f\"ur|hyperpage}{223}
+\indexentry{Identit\"at|hyperpage}{224}
+\indexentry{Streckung|hyperpage}{224}
+\indexentry{Einheitsvektor|hyperpage}{224}
+\indexentry{Vektor!Einheits-|hyperpage}{224}
+\indexentry{Drehung|hyperpage}{225}
+\indexentry{Translation|hyperpage}{225}
+\indexentry{Parallelverschiebung|hyperpage}{225}
+\indexentry{Drehung|hyperpage}{225}
+\indexentry{Polarkoordinaten|hyperpage}{225}
+\indexentry{Additionstheoreme|hyperpage}{225}
+\indexentry{Nacheinanderausf\"uhrung von linearen Abbildungen|hyperpage}{226}
+\indexentry{lineare Abbildung!Nacheinanderausf\"uhrung|hyperpage}{226}
+\indexentry{Determinante|hyperpage}{227}
+\indexentry{regul\"are Matrix|hyperpage}{227}
+\indexentry{Matrix!regul\"are|hyperpage}{227}
+\indexentry{Translation|hyperpage}{228}
+\indexentry{Parallelverschiebung|hyperpage}{228}
+\indexentry{affine Abbildung|hyperpage}{228}
+\indexentry{Abbildung!affine|hyperpage}{228}
+\indexentry{affine Abbildung|hyperpage}{228}
+\indexentry{Abbildung!affine|hyperpage}{228}
+\indexentry{Ellipsoid|hyperpage}{229}
+\indexentry{Ellipsoid|hyperpage}{229}
+\indexentry{nichtsingul\"are Matrix|hyperpage}{230}
+\indexentry{Matrix!nichtsingul\"are|hyperpage}{230}
+\indexentry{positiv definite Matrix|hyperpage}{230}
+\indexentry{Matrix!positiv definite|hyperpage}{230}
+\indexentry{Mittelpunkt eines Ellipsoids|hyperpage}{231}
+\indexentry{Ellipsoid!Mittelpunkt eines|hyperpage}{231}
+\indexentry{Dualit\"atssatz|hyperpage}{231}
+\indexentry{Satz!Dualit\"ats-|hyperpage}{231}
+\indexentry{Reduktion|hyperpage}{232}
+\indexentry{polynomielle Reduktion|hyperpage}{232}
+\indexentry{Reduktion!polynomielle|hyperpage}{232}
+\indexentry{Ellipsoid-Methode|hyperpage}{232}
+\indexentry{Methode!Ellipsoid-|hyperpage}{232}
+\indexentry{Polyeder|hyperpage}{232}
+\indexentry{beschr\"ankt|hyperpage}{233}
+\indexentry{Halbellipsoid|hyperpage}{233}
+\indexentry{Ellipsoid!Halb-|hyperpage}{233}
+\indexentry{Update-Formeln f\"ur die Ellipsoid-Methode|hyperpage}{234}
+\indexentry{Ellipsoid-Methode!Update-Formeln|hyperpage}{234}
+\indexentry{Volumen eines Ellipsoids|hyperpage}{234}
+\indexentry{Ellipsoid!Volumen eines|hyperpage}{234}
+\indexentry{Fl\"ache eines Kreises|hyperpage}{235}
+\indexentry{Kreis!Fl\"ache eines|hyperpage}{235}
+\indexentry{Volumen einer Kugel|hyperpage}{235}
+\indexentry{Kugel!Volumen einer|hyperpage}{235}
+\indexentry{Innere-Punkte-Methode|hyperpage}{236}
+\indexentry{Methode!Innere-Punkte-|hyperpage}{236}
+\indexentry{Zentraler-Pfad-Methode|hyperpage}{237}
+\indexentry{Methode!Zentraler-Pfad-|hyperpage}{237}
+\indexentry{logarithmische Barriere-Funktion|hyperpage}{237}
+\indexentry{Barriere-Funktion!logarithmische|hyperpage}{237}
+\indexentry{Funktion!logarithmische Barriere-|hyperpage}{237}
+\indexentry{nichtlineare Zielfunktion|hyperpage}{237}
+\indexentry{Zielfunktion!nichtlineare|hyperpage}{237}
+\indexentry{Funktion!nichtlineare Ziel-|hyperpage}{237}
+\indexentry{Schlupf|hyperpage}{237}
+\indexentry{Hilfszielfunktion|hyperpage}{237}
+\indexentry{Zielfunktion!Hilfs-|hyperpage}{237}
+\indexentry{Funktion!Hilfsziel-|hyperpage}{237}
+\indexentry{Barriere-Funktion|hyperpage}{238}
+\indexentry{Funktion!Barriere-|hyperpage}{238}
+\indexentry{Rand|hyperpage}{238}
+\indexentry{Inneres von $P$|hyperpage}{238}
+\indexentry{beschr\"anktes Polyeder|hyperpage}{238}
+\indexentry{Polyeder!beschr\"anktes|hyperpage}{238}
+\indexentry{H\"ohenlinie|hyperpage}{238}
+\indexentry{H\"ohenlinie|hyperpage}{239}
+\indexentry{zentraler Pfad|hyperpage}{240}
+\indexentry{Pfad!zentraler|hyperpage}{240}

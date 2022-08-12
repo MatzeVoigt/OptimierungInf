@@ -1,0 +1,798 @@
+\documentclass[smaller]{beamer}
+\usetheme[english]{Berlin}
+\usepackage{ngerman}
+\useoutertheme{infolines}
+\beamertemplatenavigationsymbolsempty
+\usepackage{pgfplots,tikz,subfigure}
+\usepackage{amsmath,amsthm}
+\usepackage{hyperref,graphics,graphicx,color,algorithm,algorithmic,enumerate}
+\usepackage{mymacros,wrapfig,relsize}
+\usepackage{pict2e}
+\usepackage[utf8x]{inputenc}
+
+\newcommand{\ri}{\mathrm{i}}
+\newcommand{\T}{\mathsf{T}}
+\renewcommand{\H}{\mathsf{H}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\To}{\rightarrow}
+\newcommand{\sddots}{\scalebox{0.6}{$\ddots$}}
+\usepackage[pdf]{pstricks}
+\usepackage{sansmathfonts}
+\usepackage{eurosym}
+%\usepackage{arev}
+%\renewcommand\familydefault{\sfdefault}
+
+\DeclareMathOperator{\loc}{loc}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\RE}{Re}
+\DeclareMathOperator{\IM}{Im}
+\DeclareMathOperator{\In}{In}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Gl}{Gl}
+\DeclareMathOperator{\spa}{span}
+\DeclareMathOperator{\ext}{{ext}}
+\DeclareMathOperator{\ind}{ind}
+\DeclareMathOperator{\normalrank}{normalrank}
+\DeclareMathOperator{\essup}{ess\,sup}
+\DeclareMathOperator{\vect}{vec}
+
+\newcommand{\re}{\mathrm{e}}
+\newcommand{\ddt}{\tfrac{\mathrm{d}}{\mathrm{d}t}}
+\newcommand{\sys}[4]{\left[\begin{array}{c|c} #1 & #2 \\ \hline #3 & #4 \end{array}\right]}
+
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+
+
+\title[]{Optimierung f\"ur Studierende der Informatik}
+\subtitle{-- 5. Vorlesung --}
+\author[Matthias Voigt]{\textbf{Matthias Voigt$^{1,2}$}}
+\institute[]{
+\begin{columns}
+%\begin{center}
+\column{0.45\textwidth}{\centering {$^1$Universit\"at Hamburg \\ Fachbereich Mathematik \\ Hamburg \\ }}
+\column{0.45\textwidth}{\centering {$^2$Technische Universit\"at Berlin \\ Institut f\"ur Mathematik \\ Berlin  \\}}
+%\end{center}
+\end{columns}
+}
+\date[]{Universit\"at Hamburg
+\begin{columns}
+\column{0.45\textwidth}{\centering \includegraphics[width = 1.2\textwidth]{uhh-logo.png}\\}
+\end{columns}
+}
+
+\definecolor{tucgreen}{rgb}{0.0,0.5,0.27}
+\definecolor{tucred}{rgb}{0.75,0,0}
+\definecolor{tucorange}{rgb}{1.0,.5625,0}
+\definecolor{mpired}{HTML}{990000}
+\definecolor{mpigreen}{HTML}{5C871D}
+\definecolor{mpiblue}{HTML}{006AA9}
+\definecolor{mpibg1}{HTML}{5D8B8A}
+\definecolor{mpibg2}{HTML}{BFDFDE}
+\definecolor{mpibg3}{HTML}{A7C1C0}
+\definecolor{mpibg4}{HTML}{7DA9A8}
+\definecolor{mpigrey}{rgb}{0.9294,0.9294,0.8784}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+ \frametitle{Dualität: allgemeiner Fall}
+ 
+Für jedes LP-Problem (P) \alert{in Standardform} haben wir definiert, was wir unter dem dazugehörigen dualen Problem (D) verstehen. Es besitzen jedoch nicht nur Probleme in Standardform ein duales Problem, \alert{sondern zu jedem LP-Problem gehört ein duales Problem}. \\ \vspace*{0.2cm}
+
+\alert{Wie sieht nun im allgemeinen Fall das duale Problem aus?} \\ \vspace*{0.2cm}
+
+Die Antwort auf diese Frage werden wir weiter unten in Form eines \alert{Rezepts} präsentieren. Bevor wir dies tun, soll jedoch erläutert werden, was wir unter dem {\glqq}allgemeinen Fall{\grqq} genau verstehen.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Dualität: allgemeiner Fall}
+ Klarerweise bedeutet es keine Einschränkung der Allgemeinheit, wenn wir annehmen, dass wir als Ausgangsproblem (primales Problem) ein \alert{Maximierungsproblem} vorliegen haben: Jedes Minimierungsproblem lässt sich ja -- wie wir wissen -- auf eine ganz einfache Art in ein Maximierungsproblem verwandeln. \\ \vspace*{0.2cm}
+
+Ebenfalls bedeutet es keine Einschränkung, wenn wir annehmen, dass im primalen Problem (abgesehen von Nichtnegativitätsbedingungen) \alert{keine Ungleichungen des Typs $\sum\limits_{j=1}^{n}{a_{ij}x_j} \geq b_i$} auftreten: Kommt eine solche Ungleichung (beispielsweise $3x_1+2x_2-5x_3 \geq 6$) vor, so braucht man diese ja nur mit $-1$ zu multiplizieren.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Dualität: allgemeiner Fall}
+ {Als Nebenbedingungen, die keine Nichtnegativitätsbedingungen sind, können im primalen Problem (P) im allgemeinen Fall also auftreten}:
+\begin{itemize}
+\item \alert{Ungleichungen} vom Typ $\sum\limits_{j=1}^{n}{a_{ij}x_j} \leq b_i$, wie beispielsweise $27x_1-x_2+2x_3 \leq 5$;
+\item \alert{Gleichungen}.
+\end{itemize} 
+
+{In ähnlicher Weise können im allgemeinen Fall zwei Typen von Variablen auftreten}:
+\begin{itemize}
+\item \alert{Variablen, die einer Nichtnegativitätsbedingung unterliegen} ($x_j \geq 0$);
+\item \alert{freie Variablen}, d.h. Variablen, für die nicht $x_j \geq 0$ gefordert wird.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Beispiel: Allgemeines LP-Problem}
+ Ein allgemeines LP-Problem (P) ist beispielsweise:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{maximiere } & 7x_1 &\ + &\ 3x_2 &\ + &\ x_3 &\ + &\ 5x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& -2x_1 &\ + &\  x_2 &\ + &\ x_3 &\ - &\ 3x_4 &\ \leq &\  1,\ \\
+&&  5x_1 &\ + &\  x_2 &\   &\     &\ + &\ 9x_4 &\ \leq &\ -2,\ \\
+&&   x_1 &\ + &\ 3x_2 &\ + &\ x_3 &\ + &\ 7x_4 &\    = &\  5,\ \\
+&&   x_1 &\   &\      &\ + &\ x_3 &\ - &\ 6x_4 &\    = &\  1,\ \\
+&& & & & & & & \llap{$x_2,x_3$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+
+Hierbei sind $x_1$ und $x_4$ freie Variablen. \\ \vspace*{0.2cm}
+
+Im Unterschied zu den bislang betrachteten primalen Problemen in Standardform können jetzt also \alert{zusätzlich Gleichungen und freie Variablen} auftreten.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Dualität: allgemeiner Fall}
+ Wir gehen also von einem LP-Problem (P) des folgenden Typs aus:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:25}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i \in I_1), \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\    = &\ b_i & \qquad (i \in I_2), \\
+&&                              x_j &\ \geq &\   0 & \qquad (j \in J_1).
+\end{alignedat}
+\end{align}
+
+Was in \eqref{eq:7:25} und im Folgenden die Bezeichnungen in $I_1$, $I_2$ und $J_1$ bedeuten, liegt auf der Hand:
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bezeichnung für bestimmte Indexmengen}
+ \begin{itemize}
+\item $I_1$ ist die Menge der Indizes $i \in \bigl\{ 1,\ldots,m \bigr\}$, für die die $i$-te Nebenbedingung eine \alert{Ungleichung} ist;
+\item $I_2$ ist die Menge der Indizes $i \in \bigl\{ 1,\ldots,m \bigr\}$, für die die $i$-te Nebenbedingung eine \alert{Gleichung} ist;
+\item $J_1$ ist die Menge der Indizes $j \in \bigl\{ 1,\ldots,n \bigr\}$, die zu \alert{restringierten Variablen} $x_j$ gehören, also zu denjenigen Variablen, die einer Nichtnegativitätsbedingung unterliegen.
+\end{itemize}
+
+Ergänzend definieren wir noch $J_2 = \bigl\{ 1,\ldots,n \bigr\} \setminus J_1$.
+\begin{itemize}
+\item Die Menge $J_2$ enthält diejenigen Indizes, die zu \alert{freien Variablen} gehören.
+\end{itemize}
+
+Es ist durchaus möglich, dass einige dieser Indexmengen leer sind.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Linearkombination von Nebenbedingungen}
+ Unter einer \alert{Linearkombination der Nebenbedingungen}
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:7:26}
+\sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i \in I_1), \\
+\sum\limits_{j=1}^{n}{a_{ij}x_j} &\    = &\ b_i & \qquad (i \in I_2)
+\end{alignedat}
+\end{align}
+verstehen wir eine lineare Ungleichung, die dadurch entsteht, dass man jede dieser Nebenbedingungen mit einem Faktor $y_i$ multipliziert, wobei $y_i \geq 0$ für alle $i \in I_1$ gelten soll, und anschließend die entstandenen Ungleichungen und Gleichungen aufsummiert. \\ \vspace*{0.2cm}
+
+Die hierdurch entstandene neue Ungleichung (Linearkombination) lautet also
+\begin{equation}
+\label{eq:7:27}
+\sum\limits_{i=1}^{m}{y_i \left( \sum\limits_{j=1}^{n}{a_{ij}x_j} \right)} \leq \sum\limits_{i=1}^{m}{b_iy_i}.
+\end{equation} 
+\end{frame}
+
+\begin{frame}
+ \frametitle{Zwei wichtige Entsprechungen}
+ \alert{Wichtig, damit die Ungleichung \eqref{eq:7:27} tatsächlich zustande kommt}: Für die Ungleichungen aus \eqref{eq:7:26} müssen nichtnegative Faktoren gewählt werden. (Die Faktoren $y_i$, die zu den Gleichungen gehören, sind hingegen frei wählbar.)
+
+Wir wollen die Faktoren $y_i$ als \structure{duale Variablen} bezeichnen; es gilt also:
+\begin{itemize}
+\item Zu jeder \alert{Ungleichung} von \eqref{eq:7:26} gehört eine \alert{restringierte duale Variable} $y_i$, d.h., es wird $y_i \geq 0$ gefordert.
+\item Zu jeder \alert{Gleichung} von \eqref{eq:7:26} gehört eine \alert{freie duale Variable} $y_i$.
+\end{itemize}
+Wir überspringen jetzt einige Überlegungen und Rechnungen, die im Skript ausführlich dargestellt sind, und halten nur Folgendes fest: \\ \vspace*{0.2cm}
+
+Ausgehend von der obigen Entsprechung zwischen Ungleichungen und restringierten dualen Variablen sowie Gleichungen und freien dualen Variablen gelangt man zum dualen Problem (D) des Ausgangsproblems (P) aus \eqref{eq:7:25}.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Das duale Problem (D)}
+Das duale Problem (D) zum Problem (P) aus \eqref{eq:7:25} lautet wie folgt:
+\begin{align}
+\begin{alignedat}{4}
+\label{eq:7:33}
+& \text{minimiere } & \sum\limits_{i=1}^{m}{b_iy_i} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{i=1}^{m}{a_{ij}y_i} &\ \geq &\ c_j & \qquad (j \in J_1), \\
+&& \sum\limits_{i=1}^{m}{a_{ij}y_i} &\    = &\ c_j & \qquad (j \in J_2), \\
+&&                              y_i &\ \geq &\   0 & \qquad (i \in I_1).
+\end{alignedat}
+\end{align}
+
+Man nennt (\ref{eq:7:33}) das \structure{duale Problem} (oder kurz: das \structure{Duale}) zu \eqref{eq:7:25}; in diesem Zusammenhang wird \eqref{eq:7:25} das \structure{primale Problem} genannt.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Ein Beispiel}
+  Das duale Problem (D) für das Beispiel (P) vor \eqref{eq:7:25} lautet also:
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & y_1 &\ - &\ 2y_2 &\ + &\ 5y_3 &\ + &\ y_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& -2y_1 &\ + &\ 5y_2 &\ + &\  y_3 &\ + &\  y_4 &\    = &\ 7,\ \\
+&&   y_1 &\ + &\  y_2 &\ + &\ 3y_3 &\   &\      &\ \geq &\ 3,\ \\
+&&   y_1 &\   &\      &\ + &\  y_3 &\ + &\  y_4 &\ \geq &\ 1,\ \\
+&& -3y_1 &\ + &\ 9y_2 &\ + &\ 7y_3 &\ - &\ 6y_4 &\    = &\ 5,\ \\
+&& & & & & & & \llap{$y_1,y_2$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Dualisierungsrezept}
+ Wir können uns das folgende \alert{Dualisierungsrezept}\label{page:7:3} merken.
+
+% \begin{Satz}[Dualisierungsrezept]
+% \begin{itemize}
+% \item Ist die $i$-te Nebenbedingung im primalen Problem (P) eine Ungleichung, so ist $y_i$ in (D) eine restringierte Variable.
+% \item Ist die $i$-te Nebenbedingung in (P) eine Gleichung, so ist $y_i$ eine freie Variable.
+% \item Ist $x_j$ eine freie Variable, so ist in (D) die $j$-te Nebenbedingung eine Gleichung.
+% \item Ist $x_j$ eine restringierte Variable, so ist in (D) die $j$-te Nebenbedingung eine Ungleichung.
+% \end{itemize}
+% \end{Satz}
+% 
+% Dasselbe in Tabellenform:
+
+\begin{center}\label{page:7:2}
+\begin{tabular}{c|c}
+{Maximierungsproblem (P)} & {Minimierungsproblem (D)} \\ [1ex] \hline\hline \\ [-1.5ex]
+$i$-te Nebenbedingung enthält $\leq$ & $y_i \geq 0$ \\ [1ex] \hline \\ [-1.5ex]
+$i$-te Nebenbedingung enthält $=$ & $y_i$ ist frei \\ [1ex] \hline \\ [-1.5ex]
+$x_j \geq 0$ & $j$-te Nebenbedingung enthält $\geq$ \\ [1ex] \hline \\ [-1.5ex]
+$x_j$ ist frei & $j$-te Nebenbedingung enthält $=$
+\end{tabular}
+\end{center}
+
+In Worten lässt sich das \textit{Dualisierungsrezept}\index{Dualisierungsrezept} ebenfalls sehr eingängig ausdrücken:
+
+\begin{quote}
+\alert{Ungleichungen entsprechen restringierten Variablen im jeweils anderen Problem;
+Gleichungen entsprechen freien Variablen.}
+\end{quote}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Ein weiteres Beispiel}
+ \textbf{Beispiel:} Wir konstruieren das Duale (D) des folgenden LP-Problems, das wir (P) nennen:
+\begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ 5x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&& 5x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\    = &\ -8,\ \\
+&& 4x_1 &\ + &\ 2x_2 &\ + &\ 8x_3 &\ \leq &\ 23,\ \\
+&& 6x_1 &\ + &\ 7x_2 &\ + &\ 3x_3 &\ \geq &\  1,\ \\
+&&  x_1 &\   &\      &\   &\      &\ \leq &\  4,\ \\
+&& & & & & \llap{$x_3$} &\ \geq &\ 0. \
+\end{alignedat}
+\end{align*}
+
+\textbf{Lösung}. Bevor wir das Dualisierungsrezept anwenden können, muss zunächst die 3. Nebenbedingung mit $-1$ multipliziert werden. Man erhält:
+\end{frame}
+
+\begin{frame}
+ \frametitle{Ein weiteres Beispiel}
+ \vspace*{-0.4cm}
+ \begin{align*}
+\begin{alignedat}{5}
+& \text{maximiere } & 3x_1 &\ + &\ 2x_2 &\ + &\ 5x_3 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & \\
+&&  5x_1 &\ + &\ 3x_2 &\ + &\  x_3 &\    = &\ -8,\ \\
+&&  4x_1 &\ + &\ 2x_2 &\ + &\ 8x_3 &\ \leq &\ 23,\ \\
+&& -6x_1 &\ - &\ 7x_2 &\ - &\ 3x_3 &\ \leq &\ -1,\ \\
+&&   x_1 &\   &\      &\   &\      &\ \leq &\  4,\ \\
+&& & & & & \llap{$x_3$} &\ \geq &\ 0. \
+\end{alignedat}
+\end{align*}
+
+Nun können wir das Dualisierungsrezept anwenden und erhalten (D):
+\begin{align*}
+\begin{alignedat}{6}
+& \text{minimiere } & -8y_1 &\ + &\ 23y_2 &\ - &\ y_3 &\ + &\ 4y_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 5y_1 &\ + &\ 4y_2 &\ - &\ 6y_3 &\ + &\ y_4 &\    = &\ 3,\ \\
+&& 3y_1 &\ + &\ 2y_2 &\ - &\ 7y_3 &\   &\     &\    = &\ 2,\ \\
+&&  y_1 &\ + &\ 8y_2 &\ - &\ 3y_3 &\   &\     &\ \geq &\ 5,\ \\
+&& & & & & & & \llap{$y_2,y_3,y_4$} &\ \geq &\ 0. \
+\end{alignedat}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Das Duale des dualen Problems ist das primale Problem}
+ Die folgende Feststellung ist unschwer einzusehen. \\ \vspace*{0.2cm}
+
+\textbf{Feststellung:}
+Bildet man von einem Problem (P) das Duale (D) und anschließend das Duale von (D), so gelangt man zurück zum primalen Problem (P), wobei es vorkommen kann, dass man (P) in leicht umgeschriebener Form erhält.
+
+Wir halten fest: \alert{Das Duale des dualen Problems ist das primale Problem}.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Tabelle von rechts and links}
+  Ist (P) ein Minimierungsproblem und soll von (P) das Duale gebildet werden, so kann man zunächst einmal eine Überführung von (P) in ein Maximierungsproblem vornehmen. Danach lässt sich das Duale bilden, indem man wie in unserem letzten Beispiel vorgeht. \\ \vspace*{0.2cm}
+
+Da das Duale des dualen Problems das primale Problem ist, gibt es hierzu eine \alert{alternative Vorgehensweise}: Man wendet die Tabelle, in der das Dualisierungsrezept beschrieben wird, \alert{von rechts nach links} an. Dabei liest man die Tabelle von rechts nach links: \\ \vspace*{0.2cm}
+
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+Liegt ein Minimierungsproblem (D) vor, von dem das Duale zu bilden ist, so sorgt man zunächst dafür, dass alle Ungleichungsnebenbedingungen von der Form {\glqq}$\geq${\grqq} sind; dann kann man das Duale von (D) bilden, indem man zum Problem (P) der linken Spalte übergeht.
+\end{minipage}
+\end{center}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Dualitätssatz für allgemeine LP-Probleme}
+ Für allgemeine LP-Probleme gelten ähnliche Sätze wie für LP-Probleme in Standardform. Dies trifft beispielsweise auf den Dualitätssatz zu. Auch für allgemeine LP-Probleme lässt sich der Dualitätssatz wie folgt formulieren (Beweis: siehe Chv\'atal). \\ \vspace*{0.2cm}
+
+\textbf{Satz (Dualitätssatz für allgemeine LP-Probleme):}
+Falls ein LP-Problem eine optimale Lösung besitzt, so gilt dies auch für das duale Problem und die optimalen Werte beider Probleme stimmen überein.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Die revidierte Simplexmethode}
+ Wir wollen zunächst das Simplexverfahren auf eine etwas andere Art beschreiben; in dieser neuen Beschreibung werden in wesentlich stärkerer Weise \alert{Matrizen} zum Einsatz kommen. \\ \vspace*{0.2cm}
+
+Im Gegensatz zum vorausgegangenen Abschnitt betrachten wir in diesem Abschnitt ausschließlich LP-Probleme in Standardform. Wir erläutern die neue Matrizendarstellung anhand des folgenden Beispiels:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:8:1}
+& \text{maximiere } & 19x_1 &\ + &\ 13x_2 &\ + &\ 12x_3 &\ + &\ 17x_4 & & \\
+& \rlap{unter den Nebenbedingungen} & & & & & & & & & \\
+&& 3x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ + &\ 2x_4 &\ \leq &\ 225,\ \\
+&&  x_1 &\ + &\  x_2 &\ + &\  x_3 &\ + &\  x_4 &\ \leq &\ 117,\ \\
+&& 4x_1 &\ + &\ 3x_2 &\ + &\ 3x_3 &\ + &\ 4x_4 &\ \leq &\ 420,\ \\
+&& & & & & & & \llap{$x_1,x_2,x_3,x_4$} &\ \geq &\ 0.\
+\end{alignedat}
+\end{align}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Beispiel}
+ Löst man \eqref{eq:8:1} mit dem Simplexverfahren, so erhält man nach zwei Iterationen das folgende Tableau:
+\begin{align}
+\begin{alignedat}{6}
+\label{eq:8:2}
+x_1 &\ = &\   54 &\ - &\ 0.5x_2 &\ - &\ 0.5x_4 &\ - &\ 0.5x_5 &\ + &\ 0.5x_6,\ \\
+x_3 &\ = &\   63 &\ - &\ 0.5x_2 &\ - &\ 0.5x_4 &\ + &\ 0.5x_5 &\ - &\ 1.5x_6,\ \\
+x_7 &\ = &\   15 &\ + &\ 0.5x_2 &\ - &\ 0.5x_4 &\ + &\ 0.5x_5 &\ + &\ 2.5x_6,\ \\ \cline{1-11}
+  z &\ = &\ 1782 &\ - &\ 2.5x_2 &\ + &\ 1.5x_4 &\ - &\ 3.5x_5 &\ - &\ 8.5x_6.\
+\end{alignedat}
+\end{align}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Zusammenhang zwischen \eqref{eq:8:1} und \eqref{eq:8:2}}
+  Es sei an den Zusammenhang erinnert, der zwischen den ersten drei Zeilen von \eqref{eq:8:2} und den ersten drei Ungleichungen von \eqref{eq:8:1} besteht: Nach der Einführung von Schlupfvariablen gehen die ersten drei Ungleichungen von \eqref{eq:8:1} über in
+\begin{align}
+\begin{alignedat}{8}
+\label{eq:8:3}
+3x_1 &\ + &\ 2x_2 &\ + &\  x_3 &\ + &\ 2x_4 &\ + &\ x_5 &\   &\     &\   &\     &\ = &\ 225,\ \\
+ x_1 &\ + &\  x_2 &\ + &\  x_3 &\ + &\  x_4 &\   &\     &\ + &\ x_6 &\   &\     &\ = &\ 117,\ \\
+4x_1 &\ + &\ 3x_2 &\ + &\ 3x_3 &\ + &\ 4x_4 &\   &\     &\   &\     &\ + &\ x_7 &\ = &\ 420.\
+\end{alignedat}
+\end{align}
+
+\alert{Diese drei Gleichungen sind äquivalent zu den ersten drei Gleichungen des Tableaus \eqref{eq:8:2}.} \\ \vspace*{0.2cm}
+
+Was für das Tableau \eqref{eq:8:2} gilt, gilt natürlich auch für die anderen Tableaus, die sonst noch auftreten, wenn man das Problem \eqref{eq:8:1} mit dem Simplexverfahren löst. Wir halten dies noch einmal ausdrücklich fest.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Matrixdarstellung}
+ \textbf{Feststellung:} Löst man das Problem \eqref{eq:8:1} mit dem Simplexverfahren, so sind die ersten drei Zeilen jedes auftretenden Tableaus äquivalent zu den drei Gleichungen in \eqref{eq:8:3}. \\ \vspace*{0.2cm}
+
+Wir wollen das Gleichungssystem \eqref{eq:8:3} in \alert{Matrixform} darstellen. Zu diesem Zweck sei
+\[
+A = \begin{pmatrix} 3 & 2 & 1 & 2 & 1 & 0 & 0 \\ 1 & 1 & 1 & 1 & 0 & 1 & 0 \\ 4 & 3 & 3 & 4 & 0 & 0 & 1 \end{pmatrix}, \quad
+b = \begin{pmatrix} 225 \\ 117 \\ 420 \end{pmatrix}, \quad
+x = \begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\x_5 \\ x_6 \\ x_7 \end{pmatrix}.
+\]
+
+Mit diesen Bezeichnungen geht \eqref{eq:8:3} über in (\structure{Matrixdarstellung von \eqref{eq:8:3}}):
+\[
+Ax = b.
+\]
+\end{frame}
+
+\begin{frame}
+ \frametitle{Matrixdarstellung}
+ Äquivalent zu \eqref{eq:8:3} sind, wie gesagt, die ersten drei Zeilen von \eqref{eq:8:2}. In \eqref{eq:8:2} sind $x_1$, $x_3$ und $x_7$ die Basisvariablen; $x_2$, $x_4$, $x_5$ und $x_6$ sind die Nichtbasisvariablen. \\ \vspace*{0.2cm}
+
+Um den Unterschied zwischen den Basis- und den Nichtbasisvariablen zu betonen, schreiben wir $Ax$ in der Form
+\[
+A_Bx_B + A_Nx_N
+\]
+
+mit
+\[
+A_B = \begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix}  \quad \text{und} \quad
+x_B = \begin{pmatrix} x_1 \\ x_3 \\ x_7 \end{pmatrix}
+\]
+
+sowie
+\[
+A_N = \begin{pmatrix} 2 & 2 & 1 & 0 \\ 1 & 1 & 0 & 1\\ 3 & 4 & 0 & 0 \end{pmatrix}  \quad \text{und} \quad
+x_N = \begin{pmatrix} x_2 \\ x_4 \\ x_5 \\ x_6 \end{pmatrix}.
+\]
+
+Das Gleichungssystem $Ax=b$ geht somit über in $A_Bx_B + A_Nx_N = b$; hieraus erhält man
+\begin{equation}
+\label{eq:8:4}
+A_Bx_B = b - A_Nx_N.
+\end{equation}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Umsortierung der Variablen}
+ Bei \eqref{eq:8:4} handelt es sich um nichts weiter als eine andere Art, die Gleichung $Ax=b$ zu schreiben. Wir verdeutlichen dies, indem wir beide Gleichungen in expliziter Form angeben: Die Gleichung $Ax=b$ ist, wenn man sie in expliziter Form hinschreibt, nichts anderes als \eqref{eq:8:3}; und wenn man \eqref{eq:8:4} in expliziter Form hinschreibt, so erhält man:
+\begin{align*}
+\begin{alignedat}{8}
+3x_1 &\ + &\  x_3 &\   &\     &\ = &\ 225 &\ - &\ 2x_2 &\ - &\ 2x_4\ &\ - &\ x_5, &\   &\     \\
+ x_1 &\ + &\  x_3 &\   &\     &\ = &\ 117 &\ - &\  x_2 &\ - &\  x_4\ &\   &\     &\ - &\ x_6, \\
+4x_1 &\ + &\ 3x_3 &\ + &\ x_7 &\ = &\ 420 &\ - &\ 3x_2 &\ - &\ 4x_4. &\   &\     &\   &\     
+\end{alignedat}
+\end{align*}
+
+Man erkennt, was beim Übergang von $Ax=b$ zu $A_Bx_B = b - A_Nx_N$ passiert ist: \eqref{eq:8:3} wurde so umgeschrieben, dass die \alert{Nichtbasisvariablen alle nach rechts kamen, während die Basisvariablen links blieben.}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Weitere Umformungen}
+  Nun soll die Gleichung $A_Bx_B = b - A_Nx_N$ weiter umgeformt werden, nämlich so, dass links nur noch $x_B$ steht. Da $A_B$ eine nichtsinguläre quadratische Matrix  ist, existiert die inverse Matrix $A_B^{-1}$. Nimmt man \eqref{eq:8:4} auf beiden Seiten von links mit $A_B^{-1}$ mal, so erhält man
+\begin{equation}
+\label{eq:8:5}
+x_B = A_B^{-1}b - A_B^{-1}A_Nx_N.
+\end{equation}
+
+\alert{Die Gleichung \eqref{eq:8:5} ist nichts weiter als eine kompakte Art, die ersten drei Zeilen von \eqref{eq:8:2} mittels Matrizen auszudrücken}. Nun soll auch noch die letzte Zeile von (\ref{eq:8:2}) in eine entsprechende Form gebracht werden. \\ \vspace*{0.2cm}
+
+Ähnlich, wie wir zuvor von $Ax=b$ ausgegangen sind, gehen wir nun von der Gleichung 
+\[
+z = c^Tx
+\]
+aus; hierbei ist $c = {\bigl( 19,\ 13,\ 12,\ 17,\ 0,\ 0,\ 0 \bigr)}^T$ und $x$ hat dieselbe Bedeutung wie oben. Ähnlich wie zuvor definieren wir $c_B= {\bigl(19,\ 12,\ 0\bigr)}^T$ und $c_N = {\bigl(13,\ 17,\ 0, 0\bigr)}^T$. Wir erhalten
+\[
+z = c_B^Tx_B + c_N^Tx_N.
+\]
+\end{frame}
+
+\begin{frame}
+ \frametitle{Zusammenfassung}
+ Setzt man hierin gemäß \eqref{eq:8:5} ein, so ergibt sich
+\begin{equation*}
+\begin{aligned}
+z &= c_B^T \big( A_B^{-1}b - A_B^{-1}A_Nx_N \big) + c_N^Tx_N \\
+  &= c_B^T A_B^{-1}b + \big( c_N^T - c_B^TA_B^{-1}A_N \big) x_N.
+\end{aligned}
+\end{equation*}
+
+Zusammenfassend können wir also feststellen, dass \eqref{eq:8:2} in Matrixform wie folgt angegeben werden kann:
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:8:6}
+x_B &\ = &\       A_B^{-1}b &\ - &\ A_B^{-1}A_Nx_N, \\ \cline{1-5}
+  z &\ = &\ c_B^T A_B^{-1}b &\ + &\ \big( c_N^T - c_B^TA_B^{-1}A_N \big) x_N.
+\end{alignedat}
+\end{align}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Der allgemeine Fall}
+ \alert{Nun betrachten wir den allgemeinen Fall. Gegeben sei ein beliebiges LP-Problem in Standardform}:
+\begin{align}
+\label{eq:8:*}
+\tag{$\star$}
+\begin{alignedat}{4}
+& \text{maximiere } & \sum\limits_{j=1}^{n}{c_jx_j} & & & \\
+& \rlap{unter den Nebenbedingungen} & & & & \\
+&& \sum\limits_{j=1}^{n}{a_{ij}x_j} &\ \leq &\ b_i & \qquad (i=1,\ldots,m), \\
+&&                              x_j &\ \geq &\   0 & \qquad (j=1,\ldots,n). 
+\end{alignedat}
+\end{align}
+
+Nach der Einführung von Schlupfvariablen lässt sich dies wie folgt schreiben:
+\begin{align*}
+\begin{alignedat}{3}
+& \text{maximiere } & c^Tx & & \\
+& \rlap{unter den Nebenbedingungen} & & & \\
+&& Ax &\    = &\ b,\ \\
+&&  x &\ \geq &\ 0.\
+\end{alignedat}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Matrizen und Vektoren}
+ \alert{Man beachte}: Es wurden \alert{Schlupfvariablen} eingeführt und $Ax=b$ ist eine \alert{Gleichung}. Dementsprechend ist $A$ eine Matrix mit $m$ Zeilen und $n+m$ Spalten; die letzten $m$ Spalten von $A$ bilden eine Einheitsmatrix. \\ \vspace*{0.2cm}
+
+Außerdem gilt: $x$ ist ein Spaltenvektor der Länge $n+m$; $b$ ist ein Spaltenvektor der Länge $m$; $c^T$ ist ein Zeilenvektor der Länge $n+m$, für den die letzten $m$ Einträge gleich Null sind.
+
+Explizit lassen sich diese Matrizen und Vektoren wie folgt angeben:
+\begin{align*}
+A &= \begin{pmatrix} 
+a_{11} & \ldots & a_{1n} & 1 & \ldots & 0 \\ 
+\vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+a_{m1} & \ldots & a_{mn} & 0 & \ldots & 1
+\end{pmatrix}, \quad
+x = \begin{pmatrix} x_1 \\ \vdots \\ x_{n+m} \end{pmatrix}, \quad
+b = \begin{pmatrix} b_1 \\ \vdots \\ b_m \end{pmatrix}, \\
+c^T &= (c_1, \ldots, c_n, 0, \ldots, 0).  
+\end{align*}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Basis- und Nichtbasisvariablen}
+ Es liege nun ein zulässiges Tableau zum Problem (\ref{eq:8:*}) vor. Wie wir wissen, gehört zu diesem Tableau eine zulässige Basislösung, die wir mit $x^* = {\bigl(x_1^*, \ldots, x_{n+m}^*\bigr)}^T$ bezeichnen wollen.
+
+Außerdem liefert das Tableau eine Zerlegung der Variablen $x_1,\ldots,x_{n+m}$ in Basisvariablen und Nichtbasisvariablen. Genauer:
+\begin{quote}
+\alert{Es gibt $m$ Basisvariablen und $n$ Nichtbasisvariablen.}
+\end{quote}
+
+Wie zuvor in unserem Beispiel führt die Aufteilung in Basis- und Nichtbasisvariablen zu Matrizen $A_B$ und $A_N$, zu Vektoren $x_B$ und $x_N$ sowie zu $c_B^T$ und $c_N^T$. Außerdem gilt (Details im Skript):
+\begin{quote}
+\alert{Die Matrix $A_B$ ist nichtsingulär.}
+\end{quote}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Die Basismatrix $A_B$ ist invertierbar}
+ Die Nichtsingularität von $A_B$ bedeutet unter anderem, dass $A_B$ invertierbar ist. Mit anderen Worten: $A_B^{-1}$ existiert. \\ \vspace*{0.2cm}
+
+Mit $A_B^{-1}$ können wir nun wie im Beispiel rechnen und gelangen auch diesmal zur Matrixdarstellung \eqref{eq:8:6} eines Tableaus. \\ \vspace*{0.2cm}
+
+Man nennt die Matrix $A_B$ die \structure{Basismatrix}. (Häufig wird die Matrix $A_B$ auch einfach nur die \structure{Basis} genannt; da wir die Menge der Basisvariablen ebenfalls {\glqq}Basis{\grqq} genannt haben, muss bei Verwendung dieser Sprechweise darauf geachtet werden, dass keine Missverständnisse möglich sind.) \\ \vspace*{0.2cm}
+
+Eine weitere \textbf{Konvention}: \alert{Es ist üblich, für die Basismatrix die Bezeichnung $B$ anstelle von $A_B$ zu verwenden}.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Matrixdarstellung eines Tableaus}
+ Wir schließen uns dieser Konvention an und erhalten dementsprechend unsere \alert{Matrixdarstellung eines Tableaus} in folgender Form:
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:8:8}
+x_B &\ = &\ B^{-1}b &\ - &\ B^{-1}A_Nx_N,\ \\ \cline{1-5}
+  z &\ = &\ c_B^TB^{-1}b &\ + &\ \Bigl( c_N^T - c_B^TB^{-1}A_N \Bigr)x_N.\
+\end{alignedat}
+\end{align}
+
+Bei \eqref{eq:8:8} handelt es sich um eine allgemeine Art, ein Tableau darzustellen. \alert{In dieser Darstellung wird in präziser Weise angegeben, wie die Koeffizienten eines Tableaus von den Eingangsdaten des Problems (also von $A$, $b$ und $c^T$) abhängen}.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Allgemeine Erläuterungen zu \eqref{eq:8:8}}
+  Schaut man sich \eqref{eq:8:8} an, so erkennt man alles wieder, was bislang immer in Tableaus vorkam:
+\begin{itemize}
+\item $B^{-1}b$ ist nichts anderes als der Vektor $x_B^*$, der die aktuellen Werte der Basisvariablen angibt.
+\item $c_B^TB^{-1}b$ ist eine allgemeine Formel für den aktuellen Wert der Zielfunktion.
+\item $c_N^T - c_B^TB^{-1}A_N$ ist eine allgemeine Formel für den Vektor der Koeffizienten, die in der $z$-Zeile bei den Nichtbasisvariablen auftreten.
+\item $-B^{-1}A_N$ ist die Matrix der Koeffizienten, die oberhalb der $z$-Zeile bei den Nichtbasisvariablen anzutreffen sind.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Erläuterung von \eqref{eq:8:8} anhand eines Beispiels}
+ Am konkreten Fall des Tableaus \eqref{eq:8:2} erläutert bedeuten diese Feststellungen, dass die folgenden Gleichungen gelten:
+\begin{align*}
+B^{-1}b &= \begin{pmatrix} 54 \\ 63 \\ 15 \end{pmatrix}, \\
+c_B^TB^{-1}b &= 1782, \\[2mm]
+c_N^T - c_B^TB^{-1}A_N &= \big( -2.5,\ 1.5,\ -3.5,\ -8.5\big), \\
+-B^{-1}A_N &= \left(\begin{array}{rrrr}
+-0.5 & -0.5 & -0.5 & 0.5 \\ -0.5 & -0.5 & 0.5 & -1.5 \\ 0.5 & -0.5 & 0.5 &  2.5
+\end{array}\right).
+\end{align*}
+
+Wir kommen nun zur \alert{Beschreibung des revidierten Simplexverfahrens}, das an die Darstellung \eqref{eq:8:8} ({\glqq}Darstellung eines Tableaus mittels Matrizen{\grqq}) anknüpft. Das Simplexverfahren in seiner bisherigen Form wollen wir auch \alert{Standardsimplexverfahren} nennen.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Standardsimplexverfahren and revidiertes Simplexverfahren}
+ In jeder Iteration des Standardsimplexverfahrens wählt man zunächst eine Eingangsvariable, bestimmt danach eine Ausgangsvariable und nimmt anschließend ein Update des aktuellen Tableaus vor, wodurch man vor allem auch eine neue zulässige Basislösung erhält. Genaue Beobachtung, wie all dies im Standardsimplexverfahren geschieht, wird uns zum revidierten Simplexverfahren führen. \\ \vspace*{0.2cm}
+
+Wir steigen mit unseren Überlegungen an der Stelle ein, an der im Standardverfahren das Tableau (\ref{eq:8:2}) vorliegt. Im Standardverfahren führt man anhand dieses Tableaus die nächste Iteration aus. \alert{Im revidierten Simplexverfahren ist dies so nicht möglich, denn wir haben das Tableau in diesem Verfahren gar nicht vorliegen.} Stattdessen liegen $x_B^*$ und $B$ vor:
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_3^* \\ x_7^* \end{pmatrix} = \begin{pmatrix} 54 \\ 63 \\ 15 \end{pmatrix} \quad \text{und} \quad
+B = \begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix}.
+\]
+\end{frame}
+
+\begin{frame}
+ \frametitle{Eine Iteration}
+ Als Eingangsvariable kommt jede Nichtbasisvariable infrage, deren Koeffizient in der letzten Zeile des Tableaus positiv ist. Wir wissen (vgl. \eqref{eq:8:8}), dass
+\[
+c_N^T - c_B^TB^{-1}A_N
+\]
+
+den Vektor der Koeffizienten der letzten Zeile angibt. \alert{Benutzt man das Standardsimplexverfahren, so hat man diesen Vektor unmittelbar zur Verfügung}: Man kann ihn ja an der letzten Zeile des aktuellen Tableaus ablesen. \\ \vspace*{0.2cm}
+
+\alert{Benutzt man dagegen die revidierte Simplexmethode, so muss man sich diesen Vektor erst ausrechnen}; dies geschieht in zwei Schritten: Zunächst berechnet man den Zeilenvektor
+\[
+y^T = c_B^T B^{-1},
+\]
+indem man das Gleichungssystem
+\[
+y^TB = c_B^T
+\]
+löst; im 2. Schritt berechnet man anschließend $c_N^T - y^TA_N$.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Das lineare Gleichungssystem im Beispiel}
+ In unserem Beispiel sieht das so aus: Zunächst löst man das Gleichungssystem
+\[
+\big( y_1,\ y_2,\ y_3\big) \begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix} = \big( 19,\ 12,\ 0 \big).
+\]
+
+In expliziter Form lautet dieses Gleichungssystem
+\begin{align*}
+\begin{alignedat}{4}
+3y_1 &\ + &\ y_2 &\ + &\ 4y_3 &\ = &\ 19,\ \\
+ y_1 &\ + &\ y_2 &\ + &\ 3y_3 &\ = &\ 12,\ \\
+     &\   &\     &\   &\  y_3 &\ = &\  0.\ 
+\end{alignedat}
+\end{align*}
+
+Als Lösung erhält man
+\[
+y^T = \big( y_1,\ y_2,\ y_3 \big) = \big( 3.5,\ 8.5,\ 0 \big).
+\]
+\end{frame}
+
+\begin{frame}
+ \frametitle{Fortsetzung des Beispiels}
+ Danach berechnet man $c_N^T-y^TA_N$; man erhält
+\begin{align*}
+c_N^T - y^TA_N &= \big( 13,\ 17,\ 0,\ 0 \big) - \big( 3.5,\ 8.5,\ 0 \big) \begin{pmatrix} 2 & 2 & 1 & 0 \\ 1 & 1 & 0 & 1 \\ 3 & 4 & 0 & 0 \end{pmatrix} \\
+&= \big( -2.5,\ 1.5,\ -3.5,\ -8.5 \big).
+\end{align*}
+
+Man vergleiche dies mit den Koeffizienten in der letzten Zeile von \eqref{eq:8:2}. (Noch einmal der Deutlichkeit halber: \alert{Im Standardverfahren hat man diesen Vektor bereits zu Beginn der Iteration vorliegen, im revidierten Verfahren muss man ihn erst berechnen}.) \\ \vspace*{0.2cm}
+
+Im Vektor $(-2.5,\ 1.5,\ -3.5,\ -8.5)$ ist nur die zweite Komponente positiv; also ist die zweite Komponente des Vektors $x_N^T = (x_2,\ x_4,\ x_5,\ x_6)$ die Eingangsvariable, d.h., \alert{$x_4$ ist die Eingangsvariable}.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Die Eingangsspalte}
+ In unserem Beispiel kam nur $x_4$ als Eingangsvariable infrage. Allgemein gilt: Die Nichtbasisvariable $x_j$ kommt als Eingangsvariable infrage, falls für die entsprechende Komponente $c_j$ von $c_N^T$ und für die entsprechende Spalte $a$ von $A_N$ gilt: $c_j-y^Ta > 0$ bzw. (was dasselbe ist) $y^Ta < c_j$. Wird $x_j$ als Eingangsvariable gewählt, so bezeichnet man die Spalte $a$ von $A_N$, die $x_j$ entspricht, als \alert{Eingangsspalte}.\\ \vspace*{0.2cm}
+ 
+Erläuterung an unserem Beispiel: $x_4$ ist die Eingangsvariable und
+\[
+a = \begin{pmatrix} 2 \\ 1 \\ 4 \end{pmatrix}
+\]
+ist die Eingangsspalte.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bestimmung der Ausgangsvariable}
+ Um die \alert{Ausgangsvariable} zu bestimmen, hebt man -- wie wir wissen -- den Wert der Eingangsvariablen von Null auf einen Wert $t$ an, wobei die übrigen Nichtbasisvariablen den Wert Null behalten und sich die Werte der Basisvariablen entsprechend ändern:
+ \begin{itemize}
+   \item Solange alle Basisvariablen positiv bleiben, wird $t$ weiter angehoben, bis es zum ersten Mal vorkommt, dass eine oder mehrere Basisvariablen auf Null absinken. 
+   \item Unter diesen Variablen wird dann eine ausgewählt, die die Basis verlässt.
+ \end{itemize}
+
+Wird die \alert{Standardsimplexmethode} benutzt, so kann man den Höchstwert von $t$ und eine dazugehörige Ausgangsvariable leicht bestimmen -- man hat ja das Tableau zur Verfügung, aus dem man die erforderlichen Informationen ablesen kann.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bestimmung der Ausgangsvariable}
+ In unserem Beispiel gilt:
+ \begin{align*}
+\begin{alignedat}{3}
+x_1 &\ = &\ 54 &\ \ldots\ - &\ 0.5x_4 &\ \ldots, \\
+x_3 &\ = &\ 63 &\ \ldots\ - &\ 0.5x_4 &\ \ldots, \\
+x_7 &\ = &\ 15 &\ \ldots\ - &\ 0.5x_4 &\ \ldots,
+\end{alignedat}
+\end{align*} 
+
+und somit (für $x_4=t$ und $x_2=x_5=x_6=0$)
+\begin{align}
+\begin{alignedat}{3}
+\label{eq:8:9}
+x_1 &\ = &\ 54 &\ - &\ 0.5t,\ \\
+x_3 &\ = &\ 63 &\ - &\ 0.5t,\ \\
+x_7 &\ = &\ 15 &\ - &\ 0.5t.\  
+\end{alignedat}
+\end{align}
+
+Aus (\ref{eq:8:9}) ergibt sich, dass $t$ bis auf 30 angehoben werden kann und dass \alert{$x_7$ die Ausgangsvariable} ist.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bestimmung der Ausgangsvariable}
+ Soweit die Vorgehensweise bei der Standardsimplexmethode. \alert{Wie verfährt man nun aber in der revidierten Simplexmethode, wenn man das Tableau \eqref{eq:8:2} gar nicht zur Verfügung hat?} \\ \vspace*{0.2cm}
+
+Was hat man stattdessen zur Verfügung? \\ \vspace*{0.2cm}
+
+\textbf{Antwort}: $x_B^*$ und $B$ sowie die zuvor bestimmte Eingangsspalte $a$ und die dazugehörige Eingangsvariable (im Beispiel: $x_4$); und außerdem natürlich $A$, $b$ und $c^T$. \\ \vspace*{0.2cm}
+
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bestimmung der Ausgangsvariable}
+ Wir wissen aus \eqref{eq:8:8}, dass sich die ersten $m$ Zeilen eines Tableaus wie folgt darstellen lassen:
+\[
+x_B = x_B^* - B^{-1}A_Nx_N.
+\]
+
+Hebt man die Eingangsvariable von Null auf $t$ (und lässt alle anderen Nichtbasisvariablen bei Null), so ändert sich $x_B$ von $x_B^*$ zu $x_B^*-td$, wobei $d$ die Spalte von $B^{-1}A_N$ bezeichnet, die der Eingangsvariablen entspricht: Dies ist die Spalte
+\[
+d = B^{-1}a,
+\]
+wobei $a$ wie zuvor die Eingangsspalte bezeichnet. Man beachte: Bei $-d$ handelt es sich um die \alert{Pivotspalte}.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Ein weiteres lineares Gleichungssystem}
+ Benutzt man die \alert{revidierte Simplexmethode}, so muss also $d = B^{-1}a$ berechnet werden. Dies geschieht dadurch, dass man das Gleichungssystem
+\[
+Bd=a
+\]
+
+löst. In unserem Beispiel sieht das wie folgt aus: \\ \vspace*{0.2cm}
+
+Schreibt man $d = {(d_1,\ d_2,\ d_3)}^T$, so lautet die Gleichung $Bd=a$:
+\[
+\begin{pmatrix} 3 & 1 & 0 \\ 1 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix} \begin{pmatrix} d_1 \\ d_2 \\ d_3 \end{pmatrix} = \begin{pmatrix} 2 \\ 1 \\ 4 \end{pmatrix}.
+\]
+
+Löst man dieses lineare Gleichungssystem mit dem Gauß-Verfahren, so erhält man
+\[
+d = \begin{pmatrix} d_1 \\ d_2 \\ d_3 \end{pmatrix} = \begin{pmatrix} 0.5 \\ 0.5 \\ 0.5 \end{pmatrix}.
+\]
+
+Dies ist genau das, was sich bei Verwendung des Standardverfahrens direkt am Tableau ablesen ließ (vgl. \eqref{eq:8:2} bzw. \eqref{eq:8:9}).
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bestimmung der Ausgangsvariable}
+Da wir $d$ nun kennen, ist es einfach festzustellen, dass $t$ bis auf 30 angehoben werden kann. Für $t=30$ ergibt sich:
+\begin{align*}
+\begin{alignedat}{3}
+54 &\ - &\ 0.5t &\ = &\ 39,\ \\
+63 &\ - &\ 0.5t &\ = &\ 48,\ \\
+15 &\ - &\ 0.5t &\ = &\  0.\  
+\end{alignedat}
+\end{align*}
+
+Es hat sich insbesondere ergeben, dass $x_7$ die Ausgangsvariable ist. \\ \vspace*{0.2cm}
+
+\alert{Bislang war es so, dass wir bei Verwendung der revidierten Simplexmethode Rechnungen durchführen mussten, die bei der Standardmethode nicht nötig waren}. 
+\end{frame}
+
+\begin{frame}
+ \frametitle{Kein Update des Tableaus nötig}
+ \textbf{Dies kehrt sich nun, am Ende der Iteration, um}: Während beim Standardverfahren nun noch das recht mühevolle Update des Tableaus zu leisten ist, \alert{sind beim revidierten Verfahren keine derartigen Rechnungen nötig}. In unserem Beispiel beginnt man die nächste Iteration einfach mit
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_3^* \\ x_4^* \end{pmatrix} = \begin{pmatrix} 39 \\ 48 \\ 30 \end{pmatrix} \quad \text{und} \quad
+B = \begin{pmatrix} 3 & 1 & 2 \\ 1 & 1 & 1 \\ 4 & 3 & 4 \end{pmatrix}.
+\]
+
+Die Reihenfolge der Spalten in der Matrix $B$ ist übrigens unerheblich: \alert{Das Einzige, was gewährleistet sein muss, ist, dass diese Reihenfolge zu der Reihenfolge der Variablen in $x_B^*$ passt}. Die nächste Iteration könnte ebenso gut beginnen mit
+\[
+x_B^* = \begin{pmatrix} x_1^* \\ x_4^* \\ x_3^* \end{pmatrix} = \begin{pmatrix} 39 \\ 30 \\ 48 \end{pmatrix} \quad \text{und} \quad
+B = \begin{pmatrix} 3 & 2 & 1 \\ 1 & 1 & 1 \\ 4 & 4 & 3 \end{pmatrix}.
+\]
+\end{frame}
+
+\begin{frame}
+ \frametitle{Update-Regel}
+Eine gute \alert{Regel}, an die man sich auch in den Übungsaufgaben unbedingt immer halten sollte, wird im Folgenden beschrieben. \\ \vspace*{0.2cm}
+
+\textbf{Regel zum Update von $x_B^*$ und $B$ bei der Durchführung des revidierten Simplexverfahrens:}
+Bei der Durchführung des revidierten Simplexverfahrens füge man beim \alert{Update von $x_B^*$} die Eingangsvariable an genau der Stelle ein, an der zuvor die Ausgangsvariable stand. \\ \vspace*{0.2cm}
+
+Beim \alert{Update von $B$} ist analog vorzugehen: Man füge die Eingangsspalte genau dort ein, wo zuvor die Spalte stand, die aus $B$ ausscheidet (\alert{Ausgangsspalte}).
+\end{frame}
+
+\end{document}

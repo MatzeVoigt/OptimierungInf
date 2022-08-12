@@ -1,0 +1,76 @@
+\def\nr{12. Aufgabenblatt}
+\def\kopf{\\\hfill\normalsize\mdseries}
+\documentclass[11pt,a4paper,fleqn]{scrartcl}
+\usepackage{eurosym}
+\usepackage{adjustbox,csquotes}
+\input{header_OptInf}
+
+\subsection*{Präsenzaufgaben am 08./09.02.2021}
+
+\Aufgabe[ (Teilsummenproblem)]{P1}
+Erläutern Sie, wie die Einträge in der Tabelle im Beispiel in Vorlesung 12 auf Folie 51 zustande kommen.
+
+\Aufgabe[ (Rucksackproblem)]{P2}
+In Vorlesung 3 auf Folie 37 heißt es:
+\begin{quote}
+ Ein Einbrecher findet viel mehr Beute, als er tragen kann. In seinem Rucksack (``knapsack'') kann er maximal $W$ kg transportieren. Er kann aus $n$ Gegenständen mit den Gewichten $w_1, \ldots, w_n$ und \euro-Werten $v_1, \ldots, v_n$ auswählen. Welche Kombination von Gegenständen sollte er mitnehmen? 
+
+Wähle z.B. $W = 10$ und
+\begin{center}
+\begin{tabular}{c|cr}
+Gegenstand & Gewicht & Wert \\ \hline
+1 & 6 & \euro\,30 \\
+2 & 3 & \euro\,14 \\
+3 & 4 & \euro\,16 \\
+4 & 2 & \euro\,9
+\end{tabular}
+\end{center}
+\end{quote}
+\begin{enumerate}[a)]
+% Aufgabe P-2a
+\item Wir betrachten die Variante, in der jeder Gegenstand nur einmal vorhanden ist. Lösen Sie das Problem für die angegebenen Daten, indem Sie den in Vorlesung 12 auf Folie 57 beschriebenen dynamischen Programmierungs-Algorithmus verwenden.
+
+\textbf{Hinweis}: Es ist eine Tabelle anzulegen, die der Tabelle aus Aufgabe 1 sehr ähnlich ist.
+
+% Aufgabe P-2b
+\item Wie kann man aus der Tabelle nicht nur den optimalen Wert einer Rucksackfüllung ablesen, sondern auch, \textit{welche Gegenstände} in den Rucksack zu packen sind?
+\end{enumerate}
+
+\subsection*{Hausaufgaben bis zum 17.02.2021 (12:00 Uhr)}
+\emph{Bitte reichen Sie Ihre Hausaufgaben in festen Zweier- oder Dreiergruppen bei Moodle ein. Bitte laden Sie ausschließlich \textbf{PDF-Dokumente} hoch, andernfalls können Ihre Hausaufgaben nicht korrigiert werden.}
+
+\Aufgabe[ (Reverse-Delete-Algorithmus, 4 Punkte)]{H1}
+\begin{enumerate}[a)]
+ \item Schreiben Sie den Reverse-Delete-Algorithmus als Pseudocode (wie in Vorlesung 12 auf Folie 14).
+ \item Zeigen Sie die Korrektheit des Reverse-Delete-Algorithmus, indem Sie den Ideen aus dem Korrektheitsbeweis von Kruskals Algorithmus folgen. 
+\end{enumerate}
+
+\Aufgabe[ (gewichtetes Intervall-Scheduling, 3 Punkte)]{H2}
+Betrachten Sie das gewichtete Intervall-Scheduling-Problem für folgende Intervalle $[s(i),f(i)]$ und Gewichte $v_i$:
+\begin{center}
+\begin{tabular}{c|cr}
+$i$ & $[s(i), f(i)]$ & $v_i$ \\ \hline
+1 & $[0,1]$ & 1 \\
+2 & $[1,2]$ & 1 \\
+3 & $[1,4]$ & 3 \\
+4 & $[2,5]$ & 2 \\
+5 & $[4,6]$ & 4 \\
+6 & $[7,8]$ & 1 \\
+7 & $[6,9]$ & 1 \\
+\end{tabular}
+\end{center}
+Berechnen Sie den optimalen Zielfunktionswert mithilfe von Iterative-Compute-OPT (Vorlesung 12, Folie 36) und veranschaulichen Sie die die Lösung genauso wie in Vorlesung 12, Folie 37.
+
+\Aufgabe[ (Rucksackproblem, 3 Punkte)]{H3}
+Lösen Sie das Rucksackproblem mit einer Rucksackgröße von $W=8$ und folgenden Gegenständen:
+\begin{center}
+\begin{tabular}{c|cr}
+Gegenstand & Gewicht & Wert \\ \hline
+1 & 3 & \euro\,32 \\
+2 & 4 & \euro\,35 \\
+3 & 2 & \euro\,15 \\
+4 & 2 & \euro\,18
+\end{tabular}
+\end{center}
+Wir betrachten wieder die Variante, in der jeder Gegenstand nur einmal vorhanden ist. Lösen Sie das Problem für die angegebenen Daten, indem Sie den in Vorlesung 12 auf Folie 57 beschriebenen dynamischen Programmierungs-Algorithmus verwenden und eine Tabelle wie in Aufgabe P1\,a) anlegen.
+\end{document}

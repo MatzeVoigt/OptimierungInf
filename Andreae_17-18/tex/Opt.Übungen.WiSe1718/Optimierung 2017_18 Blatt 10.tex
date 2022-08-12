@@ -1,0 +1,176 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{fullpage}
+\usepackage{paralist}
+\usepackage{pst-all}
+
+% Meta Information festlegen
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Optimierung für Studierende der Informatik, Aufgabenblatt 10},
+  pdfauthor={Thomas Andreae},
+  pdfcreator={LaTeX2e},
+	hyperfootnotes=false,
+	breaklinks=true,
+	colorlinks=true,
+	allcolors={black}}
+
+\setlength{\parindent}{0em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+\textbf{Optimierung für Studierende der Informatik}
+\end{Large}
+
+\textbf{Thomas Andreae}
+	
+\vspace{0.5cm}
+
+\textbf{Wintersemester 2017/18}
+
+\textbf{Blatt 10}
+
+\vspace{0.5cm}
+\end{center}
+
+\small
+
+\begin{enumerate}[\bfseries A:]
+
+%------------------------------------------------------------------------
+% Präsenzaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Präsenzaufgaben am 8./9. Januar 2018}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe P-1
+\item Beim Entwurf von Approximationsalgorithmen spielen neben LP-basierten Methoden auch \textit{Greedy-Verfahren} eine wichtige Rolle. Im Folgenden wird ein Beispiel betrachtet, das dies illustriert.
+
+\medskip
+
+Ein Schiff mit $n$ Containern $1,2,\ldots,n$ erreicht den Hafen. Die Abmessungen der Container spielen keine Rolle, es geht ums Gewicht: Container $i$ habe das Gewicht $w_i > 0$ ($i=1,\ldots,n$). Zum Weitertransport stehen Lastwagen bereit, von denen jeder einen oder mehrere Container aufnehmen kann. \textit{Einzige Restriktion}: Es gibt eine Gewichtsschranke $K$, die für jeden Laster gilt, d.h., kein Lastwagen darf Container von einem Gesamtgewicht größer $K$ aufnehmen. Die Schranke $K$ und auch die Gewichte $w_i$ sollen als ganzzahlig angenommen werden. Es gelte $K \geq w_i$ für $i=1,\ldots,n$. Zu minimieren ist die Anzahl der Lastwagen, die zum Weitertransport aller Container benötigt werden. (Anmerkung: Das beschriebene Problem ist ein NP-schweres Optimierungsproblem.)
+
+\textit{Ein Greedy-Algorithmus}: Die Container werden in der Reihenfolge $1,2,\ldots, n$ verladen, wobei immer nur ein Lastwagen zur Zeit beladen wird. Immer, wenn der nächste Container nicht mehr aufgeladen werden kann (wegen Überschreitung von $K$), wird ein Lastwagen für \enquote{voll} erklärt und auf die Reise geschickt.
+
+\medskip
+
+Mit $m^\star$ sei das optimale Ergebnis bezeichnet, d.h., $m^\star$ ist die minimale Anzahl der benötigten Lastwagen. Das Ergebnis, das der Greedy-Algorithmus liefert, werde mit $m$ bezeichnet. 
+
+\begin{enumerate}[a)]
+% Aufgabe P-1a
+\item Belegen Sie anhand eines Beispiels, dass der Greedy-Algorithmus nicht immer das bestmögliche Ergebnis liefert. Mit anderen Worten: $m > m^\star$ ist möglich.
+
+% Aufgabe P-1b
+\item \textbf{Behauptung}: Es gilt immer $m < 2m^\star$. (Dies bedeutet, dass unser Greedy-Algorithmus gar nicht so schlecht ist: Es handelt sich um einen \textit{2-Approximationsalgorithmus}.)
+
+\smallskip
+
+Zeigen Sie die Richtigkeit dieser Behauptung für den Fall, dass $m$ ungerade ist.
+
+\textbf{Hinweis}: $L_i$ sei das Gewicht, das der Greedy-Algorithmus auf den $i$-ten Lastwagen packt ($i=1,\ldots,m$). Welche naheliegende Feststellung lässt sich für die Summe $L_1+L_2$ und die Schranke $K$ treffen?
+\end{enumerate}
+
+
+
+% Aufgabe P-2
+\item Im Skript wurde auf Seite 166 ein 2-Approximationsalgorithmus für das Knoten\-über\-deckungs\-problem vorgestellt.
+\begin{enumerate}[a)]
+% Aufgabe P-2a
+\item Beschreiben Sie kurz in eigenen Worten, worum es beim Knotenüberdeckungsproblem geht.
+% Aufgabe P-2b
+\item Beschreiben Sie kurz (ebenfalls in eigenen Worten), wie der erwähnte 2-Approximations\-al\-go\-rith\-mus funktioniert.
+% Aufgabe P-2c
+\item Begründen Sie kurz, weshalb für die vom Algorithmus gelieferte Knotenüberdeckung $U$ gilt: $|U| \leq 2c(G)$.
+% Aufgabe P-2d
+\item Was versteht man unter dem vollständig bipartiten Graphen $K_{n,n}$?
+\end{enumerate}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------
+% Hausaufgaben
+%------------------------------------------------------------------------
+
+\item \textbf{Hausaufgaben zum 15./16. Januar 2018}
+
+\begin{enumerate}[\bfseries 1.]
+
+% Aufgabe H-1
+\item Wir betrachten das Lastwagenproblem aus Präsenzaufgabe 1 und verwenden die dort eingeführten Bezeichnungen.
+\begin{enumerate}[a)]
+% Aufgabe H-1a
+\item Zeigen Sie die Richtigkeit der Behauptung aus Präsenzaufgabe 1b) für den Fall, dass $m$ gerade ist.
+
+% Aufgabe H-1b
+\item Es sei $k \geq 2$ eine ganze Zahl. Zeigen Sie, dass es für jedes derartige $k$ ein Beispiel gibt, für das $m^\star = k$ und $m=2k-1$ gilt. 
+
+\textbf{Hinweis}: Lösen Sie zunächst die Fälle $k=2,3,4$ und orientieren Sie sich an diesen Fällen.
+
+% Aufgabe H-1c
+\item Begründen Sie kurz, weshalb aus b) folgt, dass unser Algorithmus \textit{kein} $\gamma$-Approximations\-al\-go\-rith\-mus für $\gamma < 2$ ist.
+\end{enumerate}
+
+
+% Aufgabe H-2
+\item \begin{enumerate}[a)]
+% Aufgabe H-2a
+\item Auf Seite 166 des Skripts wurde im Zusammenhang mit dem Knotenüberdeckungsproblem die folgende Frage gestellt: \textit{Ist es möglich, den gefundenen Faktor 2 zu verbessern, indem man den Algorithmus unverändert lässt, aber eine raffiniertere Analyse des Algorithmus vornimmt?} 
+
+\smallskip
+Zeigen Sie mithilfe des vollständig bipartiten Graphen $K_{n,n}$, dass dies nicht möglich ist.
+
+% Aufgabe H-2b
+\item Es sei $k \geq 2$ eine fest gewählte ganze Zahl. Gegeben sei eine Menge $S$ und eine Kollektion $T_1,\ldots,T_m$ von $k$-elementigen Teilmengen von $S$. Es gelte also
+\[
+T_i \subseteq S \text{  und  } |T_i|=k \quad (i=1,\ldots,m).
+\]
+
+Eine Teilmenge $H \subseteq S$ wird ein \textit{Hitting Set} genannt, falls alle Mengen $T_i$ von $H$ getroffen werden, d.h., falls $H \cap T_i \neq \emptyset$ für alle $i = 1,\ldots,m$ gilt. Gesucht ist ein Hitting Set mit einer minimalen Anzahl von Elementen. (Mitteilung: Dies ist ein NP-schweres Optimierungsproblem.) Wir nennen das beschriebene Problem $k$-HITTING SET. Das Problem lässt sich also wie folgt beschreiben:
+
+
+\medskip
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+\textbf{$\mathbf{k}$-HITTING SET}
+
+\medskip
+\textbf{Eingabe}: eine Menge $S$ sowie eine Kollektion von $k$-elementigen Teilmengen von $S$.
+
+\medskip
+\textbf{Gesucht}: ein Hitting Set mit einer minimalen Anzahl von Elementen.
+\end{minipage}
+\end{center}
+
+\medskip
+Man beachte: $k$ ist \textit{nicht} Teil der Eingabe, sondern eine \textit{Konstante}.
+
+
+\begin{enumerate}[(i)]
+% Aufgabe H-2b (i)
+\item Beschreiben Sie einen $k$-Approximationsalgorithmus für $k$-HITTING SET.
+
+% Aufgabe H-2b (ii)
+\item Weisen Sie nach, dass der von Ihnen unter (i) vorgeschlagene Algorithmus tatsächlich ein $k$-Approximationsalgorithmus ist.
+\end{enumerate}
+
+\textbf{Hinweis zu (i) und (ii)}: Denken Sie zunächst an den Spezialfall $k=2$. Sie kennen bereits einen 2-Approximationsalgorithmus für diesen Spezialfall: siehe Abschnitt 11.7.1 im Skript.
+
+\end{enumerate}
+
+
+
+
+\end{enumerate}
+
+\end{enumerate}
+\end{document}

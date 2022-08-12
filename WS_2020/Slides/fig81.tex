@@ -1,0 +1,31 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pst-all} 
+\usepackage{pst-bezier}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add, pst-eucl}
+\usepackage{color}
+\definecolor{blueish}{rgb}{0.255,0.412,0.882}
+\definecolor{light-gray}{gray}{0.90}
+
+\begin{document}
+\psset{xunit=1.00cm,yunit=1.00cm,linewidth=0.8pt,nodesep=0.5pt}
+\begin{pspicture}(-1.5,-0.5)(4.5,2.5)
+
+\cnode*(2,2){3pt}{A} \uput{0.25}[ 90](2,2){$a$}
+\cnode*(2,0){3pt}{B} \uput{0.25}[270](2,0){$b$}
+\cnode*(4,2){3pt}{C} \uput{0.25}[ 90](4,2){$c$}
+\cnode*(4,0){3pt}{E} \uput{0.25}[270](4,0){$e$}
+\cnode*(0,1){3pt}{S} \uput{0.25}[180](0,1){$s$}
+
+\ncline{->}{A}{C} \uput{0.10}[ 90](3.0, 2.0){$2$}
+\ncline{->}{A}{E} \uput{0.05}[225](3.0, 1.0){$3$}
+\ncline{->}{B}{A} \uput{0.10}[180](2.0, 1.0){$1$}
+\ncline{->}{S}{B} \uput{0.05}[225](1.0, 0.5){$2$}
+
+\uput{1}[180](0, 1.05){$\widetilde{B}$}
+
+\end{pspicture}
+\end{document}
